@@ -50,10 +50,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -156,12 +156,12 @@ This appendix consolidates key behaviours, edge cases, and inter-API dependency 
 |---|---|---|
 | [7140](../../../foundations/error-codes.md#error-7140) | 400 | A folder with the same name already exists in the workspace. |
 | [7144](../../../foundations/error-codes.md#error-7144) | 400 | The specified folder does not exist. |
-| [7277](../../../foundations/error-codes.md#error-7277) | 400 | The folder holds tables that have dependent child views, so the deletion is blocked. |
+| [7277](../../../foundations/error-codes.md#error-7277) | 400 | The folder contains tables that have dependent child views; deletion blocked. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7414](../../../foundations/error-codes.md#error-7414) | 400 | The folder name cannot be empty. |
-| [7496](../../../foundations/error-codes.md#error-7496) | 400 | The maximum sub-folder nesting depth has been exceeded. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
+| [7414](../../../foundations/error-codes.md#error-7414) | 400 | Folder name cannot be empty. |
+| [7496](../../../foundations/error-codes.md#error-7496) | 400 | Maximum subfolder nesting depth exceeded. |
+| [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
 
 # Related
 

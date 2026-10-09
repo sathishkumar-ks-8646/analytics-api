@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Email Schedules
-description: Returns the list of email schedules available in the specified workspace.
+description: "Returns every email schedule defined in the workspace, with its name, run period, enabled state, creator, and the views it delivers."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/emailschedules"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -55,10 +55,6 @@ status: stable
 Returns every email schedule defined in the workspace, with its name, run period, enabled state, creator, and the views it delivers. This is the discovery call for `<schedule-id>`, which the other five APIs need.
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
-
-From the OpenAPI specification:
-
-Returns the list of email schedules available in the specified workspace.
 
 # Endpoint
 

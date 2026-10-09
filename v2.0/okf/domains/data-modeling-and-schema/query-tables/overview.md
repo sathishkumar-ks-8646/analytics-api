@@ -34,10 +34,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -111,22 +111,22 @@ A **Query Table** (also called a **SQL View** or **QT**) is a view whose data is
 |---|---|---|
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7399](../../../foundations/error-codes.md#error-7399) | 400 | The query refers to a spatial file-based table, which is not supported for query tables. |
-| [7400](../../../foundations/error-codes.md#error-7400) | 400 | Query tables are not allowed for this workspace. |
-| [7401](../../../foundations/error-codes.md#error-7401) | 400 | The SQL statement is not a valid or allowed SQL construct. |
+| [7399](../../../foundations/error-codes.md#error-7399) | 400 | The query references a spatial (GEO) file-based table, which is not supported for query tables. |
+| [7400](../../../foundations/error-codes.md#error-7400) | 400 | Query tables are not supported/allowed for this workspace. |
+| [7401](../../../foundations/error-codes.md#error-7401) | 400 | The SQL statement is not a valid/allowed SQL construct. |
 | [7402](../../../foundations/error-codes.md#error-7402) | 400 | The SQL statement is invalid. |
 | [7403](../../../foundations/error-codes.md#error-7403) | 400 | Parsing of the SQL query failed. |
 | [7404](../../../foundations/error-codes.md#error-7404) | 400 | Conversion of the SQL query to the internal execution engine failed. |
-| [7407](../../../foundations/error-codes.md#error-7407) | 400 | An invalid column was referred to in the SELECT clause. |
-| [7408](../../../foundations/error-codes.md#error-7408) | 400 | An invalid column was referred to elsewhere in the query, such as in the WHERE or GROUP BY clause. |
-| [7409](../../../foundations/error-codes.md#error-7409) | 400 | An unknown table was referred to in the query. |
+| [7407](../../../foundations/error-codes.md#error-7407) | 400 | An invalid column was referenced in the SELECT clause. |
+| [7408](../../../foundations/error-codes.md#error-7408) | 400 | An invalid column was referenced elsewhere in the query (e.g., WHERE, GROUP BY). |
+| [7409](../../../foundations/error-codes.md#error-7409) | 400 | An invalid/unknown table was referenced in the query. |
 | [7413](../../../foundations/error-codes.md#error-7413) | 400 | TABLENAME is missing or null. |
 | [7421](../../../foundations/error-codes.md#error-7421) | 400 | A general SQL parse error occurred. |
-| [7422](../../../foundations/error-codes.md#error-7422) | 400 | The query table is used as a source by a child view, which prevents this kind of structural change. |
-| [7429](../../../foundations/error-codes.md#error-7429) | 400 | A design edit is already in progress for this query table. |
-| [7433](../../../foundations/error-codes.md#error-7433) | 400 | Duplicate column names were detected in the SELECT clause after aliasing. |
-| [7447](../../../foundations/error-codes.md#error-7447) | 400 | The result of the query would exceed the allowed row or column limit. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
+| [7422](../../../foundations/error-codes.md#error-7422) | 400 | The query table is referenced as a source by a child view, preventing this type of structural change. |
+| [7429](../../../foundations/error-codes.md#error-7429) | 400 | A design edit (schema change) is already in progress for this query table. |
+| [7433](../../../foundations/error-codes.md#error-7433) | 400 | Duplicate column names detected in the SELECT clause (after aliasing). |
+| [7447](../../../foundations/error-codes.md#error-7447) | 400 | The query result would exceed the allowed row/column limit. |
+| [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
 
 # Related
 

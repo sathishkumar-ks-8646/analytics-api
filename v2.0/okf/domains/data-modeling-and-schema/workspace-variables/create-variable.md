@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create Variable
-description: Creates a workspace variable.
+description: Creates a new workspace variable.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/variables"
 tags:
   - zoho-analytics
@@ -60,10 +60,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -75,7 +75,7 @@ Creates a new workspace variable.
 
 From the OpenAPI specification:
 
-Creates a workspace variable. A variable is a reusable placeholder, written as `${Region}` for instance, that can be embedded in formula expressions, SQL queries, filters and reports so that one definition resolves to a different value per user or per portal domain.
+Creates a new workspace variable.
 
 The variable is defined once with a name, a data type and a type that determines how its value is resolved, and can carry per-user overrides that fall back to a workspace-wide default.
 

@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Publish Configurations
-description: Returns the publish configurations of the specified view.
+description: "Returns the complete publish state of a view in one call: the public channel's audience and listing state, the private channel's password/expiry state, and the presentation configuration used to render the published page."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config"
 tags:
   - zoho-analytics
@@ -43,10 +43,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -57,10 +57,6 @@ status: stable
 Returns the complete publish state of a view in one call: the **public** channel's audience and listing state, the **private** channel's password/expiry state, and the **presentation configuration** used to render the published page.
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
-
-From the OpenAPI specification:
-
-Returns the publish configurations of the specified view. The response groups them into three blocks - the public access settings, the private link settings, and the rendering settings applied when the view is accessed through a published URL.
 
 # Endpoint
 

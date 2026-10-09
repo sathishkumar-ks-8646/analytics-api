@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -177,15 +177,15 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 
 | Code | HTTP | Meaning |
 |---|---|---|
-| [6004](../../../foundations/error-codes.md#error-6004) | 400 | Adding these users would exceed the organization's user seat limit under the current plan. |
+| [6004](../../../foundations/error-codes.md#error-6004) | 400 | Adding these users would exceed the organisation's user seat limit under the current plan. |
 | [6026](../../../foundations/error-codes.md#error-6026) | 400 | The current plan does not support adding extra users (free plan restriction). |
-| [6071](../../../foundations/error-codes.md#error-6071) | 400 | One or more of the specified email addresses is already a member of this organization. |
-| [6089](../../../foundations/error-codes.md#error-6089) | 400 | Attempted to assign the ORGADMIN role through a custom domain (domainName). The Organization Admin role cannot be assigned through a custom portal domain. |
+| [6071](../../../foundations/error-codes.md#error-6071) | 400 | One or more of the specified email addresses is already a member of this organisation. |
+| [6089](../../../foundations/error-codes.md#error-6089) | 400 | Attempted to assign "ORGADMIN" role via a custom domain (domainName). Organization Admin role cannot be assigned through a custom portal domain. |
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
-| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the organization's Account Admin. |
-| [8114](../../../foundations/error-codes.md#error-8114) | 400 | One or more of the specified email addresses are not members of this organization. |
+| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
+| [8114](../../../foundations/error-codes.md#error-8114) | 400 | One or more specified email addresses are not members of this organisation. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 
 # Related

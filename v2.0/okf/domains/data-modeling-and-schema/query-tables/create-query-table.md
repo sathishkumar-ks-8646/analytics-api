@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create Query Table
-description: Creates a query table by running a SQL SELECT statement against the existing tables and views of the workspace.
+description: Creates a new query table by executing a user-supplied SQL SELECT statement against existing tables/views in the workspace.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/querytables"
 tags:
   - zoho-analytics
@@ -54,10 +54,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -69,7 +69,7 @@ Creates a new query table by executing a user-supplied SQL `SELECT` statement ag
 
 From the OpenAPI specification:
 
-Creates a query table by running a SQL SELECT statement against the existing tables and views of the workspace. A query table is a view whose data is computed by executing the statement at query time rather than by storing imported data, which allows joining, aggregating and transforming data from several tables using standard SQL.
+Creates a new query table by executing a user-supplied SQL SELECT statement against existing tables/views in the workspace.
 
 The columns of the query table and their data types are derived from the SELECT clause and cannot be configured separately. The response returns only the view ID of the new query table.
 

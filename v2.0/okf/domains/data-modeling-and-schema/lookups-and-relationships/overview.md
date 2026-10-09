@@ -26,10 +26,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -104,17 +104,17 @@ Once a lookup is established, multi-table reports, pivot tables, and query table
 | Code | HTTP | Meaning |
 |---|---|---|
 | [7107](../../../foundations/error-codes.md#error-7107) | 400 | The specified column does not exist in the table. |
-| [7166](../../../foundations/error-codes.md#error-7166) | 400 | The child column is itself a lookup-derived column, and a lookup on a lookup is not allowed. |
-| [7183](../../../foundations/error-codes.md#error-7183) | 400 | The data type of the lookup column is incompatible with the data type of the referenced column. |
+| [7166](../../../foundations/error-codes.md#error-7166) | 400 | The child column is itself a lookup-derived column (lookup-on-lookup is not allowed). |
+| [7183](../../../foundations/error-codes.md#error-7183) | 400 | The lookup column's data type is incompatible with the referenced column's data type. |
 | [7184](../../../foundations/error-codes.md#error-7184) | 400 | Adding this lookup would create a circular relationship chain across tables. |
 | [7280](../../../foundations/error-codes.md#error-7280) | 400 | A lookup relationship already exists on this child column. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7367](../../../foundations/error-codes.md#error-7367) | 400 | The lookup is used by one or more dependent views and the removal has been blocked. |
-| [7377](../../../foundations/error-codes.md#error-7377) | 400 | An identical lookup relationship between the same child column and the same reference column is already defined. |
+| [7367](../../../foundations/error-codes.md#error-7367) | 400 | The lookup is used by one or more dependent views; removal blocked. |
+| [7377](../../../foundations/error-codes.md#error-7377) | 400 | An identical lookup relationship (same child column → same reference column) is already defined. |
 | [7378](../../../foundations/error-codes.md#error-7378) | 400 | No lookup relationship is defined on this column. |
-| [7379](../../../foundations/error-codes.md#error-7379) | 400 | A lookup column cannot refer to a column within the same table. |
-| [7509](../../../foundations/error-codes.md#error-7509) | 400 | The reference column holds duplicate values and cannot serve as the reference side. |
+| [7379](../../../foundations/error-codes.md#error-7379) | 400 | A lookup column cannot reference a column within the same table. |
+| [7509](../../../foundations/error-codes.md#error-7509) | 400 | The reference column contains duplicate values; it must be unique to serve as the reference side. |
 
 # Related
 

@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Trigger Email Schedule
-description: "Trigger the specified email schedule instantly, without waiting for its configured run time."
+description: "Runs a schedule immediately — the \"send now\" action."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}"
 tags:
   - zoho-analytics
@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -60,10 +60,6 @@ status: stable
 Runs a schedule immediately — the "send now" action. **This sends real email to every configured recipient**, using the schedule's stored configuration.
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
-
-From the OpenAPI specification:
-
-Trigger the specified email schedule instantly, without waiting for its configured run time.
 
 # Endpoint
 

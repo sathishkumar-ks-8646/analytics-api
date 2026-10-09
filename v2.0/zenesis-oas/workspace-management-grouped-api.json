@@ -36,7 +36,7 @@
         ],
         "x-zenesis-title": "Get All Workspace List",
         "summary": "Get All Workspace List",
-        "description": "Returns all the workspaces accessible to the requesting user, covering both the workspaces they own or administer and the workspaces shared with them. The response separates the two into the `ownedWorkspaces` and the `sharedWorkspaces` arrays.\n\nThis API is scoped to the user and not to the organization. It returns only the workspaces that the requesting user has some level of access to. Account Admins see all the workspaces of their organization in the owned list.",
+        "description": "Returns all workspaces accessible to the authenticated user — both workspaces they own or administer, and workspaces shared with them. The response separates owned and shared workspaces into two distinct arrays.\n\nThis API is scoped to the user and not to the organization. It returns only the workspaces that the requesting user has some level of access to. Account Admins see all the workspaces of their organization in the owned list.",
         "operationId": "getAllWorkspaces",
         "security": [
           {
@@ -53,13 +53,6 @@
         "responses": {
           "200": {
             "description": "Workspace list returned successfully.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -131,9 +124,16 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -155,7 +155,7 @@
         ],
         "x-zenesis-title": "Create Workspace",
         "summary": "Create Workspace",
-        "description": "Creates a new empty workspace in the specified organization. The workspace is created with no tables, views or users, and the content has to be added using the subsequent APIs. The requesting user should be an Account Admin or an Organization Admin of the target organization.",
+        "description": "Creates a new empty workspace in the specified organisation. The workspace is created with no tables, views, or users — content must be added through subsequent APIs.",
         "operationId": "createWorkspace",
         "security": [
           {
@@ -216,23 +216,6 @@
         "responses": {
           "200": {
             "description": "Workspace created successfully.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7301",
-                "description": "The user is not an Account Admin or an Organization Admin of the target organization.",
-                "resolution": "Ensure that the requesting user has Account Admin or Organization Admin privileges in the target organization."
-              },
-              {
-                "name": "7951",
-                "description": "The organization has reached its workspace creation limit based on the current subscription plan.",
-                "resolution": "Upgrade the subscription plan or delete the unused workspaces before creating a new workspace."
-              },
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.modeling.create scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -252,9 +235,26 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7301",
+                "description": "User is not an Account Admin or Organization Admin.",
+                "resolution": "Ensure the caller has Account Admin or Organization Admin privileges in the target organisation."
+              },
+              {
+                "name": "7951",
+                "description": "The organisation has reached its workspace creation limit based on the current subscription plan.",
+                "resolution": "Upgrade the plan or delete unused workspaces before creating a new one."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -278,7 +278,7 @@
         ],
         "x-zenesis-title": "Get Owned Workspace List",
         "summary": "Get Owned Workspace List",
-        "description": "Returns all the workspaces present in the organization of the requesting user, irrespective of how they are shared. This is an admin scoped API and can be invoked only by the Account Admin of the organization.",
+        "description": "Returns all workspaces owned by (created within) the authenticated user's organisation. This is an admin-scoped API — only the Account Admin can call it, and it returns all workspaces in the org regardless of sharing.",
         "operationId": "getOwnedWorkspaces",
         "security": [
           {
@@ -295,18 +295,6 @@
         "responses": {
           "200": {
             "description": "Workspace list returned successfully.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7301",
-                "description": "The user is not the Account Admin. Organization Admins and Workspace Admins cannot invoke this API.",
-                "resolution": "Invoke this API using the credentials of the Account Admin of the organization."
-              },
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -356,9 +344,21 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7301",
+                "description": "User is not the Account Admin. Organization Admins and Workspace Admins cannot call this API.",
+                "resolution": "Use Account Admin credentials."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -382,7 +382,7 @@
         ],
         "x-zenesis-title": "Get Shared Workspace List",
         "summary": "Get Shared Workspace List",
-        "description": "Returns all the workspaces that have been shared with the requesting user from other organizations. The workspaces present in the organization of the requesting user are not included. Use the Get All Workspace List API to retrieve the owned and the shared workspaces together.",
+        "description": "Returns all workspaces that have been shared with the authenticated user from other organisations. Workspaces in the user's own organisation are not included — use Get All Workspace List to see both owned and shared together.",
         "operationId": "getSharedWorkspaces",
         "security": [
           {
@@ -399,13 +399,6 @@
         "responses": {
           "200": {
             "description": "Workspace list returned successfully.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -467,9 +460,16 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -493,7 +493,7 @@
         ],
         "x-zenesis-title": "Get Workspace Info",
         "summary": "Get Workspace Info",
-        "description": "Returns the metadata of the specified workspace. The requesting user should have at least some level of access to the workspace, either as a Workspace Admin, a shared user, a group member, or a user with at least Read permission on a view within the workspace.\n\nThe optional `withUserRoleInfo` key enriches the response with the role details of the requesting user within the workspace.",
+        "description": "Returns metadata for the specified workspace. The calling user must have at least some level of access to the workspace (Workspace Admin, or any view in the workspace shared with them). An optional withUserRoleInfo flag enriches the response with the calling user's role details within the workspace.\n\nThe optional `withUserRoleInfo` key enriches the response with the role details of the requesting user within the workspace.",
         "operationId": "getWorkspaceDetails",
         "security": [
           {
@@ -540,23 +540,6 @@
         "responses": {
           "200": {
             "description": "Workspace details returned successfully.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
-              },
-              {
-                "name": "7301",
-                "description": "The user does not have any access to the specified workspace. The user should be a Workspace Admin or should have at least one view of this workspace shared with them.",
-                "resolution": "Verify that the user has been added to the workspace or has a view of the workspace shared with them."
-              },
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -629,9 +612,26 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Workspace not found.",
+                "resolution": "Verify <workspace-id>."
+              },
+              {
+                "name": "7301",
+                "description": "User does not have any access to the specified workspace. The user must be a workspace admin or have at least one view shared with them in this workspace.",
+                "resolution": "Verify the user has been added to the workspace or has a view shared with them."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -653,7 +653,7 @@
         ],
         "x-zenesis-title": "Copy Workspace",
         "summary": "Copy Workspace",
-        "description": "Creates a copy of an existing workspace, either within the same organization or in a different organization. The copy can optionally include all the table data and can retain the import source connections of the source workspace.\n\nWhen the destination organization differs from the organization that owns the source workspace, the secret key of the source workspace has to be provided as `workspaceKey` to authorize the copy. The key can be obtained using the Get Workspace Secret Key API. The requesting user should be an Account Admin or an Organization Admin of the destination organization.\n\n> **Rate limit:** Only one copy operation is allowed to run at a time per organization.",
+        "description": "Creates a copy of an existing workspace. The copy can be placed in the same organisation or a different organisation. When copying to a different organisation, the workspace's secret key (workspaceKey) must be provided for authorisation. The copy can optionally include all table data and/or preserve import source connections.\n\nWhen the destination organization differs from the organization that owns the source workspace, the secret key of the source workspace has to be provided as `workspaceKey` to authorize the copy. The key can be obtained using the Get Workspace Secret Key API. The requesting user should be an Account Admin or an Organization Admin of the destination organization.\n\n> **Rate limit:** Only one copy operation is allowed to run at a time per organization.",
         "operationId": "copyWorkspace",
         "security": [
           {
@@ -743,38 +743,6 @@
         "responses": {
           "200": {
             "description": "Workspace copied successfully.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Source workspace not found.",
-                "resolution": "Verify the workspace-id of the source workspace given in the request URL."
-              },
-              {
-                "name": "7301",
-                "description": "The user is not an Account Admin or an Organization Admin of the destination organization.",
-                "resolution": "Ensure that the requesting user is an admin of the destination organization and not of the source organization alone."
-              },
-              {
-                "name": "7951",
-                "description": "The destination organization has reached its workspace limit.",
-                "resolution": "Upgrade the subscription plan of the destination organization or remove the unused workspaces."
-              },
-              {
-                "name": "8024",
-                "description": "A cross-organization copy was attempted without a valid workspaceKey, or the key provided does not match the secret key of the source workspace.",
-                "resolution": "Obtain the correct workspaceKey of the source workspace using the Get Workspace Secret Key API and retry. Omit workspaceKey for copies within the same organization."
-              },
-              {
-                "name": "8058",
-                "description": "The organization ID provided in the ZANALYTICS-DEST-ORGID header does not exist.",
-                "resolution": "Provide a valid, existing organization ID in the ZANALYTICS-DEST-ORGID header."
-              },
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.modeling.create scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -794,9 +762,41 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Source workspace not found.",
+                "resolution": "Verify <workspace-id> of the source workspace."
+              },
+              {
+                "name": "7301",
+                "description": "User is not an Account Admin or Organization Admin of the destination organisation.",
+                "resolution": "The caller must be an admin of the destination org, not just the source org."
+              },
+              {
+                "name": "7951",
+                "description": "The destination organisation has reached its workspace limit.",
+                "resolution": "Upgrade the destination org's plan or remove unused workspaces."
+              },
+              {
+                "name": "8024",
+                "description": "Cross-org copy attempted without a valid workspaceKey, or the provided key does not match the source workspace's secret key.",
+                "resolution": "Obtain the correct workspaceKey from the source workspace owner using Get Workspace Secret Key, then retry. For same-org copies, omit workspaceKey."
+              },
+              {
+                "name": "8058",
+                "description": "The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist.",
+                "resolution": "Provide a valid, existing organisation ID in ZANALYTICS-DEST-ORGID."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -818,7 +818,7 @@
         ],
         "x-zenesis-title": "Rename Workspace",
         "summary": "Rename Workspace",
-        "description": "Updates the name and the description of an existing workspace. Both the values are replaced atomically. When `workspaceDesc` is omitted, the existing description is reset to an empty string and the previous value is not preserved. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.",
+        "description": "Updates the name and/or description of an existing workspace. Both fields are replaced atomically — if workspaceDesc is omitted, the description is reset to an empty string (the previous value is not preserved).",
         "operationId": "renameWorkspace",
         "security": [
           {
@@ -896,26 +896,26 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7111",
-                "description": "The workspace name is already used by another workspace in the organization.",
-                "resolution": "Choose a workspace name that is not already in use within the organization."
+                "description": "The new workspace name is already used by another workspace in the organisation.",
+                "resolution": "Choose a name not already in use."
               },
               {
                 "name": "7301",
-                "description": "The user is not an Account Admin or an Organization Admin.",
-                "resolution": "Ensure that the requesting user has Account Admin or Organization Admin privileges in the organization."
+                "description": "User is not an Account Admin or Organization Admin.",
+                "resolution": "Ensure the caller has Account Admin or Org Admin access."
               },
               {
                 "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.modeling.update scope."
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.update."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -937,7 +937,7 @@
         ],
         "x-zenesis-title": "Delete Workspace",
         "summary": "Delete Workspace",
-        "description": "Permanently deletes the specified workspace along with all its contents, including the tables, views, dashboards, formulas, import configurations and sharing settings. This operation is irreversible. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.",
+        "description": "Permanently deletes the specified workspace and all of its contents — tables, views, dashboards, formulas, import configurations, and all sharing settings. This operation is irreversible.",
         "operationId": "deleteWorkspace",
         "security": [
           {
@@ -961,21 +961,21 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The user is not an Account Admin or an Organization Admin.",
-                "resolution": "Ensure that the requesting user has Account Admin or Organization Admin privileges in the organization."
+                "description": "User is not an Account Admin or Organization Admin.",
+                "resolution": "Ensure the caller has Account Admin or Org Admin access."
               },
               {
                 "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.modeling.delete scope."
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -999,7 +999,7 @@
         ],
         "x-zenesis-title": "Get Workspace Secret Key",
         "summary": "Get Workspace Secret Key",
-        "description": "Returns the secret key of the specified workspace. This key is passed as the `workspaceKey` parameter while performing a cross-organization Copy Workspace operation, and it authorizes the copying of the workspace into a different organization.\n\nThe key can optionally be regenerated, which permanently invalidates the previous key. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.",
+        "description": "Returns the secret key for the specified workspace. This key is used as the workspaceKey parameter when performing a cross-organisation Copy Workspace operation — it authorises the copying of the workspace to a different organisation.\n\nThe key can optionally be regenerated, which permanently invalidates the previous key. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.",
         "operationId": "getWorkspaceSecretKey",
         "security": [
           {
@@ -1046,23 +1046,6 @@
         "responses": {
           "200": {
             "description": "Secret key returned successfully.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
-              },
-              {
-                "name": "7301",
-                "description": "The user is not an Account Admin or an Organization Admin.",
-                "resolution": "Ensure that the requesting user has Account Admin or Organization Admin privileges in the organization."
-              },
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -1082,9 +1065,26 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Workspace not found.",
+                "resolution": "Verify <workspace-id>."
+              },
+              {
+                "name": "7301",
+                "description": "User is not an Account Admin or Organization Admin.",
+                "resolution": "Ensure the caller has Account Admin or Org Admin access."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1108,7 +1108,7 @@
         ],
         "x-zenesis-title": "Export as Template",
         "summary": "Export as Template",
-        "description": "Exports the selected views of the specified workspace as a reusable template file in the `.atpt` (Zoho Analytics Template) format. The response is a binary file attachment and not a JSON payload, and it can be imported into another workspace to recreate the selected views along with their structural dependencies.\n\nThe template holds the schema definitions of the selected tables and views, the formula and lookup columns, the calculated fields and the view design configurations. The data rows of the source tables are not exported.",
+        "description": "Exports selected views from the specified workspace as a reusable template file. The response is a binary file in .atpt (Zoho Analytics Template) format — not a JSON payload. This file can be imported into another workspace to recreate the selected views and their structural dependencies.\n\nThe template holds the schema definitions of the selected tables and views, the formula and lookup columns, the calculated fields and the view design configurations. The data rows of the source tables are not exported.",
         "operationId": "exportAsTemplate",
         "security": [
           {
@@ -1163,33 +1163,6 @@
         "responses": {
           "200": {
             "description": "Binary .atpt template file returned as an attachment.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
-              },
-              {
-                "name": "7104",
-                "description": "One or more of the specified view IDs do not exist.",
-                "resolution": "Verify that all the values in viewIds are valid using the Get View List API."
-              },
-              {
-                "name": "7301",
-                "description": "The user is not a Workspace Admin, an Account Admin or an Organization Admin.",
-                "resolution": "Ensure that the requesting user has at least Workspace Admin access to the workspace."
-              },
-              {
-                "name": "7319",
-                "description": "One or more of the specified view IDs do not belong to the specified workspace.",
-                "resolution": "Ensure that all the values in viewIds belong to the workspace identified by the workspace-id in the request URL."
-              },
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope."
-              }
-            ],
             "headers": {
               "Content-Disposition": {
                 "description": "Holds the name of the exported template file, for example attachment; filename=\"SalesAnalytics_Q3_Template.atpt\".",
@@ -1206,9 +1179,36 @@
                   "description": "The exported template as a binary .atpt file."
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Workspace not found.",
+                "resolution": "Verify <workspace-id>."
+              },
+              {
+                "name": "7104",
+                "description": "One or more specified view IDs do not exist.",
+                "resolution": "Verify all viewIds are valid using the Get View List API."
+              },
+              {
+                "name": "7319",
+                "description": "One or more specified view IDs do not belong to the specified workspace.",
+                "resolution": "Ensure all viewIds belong to the workspace identified by <workspace-id>."
+              },
+              {
+                "name": "7301",
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1232,7 +1232,7 @@
         ],
         "x-zenesis-title": "Add Default Workspace",
         "summary": "Add Default Workspace",
-        "description": "Marks the specified workspace as the default workspace of the requesting user. The default workspace is the workspace that opens automatically when the user logs in to Zoho Analytics.\n\nA user can hold only one default workspace at a time. When a different workspace is already set as the default, it is replaced silently. Invoking this API on a workspace that is already the default succeeds without error.",
+        "description": "Marks the specified workspace as the calling user's default workspace. The default workspace is the one that opens automatically when the user logs in to Zoho Analytics.\n\nA user can hold only one default workspace at a time. When a different workspace is already set as the default, it is replaced silently. Invoking this API on a workspace that is already the default succeeds without error.",
         "operationId": "addDefaultWorkspace",
         "security": [
           {
@@ -1256,21 +1256,21 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The user has no access to the specified workspace. No view of this workspace has been shared with them and they are not a Workspace Admin.",
-                "resolution": "Ensure that the user is a member of the workspace or has at least one view of the workspace shared with them before marking it as the default workspace."
+                "description": "The user has no access to the specified workspace — no views have been shared with them, and they are not a Workspace Admin.",
+                "resolution": "Ensure the user is a workspace member or has at least one view shared with them before marking it as default."
               },
               {
                 "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope."
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.update."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1292,7 +1292,7 @@
         ],
         "x-zenesis-title": "Remove Default Workspace",
         "summary": "Remove Default Workspace",
-        "description": "Removes the default workspace designation from the specified workspace for the requesting user. After this operation, the user holds no default workspace until a new one is set.\n\nUnlike the Add Default Workspace API, this API is not idempotent. When the specified workspace is not the current default workspace of the user, the request fails with error code 7415. Verify the current default using the Get All Workspace List API, which returns `isDefault` as true for the current default, before invoking this API.",
+        "description": "Removes the default workspace designation from the specified workspace for the calling user. After this operation, the user has no default workspace set.\n\nUnlike the Add Default Workspace API, this API is not idempotent. When the specified workspace is not the current default workspace of the user, the request fails with error code 7415. Verify the current default using the Get All Workspace List API, which returns `isDefault` as true for the current default, before invoking this API.",
         "operationId": "removeDefaultWorkspace",
         "security": [
           {
@@ -1316,26 +1316,26 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
                 "description": "The user has no access to the specified workspace.",
-                "resolution": "Ensure that the user is a member of the workspace or has at least one view of the workspace shared with them."
+                "resolution": "Ensure the user has at least one view shared with them in the workspace."
               },
               {
                 "name": "7415",
-                "description": "The specified workspace is not the current default workspace of the requesting user. This API does not succeed silently for a workspace that is not the default.",
-                "resolution": "Use the Get All Workspace List API to identify the workspace that holds isDefault as true, and invoke this API with that workspace ID."
+                "description": "The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces.",
+                "resolution": "Use Get All Workspace List to identify the workspace with isDefault: true, then call this API with that workspace ID."
               },
               {
                 "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope."
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.update."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1359,7 +1359,7 @@
         ],
         "x-zenesis-title": "Add Favourite Workspace",
         "summary": "Add Favourite Workspace",
-        "description": "Adds the specified workspace to the list of favourite workspaces of the requesting user. Favourite workspaces are surfaced at the top of the workspace listings for quick navigation.\n\nA user can mark any number of workspaces as favourite, as there is no exclusivity constraint. When the workspace is already present in the favourites, the request succeeds silently without error.",
+        "description": "Adds the specified workspace to the calling user's list of favourite workspaces. Favourited workspaces are typically surfaced at the top of workspace listings for quick navigation.\n\nA user can mark any number of workspaces as favourite, as there is no exclusivity constraint. When the workspace is already present in the favourites, the request succeeds silently without error.",
         "operationId": "addFavoriteWorkspace",
         "security": [
           {
@@ -1383,21 +1383,21 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
                 "description": "The user has no access to the specified workspace.",
-                "resolution": "Ensure that the user is a member of the workspace or has at least one view of the workspace shared with them."
+                "resolution": "Ensure the user is a workspace member or has at least one view shared with them before adding it to favourites."
               },
               {
                 "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope."
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.update."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1419,7 +1419,7 @@
         ],
         "x-zenesis-title": "Remove Favourite Workspace",
         "summary": "Remove Favourite Workspace",
-        "description": "Removes the specified workspace from the list of favourite workspaces of the requesting user.\n\nThis API is idempotent. When the workspace is not present in the favourites of the user, the request succeeds silently without error. This differs from the Remove Default Workspace API, which fails with error code 7415 in the equivalent situation.",
+        "description": "Removes the specified workspace from the calling user's list of favourite workspaces. If the workspace is not currently in the user's favourites, this call succeeds silently without error (idempotent).\n\nThis API is idempotent. When the workspace is not present in the favourites of the user, the request succeeds silently without error. This differs from the Remove Default Workspace API, which fails with error code 7415 in the equivalent situation.",
         "operationId": "removeFavoriteWorkspace",
         "security": [
           {
@@ -1443,21 +1443,21 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
                 "description": "The user has no access to the specified workspace.",
-                "resolution": "Ensure that the user is a member of the workspace or has at least one view of the workspace shared with them."
+                "resolution": "Ensure the user has at least one view shared with them in the workspace."
               },
               {
                 "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope."
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.update."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1481,7 +1481,7 @@
         ],
         "x-zenesis-title": "Enable Workspace for Domain Access",
         "summary": "Enable Workspace for Domain Access",
-        "description": "Enables the specified workspace for access through the White Label or Client Portal domain of the organization. Once enabled, the workspace becomes visible and accessible to the users who log in through the configured custom domain URL, and the views shared with the portal users appear under that domain.\n\nThe portal domain is resolved automatically from the White Label configuration of the Account Admin of the workspace, so no domain name parameter is required. Invoking this API on a workspace that is already enabled for domain access fails with error code 12049.",
+        "description": "Enables the specified workspace for access through the organisation's White Label / Client Portal domain. Once enabled, the workspace becomes visible and accessible to users who log in via the configured custom domain URL.\n\nThe portal domain is resolved automatically from the White Label configuration of the Account Admin of the workspace, so no domain name parameter is required. Invoking this API on a workspace that is already enabled for domain access fails with error code 12049.",
         "operationId": "enableDomainWorkspace",
         "security": [
           {
@@ -1505,26 +1505,26 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The requesting user is not an Account Admin or an Organization Admin of the organization that owns the workspace, or the Account Admin of the workspace does not have a White Label or Client Portal domain configured.",
-                "resolution": "Ensure that the requesting user is an admin of the organization and that the organization holds an active White Label domain setup."
+                "description": "The caller is not an Account Admin or Organization Admin of the workspace's organisation, or the workspace's Account Admin does not have a White Label / Client Portal domain configured.",
+                "resolution": "Ensure the caller is an org admin and that the organisation has an active White Label domain setup."
               },
               {
                 "name": "12049",
-                "description": "The workspace is already enabled for White Label domain access. Enabling an already enabled workspace is not idempotent.",
-                "resolution": "Verify the current domain access state before invoking this API. Use the Disable Workspace for Domain Access API first when the workspace has to be enabled again, such as after a domain reconfiguration."
+                "description": "The workspace is already enabled for White Label domain access. Calling Enable on an already-enabled workspace is not idempotent.",
+                "resolution": "Check the current domain access state before calling. Use Disable first if you need to re-enable (e.g., after domain reconfiguration)."
               },
               {
                 "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope."
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.update."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1546,7 +1546,7 @@
         ],
         "x-zenesis-title": "Disable Workspace for Domain Access",
         "summary": "Disable Workspace for Domain Access",
-        "description": "Removes the specified workspace from the White Label or Client Portal domain of the organization. Once disabled, the workspace is no longer accessible to the users who log in through the custom portal domain URL, and the users who had access through the portal lose it immediately.\n\nDisabling gates only the access through the portal domain. It does not remove any view level sharing or user membership, and the workspace remains fully accessible through the standard Zoho Analytics URL for the non-portal users. Invoking this API on a workspace that is not currently enabled for domain access fails with error code 12050.",
+        "description": "Removes the specified workspace from the organisation's White Label / Client Portal domain. Once disabled, the workspace is no longer accessible to users who log in via the custom portal domain URL. Users who had access via the portal immediately lose that access.\n\nDisabling gates only the access through the portal domain. It does not remove any view level sharing or user membership, and the workspace remains fully accessible through the standard Zoho Analytics URL for the non-portal users. Invoking this API on a workspace that is not currently enabled for domain access fails with error code 12050.",
         "operationId": "disableDomainWorkspace",
         "security": [
           {
@@ -1570,26 +1570,26 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id given in the request URL."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The requesting user is not an Account Admin or an Organization Admin of the organization that owns the workspace, or the Account Admin of the workspace does not have a White Label or Client Portal domain configured.",
-                "resolution": "Ensure that the requesting user is an admin of the organization and that the organization holds an active White Label domain setup."
+                "description": "The caller is not an Account Admin or Organization Admin of the workspace's organisation, or the organisation has no White Label domain.",
+                "resolution": "Ensure the caller has admin access and the org has a configured White Label domain."
               },
               {
                 "name": "12050",
-                "description": "The workspace is not currently enabled for White Label domain access. Disabling an already disabled workspace is not idempotent.",
-                "resolution": "Verify the current domain access state before invoking this API. Invoke this API only on a workspace that was enabled using the Enable Workspace for Domain Access API."
+                "description": "The workspace is not currently enabled for White Label domain access. Calling Disable on an already-disabled workspace is not idempotent.",
+                "resolution": "Verify the current state before calling. Only call Disable on workspaces previously enabled via Enable Workspace for Domain Access."
               },
               {
                 "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope."
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.update."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1613,7 +1613,7 @@
         ],
         "x-zenesis-title": "Get Folder List",
         "summary": "Get Folder List",
-        "description": "Returns all the folders present in the specified workspace, along with their names, descriptions, display order, default status and parent folder references.\n\nWorkspace Admins receive every folder of the workspace. Shared users and group members receive a filtered list holding only the folders that contain at least one view they have access to.",
+        "description": "Returns all folders in the specified workspace, including their names, descriptions, display order, default status, and parent folder references. Shared users and group members receive a filtered list containing only the folders that include at least one view they have access to.\n\nWorkspace Admins receive every folder of the workspace. Shared users and group members receive a filtered list holding only the folders that contain at least one view they have access to.",
         "operationId": "getFolders",
         "security": [
           {
@@ -1633,13 +1633,6 @@
         "responses": {
           "200": {
             "description": "Folder list returned successfully.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7301",
-                "description": "The user does not have permission to perform this operation.",
-                "resolution": "Ensure that the user is a Workspace Admin of the workspace, or has at least Read access to one or more views in the workspace."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -1756,9 +1749,16 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7301",
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin, or has at least READ access to one or more views in the workspace."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1856,33 +1856,6 @@
         "responses": {
           "200": {
             "description": "Folder created successfully.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7140",
-                "description": "A folder with the same name already exists in the workspace.",
-                "resolution": "Provide a folder name that is not already in use within the workspace."
-              },
-              {
-                "name": "7144",
-                "description": "The specified parentFolderId does not exist.",
-                "resolution": "Verify the parentFolderId value using the Get Folder List API."
-              },
-              {
-                "name": "7301",
-                "description": "The user does not have permission to perform this operation.",
-                "resolution": "Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace."
-              },
-              {
-                "name": "7414",
-                "description": "The folder name cannot be empty.",
-                "resolution": "Provide a non-empty value for folderName."
-              },
-              {
-                "name": "7496",
-                "description": "The maximum sub-folder nesting depth has been exceeded.",
-                "resolution": "Only one level of nesting is supported. A sub-folder cannot hold children of its own, so the parentFolderId should refer to a root level folder."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -1902,9 +1875,36 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7140",
+                "description": "A folder with the same name already exists in the workspace.",
+                "resolution": "Use a unique folder name within the workspace."
+              },
+              {
+                "name": "7144",
+                "description": "The specified parentFolderId does not exist.",
+                "resolution": "Verify the parentFolderId value using the Get Folder List API."
+              },
+              {
+                "name": "7301",
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Folder permission on the workspace."
+              },
+              {
+                "name": "7414",
+                "description": "Folder name cannot be empty.",
+                "resolution": "Provide a non-empty value for folderName."
+              },
+              {
+                "name": "7496",
+                "description": "Maximum subfolder nesting depth exceeded.",
+                "resolution": "Sub-folders cannot themselves have children. Only one level of nesting is supported."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1928,7 +1928,7 @@
         ],
         "x-zenesis-title": "Rename Folder",
         "summary": "Rename Folder",
-        "description": "Updates the name and the description of an existing folder. When `folderDesc` is omitted, the existing description is reset to an empty string and the previous value is not preserved.",
+        "description": "Updates the name and/or description of an existing folder. If folderDesc is omitted from the request, the folder's existing description is reset to an empty string.",
         "operationId": "renameFolder",
         "security": [
           {
@@ -2000,7 +2000,7 @@
               {
                 "name": "7140",
                 "description": "A folder with the same name already exists in the workspace.",
-                "resolution": "Provide a folder name that is not already in use within the workspace."
+                "resolution": "Use a unique folder name within the workspace."
               },
               {
                 "name": "7144",
@@ -2009,17 +2009,17 @@
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this operation.",
-                "resolution": "Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Folder permission on the workspace."
               },
               {
                 "name": "7414",
-                "description": "The folder name cannot be empty.",
+                "description": "Folder name cannot be empty.",
                 "resolution": "Provide a non-empty value for folderName."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2110,17 +2110,17 @@
               },
               {
                 "name": "7277",
-                "description": "The folder holds tables that have dependent child views, so the deletion is blocked.",
-                "resolution": "Set deleteDependentViews to true to delete the folder along with all the dependent views, or delete the dependent views manually before retrying."
+                "description": "The folder contains tables that have dependent child views; deletion blocked.",
+                "resolution": "Set deleteDependentViews to true to delete the folder along with all dependent views, or manually delete the dependent views first."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this operation.",
-                "resolution": "Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Folder permission on the workspace."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2144,7 +2144,7 @@
         ],
         "x-zenesis-title": "Make Default Folder",
         "summary": "Make Default Folder",
-        "description": "Sets the specified folder as the default folder of the workspace. The default folder is where a new view is placed when no folder is selected explicitly. The folder that was the default until then loses that status, as a workspace holds exactly one default folder at any point in time.\n\nThis API is idempotent. Invoking it on a folder that is already the default folder succeeds without error.",
+        "description": "Sets the specified folder as the default folder for the workspace. The previous default folder (if any) loses its default status. Every workspace has exactly one default folder at all times.\n\nThis API is idempotent. Invoking it on a folder that is already the default folder succeeds without error.",
         "operationId": "makeDefaultFolder",
         "security": [
           {
@@ -2175,12 +2175,12 @@
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this operation.",
-                "resolution": "Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Folder permission on the workspace."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2204,7 +2204,7 @@
         ],
         "x-zenesis-title": "Change Folder Hierarchy",
         "summary": "Change Folder Hierarchy",
-        "description": "Changes the hierarchical position of a folder, either by promoting a sub-folder to the root level or by nesting an existing root level folder under another root level folder. Exactly one level of nesting is supported, so the folder given in `parentFolderId` should itself be at the root level.",
+        "description": "Changes the hierarchical position of a folder — either promoting a sub-folder to a top-level folder, or nesting an existing top-level folder under another top-level folder.",
         "operationId": "changeFolderHierarchy",
         "security": [
           {
@@ -2274,22 +2274,22 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7144",
-                "description": "The specified folder or the specified parent folder does not exist.",
+                "description": "The specified folder or parent folder does not exist.",
                 "resolution": "Verify the folder IDs using the Get Folder List API."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this operation.",
-                "resolution": "Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Folder permission on the workspace."
               },
               {
                 "name": "8119",
-                "description": "The value provided for hierarchy is invalid. Only 0 and 1 are accepted.",
-                "resolution": "Pass 0 to promote a sub-folder to the root level, or 1 to nest a folder under a parent folder."
+                "description": "Invalid value for hierarchy. Only 0 and 1 are accepted.",
+                "resolution": "Use 0 to promote a sub-folder to root level, or 1 to nest a folder under a parent."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2313,7 +2313,7 @@
         ],
         "x-zenesis-title": "Change Folder Position",
         "summary": "Change Folder Position",
-        "description": "Reorders a folder by placing it immediately above another folder at the same hierarchy level. Both the folder being reordered and the reference folder should be at the root level, or should be sub-folders of the same parent.",
+        "description": "Reorders a folder by moving it to just above another specified folder at the same hierarchy level. Both folders must be at the same level (both top-level or both sub-folders of the same parent).",
         "operationId": "changeFolderPosition",
         "security": [
           {
@@ -2382,17 +2382,17 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7144",
-                "description": "The specified folder or the specified reference folder does not exist.",
+                "description": "The specified folder or reference folder does not exist.",
                 "resolution": "Verify the folder IDs using the Get Folder List API."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this operation.",
-                "resolution": "Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Folder permission on the workspace."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2416,7 +2416,7 @@
         ],
         "x-zenesis-title": "Move Views To Folder",
         "summary": "Move Views To Folder",
-        "description": "Moves one or more views, covering tables, reports and dashboards, into the specified destination folder of the workspace. All the views should belong to the same workspace, and a maximum of 1000 view IDs can be moved in a single request.\n\nThe operation is transactional. A single view ID that does not belong to the workspace fails the entire request before any view is moved.",
+        "description": "Moves one or more views (tables, reports, dashboards) into the specified destination folder within the workspace. All views must belong to the same workspace. Up to 1000 view IDs can be moved in a single request.\n\nThe operation is transactional. A single view ID that does not belong to the workspace fails the entire request before any view is moved.",
         "operationId": "moveViewsToFolder",
         "security": [
           {
@@ -2491,21 +2491,21 @@
               {
                 "name": "7144",
                 "description": "The specified destination folder does not exist.",
-                "resolution": "Verify the folderId value using the Get Folder List API."
+                "resolution": "Verify the folderId using the Get Folder List API."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this operation.",
-                "resolution": "Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Folder permission on the workspace."
               },
               {
                 "name": "7319",
-                "description": "One or more of the specified view IDs do not belong to the specified workspace.",
-                "resolution": "Ensure that all the values in viewIds belong to the workspace identified by the workspace-id in the request URL."
+                "description": "One or more view IDs do not belong to the specified workspace.",
+                "resolution": "Ensure all view IDs in viewIds belong to the workspace identified by <workspace-id>."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {

@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Slide URL
-description: Returns the URL through which the specified slideshow can be accessed.
+description: Builds and returns the presentation URL for an existing slideshow.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish"
 tags:
   - zoho-analytics
@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -58,10 +58,6 @@ status: stable
 **GET `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish`** - Get Slide URL (Slideshow Management / Share & Publish).
 
 Builds and returns the presentation URL for an existing slideshow. The rendering options sent in CONFIG are not stored — they are baked into the query string of the URL that comes back, so different callers can obtain differently configured URLs for the same slideshow.
-
-From the OpenAPI specification:
-
-Returns the URL through which the specified slideshow can be accessed. The rendering options sent in the config - the title, description, social widgets, autoplay, and the switching interval - are carried in the query string of the returned URL.
 
 # Endpoint
 

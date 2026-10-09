@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: endpoint-doc
     resource: "/domains/views-management/trash-management/restore-trash-view.md"
     title: Endpoint reference - Restore Trash View
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

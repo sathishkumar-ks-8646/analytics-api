@@ -38,10 +38,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -119,21 +119,21 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | Code | HTTP | Meaning |
 |---|---|---|
 | [7107](../../../foundations/error-codes.md#error-7107) | 400 | The specified column does not exist in the table. |
-| [7112](../../../foundations/error-codes.md#error-7112) | 400 | The formula expression could not be parsed because of a syntax error. |
-| [7113](../../../foundations/error-codes.md#error-7113) | 400 | The expression refers to an unknown or unsupported function. |
-| [7115](../../../foundations/error-codes.md#error-7115) | 400 | The expression refers to a column that does not exist in the view. |
-| [7116](../../../foundations/error-codes.md#error-7116) | 400 | The formula is invalid. |
-| [7160](../../../foundations/error-codes.md#error-7160) | 400 | Formula columns are not allowed for this combination of user and view. |
-| [7180](../../../foundations/error-codes.md#error-7180) | 400 | The formula creates a circular dependency. |
-| [7181](../../../foundations/error-codes.md#error-7181) | 400 | The formula creates a circular dependency. |
-| [7277](../../../foundations/error-codes.md#error-7277) | 400 | The folder holds tables that have dependent child views, so the deletion is blocked. |
+| [7112](../../../foundations/error-codes.md#error-7112) | 400 | The formula expression could not be parsed (syntax error). |
+| [7113](../../../foundations/error-codes.md#error-7113) | 400 | The expression references an unknown/unsupported function. |
+| [7115](../../../foundations/error-codes.md#error-7115) | 400 | The expression references a column that does not exist, or the formula is otherwise invalid. |
+| [7116](../../../foundations/error-codes.md#error-7116) | 400 | The expression references a column that does not exist, or the formula is otherwise invalid. |
+| [7160](../../../foundations/error-codes.md#error-7160) | 400 | Formula columns are not allowed for this user/view combination. |
+| [7180](../../../foundations/error-codes.md#error-7180) | 400 | The formula creates a circular dependency (it references a formula that, directly or indirectly, references this one). |
+| [7181](../../../foundations/error-codes.md#error-7181) | 400 | The formula creates a circular dependency (it references a formula that, directly or indirectly, references this one). |
+| [7277](../../../foundations/error-codes.md#error-7277) | 400 | The folder contains tables that have dependent child views; deletion blocked. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7427](../../../foundations/error-codes.md#error-7427) | 400 | The specified formula ID is not a valid formula column on this view. |
-| [7467](../../../foundations/error-codes.md#error-7467) | 400 | Formula columns are not supported on pipeline tables. |
-| [8058](../../../foundations/error-codes.md#error-8058) | 400 | The organization ID provided in the ZANALYTICS-DEST-ORGID header does not exist. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A mandatory attribute is missing from the configuration. |
-| [15007](../../../foundations/error-codes.md#error-15007) | 400 | The copy is not allowed because the organisation of the destination workspace does not match that of the caller and no valid workspace key was supplied. |
+| [7427](../../../foundations/error-codes.md#error-7427) | 400 | The specified <formula-id> is not a valid formula column on this view. |
+| [7467](../../../foundations/error-codes.md#error-7467) | 400 | Formula columns are not supported on Pipeline Tables. |
+| [8058](../../../foundations/error-codes.md#error-8058) | 400 | The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
+| [15007](../../../foundations/error-codes.md#error-15007) | 400 | The copy operation is not allowed — the destination workspace's organisation does not match the caller's organisation, and no valid workspaceKey was supplied (or it does not match). |
 
 # Related
 

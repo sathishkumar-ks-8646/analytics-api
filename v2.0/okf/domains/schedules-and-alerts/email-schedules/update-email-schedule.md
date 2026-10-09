@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Update Email Schedule
-description: Update the configurations of the specified email schedule in the workspace.
+description: "Updates an existing schedule's name, run period, recipients, or email content."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}"
 tags:
   - zoho-analytics
@@ -51,10 +51,10 @@ sources:
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -63,10 +63,6 @@ status: stable
 **PUT `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}`** - Update Email Schedule (Email Schedules / Schedules & Alerts).
 
 Updates an existing schedule's name, run period, recipients, or email content. **Read [Schedule ID Lifecycle](overview.md#schedule-id-lifecycle) first** — this call can replace the schedule's ID.
-
-From the OpenAPI specification:
-
-Update the configurations of the specified email schedule in the workspace.
 
 # Endpoint
 

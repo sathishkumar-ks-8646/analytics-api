@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Delete Workspace
-description: "Permanently deletes the specified workspace along with all its contents, including the tables, views, dashboards, formulas, import configurations and sharing settings."
+description: "Permanently deletes the specified workspace and all of its contents — tables, views, dashboards, formulas, import configurations, and all sharing settings."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}"
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

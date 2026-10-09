@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Deployments For A Model
-description: "Returns the deployment details configured for an AutoML analysis model, including the input and output tables, the schedule status and the time at which the deployment last ran."
+description: "Returns the deployment configured for a model — its input and output tables, schedule outcome, and last run status."
 resource: "https://analyticsapi.zoho.com/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

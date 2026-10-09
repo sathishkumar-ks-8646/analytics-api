@@ -50,10 +50,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -151,24 +151,24 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 
 | Code | HTTP | Meaning |
 |---|---|---|
-| [7089](../../../foundations/error-codes.md#error-7089) | 400 | All the columns of the table cannot be hidden at the same time. |
-| [7092](../../../foundations/error-codes.md#error-7092) | 400 | A DDL lock is active on the table. |
+| [7089](../../../foundations/error-codes.md#error-7089) | 400 | (For hide) All columns cannot be hidden simultaneously. |
+| [7092](../../../foundations/error-codes.md#error-7092) | 400 | DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock in this workspace. |
 | [7107](../../../foundations/error-codes.md#error-7107) | 400 | The specified column does not exist in the table. |
-| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A view with the given viewName already exists in this workspace. |
-| [7125](../../../foundations/error-codes.md#error-7125) | 400 | The specified data type is not compatible with the configuration of the column. |
+| [7111](../../../foundations/error-codes.md#error-7111) | 400 | METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists. |
+| [7125](../../../foundations/error-codes.md#error-7125) | 400 | The specified data type is not compatible with the column's configuration. |
 | [7146](../../../foundations/error-codes.md#error-7146) | 400 | The DATATYPE value is not a recognised data type. |
 | [7157](../../../foundations/error-codes.md#error-7157) | 400 | A column with the same name already exists in the table. |
-| [7164](../../../foundations/error-codes.md#error-7164) | 400 | The table is a snapshot table and its columns cannot be renamed. |
-| [7277](../../../foundations/error-codes.md#error-7277) | 400 | The folder holds tables that have dependent child views, so the deletion is blocked. |
+| [7164](../../../foundations/error-codes.md#error-7164) | 400 | SYSTEMTABLEDATAMOD — System table data cannot be modified. |
+| [7277](../../../foundations/error-codes.md#error-7277) | 400 | The folder contains tables that have dependent child views; deletion blocked. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7397](../../../foundations/error-codes.md#error-7397) | 400 | The specified view is not a table. |
-| [7439](../../../foundations/error-codes.md#error-7439) | 400 | The specified view is not a table. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
-| [8173](../../../foundations/error-codes.md#error-8173) | 400 | The number of columns sent in bulk mode exceeds the allowed limit. |
-| [8179](../../../foundations/error-codes.md#error-8179) | 403 | The calling user is not an Account Admin, Organization Admin or Workspace Admin of the workspace. |
-| [8180](../../../foundations/error-codes.md#error-8180) | 403 | The calling user is a read-only user. Read-only users cannot change tag associations regardless of any other permission. |
-| [8182](../../../foundations/error-codes.md#error-8182) | 403 | resetSort and sortOrder cannot be used together. |
+| [7397](../../../foundations/error-codes.md#error-7397) | 400 | The view is not a table. |
+| [7439](../../../foundations/error-codes.md#error-7439) | 400 | The view is not a table. |
+| [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
+| [8173](../../../foundations/error-codes.md#error-8173) | 400 | The number of columns in bulk mode exceeds the allowed limit. |
+| [8179](../../../foundations/error-codes.md#error-8179) | 403 | DONTHAVEPERMISSIONTOCREATETAGS — The caller is not an Account Admin, Organization Admin, or Workspace Admin. |
+| [8180](../../../foundations/error-codes.md#error-8180) | 403 | DONTHAVEPERMISSIONTOASSOCIATEANDUNASSOCIATETAGS — The caller is a read-only user. |
+| [8182](../../../foundations/error-codes.md#error-8182) | 403 | resetSort: true and sortOrder cannot be used together. |
 
 # Related
 

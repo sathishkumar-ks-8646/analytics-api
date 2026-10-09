@@ -34,6 +34,86 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7092",
+            "description": "DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock on this table.",
+            "resolution": "Retry once the import has finished."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id>."
+          },
+          {
+            "name": "7137",
+            "description": "NOTATABLE — The target view is not a table.",
+            "resolution": "Target a table; reports, dashboards, and query tables cannot accept rows."
+          },
+          {
+            "name": "7164",
+            "description": "SYSTEMTABLEDATAMOD — System table data cannot be modified.",
+            "resolution": "System tables are managed by Zoho Analytics. Target a user-created table instead."
+          },
+          {
+            "name": "7165",
+            "description": "SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified.",
+            "resolution": "Target a non-snapshot table."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user cannot add rows to this view.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, View Owner, or has Add Row permission on the view."
+          },
+          {
+            "name": "7405",
+            "description": "DMLNOTALLOWED — Row modification is not allowed for this table.",
+            "resolution": "Use a table that permits DML."
+          },
+          {
+            "name": "7512",
+            "description": "INVALIDDATEFORMAT — A pattern in dateFormat / columnDateFormat could not be parsed.",
+            "resolution": "Supply a valid date pattern such as dd-MMM-yyyy."
+          },
+          {
+            "name": "7515",
+            "description": "UNKNOWNLOOKUPVALUE — A value for a lookup column does not exist in the parent table.",
+            "resolution": "Add the value to the parent table first, or send an existing one."
+          },
+          {
+            "name": "8016",
+            "description": "APINOCOLUMNPRESENT — None of the supplied column names matched a column in the table.",
+            "resolution": "Check the names via Get Columns."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or columns is missing.",
+            "resolution": "Send a CONFIG object containing columns."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.create."
+          },
+          {
+            "name": "101021",
+            "description": "NOTASTREAMTABLE — Row operations are not supported on a stream table.",
+            "resolution": "Target a non-stream table."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows'].post",
+      "update": {
+        "description": "Inserts a single row into a table."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows'].put.requestBody.content['application/x-www-form-urlencoded'].examples.updateMatching",
       "update": {
         "description": "Update matching rows"
@@ -76,6 +156,101 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows'].put.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7092",
+            "description": "DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock on this table.",
+            "resolution": "Retry once the import has finished."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id>."
+          },
+          {
+            "name": "7137",
+            "description": "NOTATABLE — The target view is not a table.",
+            "resolution": "Target a table."
+          },
+          {
+            "name": "7164",
+            "description": "SYSTEMTABLEDATAMOD — System table data cannot be modified.",
+            "resolution": "Target a user-created table instead."
+          },
+          {
+            "name": "7165",
+            "description": "SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified.",
+            "resolution": "Target a non-snapshot table."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user cannot update rows in this view, or lacks Add Row permission when addIfNotExist fires.",
+            "resolution": "Ensure the user has Update Row permission — and Add Row permission too if addIfNotExist is used."
+          },
+          {
+            "name": "7330",
+            "description": "UNKNOWNCOLUMNINFILTERCRITERIA — A column referenced in criteria does not exist in the table.",
+            "resolution": "Verify the column names in criteria via Get Columns."
+          },
+          {
+            "name": "7405",
+            "description": "DMLNOTALLOWED — Row modification is not allowed for this table.",
+            "resolution": "Use a table that permits DML."
+          },
+          {
+            "name": "7512",
+            "description": "INVALIDDATEFORMAT — A pattern in dateFormat / columnDateFormat could not be parsed.",
+            "resolution": "Supply a valid date pattern."
+          },
+          {
+            "name": "7515",
+            "description": "UNKNOWNLOOKUPVALUE — A value for a lookup column does not exist in the parent table.",
+            "resolution": "Send an existing lookup value."
+          },
+          {
+            "name": "8016",
+            "description": "APINOCOLUMNPRESENT — None of the supplied column names matched a column in the table.",
+            "resolution": "Check the names via Get Columns."
+          },
+          {
+            "name": "8062",
+            "description": "ADDROWREQUESTSTILLINPROGRESS — Another row-write request for this table is still being processed.",
+            "resolution": "Retry after the in-flight request completes."
+          },
+          {
+            "name": "8130",
+            "description": "INVALIDUPDATECRITERIACONFIGURATION — Both criteria and updateAllRows were sent, or neither was.",
+            "resolution": "Send exactly one of the two."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or columns is missing.",
+            "resolution": "Send a CONFIG object containing columns."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.update."
+          },
+          {
+            "name": "101021",
+            "description": "NOTASTREAMTABLE — Row operations are not supported on a stream table.",
+            "resolution": "Target a non-stream table."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows'].put",
+      "update": {
+        "description": "Updates the rows of a table that match a filter, or every row. Can optionally insert a row when nothing matches."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows'].delete.requestBody.content['application/x-www-form-urlencoded'].examples.deleteMatching",
       "update": {
         "description": "Delete matching rows"
@@ -100,6 +275,81 @@
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows'].delete.requestBody.content['application/x-www-form-urlencoded'].examples.deleteAll",
       "update": {
         "summary": "Deletes every row in the table. criteria must not be sent along with deleteAllRows."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows'].delete.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7092",
+            "description": "DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock on this table.",
+            "resolution": "Retry once the import has finished."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id>."
+          },
+          {
+            "name": "7137",
+            "description": "NOTATABLE — The target view is not a table.",
+            "resolution": "Target a table."
+          },
+          {
+            "name": "7164",
+            "description": "SYSTEMTABLEDATAMOD — System table data cannot be modified.",
+            "resolution": "Target a user-created table instead."
+          },
+          {
+            "name": "7165",
+            "description": "SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified.",
+            "resolution": "Target a non-snapshot table."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user cannot delete rows from this view.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, View Owner, or has Delete All Rows permission on the view."
+          },
+          {
+            "name": "7330",
+            "description": "UNKNOWNCOLUMNINFILTERCRITERIA — A column referenced in criteria does not exist in the table.",
+            "resolution": "Verify the column names in criteria via Get Columns."
+          },
+          {
+            "name": "7405",
+            "description": "DMLNOTALLOWED — Row modification is not allowed for this table.",
+            "resolution": "Use a table that permits DML."
+          },
+          {
+            "name": "8062",
+            "description": "ADDROWREQUESTSTILLINPROGRESS — Another row-write request for this table is still being processed.",
+            "resolution": "Retry after the in-flight request completes."
+          },
+          {
+            "name": "8131",
+            "description": "INVALIDDELETECRITERIACONFIGURATION — Both criteria and deleteAllRows were sent, or neither was.",
+            "resolution": "Send exactly one of the two."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent.",
+            "resolution": "Send a CONFIG object containing criteria or deleteAllRows."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows'].delete",
+      "update": {
+        "description": "Deletes the rows of a table that match a filter, or every row."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -132,11 +382,111 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/data'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7092",
+            "description": "DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock in this workspace.",
+            "resolution": "Retry once the import has finished."
+          },
+          {
+            "name": "7111",
+            "description": "METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists in the workspace.",
+            "resolution": "Choose a different name, or import into the existing table with Import Data into an Existing Table (Synchronous)."
+          },
+          {
+            "name": "7208",
+            "description": "IMPORTFILENUMBEROFFIELDSEXCEEDSSIZE — A row contains more fields than the header defines.",
+            "resolution": "Correct the source data, or set the right delimiter."
+          },
+          {
+            "name": "7232",
+            "description": "IMPORTABORTED — A value could not be parsed and onError is ABORT. errorMessage carries the per-line detail.",
+            "resolution": "Fix the data, or resend with onError set to SKIPROW or SETCOLUMNEMPTY."
+          },
+          {
+            "name": "7248",
+            "description": "INVALIDFILECONTENT — The payload could not be parsed as the declared fileType.",
+            "resolution": "Check that fileType matches the actual content."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user cannot create tables in this workspace.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Table permission."
+          },
+          {
+            "name": "7478",
+            "description": "MORETHANMAXCOLUMN — The source has more columns than a table can hold.",
+            "resolution": "Reduce the columns, or use selectedColumns to import a subset."
+          },
+          {
+            "name": "7512",
+            "description": "INVALIDDATEFORMAT — A pattern in dateFormat / columnDateFormat could not be parsed.",
+            "resolution": "Supply a valid date pattern such as dd-MMM-yyyy."
+          },
+          {
+            "name": "8046",
+            "description": "INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source data.",
+            "resolution": "Match the names to the source's header row."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing; with autoIdentify: false this is usually delimiter or quoted.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set.",
+            "resolution": "The message names the attribute and the allowed values."
+          },
+          {
+            "name": "8139",
+            "description": "PASTEDDATALIMITEXCEEDED — The DATA parameter exceeds 10,000,000 characters.",
+            "resolution": "Send the payload as a FILE upload instead."
+          },
+          {
+            "name": "8148",
+            "description": "DECIMALANDTHOUSANDSEPARATORSAME — The thousand and decimal separators resolve to the same character.",
+            "resolution": "Choose different separators."
+          },
+          {
+            "name": "8149",
+            "description": "DECIMALANDTHOUSANDCOLUMNSEPARATORLEGNTHVALIDATION — A columnSeparators entry has fewer than two values.",
+            "resolution": "Send [thousandSeparator, decimalSeparator] for each column."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or a mandatory key is missing at the template level.",
+            "resolution": "Send a complete CONFIG object."
+          },
+          {
+            "name": "8516",
+            "description": "UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type.",
+            "resolution": "Check that booleans are booleans and integers are integers."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/data'].post",
       "update": {
         "x-zenesis-title": "Import Data into a New Table"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/data'].post",
+      "update": {
+        "description": "Creates a new table in the workspace from the uploaded data and returns the new table's ID along with the import result."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/data'].post",
@@ -181,11 +531,131 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7092",
+            "description": "DDLLOCKSINCEIMPORTINPROGRESS — Another import is holding a DDL lock on this table.",
+            "resolution": "Retry once it has finished."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id>."
+          },
+          {
+            "name": "7107",
+            "description": "METAOBJECTNOTPRESENT — A column named in matchingColumns is not present in the table.",
+            "resolution": "Verify the names via Get Columns."
+          },
+          {
+            "name": "7164",
+            "description": "SYSTEMTABLEDATAMOD — System table data cannot be modified.",
+            "resolution": "Target a user-created table instead."
+          },
+          {
+            "name": "7165",
+            "description": "SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified.",
+            "resolution": "Target a non-snapshot table."
+          },
+          {
+            "name": "7208",
+            "description": "IMPORTFILENUMBEROFFIELDSEXCEEDSSIZE — A row contains more fields than expected.",
+            "resolution": "Correct the source data or the delimiter."
+          },
+          {
+            "name": "7232",
+            "description": "IMPORTABORTED — A value could not be parsed and onError is ABORT.",
+            "resolution": "Fix the data, or resend with SKIPROW / SETCOLUMNEMPTY."
+          },
+          {
+            "name": "7248",
+            "description": "INVALIDFILECONTENT — The payload could not be parsed as the declared fileType.",
+            "resolution": "Check that fileType matches the content."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user lacks the import permission matching importType, or is outside the workspace's permitted IP range.",
+            "resolution": "Grant the specific import permission (see Permission Model), or use an importType the user is allowed."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The table does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "7478",
+            "description": "MORETHANMAXCOLUMN — The source has more columns than the table can hold.",
+            "resolution": "Reduce the columns, or use selectedColumns."
+          },
+          {
+            "name": "7512",
+            "description": "INVALIDDATEFORMAT — A date pattern could not be parsed.",
+            "resolution": "Supply a valid pattern."
+          },
+          {
+            "name": "8046",
+            "description": "INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source data.",
+            "resolution": "Match the names to the source's header row."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing — commonly matchingColumns for UPDATEADD, or delimiter/quoted when autoIdentify is false.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — importType, fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set.",
+            "resolution": "The message names the attribute and the allowed values."
+          },
+          {
+            "name": "8139",
+            "description": "PASTEDDATALIMITEXCEEDED — The DATA parameter exceeds 10,000,000 characters.",
+            "resolution": "Send the payload as a FILE upload instead."
+          },
+          {
+            "name": "8148",
+            "description": "DECIMALANDTHOUSANDSEPARATORSAME — The thousand and decimal separators are the same character.",
+            "resolution": "Choose different separators."
+          },
+          {
+            "name": "8149",
+            "description": "DECIMALANDTHOUSANDCOLUMNSEPARATORLEGNTHVALIDATION — A columnSeparators entry has fewer than two values.",
+            "resolution": "Send [thousandSeparator, decimalSeparator] per column."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or a mandatory key is missing.",
+            "resolution": "Send a complete CONFIG object."
+          },
+          {
+            "name": "8516",
+            "description": "UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type.",
+            "resolution": "Check booleans and integers are sent as such."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data'].post",
       "update": {
         "x-zenesis-title": "Import Data into an Existing Table"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data'].post",
+      "update": {
+        "description": "Loads the uploaded data into an existing table, appending, replacing, or merging according to importType."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data'].post",
@@ -314,11 +784,176 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id> with Get View List."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The caller lacks Export permission on the view, or the view does not belong to <workspace-id>.",
+            "resolution": "Ensure the caller is an Account Admin, Organization Admin, Workspace Admin, or View Owner, or holds Export permission on the view."
+          },
+          {
+            "name": "7327",
+            "description": "FILTERCRITERIAINVALID — criteria parsed but could not be converted into a query.",
+            "resolution": "Simplify the expression and check operator and value types."
+          },
+          {
+            "name": "7330",
+            "description": "UNKNOWNCOLUMNINFILTERCRITERIA — A column named in criteria does not exist in the view.",
+            "resolution": "Check the name against Get Columns."
+          },
+          {
+            "name": "7331",
+            "description": "FILTERCRITERIAPARSEERROR — criteria is syntactically malformed.",
+            "resolution": "Check quoting: double quotes around column names, single quotes around string literals."
+          },
+          {
+            "name": "7332",
+            "description": "UNKNOWNTABLEINFILTERCRITERIA — A table qualifier in criteria is not part of the view.",
+            "resolution": "Qualify columns only with tables the view actually uses."
+          },
+          {
+            "name": "7333",
+            "description": "INVALIDGROUPFUNCUSEINFILTERCRITERIA — An aggregate function was used in criteria.",
+            "resolution": "Remove sum, avg, count, and similar functions; filter on raw column values instead."
+          },
+          {
+            "name": "7543",
+            "description": "ONLYBASETABLECOLINTABULARFILTERCRITERIA — criteria on a tabular view referenced a column outside its base table.",
+            "resolution": "Filter using only the base table's own columns."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "7801",
+            "description": "MARGINVALUEEXCEEDS — A PDF margin is outside 0–1 inches.",
+            "resolution": "Send a value between 0 and 1."
+          },
+          {
+            "name": "7803",
+            "description": "INVALIDDIMENSION — width or height is outside the permitted image range.",
+            "resolution": "Use width 250–2000 and height 200–2000."
+          },
+          {
+            "name": "7806",
+            "description": "XLSCELLLIMITEXCEEDS — The XLS export exceeds the per-sheet cell limit.",
+            "resolution": "Narrow the export with criteria or selectedColumns, or export as CSV."
+          },
+          {
+            "name": "7807",
+            "description": "XLSCOLLIMITEXCEEDS — More than 256 columns were requested for an XLS export.",
+            "resolution": "Reduce the column count with selectedColumns, or export as CSV."
+          },
+          {
+            "name": "7808",
+            "description": "XLSCELLCHARLIMITEXCEEDS — A single cell exceeds 32,767 characters.",
+            "resolution": "Exclude the offending column, or export as CSV."
+          },
+          {
+            "name": "7809",
+            "description": "XLSNODATA — The XLS export produced no data.",
+            "resolution": "Widen or remove criteria."
+          },
+          {
+            "name": "7824",
+            "description": "EXPORTREQBLOCKED — Export has been blocked for this workspace.",
+            "resolution": "Contact Zoho Analytics support using the address in the error message."
+          },
+          {
+            "name": "7827",
+            "description": "EXPPDFRECORDLIMIT — The PDF exceeds 1,000,000 cells (visible columns × rows).",
+            "resolution": "Narrow the export with criteria or selectedColumns, or choose a non-paginated format."
+          },
+          {
+            "name": "7830",
+            "description": "EXPALLRECORDLIMIT — The exported payload exceeds 100 MB.",
+            "resolution": "Split the export with criteria, or use the asynchronous export."
+          },
+          {
+            "name": "8001",
+            "description": "INVALIDRESPFORMAT — responseFormat is not a supported value.",
+            "resolution": "Send one of csv, json, xml, xls, pdf, html, image."
+          },
+          {
+            "name": "8014",
+            "description": "APIIMAGERESPONSENOTPOSSIBLE — image was requested for a view that is not a chart.",
+            "resolution": "Export charts as images; use pdf or html for tables and reports."
+          },
+          {
+            "name": "8015",
+            "description": "APIEXPORTCOLUMNNOTPRESENT — A name in selectedColumns does not match any column in the view.",
+            "resolution": "Check the display names with Get Columns."
+          },
+          {
+            "name": "8017",
+            "description": "INVALIDIMAGEFORMAT — imageFormat is not png, jpg, or jpeg.",
+            "resolution": "Send one of the three supported values."
+          },
+          {
+            "name": "8088",
+            "description": "SECURITYCONTROLSFEATUREDISABLED — Export has been disabled for the organization by an administrator.",
+            "resolution": "Ask an Organization Admin to re-enable export in the organization's security controls."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — A numeric or enumerated attribute is outside its permitted set. The message names the attribute and the accepted values.",
+            "resolution": "Correct the value; see Appendix E."
+          },
+          {
+            "name": "8133",
+            "description": "SYNCEXPORTNOTALLOWED — The view is a dashboard, a query table, a live-connect view, or a table above the row limit.",
+            "resolution": "Use the asynchronous export API for this view."
+          },
+          {
+            "name": "8188",
+            "description": "EXPORTINVALIDPASSWORD — password is empty, blank, or shorter than 6 characters.",
+            "resolution": "Send a password of 6–256 characters."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false."
+          },
+          {
+            "name": "8507",
+            "description": "MORETHANMAXLENGTH — CONFIG exceeds 100,000 characters.",
+            "resolution": "Shorten criteria or selectedColumns."
+          },
+          {
+            "name": "8547",
+            "description": "ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries.",
+            "resolution": "Send between 1 and 300 column names, or omit the attribute."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.data.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data'].get",
       "update": {
         "x-zenesis-title": "Export Data from a View"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data'].get",
+      "update": {
+        "description": "Exports the data of a view and returns the generated file in the response body.\n\nNote: Export Data API is restricted for certain resources (given below). For these cases, use the Asynchronous Export APIs instead:\n\n  - Tables having more than one million rows.\n  - Tables and Views from live connect workspaces.\n  - Dashboard and QueryTable view types."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data'].get",
@@ -369,11 +1004,121 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7092",
+            "description": "DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock in this workspace.",
+            "resolution": "Retry once it has finished."
+          },
+          {
+            "name": "7111",
+            "description": "METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists.",
+            "resolution": "Choose a different name, or import into the existing table with Create Import Job for an Existing Table (Asynchronous)."
+          },
+          {
+            "name": "7203",
+            "description": "IMPORTFILEEMPTY — No file was uploaded, or the uploaded file is empty.",
+            "resolution": "Attach a non-empty FILE part."
+          },
+          {
+            "name": "7248",
+            "description": "INVALIDFILECONTENT — The file could not be parsed as the declared fileType.",
+            "resolution": "Check that fileType matches the actual content."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user cannot create tables in this workspace.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Table permission."
+          },
+          {
+            "name": "7478",
+            "description": "MORETHANMAXCOLUMN — The source has more columns than a table can hold.",
+            "resolution": "Reduce the columns, or use selectedColumns."
+          },
+          {
+            "name": "7512",
+            "description": "INVALIDDATEFORMAT — A date pattern could not be parsed.",
+            "resolution": "Supply a valid pattern such as dd-MMM-yyyy."
+          },
+          {
+            "name": "8046",
+            "description": "INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source.",
+            "resolution": "Match the names to the source's header row."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing; with autoIdentify: false this is usually delimiter, quoted, or commentChar.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set.",
+            "resolution": "The message names the attribute and allowed values."
+          },
+          {
+            "name": "8125",
+            "description": "CALLBACKURLNOTVALID — callbackUrl is not a well-formed URL.",
+            "resolution": "Supply a valid absolute http/https URL."
+          },
+          {
+            "name": "8126",
+            "description": "CALLBACKURLCONNECTIONERROR — The callback endpoint could not be reached.",
+            "resolution": "Ensure the endpoint is publicly reachable."
+          },
+          {
+            "name": "8127",
+            "description": "CALLBACKURLRESTRICTED — The callback URL resolves to a private or internal address.",
+            "resolution": "Use a publicly routable endpoint."
+          },
+          {
+            "name": "8134",
+            "description": "ASYNCIMPORTLIMITEXCEEDED — The organization already has the maximum number of import jobs in progress.",
+            "resolution": "Wait for a running job to finish and retry."
+          },
+          {
+            "name": "8148",
+            "description": "DECIMALANDTHOUSANDSEPARATORSAME — The thousand and decimal separators are the same character.",
+            "resolution": "Choose different separators."
+          },
+          {
+            "name": "8149",
+            "description": "DECIMALANDTHOUSANDCOLUMNSEPARATORLEGNTHVALIDATION — A columnSeparators entry has fewer than two values.",
+            "resolution": "Send [thousandSeparator, decimalSeparator] per column."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or a mandatory key is missing.",
+            "resolution": "Send a complete CONFIG object."
+          },
+          {
+            "name": "8516",
+            "description": "UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type.",
+            "resolution": "Check booleans and integers are sent as such."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data'].post",
       "update": {
         "x-zenesis-title": "Create Import Job for a New Table"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data'].post",
+      "update": {
+        "description": "Uploads a file, creates a new table from it, and returns a job ID for tracking. The table is created and populated in the background.\n\nWorkflow of Asynchronous Import API:\n\n1. Create Import Job:\n   - Initiate the import by calling the Create Import Job API.\n   - A unique JOBID will be returned in the response, which serves as the reference for tracking the import job.\n\n2. Check Job Status:\n   - Use the Get Import Job Details API to monitor the status of the import job.\n   - The JOBID must be used in the request to check the status periodically (e.g., every 10 seconds).\n   - The response will include a JOBCODE, which indicates the current state of the job.\n\nHandling Import Job Status Based on JOBCODE:\n  - If the JOBCODE is 1001 or 1002, wait for a few seconds and repeat the status check loop.\n  - If the JOBCODE is 1003, stop the status check and inspect the error message for details.\n  - If the JOBCODE is 1005, verify the validity of the JOBID and terminate the status check.\n  - If the JOBCODE is 1004, the job is complete, and the import summary will be returned.\n\nLimitations:\n  - The import job summary is retained only for one hour after job completion.\n  - A maximum of 5 simultaneous import jobs is allowed per organization.\n  - A maximum file size of 100 MB can be imported."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data'].post",
@@ -502,11 +1247,166 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The caller lacks Export permission on at least one table referenced by the query.",
+            "resolution": "Ensure the caller holds Export permission on every table in the statement."
+          },
+          {
+            "name": "7401",
+            "description": "The SQL statement is not a valid or allowed construct.",
+            "resolution": "Review the syntax; only SELECT statements over the workspace's own tables are accepted."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "7571",
+            "description": "UNKNOWNVIEWIDPASSED — A tableCriteriaList[].viewId does not exist in this workspace.",
+            "resolution": "Verify the IDs with Get View List."
+          },
+          {
+            "name": "7801",
+            "description": "MARGINVALUEEXCEEDS — A PDF margin is outside 0–1 inches.",
+            "resolution": "Send a value between 0 and 1."
+          },
+          {
+            "name": "7824",
+            "description": "EXPORTREQBLOCKED — Export has been blocked for this workspace.",
+            "resolution": "Contact Zoho Analytics support using the address in the error message."
+          },
+          {
+            "name": "7827",
+            "description": "EXPPDFRECORDLIMIT — The PDF exceeds 1,000,000 cells.",
+            "resolution": "Narrow the statement or use selectedColumns."
+          },
+          {
+            "name": "7835",
+            "description": "NOTABLESINVOLVEDINSQLEXPORT — The statement references no table.",
+            "resolution": "Query at least one table of the workspace."
+          },
+          {
+            "name": "7836",
+            "description": "GIVENTABLENOTINVOLVEDINSQLEXPORT — A tableCriteriaList[].viewId is not used by the statement.",
+            "resolution": "List only tables the query actually references."
+          },
+          {
+            "name": "7837",
+            "description": "INVOLVEDTABLEDOESNOTHAVEPERMISSION — A table used by the query has no matching tableCriteriaList entry where one is required.",
+            "resolution": "Supply a criteria entry for every participating table."
+          },
+          {
+            "name": "8001",
+            "description": "INVALIDRESPFORMAT — responseFormat is not a supported value.",
+            "resolution": "Send one of csv, json, xml, xls, pdf, html."
+          },
+          {
+            "name": "8014",
+            "description": "APIIMAGERESPONSENOTPOSSIBLE — image was requested.",
+            "resolution": "A query result cannot be rendered as an image; choose another format."
+          },
+          {
+            "name": "8015",
+            "description": "APIEXPORTCOLUMNNOTPRESENT — A name in selectedColumns is not in the result set.",
+            "resolution": "Match the names to the columns the statement projects."
+          },
+          {
+            "name": "8088",
+            "description": "SECURITYCONTROLSFEATUREDISABLED — Export is disabled for the organization.",
+            "resolution": "Ask an Organization Admin to re-enable export."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — A numeric or enumerated attribute is outside its permitted set.",
+            "resolution": "Correct the value; see Appendix E."
+          },
+          {
+            "name": "8125",
+            "description": "CALLBACKURLNOTVALID — callbackUrl is malformed.",
+            "resolution": "Send a well-formed absolute http/https URL."
+          },
+          {
+            "name": "8126",
+            "description": "CALLBACKURLCONNECTIONERROR — callbackUrl could not be reached during validation.",
+            "resolution": "Make the endpoint publicly reachable before creating the job."
+          },
+          {
+            "name": "8127",
+            "description": "CALLBACKURLRESTRICTED — callbackUrl resolves to a private or internal address.",
+            "resolution": "Use a publicly routable host."
+          },
+          {
+            "name": "8128",
+            "description": "INTERNALERRORONINITIATINGEXPORT — The job could not be queued.",
+            "resolution": "Retry; if it persists, contact support."
+          },
+          {
+            "name": "8132",
+            "description": "ASYNCEXPORTLIMITEXCEEDED — 5 export jobs are already queued or running for the organization.",
+            "resolution": "Wait for an in-flight job to finish, then retry."
+          },
+          {
+            "name": "8188",
+            "description": "EXPORTINVALIDPASSWORD — password is blank or shorter than 6 characters.",
+            "resolution": "Send 6–256 characters."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A source table carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false."
+          },
+          {
+            "name": "8077",
+            "description": "EMPTYJSONCONFIGURATION — CONFIG was not sent, or was sent empty.",
+            "resolution": "Send a CONFIG object containing at least sqlQuery."
+          },
+          {
+            "name": "8078",
+            "description": "EMPTYJSONATTRIBUTEFOUND — sqlQuery was sent but is blank.",
+            "resolution": "Send a non-empty SELECT statement."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing — sqlQuery on the request itself, or viewId / criteria inside a tableCriteriaList entry.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8507",
+            "description": "MORETHANMAXLENGTH — CONFIG exceeds 200,000 characters, or sqlQuery exceeds 100,000.",
+            "resolution": "Shorten the statement."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.data.read."
+          },
+          {
+            "name": "8547",
+            "description": "ARRAYSIZEOUTOFRANGE — tableCriteriaList exceeds 25 entries, or selectedColumns is empty or exceeds 300.",
+            "resolution": "Stay within the documented sizes."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data'].get",
       "update": {
         "x-zenesis-title": "Create Export Job using SQL Query"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data'].get",
+      "update": {
+        "description": "Creates an export job whose source is an ad-hoc SQL SELECT statement rather than a saved view.\n\nWorkflow:\n1. Create Export Job:\n  - Call the Create Export Job API.\n  - Receive a unique JOBID to track the export status.\n\n2. Check Export Job Status:\n  - Use the JOBID with the Get Export Job Details API.\n  - Poll every few seconds to get the current JOBCODE.\n\n   JOBCODEs and Meaning:\n   - 1001: JOB NOT INITIATED\n     → Export job acknowledged but not started. Retry after a short delay.\n   - 1002: JOB IN PROGRESS\n     → Export is currently being processed. Continue polling.\n   - 1003: ERROR OCCURRED\n     → An error occurred. Stop polling and investigate the error.\n   - 1004: JOB COMPLETED\n     → Export process completed. Proceed to download.\n   - 1005: JOB NOT FOUND\n     → Provided JOBID is invalid. Stop polling and verify the JOBID.\n\n3. Download Exported Data:\n  - Once JOBCODE is 1004, use the Download Exported Data API to download the exported file.\n\nLimitations:\n- Exported file will be available only for 1 hour after job completion.\n- Maximum 5 concurrent export jobs are allowed per organization."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data'].get",
@@ -551,11 +1451,141 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7092",
+            "description": "DDLLOCKSINCEIMPORTINPROGRESS — Another import is holding a DDL lock on this table.",
+            "resolution": "Retry once it has finished."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id>."
+          },
+          {
+            "name": "7107",
+            "description": "METAOBJECTNOTPRESENT — A column named in matchingColumns is not present in the table.",
+            "resolution": "Verify the names via Get Columns."
+          },
+          {
+            "name": "7164",
+            "description": "SYSTEMTABLEDATAMOD — System table data cannot be modified.",
+            "resolution": "Target a user-created table."
+          },
+          {
+            "name": "7165",
+            "description": "SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified.",
+            "resolution": "Target a non-snapshot table."
+          },
+          {
+            "name": "7203",
+            "description": "IMPORTFILEEMPTY — No file was uploaded, or it is empty.",
+            "resolution": "Attach a non-empty FILE part."
+          },
+          {
+            "name": "7248",
+            "description": "INVALIDFILECONTENT — The file could not be parsed as the declared fileType.",
+            "resolution": "Check that fileType matches the content."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user lacks the import permission matching importType, or is outside the workspace's permitted IP range.",
+            "resolution": "Grant the specific import permission, or use an importType the user is allowed."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The table does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "7478",
+            "description": "MORETHANMAXCOLUMN — The source has more columns than the table can hold.",
+            "resolution": "Reduce the columns, or use selectedColumns."
+          },
+          {
+            "name": "7512",
+            "description": "INVALIDDATEFORMAT — A date pattern could not be parsed.",
+            "resolution": "Supply a valid pattern."
+          },
+          {
+            "name": "8046",
+            "description": "INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source.",
+            "resolution": "Match the names to the source's header row."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing — commonly matchingColumns for UPDATEADD, or the CSV attributes when autoIdentify is false.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — importType, fileType, onError, or a parsing attribute is outside its permitted set.",
+            "resolution": "The message names the attribute and allowed values."
+          },
+          {
+            "name": "8125",
+            "description": "CALLBACKURLNOTVALID / CALLBACKURLCONNECTIONERROR / CALLBACKURLRESTRICTED — The callback URL is malformed, unreachable, or points at a private address.",
+            "resolution": "See The callbackUrl Attribute."
+          },
+          {
+            "name": "8126",
+            "description": "CALLBACKURLNOTVALID / CALLBACKURLCONNECTIONERROR / CALLBACKURLRESTRICTED — The callback URL is malformed, unreachable, or points at a private address.",
+            "resolution": "See The callbackUrl Attribute."
+          },
+          {
+            "name": "8127",
+            "description": "CALLBACKURLNOTVALID / CALLBACKURLCONNECTIONERROR / CALLBACKURLRESTRICTED — The callback URL is malformed, unreachable, or points at a private address.",
+            "resolution": "See The callbackUrl Attribute."
+          },
+          {
+            "name": "8134",
+            "description": "ASYNCIMPORTLIMITEXCEEDED — The maximum number of simultaneous import jobs is already in progress.",
+            "resolution": "Wait for a running job to finish."
+          },
+          {
+            "name": "8148",
+            "description": "Separator configuration errors.",
+            "resolution": "See Number Separator Values."
+          },
+          {
+            "name": "8149",
+            "description": "Separator configuration errors.",
+            "resolution": "See Number Separator Values."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or a mandatory key is missing.",
+            "resolution": "Send a complete CONFIG object."
+          },
+          {
+            "name": "8516",
+            "description": "UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type.",
+            "resolution": "Check booleans and integers."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data'].post",
       "update": {
         "x-zenesis-title": "Create Import Job for an Existing Table"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data'].post",
+      "update": {
+        "description": "Uploads a file and loads it into an existing table in the background, appending, replacing, or merging according to importType.\n\nWorkflow of Asynchronous Import API:\n\n1. Create Import Job:\n   - Initiate the import by calling the Create Import Job API.\n   - A unique JOBID will be returned in the response, which serves as the reference for tracking the import job.\n\n2. Check Job Status:\n   - Use the Get Import Job Details API to monitor the status of the import job.\n   - The JOBID must be used in the request to check the status periodically (e.g., every 10 seconds).\n   - The response will include a JOBCODE, which indicates the current state of the job.\n\nHandling Import Job Status Based on JOBCODE:\n  - If the JOBCODE is 1001 or 1002, wait for a few seconds and repeat the status check loop.\n  - If the JOBCODE is 1003, stop the status check and inspect the error message for details.\n  - If the JOBCODE is 1005, verify the validity of the JOBID and terminate the status check.\n  - If the JOBCODE is 1004, the job is complete, and the import summary will be returned.\n\nLimitations:\n  - The import job summary is retained only for one hour after job completion.\n  - A maximum of 5 simultaneous import jobs is allowed per organization.\n  - A maximum file size of 100 MB can be imported."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data'].post",
@@ -684,11 +1714,171 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id> with Get View List."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The caller lacks Export permission on the view, or the view does not belong to <workspace-id>.",
+            "resolution": "Ensure the caller is an Account Admin, Organization Admin, Workspace Admin, or View Owner, or holds Export permission on the view."
+          },
+          {
+            "name": "7327",
+            "description": "FILTERCRITERIAINVALID — criteria parsed but could not be converted into a query.",
+            "resolution": "Simplify the expression and check operator and value types."
+          },
+          {
+            "name": "7330",
+            "description": "UNKNOWNCOLUMNINFILTERCRITERIA — A column named in criteria does not exist in the view.",
+            "resolution": "Check the name against Get Columns."
+          },
+          {
+            "name": "7331",
+            "description": "FILTERCRITERIAPARSEERROR — criteria is syntactically malformed.",
+            "resolution": "Check quoting: double quotes around column names, single quotes around string literals."
+          },
+          {
+            "name": "7332",
+            "description": "UNKNOWNTABLEINFILTERCRITERIA — A table qualifier in criteria is not part of the view.",
+            "resolution": "Qualify columns only with tables the view uses."
+          },
+          {
+            "name": "7333",
+            "description": "INVALIDGROUPFUNCUSEINFILTERCRITERIA — An aggregate function was used in criteria.",
+            "resolution": "Filter on raw column values instead."
+          },
+          {
+            "name": "7543",
+            "description": "ONLYBASETABLECOLINTABULARFILTERCRITERIA — criteria on a tabular view referenced a column outside its base table.",
+            "resolution": "Filter using only the base table's own columns."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "7801",
+            "description": "MARGINVALUEEXCEEDS — A PDF margin is outside 0–1 inches.",
+            "resolution": "Send a value between 0 and 1."
+          },
+          {
+            "name": "7803",
+            "description": "INVALIDDIMENSION — width or height is outside the permitted image range.",
+            "resolution": "Use width 250–2000 and height 200–2000."
+          },
+          {
+            "name": "7824",
+            "description": "EXPORTREQBLOCKED — Export has been blocked for this workspace.",
+            "resolution": "Contact Zoho Analytics support using the address in the error message."
+          },
+          {
+            "name": "7827",
+            "description": "EXPPDFRECORDLIMIT — The PDF exceeds 1,000,000 cells.",
+            "resolution": "Narrow the export with criteria or selectedColumns."
+          },
+          {
+            "name": "8001",
+            "description": "INVALIDRESPFORMAT — responseFormat is not a supported value.",
+            "resolution": "Send one of csv, json, xml, xls, pdf, html, image."
+          },
+          {
+            "name": "8014",
+            "description": "APIIMAGERESPONSENOTPOSSIBLE — image was requested for a view that is not a chart.",
+            "resolution": "Export charts as images; use pdf or html otherwise."
+          },
+          {
+            "name": "8015",
+            "description": "APIEXPORTCOLUMNNOTPRESENT — A name in selectedColumns does not match any column in the view.",
+            "resolution": "Check the display names with Get Columns."
+          },
+          {
+            "name": "8017",
+            "description": "INVALIDIMAGEFORMAT — imageFormat is not png, jpg, or jpeg.",
+            "resolution": "Send one of the three supported values."
+          },
+          {
+            "name": "8088",
+            "description": "SECURITYCONTROLSFEATUREDISABLED — Export is disabled for the organization.",
+            "resolution": "Ask an Organization Admin to re-enable export."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — A numeric or enumerated attribute is outside its permitted set, or a dashboard was requested in a format other than PDF or HTML.",
+            "resolution": "Correct the value; see Appendix E."
+          },
+          {
+            "name": "8125",
+            "description": "CALLBACKURLNOTVALID — callbackUrl is malformed.",
+            "resolution": "Send a well-formed absolute http/https URL."
+          },
+          {
+            "name": "8126",
+            "description": "CALLBACKURLCONNECTIONERROR — callbackUrl could not be reached during validation.",
+            "resolution": "Make the endpoint publicly reachable before creating the job."
+          },
+          {
+            "name": "8127",
+            "description": "CALLBACKURLRESTRICTED — callbackUrl resolves to a private or internal address.",
+            "resolution": "Use a publicly routable host."
+          },
+          {
+            "name": "8128",
+            "description": "INTERNALERRORONINITIATINGEXPORT — The job could not be queued.",
+            "resolution": "Retry; if it persists, contact support."
+          },
+          {
+            "name": "8132",
+            "description": "ASYNCEXPORTLIMITEXCEEDED — 5 export jobs are already queued or running for the organization.",
+            "resolution": "Wait for an in-flight job to finish, then retry."
+          },
+          {
+            "name": "8188",
+            "description": "EXPORTINVALIDPASSWORD — password is blank or shorter than 6 characters.",
+            "resolution": "Send 6–256 characters."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false."
+          },
+          {
+            "name": "8507",
+            "description": "MORETHANMAXLENGTH — CONFIG exceeds 100,000 characters.",
+            "resolution": "Shorten criteria or selectedColumns."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.data.read."
+          },
+          {
+            "name": "8547",
+            "description": "ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries.",
+            "resolution": "Send between 1 and 300 column names, or omit the attribute."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data'].get",
       "update": {
         "x-zenesis-title": "Create Export Job using View ID"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data'].get",
+      "update": {
+        "description": "Creates an export job whose source is a saved view — including the view types the synchronous export refuses.\n\nWorkflow:\n1. Create Export Job:\n  - Call the Create Export Job API.\n  - Receive a unique JOBID to track the export status.\n\n2. Check Export Job Status:\n  - Use the JOBID with the Get Export Job Details API.\n  - Poll every few seconds to get the current JOBCODE.\n\n   JOBCODEs and Meaning:\n   - 1001: JOB NOT INITIATED\n     → Export job acknowledged but not started. Retry after a short delay.\n   - 1002: JOB IN PROGRESS\n     → Export is currently being processed. Continue polling.\n   - 1003: ERROR OCCURRED\n     → An error occurred. Stop polling and investigate the error.\n   - 1004: JOB COMPLETED\n     → Export process completed. Proceed to download.\n   - 1005: JOB NOT FOUND\n     → Provided JOBID is invalid. Stop polling and verify the JOBID.\n\n3. Download Exported Data:\n  - Once JOBCODE is 1004, use the Download Exported Data API to download the exported file.\n\nLimitations:\n- Exported file will be available only for 1 hour after job completion.\n- Maximum 5 concurrent export jobs are allowed per organization."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data'].get",
@@ -747,11 +1937,126 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data/batch'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7092",
+            "description": "DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock in this workspace.",
+            "resolution": "Retry once it has finished."
+          },
+          {
+            "name": "7111",
+            "description": "METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists.",
+            "resolution": "Choose a different name, or use Batch Import Data into Existing Table."
+          },
+          {
+            "name": "7203",
+            "description": "IMPORTFILEEMPTY — No file was uploaded for this batch, or it is empty.",
+            "resolution": "Attach a non-empty FILE part to every batch."
+          },
+          {
+            "name": "7248",
+            "description": "INVALIDFILECONTENT — The batch could not be parsed as CSV.",
+            "resolution": "Batch import accepts CSV only."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user cannot create tables in this workspace.",
+            "resolution": "Ensure the user has Create Table permission."
+          },
+          {
+            "name": "7336",
+            "description": "BATCHIMPORTLIMITEXCEEDED — More than 100 batches were sent for one job.",
+            "resolution": "Use larger batches so the job fits within the limit."
+          },
+          {
+            "name": "7337",
+            "description": "BATCHIMPORTLASTBATCHALREADYRECEIVED — A batch was sent after isLastBatch: true.",
+            "resolution": "Start a new job for additional data."
+          },
+          {
+            "name": "7338",
+            "description": "BATCHIMPORTINVALIDKEY — The batchKey is not recognised, or its job is no longer active.",
+            "resolution": "Use the batchKey returned by the first batch, and start a new job if it has expired."
+          },
+          {
+            "name": "7478",
+            "description": "MORETHANMAXCOLUMN — The source has more columns than a table can hold.",
+            "resolution": "Reduce the columns, or use selectedColumns on the first batch."
+          },
+          {
+            "name": "7512",
+            "description": "INVALIDDATEFORMAT — A date pattern could not be parsed.",
+            "resolution": "Supply a valid pattern on the first batch."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing; on the first batch this is usually tableName or autoIdentify.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — onError or a parsing attribute is outside its permitted set.",
+            "resolution": "The message names the attribute and allowed values."
+          },
+          {
+            "name": "8125",
+            "description": "Callback URL is malformed, unreachable, or private.",
+            "resolution": "See The callbackUrl Attribute."
+          },
+          {
+            "name": "8126",
+            "description": "Callback URL is malformed, unreachable, or private.",
+            "resolution": "See The callbackUrl Attribute."
+          },
+          {
+            "name": "8127",
+            "description": "Callback URL is malformed, unreachable, or private.",
+            "resolution": "See The callbackUrl Attribute."
+          },
+          {
+            "name": "8134",
+            "description": "ASYNCIMPORTLIMITEXCEEDED — The maximum number of simultaneous import jobs is in progress.",
+            "resolution": "Wait for a running job to finish, or close an abandoned batch job."
+          },
+          {
+            "name": "8148",
+            "description": "Separator configuration errors.",
+            "resolution": "See Number Separator Values."
+          },
+          {
+            "name": "8149",
+            "description": "Separator configuration errors.",
+            "resolution": "See Number Separator Values."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or batchKey is missing.",
+            "resolution": "Every batch must carry a CONFIG containing batchKey."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data/batch'].post",
       "update": {
         "x-zenesis-title": "Batch Import Data into New Table"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data/batch'].post",
+      "update": {
+        "description": "Creates a new table and loads it from several uploads, all belonging to one import job. Called once per batch.\n\n The Batch Import API allows you to upload large amounts of data in batches. A large data file is split into small batches, each batch not exceeding 100 MB, and imported using batch import. Alternatively, you can also use Zoho Analytics SDKs to simplify the batching process.\n\nTo import large amounts of data using Batch Import, follow the steps below:\n\n- Split the large CSV file into batches (each batch not exceeding 100MB) and upload the first batch using the Batch Import API's {\"batchKey\":\"start\"} attribute.\n- The server will generate a unique job ID and batch key for the import job and send them to the user in the response.\n- Use the received batch key to submit the subsequent batches to the Batch Import API.\n- Mark the end of the upload by adding {\"isLastBatch\":true} to the final batch.\n\nYou can check the import job status using the 'Get Import Job Details' API with the jobId received in the response.\n\nNotes:\n- After the first batch is imported, scheduled import of the remaining batches begins automatically.\n- For 'Append' and 'UpdateAdd' import types, each batch is committed individually.\n- For 'TruncateAdd', data is committed only after the final batch is uploaded.\n- Batch order is preserved throughout.\n- An import summary is stored upon job completion or failure."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/data/batch'].post",
@@ -810,11 +2115,146 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data/batch'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7092",
+            "description": "DDLLOCKSINCEIMPORTINPROGRESS — Another import holds a DDL lock on this table.",
+            "resolution": "Retry once it has finished."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id>."
+          },
+          {
+            "name": "7107",
+            "description": "METAOBJECTNOTPRESENT — A column named in matchingColumns is not present.",
+            "resolution": "Verify the names via Get Columns."
+          },
+          {
+            "name": "7164",
+            "description": "SYSTEMTABLEDATAMOD — System table data cannot be modified.",
+            "resolution": "Target a user-created table."
+          },
+          {
+            "name": "7165",
+            "description": "SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified.",
+            "resolution": "Target a non-snapshot table."
+          },
+          {
+            "name": "7203",
+            "description": "IMPORTFILEEMPTY — No file was uploaded for this batch, or it is empty.",
+            "resolution": "Attach a non-empty FILE part."
+          },
+          {
+            "name": "7248",
+            "description": "INVALIDFILECONTENT — The batch could not be parsed as CSV.",
+            "resolution": "Batch import accepts CSV only."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user lacks the import permission matching importType.",
+            "resolution": "Grant the specific import permission, or use a permitted importType."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The table does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "7336",
+            "description": "BATCHIMPORTLIMITEXCEEDED — More than 100 batches were sent for one job.",
+            "resolution": "Use larger batches."
+          },
+          {
+            "name": "7337",
+            "description": "BATCHIMPORTLASTBATCHALREADYRECEIVED — A batch was sent after isLastBatch: true.",
+            "resolution": "Start a new job for additional data."
+          },
+          {
+            "name": "7338",
+            "description": "BATCHIMPORTINVALIDKEY — The batchKey is not recognised or is no longer active.",
+            "resolution": "Use the key returned by the first batch."
+          },
+          {
+            "name": "7340",
+            "description": "BATCHIMPORTVIEWIDMISMATCH — The batchKey belongs to a different table.",
+            "resolution": "Send every batch of a job to the same <view-id>."
+          },
+          {
+            "name": "7512",
+            "description": "INVALIDDATEFORMAT — A date pattern could not be parsed.",
+            "resolution": "Supply a valid pattern on the first batch."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing; on the first batch this is usually importType, autoIdentify, or matchingColumns.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — importType, onError, or a parsing attribute is outside its permitted set.",
+            "resolution": "The message names the attribute and allowed values."
+          },
+          {
+            "name": "8125",
+            "description": "Callback URL is malformed, unreachable, or private.",
+            "resolution": "See The callbackUrl Attribute."
+          },
+          {
+            "name": "8126",
+            "description": "Callback URL is malformed, unreachable, or private.",
+            "resolution": "See The callbackUrl Attribute."
+          },
+          {
+            "name": "8127",
+            "description": "Callback URL is malformed, unreachable, or private.",
+            "resolution": "See The callbackUrl Attribute."
+          },
+          {
+            "name": "8134",
+            "description": "ASYNCIMPORTLIMITEXCEEDED — The maximum number of simultaneous import jobs is in progress.",
+            "resolution": "Wait for a running job to finish."
+          },
+          {
+            "name": "8148",
+            "description": "Separator configuration errors.",
+            "resolution": "See Number Separator Values."
+          },
+          {
+            "name": "8149",
+            "description": "Separator configuration errors.",
+            "resolution": "See Number Separator Values."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or batchKey is missing.",
+            "resolution": "Every batch must carry a CONFIG containing batchKey."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data/batch'].post",
       "update": {
         "x-zenesis-title": "Batch Import Data into Existing Table"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data/batch'].post",
+      "update": {
+        "description": "Loads an existing table from several uploads belonging to one import job. Called once per batch.\n\n The Batch Import API allows you to upload large amounts of data in batches. A large data file is split into small batches, each batch not exceeding 100 MB, and imported using batch import. Alternatively, you can also use Zoho Analytics SDKs to simplify the batching process.\n\nTo import large amounts of data using Batch Import, follow the steps below:\n\n- Split the large CSV file into batches (each batch not exceeding 100MB) and upload the first batch using the Batch Import API's {\"batchKey\":\"start\"} attribute.\n- The server will generate a unique job ID and batch key for the import job and send them to the user in the response.\n- Use the received batch key to submit the subsequent batches to the Batch Import API.\n- Mark the end of the upload by adding {\"isLastBatch\":true} to the final batch.\n\nYou can check the import job status using the 'Get Import Job Details' API with the jobId received in the response.\n\nNotes:\n- After the first batch is imported, scheduled import of the remaining batches begins automatically.\n- For 'Append' and 'UpdateAdd' import types, each batch is committed individually.\n- For 'TruncateAdd', data is committed only after the final batch is uploaded.\n- Batch order is preserved throughout.\n- An import summary is stored upon job completion or failure."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data/batch'].post",
@@ -831,6 +2271,34 @@
       "x-migration": "HTML restatement of `description`. Retire it."
     },
     {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/importjobs/{job-id}'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "8137",
+            "description": "IMPORTJOBNOTFOUND — No import job exists with this ID.",
+            "resolution": "Verify the jobId. Note that a job whose summary has expired is also reported as jobCode 1005."
+          },
+          {
+            "name": "8138",
+            "description": "IMPORTJOBACCESSDENIED — The job was created by a different user.",
+            "resolution": "Poll under the same account that created the job."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.data.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/importjobs/{job-id}'].get",
       "update": {
         "x-zenesis-title": "Get Import Job Details"
@@ -838,11 +2306,86 @@
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
     },
     {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/importjobs/{job-id}'].get",
+      "update": {
+        "description": "Returns the current state of an import job and, once it has finished, the full import summary. This is the monitoring API for all four import APIs above.\n\nJob codes returned in the response:\n  - 1001 - JOB NOT INITIATED: wait for a few seconds and repeat the status check.\n  - 1002 - JOB IN PROGRESS: wait for a few seconds and repeat the status check.\n  - 1003 - ERROR OCCURRED: stop the status check and inspect the error message for details.\n  - 1004 - JOB COMPLETED: the job is complete and the import summary is returned.\n  - 1005 - JOB NOT FOUND: verify the validity of the job ID and terminate the status check.\n\nNote: the import job summary is retained only for one hour after job completion."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "8120",
+            "description": "EXPORTJOBNOTFOUND — No export job exists for the given ID (HTTP 404).",
+            "resolution": "Verify the jobId returned by the create call, and that the job has not passed its 72-hour retention."
+          },
+          {
+            "name": "8124",
+            "description": "EXPORTJOBACCESSDENIED — The caller did not create this job (HTTP 403).",
+            "resolution": "Poll with the same user that created the job."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.data.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}'].get",
       "update": {
         "x-zenesis-title": "Get Export Job Details"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}'].get",
+      "update": {
+        "description": "Reports the progress of an export job, and once it has finished, where to collect the file."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}/data'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "8120",
+            "description": "EXPORTJOBNOTFOUND — No export job exists for the given ID, or it has passed its 72-hour retention (HTTP 404).",
+            "resolution": "Verify the jobId; if it has expired, create a new job."
+          },
+          {
+            "name": "8121",
+            "description": "EXPORTJOBNOTINITIATED — The job is queued but has not started (jobCode 1001).",
+            "resolution": "Poll Get Export Job Details until jobCode is 1004."
+          },
+          {
+            "name": "8122",
+            "description": "EXPORTJOBNOTCOMPLETED — The job is still running (jobCode 1002).",
+            "resolution": "Poll Get Export Job Details until jobCode is 1004."
+          },
+          {
+            "name": "8123",
+            "description": "EXPORTJOBERROROCCURRED — The job failed (jobCode 1003).",
+            "resolution": "Nothing to download. Create a new job; if the failure repeats, contact support."
+          },
+          {
+            "name": "8124",
+            "description": "EXPORTJOBACCESSDENIED — The caller did not create this job (HTTP 403).",
+            "resolution": "Download with the same user that created the job."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.data.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
     },
     {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}/data'].get",
@@ -854,7 +2397,7 @@
     {
       "target": "$.paths['/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}/data'].get",
       "update": {
-        "description": "Download the file produced by a completed asynchronous export job. The job must have reached jobCode 1004; calling earlier fails with 8121 (queued) or 8122 (running), and 8123 if the job failed. Only the user who created the job may download it."
+        "description": "Returns the exported file produced by a completed export job."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -887,11 +2430,79 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/importdetails'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id> with Get View List."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller is neither an admin nor the View Owner and lacks View Datasource or an import permission on the view.",
+            "resolution": "Call from the standard API host with the required permission."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/importdetails'].get",
       "update": {
         "x-zenesis-title": "Get Last Import Details"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/importdetails'].get",
+      "update": {
+        "description": "Reports what the most recent load into a table actually did — when it ran, whether it succeeded, and how many rows and columns landed."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/sync'].post.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id> with Get View List."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller is neither an admin nor the View Owner and lacks Sync Data permission.",
+            "resolution": "Call from the standard API host with the required permission."
+          },
+          {
+            "name": "8507",
+            "description": "MORETHANMAXLENGTH — CONFIG exceeds 3,000 characters, or a credential exceeds 1,000.",
+            "resolution": "Shorten the value."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.metadata.create."
+          },
+          {
+            "name": "18056",
+            "description": "NOSOURCEAVAILABLEFORTABLE — The table has no datasource behind it.",
+            "resolution": "Refetch only tables fed by a datasource; use the import APIs otherwise."
+          },
+          {
+            "name": "18072",
+            "description": "TABLESYNCINPROGRESS — A sync for this table is already running.",
+            "resolution": "Wait for it to finish, then retry."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/sync'].post.requestBody.content['application/x-www-form-urlencoded'].examples.refetchWithCredentials",
@@ -929,6 +2540,61 @@
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/sync'].post",
+      "update": {
+        "description": "Triggers an immediate pull for one table from whatever datasource sits behind it."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}/sync'].post.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller lacks Create Table and Sync Data permission on the workspace.",
+            "resolution": "Call from the standard API host with one of the two permissions."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8182",
+            "description": "SYNCCANNOTBEINITIATEDFORCONNECTORWITHMULTIPLESCHEDULES — The datasource has more than one sync interval and none was named.",
+            "resolution": "Send syncIntervalId; read the options from Get Datasources."
+          },
+          {
+            "name": "8183",
+            "description": "SCHEDULEIDNOTASSOCIATEDWITHCONNECTOR — The syncIntervalId does not belong to this datasource.",
+            "resolution": "Use a syncIntervalId listed under this datasource's syncIntervals."
+          },
+          {
+            "name": "8507",
+            "description": "MORETHANMAXLENGTH — CONFIG exceeds 3,000 characters, or a credential exceeds 1,000.",
+            "resolution": "Shorten the value."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.metadata.create."
+          },
+          {
+            "name": "18061",
+            "description": "CONNECTIONIDNOTASSOSIATEDFORWORKSPACE — The datasource ID does not exist in this workspace, or the source type cannot be synced this way (HTTP 404).",
+            "resolution": "Verify <datasource-id> with Get Datasources."
+          },
+          {
+            "name": "18073",
+            "description": "DATASOURCESYNCINPROGRESS — A sync for this datasource is already running.",
+            "resolution": "Wait for the running sync to finish."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}/sync'].post.requestBody.content['application/x-www-form-urlencoded'].examples.syncWithCredentials",
       "update": {
         "description": "Sync with credentials"
@@ -964,6 +2630,13 @@
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}/sync'].post",
+      "update": {
+        "description": "Triggers an immediate pull for a whole datasource — every table it feeds."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}'].put.requestBody.content['application/x-www-form-urlencoded'].examples.updateCredentials",
       "update": {
         "description": "Update credentials"
@@ -992,11 +2665,91 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}'].put.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller lacks Create Table and Edit Datasource permission on the workspace.",
+            "resolution": "Call from the standard API host with one of the two permissions."
+          },
+          {
+            "name": "8077",
+            "description": "EMPTYJSONCONFIGURATION — CONFIG was not sent, or was sent empty.",
+            "resolution": "Send a CONFIG object with at least serviceName, hostName, and userName."
+          },
+          {
+            "name": "8078",
+            "description": "EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent blank.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing — usually databaseType for a service that supports several engines.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG is missing entirely.",
+            "resolution": "Send the CONFIG object."
+          },
+          {
+            "name": "8507",
+            "description": "MORETHANMAXLENGTH — An attribute exceeds its length limit.",
+            "resolution": "See Limitations."
+          },
+          {
+            "name": "8509",
+            "description": "PATTERNNOTMATCHED — serviceName or databaseType is not one of the accepted values.",
+            "resolution": "Send a value from serviceName values."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.metadata.update."
+          },
+          {
+            "name": "18055",
+            "description": "DBTYPESERVICENAMENOTMACHED — The databaseType is not available for the given serviceName.",
+            "resolution": "Pick an engine the service actually offers."
+          },
+          {
+            "name": "18057",
+            "description": "INVALIDCLOUDSERVICENAME — serviceName is not a recognised service.",
+            "resolution": "Send a value from serviceName values."
+          },
+          {
+            "name": "18061",
+            "description": "CONNECTIONIDNOTASSOSIATEDFORWORKSPACE — The datasource ID does not exist in this workspace, or is not a database connection (HTTP 404).",
+            "resolution": "Verify <datasource-id> with Get Datasources."
+          },
+          {
+            "name": "18063",
+            "description": "DBTYPECANNOTBEUPDATEDFORLIVECONNECTDB — databaseType differs from the stored one on a Live Connect database.",
+            "resolution": "Resend the existing databaseType."
+          },
+          {
+            "name": "18064",
+            "description": "SERVICENAMECANNOTBEUPDATEDFORLIVECONNECTDB — serviceName differs from the stored one on a Live Connect database.",
+            "resolution": "Resend the existing serviceName."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}'].put",
       "update": {
         "x-zenesis-title": "Update Datasource Connection"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}'].put",
+      "update": {
+        "description": "Updates the connection details of a database-style datasource — host, port, credentials, and the service-specific settings that go with them."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources'].get.responses['200'].content['application/json'].examples.singleInterval",
@@ -1027,11 +2780,36 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller lacks View Datasource and Create Table permission on the workspace.",
+            "resolution": "Call from the standard API host with one of the two permissions."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources'].get",
       "update": {
         "x-zenesis-title": "Get Datasources"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/datasources'].get",
+      "update": {
+        "description": "Lists every datasource in a workspace, the tables each one feeds, and the state of their last sync."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.components.schemas.ColumnDataType.properties.dataType",

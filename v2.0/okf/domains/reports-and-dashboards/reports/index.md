@@ -1,9 +1,9 @@
 # Reports (Analysis Views)
 
-* [Reports (Analysis Views)](overview.md) - APIs for creating, updating and reading the metadata of analysis views (charts, pivot tables and summary views) inside a workspace.
+* [Reports (Analysis Views)](overview.md) - APIs for creating a report (chart, pivot or summary view) on an existing table, reading the stored definition back, and rebuilding it.
 
 # Concepts
 
-* [Create Analysis View](create-report.md) - Creates a new analysis view - a chart, a pivot table or a summary view - in the specified workspace, based on a referenced base table.
-* [Get Report Metadata](get-report-metadata.md) - Retrieves the full configuration metadata of an existing analysis view - a chart, a pivot table or a summary view - in the specified workspace.
-* [Update Analysis View](update-report.md) - Resets and updates the configuration of an existing analysis view in the specified workspace.
+* [Create Report](create-report.md) - Builds a new chart, pivot or summary view on an existing table and returns its view ID.
+* [Read Report Metadata](get-report-metadata.md) - Returns the stored definition of a chart, pivot or summary view.
+* [Update Report](update-report.md) - Rebuilds an existing report from a fresh CONFIG.

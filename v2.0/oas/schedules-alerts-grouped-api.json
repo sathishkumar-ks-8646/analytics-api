@@ -21,7 +21,7 @@
       "post": {
         "operationId": "createEmailSchedule",
         "summary": "Create Email Schedule",
-        "description": "Create an email schedule in the specified workspace. The schedule emails the views listed in `viewIds`, in the requested `exportType`, to the configured recipients at the frequency defined in `scheduleDetails`.",
+        "description": "Creates a new recurring email schedule in the workspace and returns its ID.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — A view in viewIds does not exist. | Verify the IDs via Get View List. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, the user lacks Create Email Schedule permission, or lacks Export permission on a view in viewIds. | Call from the standard API host with the required permissions. |\n| 7319 | OBJIDNOTBELONGSTODB — A view in viewIds belongs to a different workspace. | Include only views from . |\n| 7832 | INVALIDEXPORTTYPE — exportType is not one of the supported formats. | Use CSV, XLS, PDF, HTML, or IMG. |\n| 8000 | DUPLICATESCHEDULE — A schedule with this scheduleName already exists in the workspace. | Choose a different name. |\n| 8001 | MAILCOUNTPERSCHEDEXCEED — Too many recipients for a single schedule. | Reduce the recipient list, or split it across schedules. |\n| 8009 | MAILMULTIVIEWMAXCOUNTEXCEEEDED — Too many views in one schedule. | Reduce viewIds, or split across schedules. |\n| 8030 | EMAILEXPORTDISABLEDINORG — Email export is disabled for this organization. | Ask the Organization Admin to enable export in Security Controls. |\n| 8031 | UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains. | Use trusted-domain addresses, or ask the Organization Admin to add the domain. |\n| 8032 | EMAILINGVIEWDISABLED — Emailing this view is disabled. | Check the view's and workspace's export settings. |\n| 8033 | MAILSCHSELECTATLEASTONEEMAILID — No recipient could be resolved from emailIds, groupIds, and cc. | Supply at least one address or a non-empty group. |\n| 8034 | ONLYONEDASHBOARDISALLOWEDPERSCH — More than one view scheduled where the first is a dashboard. | Schedule the dashboard on its own. |\n| 8035 | EXPORTFORMATSALLOWEDFORDASHBOARD — Dashboard scheduled with a format other than PDF/HTML. | Use PDF or HTML. |\n| 8036 | EXPORTFORMATSALLOWEDFORCHART — IMG requested for a view that is not a chart. | Use IMG only for chart views. |\n| 8037 | ONLYONEVIEWISALLOWEDFORXLS — XLS requested with more than one view. | Send exactly one view, or choose another format. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — A scheduleDetails value is out of range (e.g. hour outside 0–23, minute not a multiple of 5, weekDays outside 1–7, months outside 1–12, skipFrequency beyond the limit for the chosen frequency). | The error message names the attribute and its permitted range; correct the value. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "tags": [
           "Email Schedules"
         ],
@@ -70,7 +70,7 @@
                       "viewIds": [
                         "1234567890123"
                       ],
-                      "exportType": "csv",
+                      "exportType": "CSV",
                       "scheduleDetails": {
                         "calendarFrequency": "daily",
                         "hour": 9,
@@ -94,7 +94,7 @@
                         "1234567890123",
                         "1234567890456"
                       ],
-                      "exportType": "pdf",
+                      "exportType": "PDF",
                       "scheduleDetails": {
                         "calendarFrequency": "weekly",
                         "hour": 14,
@@ -135,7 +135,7 @@
                       "viewIds": [
                         "1234567890123"
                       ],
-                      "exportType": "img",
+                      "exportType": "IMG",
                       "scheduleDetails": {
                         "calendarFrequency": "monthly",
                         "hour": 8,
@@ -192,7 +192,7 @@
       "get": {
         "operationId": "getEmailSchedules",
         "summary": "Get Email Schedules",
-        "description": "Returns the list of email schedules available in the specified workspace.",
+        "description": "Returns every email schedule defined in the workspace, with its name, run period, enabled state, creator, and the views it delivers. This is the discovery call for <schedule-id>, which the other five APIs need.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain (where this API is disabled), or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host as an Account Admin, Organization Admin, Workspace Admin, or a user with Create Email Schedule permission. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Email Schedules"
         ],
@@ -283,7 +283,7 @@
       "post": {
         "operationId": "triggerEmailSchedule",
         "summary": "Trigger Email Schedule",
-        "description": "Trigger the specified email schedule instantly, without waiting for its configured run time.",
+        "description": "Runs a schedule immediately — the \"send now\" action. This sends real email to every configured recipient, using the schedule's stored configuration.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7106 | METAOBJECTNOTPRESENT — The schedule has no surviving views to send. | Recreate the schedule against existing views. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . | Re-resolve the current ID via Get Email Schedules. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or the caller may not act on it. | Verify the ID belongs to this workspace. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8030 | EMAILEXPORTDISABLEDINORG — Email export is disabled for this organization. | Ask the Organization Admin to enable export in Security Controls. |\n| 8032 | EMAILINGVIEWDISABLED — Emailing is disabled for a view in this schedule. | Check the view's and workspace's export settings. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "tags": [
           "Email Schedules"
         ],
@@ -320,7 +320,7 @@
       "put": {
         "operationId": "updateEmailSchedule",
         "summary": "Update Email Schedule",
-        "description": "Update the configurations of the specified email schedule in the workspace.",
+        "description": "Updates an existing schedule's name, run period, recipients, or email content. Read Schedule ID Lifecycle first — this call can replace the schedule's ID.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . Commonly a stale ID after an earlier update regenerated it. | Re-resolve the current ID via Get Email Schedules. |\n| 8000 | DUPLICATESCHEDULE — Another schedule in the workspace already uses the requested scheduleName. | Choose a different name. |\n| 8001 | MAILCOUNTPERSCHEDEXCEED — Too many recipients after the update. | Reduce the recipient list. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or a custom-role user attempted to edit a schedule they do not own. | Verify the ID belongs to this workspace; otherwise have the schedule's creator or an admin perform the update. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8031 | UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains. | Use trusted-domain addresses. |\n| 8033 | MAILSCHSELECTATLEASTONEEMAILID — The update would leave the schedule with no recipients. | Keep at least one address or non-empty group. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — A scheduleDetails value is out of range. | The error message names the attribute and its permitted range. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A delivered view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
         "tags": [
           "Email Schedules"
         ],
@@ -452,7 +452,7 @@
       "delete": {
         "operationId": "deleteEmailSchedule",
         "summary": "Delete Email Schedule",
-        "description": "Delete the specified email schedule in the workspace.",
+        "description": "Permanently deletes an email schedule. The views it delivered are unaffected; only the schedule and its pending runs are removed.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . | Nothing to delete; re-check via Get Email Schedules. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or a custom-role user attempted to delete a schedule they do not own. | Verify the ID belongs to this workspace; otherwise have the creator or an admin delete it. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "tags": [
           "Email Schedules"
         ],
@@ -491,7 +491,7 @@
       "put": {
         "operationId": "changeEmailScheduleStatus",
         "summary": "Change Email Schedule Status",
-        "description": "Modify the status of the specified email schedule. Use this API to activate a schedule that is currently deactivated, or to deactivate one without deleting it.",
+        "description": "Activates or deactivates a schedule without deleting it. A deactivated schedule keeps its configuration and ID but stops running automatically.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . | Re-resolve the current ID via Get Email Schedules. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or the caller may not act on it. | Verify the ID belongs to this workspace. |\n| 8003 | ALLSCHRUNERROR — The schedule could not be activated. | Check that the schedule's views still exist and that the organization is within its schedule quota. |\n| 8004 | ALLSCHPAUSEERROR — The schedule could not be deactivated. | Retry; if it persists, verify the schedule still exists. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — operation is neither activate nor deactivate. | Send exactly activate or deactivate. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
         "tags": [
           "Email Schedules"
         ],
@@ -668,18 +668,18 @@
             "type": "string",
             "description": "The type of export.",
             "enum": [
-              "csv",
-              "xls",
-              "img",
-              "pdf",
-              "html"
+              "CSV",
+              "XLS",
+              "IMG",
+              "PDF",
+              "HTML"
             ],
             "x-enumDescriptions": {
-              "csv": "CSV file",
-              "xls": "Excel file",
-              "img": "Image file",
-              "pdf": "PDF file",
-              "html": "HTML file"
+              "CSV": "CSV file",
+              "XLS": "Excel file",
+              "IMG": "Image file",
+              "PDF": "PDF file",
+              "HTML": "HTML file"
             }
           },
           "scheduleDetails": {
@@ -728,6 +728,98 @@
               true,
               false
             ]
+          },
+          "isBCC": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true (the default), the addresses in emailIds are placed in BCC so recipients cannot see one another. Set false to address them in the To line."
+          },
+          "emailAsInline": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, the exported content is rendered inline in the email body instead of being attached as a file. Meaningful for HTML exports."
+          },
+          "isNormalDbExp": {
+            "type": "boolean",
+            "default": false,
+            "description": "Dashboard export layout switch. When true, the dashboard is exported in the standard document layout rather than the widget-by-widget layout. Applies to dashboard schedules only."
+          },
+          "selectedTabs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "For a tabbed dashboard, restricts delivery to the listed tabs. 0–30 entries. Ignored for other view types."
+          },
+          "reportBurstConfig": {
+            "type": "object",
+            "description": "Turns the schedule into a report burst — one personalised email per row of a distribution-list table. See reportBurstConfig Fields.",
+            "properties": {
+              "zaTableId": {
+                "type": "integer",
+                "format": "int64",
+                "description": "ID of the table holding the distribution list (8040 if not found)."
+              },
+              "emailColumnId": {
+                "type": "integer",
+                "format": "int64",
+                "description": "ID of the column in that table containing the recipient email address (8041 if not found)."
+              },
+              "reports": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "1–15 report entries, each shaped as below."
+              },
+              "objId": {
+                "type": "integer",
+                "format": "int64",
+                "description": "ID of the view to include in the burst (8046 if not found)."
+              },
+              "exportFormat": {
+                "type": "string",
+                "description": "Export format for this report entry."
+              },
+              "deliveryMode": {
+                "type": "integer",
+                "description": "0 or 1 — how the report is delivered for this entry (8047 if out of range)."
+              },
+              "criteriaExpression": {
+                "type": "string",
+                "description": "Filter expression applied to this report per recipient. Max 65,535 characters."
+              },
+              "sortOrder": {
+                "type": "integer",
+                "description": "Position of this report within the email."
+              },
+              "filterColumns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "0–10 entries mapping distribution-list columns to report columns."
+              },
+              "criteriaColumnId": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Column in the distribution-list table supplying the filter value."
+              },
+              "targetColumnId": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Column in the report that the value filters (8045 if not found)."
+              }
+            },
+            "required": [
+              "zaTableId",
+              "emailColumnId",
+              "reports",
+              "objId",
+              "exportFormat",
+              "criteriaColumnId",
+              "targetColumnId"
+            ]
           }
         },
         "examples": [
@@ -736,7 +828,7 @@
             "viewIds": [
               "1234567890123"
             ],
-            "exportType": "csv",
+            "exportType": "CSV",
             "scheduleDetails": {
               "calendarFrequency": "daily",
               "hour": 9,
@@ -879,6 +971,11 @@
           },
           "months": {
             "$ref": "#/components/schemas/ScheduleMonths"
+          },
+          "skipFrequency": {
+            "type": "integer",
+            "default": 0,
+            "description": "How many periods to skip between runs — 0 means every period, 1 means every other, and so on. The permitted maximum depends on calendarFrequency: 0–6 for daily, 0–3 for weekly, 0–11 for monthly, 0–4 for yearly."
           }
         },
         "examples": [
@@ -1285,6 +1382,13 @@
           },
           "views": {
             "$ref": "#/components/schemas/ScheduleViews"
+          },
+          "selectedTabs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Replaces views when the schedule targets a tabbed dashboard — it then lists the delivered tab IDs instead. Exactly one of views or selectedTabs is present per entry, never both."
           }
         },
         "examples": [
@@ -1321,10 +1425,6 @@
         "type": "object",
         "title": "UpdateEmailScheduleConfig",
         "description": "JSONObject that holds the configuration to be applied to the existing email schedule.",
-        "required": [
-          "scheduleName",
-          "scheduleDetails"
-        ],
         "properties": {
           "scheduleName": {
             "type": "string",
@@ -1358,6 +1458,22 @@
               true,
               false
             ]
+          },
+          "isBCC": {
+            "type": "boolean",
+            "description": "Whether recipients are addressed via BCC."
+          },
+          "selectedTabs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "For tabbed dashboards, the tabs to deliver. 0–30 entries."
+          },
+          "reportBurstConfig": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Report-burst configuration. See reportBurstConfig Fields. Omitting it removes any existing burst configuration, converting the schedule back to a normal one — this is the one field where omission is not \"leave unchanged\"."
           }
         },
         "examples": [

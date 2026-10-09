@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -229,28 +229,28 @@ A create or update that would push the organization past its quota is rejected b
 |---|---|---|
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7106](../../../foundations/error-codes.md#error-7106) | 404 | The schedule has no surviving views to send. |
+| [7106](../../../foundations/error-codes.md#error-7106) | 404 | The report does not exist or has been deleted. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7812](../../../foundations/error-codes.md#error-7812) | 400 | No schedule exists with the given <schedule-id>. |
-| [7832](../../../foundations/error-codes.md#error-7832) | 400 | exportType is not one of the supported formats. |
-| [8000](../../../foundations/error-codes.md#error-8000) | 400 | A schedule with this scheduleName already exists in the workspace. |
-| [8001](../../../foundations/error-codes.md#error-8001) | 400 | responseFormat is not a supported value. |
-| [8002](../../../foundations/error-codes.md#error-8002) | 400 | The schedule is not in this workspace, or the caller may not act on it. |
-| [8003](../../../foundations/error-codes.md#error-8003) | 400 | The schedule could not be activated. |
-| [8004](../../../foundations/error-codes.md#error-8004) | 400 | The schedule could not be deactivated. |
-| [8005](../../../foundations/error-codes.md#error-8005) | 400 | The schedule does not belong to the specified workspace. |
-| [8009](../../../foundations/error-codes.md#error-8009) | 400 | Too many views in one schedule. |
-| [8030](../../../foundations/error-codes.md#error-8030) | 400 | Email export is disabled for this organization. |
-| [8031](../../../foundations/error-codes.md#error-8031) | 400 | A recipient address is outside the organization's trusted domains. |
-| [8032](../../../foundations/error-codes.md#error-8032) | 400 | The view is not currently shared with the specified user. |
-| [8033](../../../foundations/error-codes.md#error-8033) | 400 | No recipient could be resolved from emailIds, groupIds, and cc. |
-| [8034](../../../foundations/error-codes.md#error-8034) | 400 | More than one view scheduled where the first is a dashboard. |
-| [8035](../../../foundations/error-codes.md#error-8035) | 400 | Dashboard scheduled with a format other than PDF/HTML. |
-| [8036](../../../foundations/error-codes.md#error-8036) | 400 | IMG requested for a view that is not a chart. |
-| [8037](../../../foundations/error-codes.md#error-8037) | 400 | XLS requested with more than one view. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
-| [8241](../../../foundations/error-codes.md#error-8241) | 409 | The view carries a restricted DATAWARNING system tag. |
+| [7812](../../../foundations/error-codes.md#error-7812) | 400 | SCHEDULEDELETED — No schedule exists with the given <schedule-id>. |
+| [7832](../../../foundations/error-codes.md#error-7832) | 400 | INVALIDEXPORTTYPE — exportType is not one of the supported formats. |
+| [8000](../../../foundations/error-codes.md#error-8000) | 400 | DUPLICATESCHEDULE — A schedule with this scheduleName already exists in the workspace. |
+| [8001](../../../foundations/error-codes.md#error-8001) | 400 | INVALIDRESPFORMAT — responseFormat is not a supported value. |
+| [8002](../../../foundations/error-codes.md#error-8002) | 400 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or the caller may not act on it. |
+| [8003](../../../foundations/error-codes.md#error-8003) | 400 | ALLSCHRUNERROR — The schedule could not be activated. |
+| [8004](../../../foundations/error-codes.md#error-8004) | 400 | ALLSCHPAUSEERROR — The schedule could not be deactivated. |
+| [8005](../../../foundations/error-codes.md#error-8005) | 400 | SCHNOTINWS — The schedule does not belong to the specified workspace. |
+| [8009](../../../foundations/error-codes.md#error-8009) | 400 | MAILMULTIVIEWMAXCOUNTEXCEEEDED — Too many views in one schedule. |
+| [8030](../../../foundations/error-codes.md#error-8030) | 400 | EMAILEXPORTDISABLEDINORG — Email export is disabled for this organization. |
+| [8031](../../../foundations/error-codes.md#error-8031) | 400 | UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains. |
+| [8032](../../../foundations/error-codes.md#error-8032) | 400 | VIEWNOTSHARED — The view is not currently shared with the specified user. |
+| [8033](../../../foundations/error-codes.md#error-8033) | 400 | MAILSCHSELECTATLEASTONEEMAILID — No recipient could be resolved from emailIds, groupIds, and cc. |
+| [8034](../../../foundations/error-codes.md#error-8034) | 400 | ONLYONEDASHBOARDISALLOWEDPERSCH — More than one view scheduled where the first is a dashboard. |
+| [8035](../../../foundations/error-codes.md#error-8035) | 400 | EXPORTFORMATSALLOWEDFORDASHBOARD — Dashboard scheduled with a format other than PDF/HTML. |
+| [8036](../../../foundations/error-codes.md#error-8036) | 400 | EXPORTFORMATSALLOWEDFORCHART — IMG requested for a view that is not a chart. |
+| [8037](../../../foundations/error-codes.md#error-8037) | 400 | ONLYONEVIEWISALLOWEDFORXLS — XLS requested with more than one view. |
+| [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
+| [8241](../../../foundations/error-codes.md#error-8241) | 409 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 
 # Related

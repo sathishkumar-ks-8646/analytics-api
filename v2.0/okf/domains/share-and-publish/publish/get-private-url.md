@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Private URL
-description: Returns the private URL through which the specified view can be accessed.
+description: "Returns the existing Private URL of a view — the open-view URL with the view's secret 32-character private key appended."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink"
 tags:
   - zoho-analytics
@@ -48,10 +48,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -60,10 +60,6 @@ status: stable
 **GET `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink`** - Get Private URL (Publish / Share & Publish).
 
 Returns the existing **Private URL** of a view — the `open-view` URL with the view's secret 32-character private key appended. Read-only: it neither creates nor regenerates a key.
-
-From the OpenAPI specification:
-
-Returns the private URL through which the specified view can be accessed. A custom domain can be supplied so that the URL is returned with that domain address.
 
 # Endpoint
 

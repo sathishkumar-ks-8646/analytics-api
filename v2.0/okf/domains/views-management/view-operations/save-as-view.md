@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Save As View
-description: Creates a copy of an existing view - a table or an analysis view - within the same workspace.
+description: Creates a copy of an existing view (table or analysis view) within the same workspace.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/saveas"
 tags:
   - zoho-analytics
@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -61,7 +61,7 @@ Creates a copy of an existing view (table or analysis view) within the **same wo
 
 From the OpenAPI specification:
 
-Creates a copy of an existing view - a table or an analysis view - within the same workspace.
+Creates a copy of an existing view (table or analysis view) within the same workspace. The new view is independent of the original after creation — changes to one do not affect the other.
 
 The new view is independent of the original once created; later changes to one do not affect the other. For a table, `copyWithData`, `copyWithLookup` and `copyHugeData` control how much of the source is reproduced. For an analysis view those three attributes are ignored and only the view definition is copied.
 

@@ -4,5 +4,5 @@
 
 # Concepts
 
-* [Disable Workspace for Domain Access](disable-domain-workspace.md) - Removes the specified workspace from the White Label or Client Portal domain of the organization.
-* [Enable Workspace for Domain Access](enable-domain-workspace.md) - Enables the specified workspace for access through the White Label or Client Portal domain of the organization.
+* [Disable Workspace for Domain Access](disable-domain-workspace.md) - Removes the specified workspace from the organisation's White Label / Client Portal domain.
+* [Enable Workspace for Domain Access](enable-domain-workspace.md) - Enables the specified workspace for access through the organisation's White Label / Client Portal domain.

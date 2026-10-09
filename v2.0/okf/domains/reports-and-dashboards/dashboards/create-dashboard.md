@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create Dashboard
-description: Creates a new dashboard in the specified workspace.
+description: Creates a dashboard in the given workspace and returns its ID.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/dashboards"
 tags:
   - zoho-analytics
@@ -26,14 +26,39 @@ api:
   success_status: 200
   response_content_types:
     - application/json
-  permission_required: "The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or a Shared User, or a Group Member, or any user with Create Report permission on the workspace."
+  permission_required: "Workspace Admin / Organization Admin, or a shared or group user holding Create Report permission on the workspace. A Custom Role user must have the Create Report permission explicitly granted, otherwise the call is rejected before any validation runs."
+  rate_limit: "10 requests per user per 60 seconds; lockout 600 seconds on breach"
   error_codes:
     - 7103
     - 7111
     - 7301
-    - 8072
-    - 8119
+    - 7309
+    - 7479
+    - 7480
+    - 7481
+    - 7482
+    - 7483
+    - 7484
+    - 7485
+    - 7486
+    - 7487
+    - 7488
+    - 7491
+    - 7492
+    - 7493
+    - 7507
+    - 7510
+    - 7512
+    - 7513
+    - 7514
+    - 8027
+    - 8504
+    - 8509
+    - 8517
+    - 8534
     - 8535
+    - 8542
+    - 9001
   openapi:
     file: "/references/openapi/reports-dashboards-grouped-api.json"
     pointer: "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards/post"
@@ -45,10 +70,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -56,11 +81,13 @@ status: stable
 
 **POST `/restapi/v2/workspaces/{workspace-id}/dashboards`** - Create Dashboard (Dashboards / Reports & Dashboards).
 
+Creates a dashboard in the given workspace and returns its ID.
+
 From the OpenAPI specification:
 
-Creates a new dashboard in the specified workspace. The dashboard is defined through the CONFIG JSON parameter, which carries the display name, the layout card map and, optionally, the visual theme and the behaviour settings.
+Creates a dashboard in the given workspace and returns its ID.
 
-The authenticated user must be an Account Admin or an Organization Admin, or a Workspace Admin, or a Shared User, or a Group Member, or any user with Create Report permission on the workspace.
+Permission required: Workspace Admin / Organization Admin, or a shared or group user holding Create Report permission on the workspace. A Custom Role user must have the Create Report permission explicitly granted, otherwise the call is rejected before any validation runs.
 
 # Endpoint
 
@@ -72,11 +99,14 @@ The authenticated user must be an Account Admin or an Organization Admin, or a W
 | Base URL | `https://analyticsapi.zoho.com` (data-center specific, see [Data centers](../../../foundations/data-centers.md)) |
 | OAuth scope | [`ZohoAnalytics.modeling.create`](../../../foundations/oauth-scopes.md#zohoanalyticsmodelingcreate) |
 | ZANALYTICS-ORGID header | **Required** |
-| Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or a Shared User, or a Group Member, or any user with Create Report permission on the workspace. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
+| Permission required | Workspace Admin / Organization Admin, or a shared or group user holding Create Report permission on the workspace. A Custom Role user must have the Create Report permission explicitly granted, otherwise the call is rejected before any validation runs. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - **mandatory** |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 200 - `application/json` |
-| API ID | 2060 |
+| Rate limit | 10 requests per user per 60 seconds; lockout 600 seconds on breach. See [Rate limits](../../../foundations/rate-limits-and-quotas.md). |
+| Content-Type | `application/x-www-form-urlencoded` |
+| Custom domain | Permitted, but only when the target workspace is mapped to the calling white-label domain. A mismatch raises **7301**. |
+| Throttle | 10 requests per minute per user; 10-minute lock-out on breach. |
 | OpenAPI | [`reports-dashboards-grouped-api.json`](../../../references/openapi/reports-dashboards-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards/post`; CONFIG schema `CreateDashboardConfig`; response schema `CreateDashboardResponse` |
 
 # Request
@@ -97,120 +127,33 @@ The authenticated user must be an Account Admin or an Organization Admin, or a W
 
 ## CONFIG Parameter
 
-The `CONFIG` parameter is a JSON object sent as a form field. `displayName` and `layout` are required.
+`CONFIG` is a JSON object sent as a form-encoded body parameter. Maximum encoded size 5,000,000
+characters.
 
-| Field | Type | Mandatory | Description | Default |
-|-------|------|-----------|-------------|---------|
-| `displayName` | String | **Yes** | Display name of the new dashboard. Must be unique within the workspace. Max 100 characters. | — |
-| `description` | String | No | Optional text description for the dashboard. Max 250 characters. | `""` |
-| `layout` | JSON Object | **Yes** | Layout card map. Keys are sequential card index strings (`"1"`, `"2"`, …). Each value is a layout card object (see sub-table below). | — |
-| `layoutType` | Integer | No | Grid column preset applied at creation time: `1` = single column, `2` = two columns, `3` = three columns, `4` = four columns. Only meaningful when combined with a `layout` that uses the grid. | `0` (free form) |
-| `themes` | JSON Object | No | Visual theme configuration (see Themes Object below). | Default theme |
-| `settings` | JSON Object | No | Dashboard behaviour settings (see Settings Object below). | System defaults |
-
-### Layout Card Object
-
-Each entry in `layout` is keyed by its card index (e.g., `"1"`, `"2"`) and contains the following fields:
-
-| Field | Type | Mandatory | Description |
-|-------|------|-----------|-------------|
-| `type` | String | **Yes** | Card type. Allowed values: `VIEW`, `HTML`, `TITLE`, `PARA`, `IMAGE`, `EMBED`, `USERFILTERS`, `DELETED`. |
-| `width` | Integer | **Yes** | Card width in grid units. Combined with `left`, must not exceed `80`. |
-| `height` | Integer | **Yes** | Card height in grid units. Minimum varies by type (USERFILTERS: 3, HTML: 5, others: depends). |
-| `left` | Integer | **Yes** | Left offset in grid units (0–79). |
-| `top` | Integer | **Yes** | Top offset in grid units (0+). |
-| `viewName` | String | Yes (for `VIEW`) | Display name of the existing analysis view to embed. Required when `type` is `VIEW`. |
-| `content` | String | Yes (for HTML/IMAGE/EMBED/TITLE/PARA) | HTML markup, image URL, or embed URL depending on card type. |
-| `properties` | JSON Object | No | Additional card-level properties (e.g., interaction overrides). Optional for `VIEW` cards. |
-
-### Themes Object
-
-| Field | Type | Description | Allowed Values / Constraints |
-|-------|------|-------------|------------------------------|
-| `default` | String | Reset theme to built-in defaults. If set to `"true"`, all other theme fields are ignored. | `"true"`, `"unset"` |
-| `type` | String | Background fill style. | `solid`, `gradient`, `image` |
-| `layoutType` | Integer | Preset layout theme number (1–6). | `1`–`6` |
-| `solid` | Object | Solid background config. Contains `background` (hex color). | — |
-| `gradient` | Object | Gradient background (see Gradient Sub-Object below). | — |
-| `image` | Object | Image background (see Image Sub-Object below). | — |
-| `font` | Object | Global font settings. Contains `color` (hex), `family` (font name), `size` (7–24), `style` (`plain`, `bold`, `italic`). | — |
-| `card` | Object | Card-level styling (see Card Sub-Object below). | — |
-| `chartEffect` | Object | Chart animation effect. Contains `apply` (**mandatory**, `1`=none / `2`=apply) and `type` (`1`–`3`). | — |
-| `palette` | Object | Color palette for charts. Contains `chart.type` (palette name string). | — |
-
-**Gradient Sub-Object:**
-
-| Field | Type | Description | Allowed Values |
-|-------|------|-------------|----------------|
-| `background` | String | Fallback background color (hex). | Hex color |
-| `startColor` | String | Gradient start color (hex). | Hex color |
-| `endColor` | String | Gradient end color (hex). | Hex color |
-| `mode` | String | Gradient direction mode. | `linear`, `radial` |
-| `linear.angle` | Integer | Angle of the linear gradient in degrees (-270 to 270). | `-270`–`270` |
-| `radial.x` | Integer | Horizontal focal point of radial gradient (0–180). | `0`–`180` |
-| `radial.y` | Integer | Vertical focal point of radial gradient (0–180). | `0`–`180` |
-
-**Image Sub-Object:**
-
-| Field | Type | Description | Allowed Values |
-|-------|------|-------------|----------------|
-| `url` | String | URL of the background image. | Valid URL |
-| `background` | String | Fallback color behind the image (hex). | Hex color |
-| `brightness` | Integer | Brightness adjustment (-100 to 100). | `-100`–`100` |
-| `contrast` | Integer | Contrast adjustment (-100 to 100). | `-100`–`100` |
-| `transparency` | String | Transparency percentage as a string (`"0"`–`"100"`). | `"0"`–`"100"` |
-| `flip` | String | Whether to flip the image (`"true"` / `"false"`). | `"true"`, `"false"` |
-| `fitType` | String | Image fit strategy (`"1"` = cover, `"2"` = contain, `"3"` = stretch). | `"1"`, `"2"`, `"3"` |
-
-**Card Sub-Object:**
-
-| Field | Type | Description | Allowed Values |
-|-------|------|-------------|----------------|
-| `background` | String | Card background color (hex). | Hex color |
-| `opacity` | Float | Card background opacity (0.0–1.0). | `0.0`–`1.0` |
-| `blur` | Integer | Background blur radius (0–50). | `0`–`50` |
-| `radius` | Integer | Card corner radius (0–20). | `0`–`20` |
-| `margin` | Integer | Card outer margin (0–10). | `0`–`10` |
-| `shadow` | Integer | Card shadow style (1–3). | `1`–`3` |
-| `paletteType` | Integer | Card palette variant (`1` = themed, `2` = custom). | `1`, `2` |
-| `border` | Object | Card border. Contains `color` (hex) and `width` (string, `"0"`–`"5"`). | — |
-| `title` | Object | Card title font. Contains nested `font` object (`color`, `family`, `size`, `style`). | — |
-| `desc` | Object | Card description font. Contains nested `font` object (`color`, `family`, `size`, `style`). | — |
-
-### Settings Object
-
-| Field | Type | Description | Default |
-|-------|------|-------------|---------|
-| `enableGlobalUF` | String | Enable global user filter for all cards. | `"false"` |
-| `enableGlobalValueUF` | String | Enable global value-based user filter. | `"false"` |
-| `smartAlignCharts` | String | Auto-align charts to the grid. | `"true"` |
-| `allowExport` | Object | Controls which export formats are enabled. Contains boolean string fields: `csv`, `excel`, `html`, `image`, `pdf`, `zohoSheet`. | All `"true"` |
-| `showContextualOptions` | String | Show contextual chart options to viewers. | `"true"` |
-| `allowEmbedInsights` | String | Allow embedding AI insights in dashboards. | `"true"` |
-| `enableSortMenu` | String | Show sort options in viewer mode. | `"true"` |
-| `reportAsFilter` | String | Allow charts to act as filters for other charts. | `"false"` |
-| `hideColumnOptions` | String | Hide column-level options in viewer mode. | `"true"` |
-| `allowVUD` | String | Allow view/update/delete interactions. | `"true"` |
-| `allowInsights` | String | Enable AI-powered insights. | `"true"` |
-| `fitToWidth` | String | Stretch dashboard to fill browser width. | `"true"` |
-| `layoutType` | String | Layout width mode. | `"web"` |
-| `layoutWidth` | String | Custom layout width in pixels (only when `layoutType` is `custom_width`). | `"1279"` |
-| `allowDrillDown` | String | Enable drill-down on chart data points. | `"true"` |
-| `applyImmediateUF` | String | Apply user filter values immediately (without a submit button). | `"true"` |
-| `timeSlicer` | String | Enable time-slicer user filter component. | `"false"` |
-| `mapSync` | String | Sync map view across dashboard cards. | `"false"` |
-
-> **layoutType allowed values:** `web`, `custom_width`, `tabloid_1056`, `letter_816`, `a4_797`, `a3_1123`
+| Field | Type | Mandatory | Constraints | Description |
+|-------|------|-----------|-------------|-------------|
+| `displayName` | String | **Yes** | 1–100 characters; unique within the workspace | Name of the dashboard. |
+| `layout` | String | **Yes** | JSON-encoded string, max 1,000,000 characters | The card layout. See [The layout model](overview.md#the-layout-model). |
+| `description` | String | No | Max 250 characters | Free-text description. |
+| `themes` | JSONObject | No | Max 10,000 characters | Visual theme. See [Themes](#themes). Omitting it writes the default theme `{"default":"true","type":"2"}`. |
+| `settings` | JSONObject | No | Max 10,000 characters | Viewer behaviour flags. See [Settings](#settings). Omitting it writes the full default settings object. |
+| `layoutType` | Integer | No | 1–4 | Generate a 1/2/3/4-column layout instead of using the supplied geometry. See [Generated layouts](overview.md#generated-layouts-layouttype). |
 
 ## Notes from the OpenAPI specification
 
-This is a workspace-scoped API. The **ZANALYTICS-ORGID** header carrying the organization ID that owns the workspace is mandatory. A workspaceKey in the format **orgid/workspacename** (for example, 700000123456/Sales_Analytics) may be used in place of the numeric workspace ID in the URL path.
+This is a workspace-scoped API. The **ZANALYTICS-ORGID** header carrying the organization ID that owns the workspace is mandatory.
+
+Tabbed dashboards are out of scope: Read and Update reject a tabbed dashboard with **7511**.
 
 The CONFIG parameter must be sent as a URL encoded JSON string in a form field named **CONFIG**, with the content type **application/x-www-form-urlencoded**.
 
-A VIEW card identifies an analysis view by its display name in **viewName**, not by its ID. If the referenced view is renamed or deleted the card renders as broken, and when cloning across workspaces the **viewName** values must be updated to match views that exist in the target workspace.
+The **layout** attribute inside CONFIG is a JSON-encoded **string**, not a nested object: CONFIG={"displayName":"Sales Overview","layout":"{\"1\":{\"type\":\"VIEW\",\"viewName\":\"Sales Chart\",\"width\":80,\"height\":20,\"left\":0,\"top\":0}}"}. **themes** and **settings** are ordinary nested objects. Read Dashboard Metadata returns **layout** as a genuine object, so it must be re-serialised to a string before being written back.
 
-When **layoutType** is set to a grid preset (1 to 4), the server auto-injects a USERFILTERS card at position "1" and rearranges the view cards into columns, so the card indices that were sent may be renumbered. Omit **layoutType**, or set it to 0, for a free form layout, and call Get Dashboard Metadata afterwards to confirm the layout that was actually stored.
+A VIEW card identifies a report by its display name in **viewName**, matched case-insensitively. The view must exist in the workspace (8027) and be readable by the caller (7481). Two cards may reference the same view.
+
+When **layoutType** is 1 to 4 the supplied geometry is discarded and a 1/2/3/4-column layout is generated: a full-width USERFILTERS card, one HTML card per **content** value, then one VIEW card per distinct **viewName**. Omit **layoutType**, or send 0, to keep the layout as submitted. Auto-layout is not recorded in the read response.
+
+The CONFIG parameter has a maximum encoded size of 5,000,000 characters; the encoded **layout** string at most 1,000,000.
 
 # Response
 
@@ -220,46 +163,78 @@ HTTP `200` with content type `application/json`. JSON responses use the standard
 
 ## Notes from the OpenAPI specification
 
-**dashboardConfig.objId** in the metadata response, **data.dashboardId** in the Create Dashboard response and **viewId** in the listing APIs are the same value under three different field names. Any of them can be used as the dashboard ID in the URL path.
+**dashboardConfig.objId** in the metadata response, **data.dashboardId** in the Create Dashboard response and **viewId** in the listing APIs are the same value under three field names. Any of them can be used as the dashboard ID in the URL path.
 
 # Examples
 
 ## Sample Requests
 
-**Case 1 — Minimal dashboard with a single chart and default theme**
+**Case 1 — Minimal dashboard with one report**
 
 ```http
-POST /restapi/v2/workspaces/320873000000001001/dashboards HTTP/1.1
+POST /restapi/v2/workspaces/466206000000071000/dashboards HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 320873000000000001
+ZANALYTICS-ORGID: 700000123456
 Content-Type: application/x-www-form-urlencoded
 
-CONFIG={"displayName":"Sales Overview","description":"Monthly sales KPIs","layout":{"1":{"type":"VIEW","width":40,"height":20,"left":0,"top":0,"viewName":"Monthly_Sales_Chart","properties":{}},"2":{"type":"VIEW","width":40,"height":20,"left":40,"top":0,"viewName":"Sales_Pivot","properties":{}}}}
+CONFIG={"displayName":"Sales Overview","layout":"{\"1\":{\"type\":\"VIEW\",\"viewName\":\"Sales Chart\",\"width\":80,\"height\":20,\"left\":0,\"top\":0}}"}
 ```
 
-**Case 2 — Dashboard with gradient theme, card styling, and restricted export**
+**Case 2 — Filter panel, a heading and two side-by-side reports**
 
 ```http
-POST /restapi/v2/workspaces/320873000000001001/dashboards HTTP/1.1
+POST /restapi/v2/workspaces/466206000000071000/dashboards HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 320873000000000001
+ZANALYTICS-ORGID: 700000123456
 Content-Type: application/x-www-form-urlencoded
 
-CONFIG={"displayName":"Dashboard_Gradient_Linear_3","themes":{"layoutType":6,"type":"gradient","gradient":{"background":"#bf00ff","startColor":"#bf00ff","endColor":"#000000","mode":"linear","linear":{"angle":270}},"font":{"color":"#bf00ff","family":"arial"},"card":{"background":"#00ff00","opacity":0.2,"blur":5,"margin":10,"radius":5,"shadow":3,"paletteType":2},"chartEffect":{"apply":2,"type":1},"palette":{"chart":{"type":"SOLID__BUSINESS"}}},"settings":{"allowDrillDown":"true","smartAlignCharts":"true","reportAsFilter":"true","showContextualOptions":"false","allowExport":{"csv":"true"},"fitToWidth":"false","enableGlobalUF":"true","applyImmediateUF":"true"},"layout":{"1":{"type":"VIEW","width":40,"height":20,"left":0,"top":8,"viewName":"Chart2","properties":{}},"2":{"type":"USERFILTERS","width":80,"height":3,"left":0,"top":0}}}
+CONFIG={
+  "displayName": "Regional Performance",
+  "description": "Quarterly regional roll-up",
+  "layout": "{
+     \"1\": {\"type\":\"USERFILTERS\",\"width\":80,\"height\":3,\"left\":0,\"top\":0},
+     \"2\": {\"type\":\"TITLE\",\"width\":80,\"height\":3,\"left\":0,\"top\":3,\"content\":\"<b>Q3 Performance</b>\"},
+     \"3\": {\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":0,\"top\":6,\"viewName\":\"Sales by Region\"},
+     \"4\": {\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":40,\"top\":6,\"viewName\":\"Margin by Region\"}
+  }",
+  "settings": {"allowDrillDown":"true","fitToWidth":"true","reportAsFilter":"true","layoutType":"web"},
+  "themes": {
+    "layoutType": 2,
+    "type": "solid",
+    "solid": {"background": "#333542"},
+    "card": {"background":"#3E3F4D","border":{"color":"#6F738E","width":2},"title":{"border":{"color":"#6F738E"}}}
+  }
+}
 ```
 
-**Case 3 — Dashboard with image background, HTML card, and image card**
+**Case 3 — Let the server lay the cards out in two columns**
+
+Only the view names matter here; the geometry is replaced.
 
 ```http
-POST /restapi/v2/workspaces/320873000000001001/dashboards HTTP/1.1
+POST /restapi/v2/workspaces/466206000000071000/dashboards HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 320873000000000001
+ZANALYTICS-ORGID: 700000123456
 Content-Type: application/x-www-form-urlencoded
 
-CONFIG={"displayName":"Dashboard_Image_Theme_6","themes":{"layoutType":6,"type":"image","image":{"url":"https://example.com/bg.jpg","brightness":2,"flip":"true","transparency":"40","fitType":"2","contrast":5,"background":"#bf00ff"},"font":{"color":"#bf00ff","family":"arial"},"card":{"background":"#00ff00","opacity":0.2,"blur":5,"margin":10,"radius":5,"shadow":3,"paletteType":2},"chartEffect":{"apply":1},"palette":{"chart":{"type":"SOLID__BUSINESS"}}},"layout":{"1":{"type":"HTML","width":80,"height":5,"left":0,"top":0,"content":"<div><h2 style=\"font-family: Arial\">Dashboard Header</h2></div>"},"2":{"type":"IMAGE","width":40,"height":15,"left":0,"top":5,"content":"https://example.com/logo.png"},"3":{"type":"VIEW","width":40,"height":20,"left":40,"top":5,"viewName":"Pivot","properties":{}}}}
+CONFIG={"displayName":"Auto Layout","layoutType":2,"layout":"{\"1\":{\"type\":\"VIEW\",\"viewName\":\"Sales Chart\",\"width\":40,\"height\":20,\"left\":0,\"top\":0},\"2\":{\"type\":\"VIEW\",\"viewName\":\"Margin Chart\",\"width\":40,\"height\":20,\"left\":40,\"top\":0}}"}
+```
+
+**Case 4 — Gradient theme**
+
+```
+CONFIG={
+  "displayName": "Gradient Demo",
+  "layout": "{\"1\":{\"type\":\"VIEW\",\"viewName\":\"Sales Chart\",\"width\":80,\"height\":20,\"left\":0,\"top\":0}}",
+  "themes": {
+    "type": "gradient",
+    "gradient": {"background":"#1B1C28","startColor":"#2A2D3E","endColor":"#13141C","mode":"linear","linear":{"angle":135}},
+    "card": {"background":"#22242F","opacity":0.9,"blur":4}
+  }
+}
 ```
 
 ## Sample Responses
@@ -271,7 +246,7 @@ CONFIG={"displayName":"Dashboard_Image_Theme_6","themes":{"layoutType":6,"type":
   "status": "success",
   "summary": "Create dashboard",
   "data": {
-    "dashboardId": "320873000000597763",
+    "dashboardId": "466206000000106002",
     "displayName": "Sales Overview"
   }
 }
@@ -281,6 +256,109 @@ CONFIG={"displayName":"Dashboard_Image_Theme_6","themes":{"layoutType":6,"type":
 
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Create Dashboard](../../../sdk-examples/reports-and-dashboards/dashboards/create-dashboard.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
 
+# Notes & Behaviour
+
+## Settings
+
+Every flag below is optional. Boolean flags are stored as the strings `"true"` / `"false"`; the request
+schema declares them as booleans, so JSON `true` / `false` is the form to send and is what the read API
+returns as `"true"` / `"false"`.
+
+Supplying a partial `settings` object writes **only** those keys — it does not merge with the defaults,
+so unspecified flags fall back to whatever the dashboard renderer treats as unset rather than to the
+values in the Default column.
+
+| Field | Values | Default | Description |
+|-------|--------|---------|-------------|
+| `allowDrillDown` | `"true"` / `"false"` | `"true"` | Allow drill-down on chart data points. |
+| `hideColumnOptions` | `"true"` / `"false"` | `"true"` | Hide column-level options from viewers. |
+| `smartAlignCharts` | `"true"` / `"false"` | `"true"` | Auto-align chart elements across cards. |
+| `enableSortMenu` | `"true"` / `"false"` | `"true"` | Show the sort menu on embedded reports. |
+| `reportAsFilter` | `"true"` / `"false"` | `"false"` | Clicking a data point filters the other cards. |
+| `showContextualOptions` | `"true"` / `"false"` | `"true"` | Show contextual action menus on cards. |
+| `allowVUD` | `"true"` / `"false"` | `"true"` | Enable View Underlying Data on embedded reports. |
+| `allowInsights` | `"true"` / `"false"` | `"true"` | Enable Zia Insights on embedded reports. |
+| `allowEmbedInsights` | `"true"` / `"false"` | `"true"` | Enable Insights in embedded/published views. |
+| `fitToWidth` | `"true"` / `"false"` | `"true"` | Scale embedded reports to the card width. |
+| `enableGlobalUF` | `"true"` / `"false"` | `"false"` | Enable the global user filter. |
+| `enableGlobalValueUF` | `"true"` / `"false"` | *(unset)* | Enable value-based global user filters. |
+| `applyImmediateUF` | `"true"` / `"false"` | `"true"` | Apply user-filter changes without a confirm click. |
+| `timeSlicer` | `"true"` / `"false"` | `"false"` | Enable the time-slicer widget. |
+| `mapSync` | `"true"` / `"false"` | *(unset)* | Synchronise pan/zoom across map cards. |
+| `layoutType` | `web` \| `custom_width` \| `tabloid_1056` \| `letter_816` \| `a4_797` \| `a3_1123` | `"web"` | Target page layout. **`mobile` is not a valid value.** |
+| `layoutWidth` | String of 1–4 digits | `"1279"` | Fixed layout width in pixels. |
+| `allowExport` | JSONObject | `"true"` (all formats) | Per-format export control. Sub-keys `csv`, `excel`, `html`, `image`, `pdf`, `zohoSheet`, each `"true"` / `"false"`. Any sub-key you omit is stored as `"false"`. |
+| `allowAllExport` | `"true"` / `"false"` | — | Alias of `allowExport` used as a single master switch. |
+
+## Themes
+
+`themes` is a nested JSON object. Its shape is driven by `type`.
+
+**Mode A — default theme.** Send `{"default": "true"}` (or `"unset"`). When `default` is present,
+`type`, `solid`, `gradient`, `image`, `card`, `chartEffect` and `palette` must all be **absent**
+(**7493** otherwise).
+
+**Mode B — explicit theme.** `type` is mandatory and selects which sub-object is required:
+
+| `type` | Required in the type object | Required in `card` | Must be absent |
+|--------|-----------------------------|--------------------|----------------|
+| `solid` | `background` | `background` | `gradient`, `image` |
+| `gradient` | `background`, `startColor`, `endColor`, `mode` | `background`, `opacity`, `blur` | `solid`, `image` |
+| `image` | `url`, `background` | `background`, `opacity`, `blur` | `solid`, `gradient` |
+
+For `gradient`, exactly one of `linear` / `radial` must be present and it must match `mode` — supplying
+both, neither, or the one that does not match `mode` raises **7492** / **7493**.
+
+Accepted keys and their ranges:
+
+| Key | Type / range |
+|-----|--------------|
+| `default` | `"true"` \| `"unset"` |
+| `layoutType` | `1`–`6` |
+| `type` | `solid` \| `gradient` \| `image` |
+| `solid.background` | Colour |
+| `gradient.background`, `gradient.startColor`, `gradient.endColor` | Colour |
+| `gradient.mode` | `linear` \| `radial` |
+| `gradient.linear.angle` | `-270`–`270` |
+| `gradient.radial.x`, `gradient.radial.y` | `0`–`180` |
+| `image.url` | External URL |
+| `image.background` | Colour |
+| `image.brightness`, `image.contrast` | `-100`–`100` |
+| `image.transparency` | `0`–`100` |
+| `image.flip` | Boolean |
+| `image.fitType` | `1`–`3` |
+| `font.color` | Colour |
+| `font.family` | Letters, digits, spaces, apostrophes, hyphens; max 50 |
+| `font.size` | `7`–`24` |
+| `font.style` | `plain` \| `bold` \| `italic` |
+| `card.background` | Colour |
+| `card.opacity` | `0`–`1` decimal, e.g. `0.85` |
+| `card.blur` | `0`–`50` |
+| `card.radius` | `0`–`20` |
+| `card.margin` | `0`–`10` |
+| `card.shadow` | `1`–`3` |
+| `card.paletteType` | `1`–`6` |
+| `card.border.color` | Colour |
+| `card.border.width` | `0`–`5` |
+| `card.title.background` | Colour |
+| `card.title.border.color` | Colour |
+| `card.title.border.width` | `0`–`5` |
+| `card.title.font.{color,family,size,style}` | As `font.*` |
+| `card.desc.font.{color,family,size,style}` | As `font.*` |
+| `chartEffect.apply` | `1` \| `2` — **mandatory** when `chartEffect` is present |
+| `chartEffect.type` | `1`–`3` — forbidden when `apply` is `1` (**7513**), required when `apply` is `2` (**7514**) |
+
+> **Colour format.** Only `#RRGGBB` or `#RGB` is accepted (`^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$`).
+> 8-digit hex, `rgb()` and named colours are rejected with **8509**. A non-string colour value is
+> likewise rejected with **8509**.
+
+> **Border widths are not per-edge.** A single `card.border.width` (or `card.title.border.width`) is
+> written to the left, right, top and bottom edges simultaneously.
+
+> **`palette` is accepted but unsupported.** `themes.palette.*` passes schema validation and is written
+> to storage, but the conditional validation for it is disabled in the current build. Do not depend on
+> it.
+
 # Error Codes
 
 Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode` carries the code below. Full definitions are in the [Error code catalog](../../../foundations/error-codes.md).
@@ -288,12 +366,36 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | Code | HTTP | Reason | Solution |
 |---|---|---|---|
 | [7005](../../../foundations/error-codes.md#error-7005) | 500 | Unexpected error on the Zoho Analytics server while processing an otherwise valid request. Not caused by the request payload. | Retry after a short interval. If the error persists, contact Zoho Analytics support quoting the error code and the time of the request. |
-| [7103](../../../foundations/error-codes.md#error-7103) | 404 | Workspace not found. | Verify the `<workspace-id>` in the URL is correct and accessible to the user. |
-| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A dashboard with the same name already exists in the workspace. | Use a different `displayName` value. |
-| [7301](../../../foundations/error-codes.md#error-7301) | 403 | User does not have permission to create a dashboard. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, Shared User, Group Member, or has Create Report permission. |
-| [8072](../../../foundations/error-codes.md#error-8072) | 400 | The target object is not a valid dashboard. | Verify the request parameters and ensure the workspace supports dashboard creation. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | One or more CONFIG field values are invalid (e.g., invalid color, out-of-range number). | Review the CONFIG JSON and correct the invalid values. |
-| [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid OAuth token. | Provide a valid, non-expired OAuth token with the `ZohoAnalytics.modeling.create` scope. |
+| [7103](../../../foundations/error-codes.md#error-7103) | 404 | Workspace not found. | Verify `<workspace-id>`. |
+| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A dashboard with this `displayName` already exists in the workspace. | Choose a different name. |
+| [7301](../../../foundations/error-codes.md#error-7301) | 403 | The caller lacks Create Report permission on the workspace, or is calling from a white-label domain that is not mapped to this workspace. | Grant the permission, or call the standard data-centre domain. |
+| [7309](../../../foundations/error-codes.md#error-7309) | 400 | `Authorization` header absent. | Send `Authorization: Zoho-oauthtoken <token>`. |
+| [7479](../../../foundations/error-codes.md#error-7479) | 400 | A card is missing one or more of `type`, `width`, `height`, `left`, `top`. | Add the missing positional fields. |
+| [7480](../../../foundations/error-codes.md#error-7480) | 400 | Negative offset, `width`/`height` of 1 or less, or `left + width > 80`. | Keep every card inside the 80-unit grid. |
+| [7481](../../../foundations/error-codes.md#error-7481) | 400 | The referenced view exists but the caller cannot read it. | Have the view shared with the caller, or remove the card. |
+| [7482](../../../foundations/error-codes.md#error-7482) | 400 | Two cards overlap. | Reposition so no two rectangles intersect. |
+| [7483](../../../foundations/error-codes.md#error-7483) | 400 | A `HTML`, `TITLE`, `PARA`, `IMAGE` or `EMBED` card has absent, `null` or empty `content`. | Supply a non-empty `content` string. |
+| [7484](../../../foundations/error-codes.md#error-7484) | 400 | More than 100 cards in the layout. | Split the dashboard. |
+| [7485](../../../foundations/error-codes.md#error-7485) | 400 | Unrecognised card `type`. | Use one of the eight values in [Card types](overview.md#card-types). |
+| [7486](../../../foundations/error-codes.md#error-7486) | 400 | A positional field has the wrong JSON type. | `width`, `height`, `left`, `top` must be integers; `type` must be a string. |
+| [7487](../../../foundations/error-codes.md#error-7487) | 400 | `displayName` or `layout` is absent, `null` or empty. | Supply both. Remember `layout` is a JSON-encoded **string**. |
+| [7488](../../../foundations/error-codes.md#error-7488) | 400 | A `settings` or `themes` key has an empty or `null` value, or an unrecognised key reached the server. | Remove the key or give it a valid value. |
+| [7491](../../../foundations/error-codes.md#error-7491) | 400 | The sub-object required by `themes.type` is missing, or `card` is absent. | Add the required sub-object. |
+| [7492](../../../foundations/error-codes.md#error-7492) | 400 | A required field inside the type sub-object or inside `card` is missing. | See the required-fields table in [Themes](#themes). |
+| [7493](../../../foundations/error-codes.md#error-7493) | 400 | A sub-object belonging to a different theme type is present, or a forbidden key accompanies `default`. | Remove the conflicting key. |
+| [7507](../../../foundations/error-codes.md#error-7507) | 400 | `displayName` exceeds 100 characters, or `description` exceeds 250. | Shorten the value. |
+| [7510](../../../foundations/error-codes.md#error-7510) | 400 | `layout` is not parseable JSON, or a `themes` sub-object is `null`. | Validate the JSON you embed in the `layout` string; never send `null` for `card`, `solid`, `gradient` or `image`. |
+| [7512](../../../foundations/error-codes.md#error-7512) | 400 | A card is smaller than the minimum for its type. | See the min height/width columns in [Card types](overview.md#card-types). |
+| [7513](../../../foundations/error-codes.md#error-7513) | 400 | `chartEffect.type` supplied while `chartEffect.apply` is `1`. | Remove `type`, or set `apply` to `2`. |
+| [7514](../../../foundations/error-codes.md#error-7514) | 400 | `chartEffect.apply` is `2` but `chartEffect.type` is absent. | Supply `chartEffect.type`. |
+| [8027](../../../foundations/error-codes.md#error-8027) | 400 | One or more `VIEW` cards name a view that does not exist in this workspace, or `viewName` is absent / `null` / non-string. | Check the view display names. Matching is case-insensitive but the view must exist. |
+| [8504](../../../foundations/error-codes.md#error-8504) | 400 | The `CONFIG` parameter is missing from the request body. | Send `CONFIG` as a form-encoded parameter. |
+| [8509](../../../foundations/error-codes.md#error-8509) | 400 | An enumerated or pattern-constrained value does not match — a malformed colour, an out-of-range number, `layoutType` outside 1–4, a non-string colour. | Check the ranges in [Themes](#themes) and [Settings](#settings). |
+| [8517](../../../foundations/error-codes.md#error-8517) | 400 | A value has the wrong JSON data type for its schema declaration. | Match the declared types. |
+| [8534](../../../foundations/error-codes.md#error-8534) | 400 | A theme sub-object was supplied as an array, or `CONFIG` is malformed JSON. | Use `{}` for objects. |
+| [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid or expired OAuth token. | Refresh the token with scope `ZohoAnalytics.modeling.create`. |
+| [8542](../../../foundations/error-codes.md#error-8542) | 400 | An unknown key is present in `CONFIG`. | Only `displayName`, `description`, `layout`, `themes`, `settings`, `layoutType` are accepted. |
+| [9001](../../../foundations/error-codes.md#error-9001) | 400 | Every card in the layout is a `USERFILTERS` card. | Add at least one content-bearing card. |
 
 # Related
 
@@ -301,5 +403,5 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Reports & Dashboards](../overview.md) - the parent API domain.
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
-- Other endpoints in this group: [Get All Dashboards](get-dashboards.md), [Get Owned Dashboards](get-owned-dashboards.md), [Get Shared Dashboards](get-shared-dashboards.md), [Get Dashboard Metadata](get-dashboard-metadata.md), [Update Dashboard](update-dashboard.md).
+- Other endpoints in this group: [Read Dashboard Metadata](get-dashboard-metadata.md), [Update Dashboard](update-dashboard.md), [Get All Dashboards](get-dashboards.md), [Get Owned Dashboards](get-owned-dashboards.md), [Get Shared Dashboards](get-shared-dashboards.md).
 - [SDK examples](../../../sdk-examples/reports-and-dashboards/dashboards/create-dashboard.md).

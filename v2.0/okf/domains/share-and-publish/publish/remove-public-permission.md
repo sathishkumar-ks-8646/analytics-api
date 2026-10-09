@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Remove Public Permission
-description: Removes the public access granted on the specified view.
+description: "Un-publishes the view's Public URL, revoking access for all public visitors."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public"
 tags:
   - zoho-analytics
@@ -44,10 +44,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -58,10 +58,6 @@ status: stable
 Un-publishes the view's **Public URL**, revoking access for all public visitors. The private link (if any) and the publish configuration are left untouched.
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
-
-From the OpenAPI specification:
-
-Removes the public access granted on the specified view. Once removed, the public URL generated for the view no longer resolves.
 
 # Endpoint
 

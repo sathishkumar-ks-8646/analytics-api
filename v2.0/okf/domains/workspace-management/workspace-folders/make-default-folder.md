@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Make Default Folder
-description: Sets the specified folder as the default folder of the workspace.
+description: Sets the specified folder as the default folder for the workspace.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/default"
 tags:
   - zoho-analytics
@@ -39,10 +39,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -53,12 +53,6 @@ status: stable
 Sets the specified folder as the default folder for the workspace. The previous default folder (if any) loses its default status. Every workspace has exactly one default folder at all times.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Sets the specified folder as the default folder of the workspace. The default folder is where a new view is placed when no folder is selected explicitly. The folder that was the default until then loses that status, as a workspace holds exactly one default folder at any point in time.
-
-This API is idempotent. Invoking it on a folder that is already the default folder succeeds without error.
 
 # Endpoint
 

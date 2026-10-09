@@ -26,10 +26,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -139,8 +139,8 @@ If the organisation has no White Label domain set up, these APIs will return a p
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [12049](../../../foundations/error-codes.md#error-12049) | 400 | The workspace is already enabled for White Label domain access. Enabling an already enabled workspace is not idempotent. |
-| [12050](../../../foundations/error-codes.md#error-12050) | 400 | The workspace is not currently enabled for White Label domain access. Disabling an already disabled workspace is not idempotent. |
+| [12049](../../../foundations/error-codes.md#error-12049) | 400 | The workspace is already enabled for White Label domain access. Calling Enable on an already-enabled workspace is not idempotent. |
+| [12050](../../../foundations/error-codes.md#error-12050) | 400 | The workspace is not currently enabled for White Label domain access. Calling Disable on an already-disabled workspace is not idempotent. |
 
 # Related
 

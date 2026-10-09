@@ -26,10 +26,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -88,7 +88,7 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | [7107](../../../foundations/error-codes.md#error-7107) | 400 | The specified column does not exist in the table. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7397](../../../foundations/error-codes.md#error-7397) | 400 | The specified view is not a table. |
+| [7397](../../../foundations/error-codes.md#error-7397) | 400 | The view is not a table. |
 | [8116](../../../foundations/error-codes.md#error-8116) | 400 | Auto analysis has already been completed for this table and analyseAgain was not set to true. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 | [14037](../../../foundations/error-codes.md#error-14037) | 400 | The column is disabled in its Query Table definition and cannot be used for analysis. |

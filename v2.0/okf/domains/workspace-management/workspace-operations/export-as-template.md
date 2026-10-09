@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Export as Template
-description: Exports the selected views of the specified workspace as a reusable template file in the .atpt (Zoho Analytics Template) format.
+description: Exports selected views from the specified workspace as a reusable template file.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/template/data"
 tags:
   - zoho-analytics
@@ -43,10 +43,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

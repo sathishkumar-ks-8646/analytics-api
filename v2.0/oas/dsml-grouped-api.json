@@ -23,7 +23,7 @@
           "AutoML Analysis"
         ],
         "summary": "Create AutoML Analysis",
-        "description": "Creates a new AutoML analysis within the workspace. An analysis is defined by the training table, the target column, the input features and the set of algorithms to be trained. The prediction type chosen determines which algorithms can be configured - regression, classification or clustering.",
+        "description": "Creates an analysis and immediately starts training one model per configured algorithm. Returns as soon as the training job is queued — it does not wait for training to finish.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7005 | COMMONINTERNALSERVERERROR — Surfaces when trainingTableId does not identify a real table. | Verify the ID via Get View List. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 7319 | OBJIDNOTBELONGSTODB — The training table belongs to a different workspace. | Use a table from . |\n| 8078 | EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent empty. | Supply a value. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing. | The message names the attribute. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — serverOption or predictionType is outside its allowed set. | The message names the attribute and permitted values. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is absent, or a required key is missing at the template level. | Send a complete CONFIG object. |\n| 8547 | ARRAYSIZEOUTOFRANGE — features is empty or exceeds the allowed array size. | Send between 3 and 20 feature names. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "createAutoMLAnalysis",
         "security": [
           {
@@ -185,7 +185,7 @@
           "AutoML Analysis"
         ],
         "summary": "Get AutoML Analysis In Workspace",
-        "description": "Returns the list of AutoML analyses available in the specified workspace. Use the Get AutoML Analysis Details API with a returned analysis ID to fetch the models trained under it.",
+        "description": "Returns every AutoML analysis defined in one workspace. Identical to Get AutoML Analysis In Org except that it is workspace-scoped and therefore omits the workspace fields.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller does not own this workspace. | Call from the standard API host as an Account Admin, Organization Admin, or the workspace's own admin. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getAutoMLAnalysisInWorkspace",
         "security": [
           {
@@ -269,7 +269,7 @@
           "AutoML Analysis"
         ],
         "summary": "Run AutoML Analysis",
-        "description": "Executes an AutoML analysis deployment on demand. The predictions are generated using the model bound to the deployment, and the results are written to the output table that was configured when the deployment was created.",
+        "description": "Triggers a deployment immediately — the \"run now\" action. Scores the input table with the deployed model and writes the results to the output table according to the deployment's importType.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "runAutoMLAnalysis",
         "security": [
           {
@@ -311,7 +311,7 @@
           "AutoML Analysis"
         ],
         "summary": "Delete AutoML Analysis",
-        "description": "Deletes the specified AutoML analysis from the workspace. The analysis ID can be obtained using the Get AutoML Analysis In Workspace API.",
+        "description": "Deletes an analysis and everything beneath it — all its models, and all deployments attached to those models.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "operationId": "deleteAutoMLAnalysis",
         "security": [
           {
@@ -348,7 +348,7 @@
           "AutoML Analysis"
         ],
         "summary": "Get AutoML Analysis Details",
-        "description": "Retrieves the detailed information of a specific AutoML analysis, including the training table, the target column, the input features and every model trained under the analysis with its score and hyperparameters.",
+        "description": "Returns the full definition of one analysis together with every model trained under it — including each model's ID, score, training status, and hyperparameters. This is the pivotal read in the family: it is the only source of modelId.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getAutoMLAnalysisDetails",
         "security": [
           {
@@ -497,7 +497,7 @@
           "AutoML Analysis"
         ],
         "summary": "Get AutoML Analysis In Org",
-        "description": "Returns all the AutoML analyses available in the organization. Each entry also carries the workspace it belongs to, so the analysis can be looked up in detail using the Get AutoML Analysis Details API.",
+        "description": "Returns every AutoML analysis across all workspaces in the organization, each tagged with the workspace it belongs to. This is the organization-wide inventory call.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller is not an Account Admin / Organization Admin of the organization. | Call from the standard API host as an Account Admin or Organization Admin. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getAutoMLAnalysisInOrg",
         "security": [
           {
@@ -582,7 +582,7 @@
           "AutoML Analysis"
         ],
         "summary": "Delete AutoML Analysis Model",
-        "description": "Deletes a specific model from an AutoML analysis. The model ID can be obtained using the Get AutoML Analysis Details API.",
+        "description": "Deletes one model from an analysis, along with the deployment attached to it. The analysis and its other models are unaffected.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "operationId": "deleteAutoMLAnalysisModel",
         "security": [
           {
@@ -624,7 +624,7 @@
           "AutoML Analysis"
         ],
         "summary": "Get Deployments For A Model",
-        "description": "Returns the deployment details configured for an AutoML analysis model, including the input and output tables, the schedule status and the time at which the deployment last ran.",
+        "description": "Returns the deployment configured for a model — its input and output tables, schedule outcome, and last run status.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getDeploymentsForModel",
         "security": [
           {
@@ -679,7 +679,7 @@
                           ],
                           "predictionColumn": "Sales_Pred",
                           "stack": "8 GB",
-                          "importType": "truncateadd"
+                          "importType": "TRUNCATEADD"
                         }
                       }
                     }
@@ -706,7 +706,7 @@
                           ],
                           "predictionColumn": "Sales_Pred",
                           "stack": "16 GB",
-                          "importType": "append"
+                          "importType": "APPEND"
                         }
                       }
                     }
@@ -728,7 +728,7 @@
           "AutoML Analysis"
         ],
         "summary": "Create AutoML Analysis Deployment",
-        "description": "Creates a deployment for an AutoML analysis model. A deployment binds a trained model to an input table and an output table, and defines the schedule on which predictions are generated and written back.",
+        "description": "Binds a trained model to an input table and an output table so that predictions can be generated — on a recurring schedule, on demand, or both. Returns the new deployment ID and the ID of the output table it created.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 7319 | OBJIDNOTBELONGSTODB — The input table belongs to a different workspace. | Use a table from . |\n| 8050 | INVALIDVALUE — timezone is not a recognised timezone name. | Use a standard timezone identifier such as Asia/Kolkata. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A required attribute is missing; for weekly/monthly schedules this reports 'day'. | The message names the attribute. See the schedule caveat above. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — serverOption, hour, minute, or interval is outside its permitted set. | The message names the attribute and the allowed values. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is absent or a mandatory key is missing at the template level. | Send a complete CONFIG object. |\n| 8544 | OUTOFRANGE — A schedule value is outside its declared range. | Correct the value. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "createAutoMLAnalysisDeployment",
         "security": [
           {
@@ -903,7 +903,7 @@
           "AutoML Analysis"
         ],
         "summary": "Delete AutoML Analysis Model Deployment",
-        "description": "Deletes an AutoML analysis deployment. The deployment stops running on its schedule, and the output table it was writing to is retained. The deployment ID can be obtained using the Get Deployments For A Model API.",
+        "description": "Deletes a deployment. The model becomes deployable again; the analysis, the model, and the output table are unaffected.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "operationId": "deleteAutoMLAnalysisModelDeployment",
         "security": [
           {
@@ -945,7 +945,7 @@
           "AutoML Analysis"
         ],
         "summary": "AutoML What If Analysis",
-        "description": "Generates a prediction using a trained AutoML model. A hypothetical value is supplied for each feature that the model was trained on, and the model returns the value it predicts for the target column.",
+        "description": "Generates a single prediction for a hypothetical set of feature values — a live \"what if I changed these inputs?\" query against a trained model. Nothing is stored and no table is written.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8078 | EMPTYJSONATTRIBUTEFOUND — features was sent as an empty object. | Supply every training feature and its value. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — features is missing from CONFIG. | Include the features object. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is absent. | Send a CONFIG object containing features. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "autoMLWhatIfAnalysis",
         "security": [
           {
@@ -2235,6 +2235,14 @@
               31,
               99
             ]
+          },
+          "day": {
+            "type": "integer",
+            "description": "For weekly, the day of the week, 1 = Sunday … 7 = Saturday. For monthly, the day of the month, 1–31, or 99 for the last day of the month. See the caveat below."
+          },
+          "skipFrequency": {
+            "type": "integer",
+            "description": "Number of periods to skip between runs. Defaults to 0 (every period)."
           }
         },
         "required": [
@@ -2559,6 +2567,10 @@
           },
           "models": {
             "$ref": "#/components/schemas/AutoMLModelList"
+          },
+          "description": {
+            "type": "string",
+            "description": "Free-text description supplied at creation."
           }
         },
         "examples": [
@@ -3077,7 +3089,7 @@
                 ],
                 "predictionColumn": "Sales_Pred",
                 "stack": "8 GB",
-                "importType": "truncateadd"
+                "importType": "TRUNCATEADD"
               }
             }
           }
@@ -3110,7 +3122,7 @@
               ],
               "predictionColumn": "Sales_Pred",
               "stack": "8 GB",
-              "importType": "truncateadd"
+              "importType": "TRUNCATEADD"
             }
           }
         ]
@@ -3188,7 +3200,7 @@
             ],
             "predictionColumn": "Sales_Pred",
             "stack": "8 GB",
-            "importType": "truncateadd"
+            "importType": "TRUNCATEADD"
           }
         ]
       }

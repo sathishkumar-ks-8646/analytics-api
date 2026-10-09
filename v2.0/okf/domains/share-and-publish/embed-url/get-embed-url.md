@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Embed URL
-description: Returns an embed URL through which the specified view can be accessed.
+description: "Mints a new, short-lived embed URL for a view."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed"
 tags:
   - zoho-analytics
@@ -54,10 +54,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -66,12 +66,6 @@ status: stable
 **GET `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed`** - Get Embed URL (Embed URL / Share & Publish).
 
 Mints a new, short-lived embed URL for a view. Everything the eventual viewer can see and do — which rows, which columns, whether they can export or drill — is fixed at the moment of this call and baked into the URL's stored configuration. The URL requires no sign-in.
-
-From the OpenAPI specification:
-
-Returns an embed URL through which the specified view can be accessed. The generated URL is short-lived, which adds more security to it. It does not require a login, and what the viewer can see and do is governed entirely by the permissions, filter criteria, and column restrictions sent in the config.
-
-> **Note:** This API is available only to Embedded Analytics customers.
 
 # Endpoint
 

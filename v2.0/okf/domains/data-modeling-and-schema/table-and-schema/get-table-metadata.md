@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Table Metadata
-description: "Returns the complete column schema of the specified table, including column names, data types, descriptions, lookup relationships, formula expressions and formatting details."
+description: "Returns the complete column schema of the specified table — including column names, data types, descriptions, lookup relationships, formula expressions, and formatting details."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/metadata"
 tags:
   - zoho-analytics
@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

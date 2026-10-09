@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Query Table Details
-description: "Returns the full metadata of the specified query table, including its SQL definition, the source views that the statement refers to, and the derived column schema."
+description: "Returns the full metadata of a query table, including its SQL definition, the tables involved, and its column schema."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}"
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -54,12 +54,6 @@ status: stable
 Returns the full metadata of a query table, including its SQL definition, the tables involved, and its column schema.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Returns the full metadata of the specified query table, including its SQL definition, the source views that the statement refers to, and the derived column schema.
-
-This is the only API that exposes the SQL text of a query table, so use it to audit the definition and to fetch the current statement before calling the Edit Query Table API.
 
 # Endpoint
 

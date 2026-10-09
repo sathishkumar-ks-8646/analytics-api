@@ -7,6 +7,36 @@ patch for corrections. The OKF bundle's own content version is in `vN.N/okf/mani
 
 ## Unreleased
 
+### Changed - every artefact re-aligned to `v2.0/md/` (the source of truth)
+
+A full audit of all 182 documented endpoints against the Zenesis OpenAPI, the samples and the
+generated artefacts, before the initial release. Findings and the scripts that applied them are kept
+outside the repository (`../analytics-api-audit/`).
+
+- **Reports and Dashboards rewritten.** `REPORTS.md` and `DASHBOARDS.md` were replaced by the API
+  team's new documents (new titles `Create Report`, `Read Report Metadata`, `Update Report`,
+  `Read Dashboard Metadata`; a layout model, round-tripping rules and appendices). The OpenAPI was
+  rebuilt from them: titles, descriptions, 57 chart types, every accepted axis-type spelling,
+  the full operation / filter / user-filter vocabularies, `layout` as a JSON-encoded string with
+  `contentSchema`, `displayName` max 100, card and theme ranges, `include` as a single section,
+  Read Report Metadata's lossy response schemas, 41 + 30 error codes, throttles, examples, notes.
+  The three dashboard listing APIs, which the new document did not cover, were re-added to
+  `DASHBOARDS.md` as sections 4-6 from the previous revision so no published endpoint disappears.
+  Dashboard code samples send `layout` as a string; the enumerations foundation of the OKF bundle
+  was rewritten from the appendices.
+- **Error codes.** Every row of every section's Error Codes table is now an `x-zenesis-statuscodes`
+  entry on the operation (171 operations touched); the OKF error catalog grows accordingly.
+- **Descriptions.** The opening paragraph of 142 operation descriptions now equals the section's
+  opening paragraph.
+- **Schemas.** 56 CONFIG fields documented in markdown but missing from the schemas were added
+  (report bursts, tabbed-dashboard tabs, embed/publish/share permission flags, import overrides and
+  more); 7 response fields were added; `importType`, `onError` and `exportType` enumerations and
+  examples use the upper-case values the documents use; `required` lists follow the Mandatory
+  column (Share Views, Remove Shared Views, Update Shared Details, Update Email Schedule, batch
+  import, Get Shared Details, Create AutoML Analysis).
+- Get My Permissions is `/share/userpermissions`; `/share/mypermissions` is the deprecated alias.
+- OKF bundle 1.5.0, Postman collection and `v2.0/oas/` regenerated from the above.
+
 ## 3.0.0 - 2026-10-09
 
 ### Changed

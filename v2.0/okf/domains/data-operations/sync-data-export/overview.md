@@ -22,10 +22,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -385,34 +385,34 @@ Defaults: `leftHeader` `1`, `centerHeader` `0`, `rightHeader` `2`, `leftFooter` 
 |---|---|---|
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [7327](../../../foundations/error-codes.md#error-7327) | 400 | criteria parsed but could not be converted into a query. |
-| [7330](../../../foundations/error-codes.md#error-7330) | 400 | A column named in criteria does not exist in the view. |
-| [7331](../../../foundations/error-codes.md#error-7331) | 400 | criteria is syntactically malformed. |
-| [7332](../../../foundations/error-codes.md#error-7332) | 400 | A table qualifier in criteria is not part of the view. |
-| [7333](../../../foundations/error-codes.md#error-7333) | 400 | An aggregate function was used in criteria. |
-| [7543](../../../foundations/error-codes.md#error-7543) | 400 | criteria on a tabular view referenced a column outside its base table. |
-| [7565](../../../foundations/error-codes.md#error-7565) | 400 | The calling user's primary email address is not verified. |
-| [7801](../../../foundations/error-codes.md#error-7801) | 400 | A PDF margin is outside 0–1 inches. |
-| [7803](../../../foundations/error-codes.md#error-7803) | 400 | width or height is outside the permitted image range. |
-| [7806](../../../foundations/error-codes.md#error-7806) | 400 | The XLS export exceeds the per-sheet cell limit. |
-| [7807](../../../foundations/error-codes.md#error-7807) | 400 | More than 256 columns were requested for an XLS export. |
-| [7808](../../../foundations/error-codes.md#error-7808) | 400 | A single cell exceeds 32,767 characters. |
-| [7809](../../../foundations/error-codes.md#error-7809) | 400 | The XLS export produced no data. |
-| [7824](../../../foundations/error-codes.md#error-7824) | 400 | Export has been blocked for this workspace. |
-| [7827](../../../foundations/error-codes.md#error-7827) | 400 | The PDF exceeds 1,000,000 cells. |
-| [7830](../../../foundations/error-codes.md#error-7830) | 400 | The exported payload exceeds 100 MB. |
-| [8001](../../../foundations/error-codes.md#error-8001) | 400 | responseFormat is not a supported value. |
-| [8014](../../../foundations/error-codes.md#error-8014) | 400 | image was requested for a view that is not a chart. |
-| [8015](../../../foundations/error-codes.md#error-8015) | 400 | A name in selectedColumns does not match any column in the view. |
-| [8017](../../../foundations/error-codes.md#error-8017) | 400 | imageFormat is not png, jpg, or jpeg. |
-| [8088](../../../foundations/error-codes.md#error-8088) | 400 | Export is disabled for the organization. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
-| [8133](../../../foundations/error-codes.md#error-8133) | 400 | The view is a dashboard, a query table, a live-connect view, or a table above the row limit. |
-| [8188](../../../foundations/error-codes.md#error-8188) | 400 | password is blank or shorter than 6 characters. |
-| [8241](../../../foundations/error-codes.md#error-8241) | 409 | The view carries a restricted DATAWARNING system tag. |
-| [8507](../../../foundations/error-codes.md#error-8507) | 400 | roleName exceeds 30 characters, or the serialized permissions object exceeds its size limit. |
+| [7327](../../../foundations/error-codes.md#error-7327) | 400 | FILTERCRITERIAINVALID — criteria parsed but could not be converted into a query. |
+| [7330](../../../foundations/error-codes.md#error-7330) | 400 | UNKNOWNCOLUMNINFILTERCRITERIA — A column named in criteria does not exist in the view. |
+| [7331](../../../foundations/error-codes.md#error-7331) | 400 | FILTERCRITERIAPARSEERROR — criteria is syntactically malformed. |
+| [7332](../../../foundations/error-codes.md#error-7332) | 400 | UNKNOWNTABLEINFILTERCRITERIA — A table qualifier in criteria is not part of the view. |
+| [7333](../../../foundations/error-codes.md#error-7333) | 400 | INVALIDGROUPFUNCUSEINFILTERCRITERIA — An aggregate function was used in criteria. |
+| [7543](../../../foundations/error-codes.md#error-7543) | 400 | ONLYBASETABLECOLINTABULARFILTERCRITERIA — criteria on a tabular view referenced a column outside its base table. |
+| [7565](../../../foundations/error-codes.md#error-7565) | 400 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. |
+| [7801](../../../foundations/error-codes.md#error-7801) | 400 | MARGINVALUEEXCEEDS — A PDF margin is outside 0–1 inches. |
+| [7803](../../../foundations/error-codes.md#error-7803) | 400 | INVALIDDIMENSION — width or height is outside the permitted image range. |
+| [7806](../../../foundations/error-codes.md#error-7806) | 400 | XLSCELLLIMITEXCEEDS — The XLS export exceeds the per-sheet cell limit. |
+| [7807](../../../foundations/error-codes.md#error-7807) | 400 | XLSCOLLIMITEXCEEDS — More than 256 columns were requested for an XLS export. |
+| [7808](../../../foundations/error-codes.md#error-7808) | 400 | XLSCELLCHARLIMITEXCEEDS — A single cell exceeds 32,767 characters. |
+| [7809](../../../foundations/error-codes.md#error-7809) | 400 | XLSNODATA — The XLS export produced no data. |
+| [7824](../../../foundations/error-codes.md#error-7824) | 400 | EXPORTREQBLOCKED — Export has been blocked for this workspace. |
+| [7827](../../../foundations/error-codes.md#error-7827) | 400 | EXPPDFRECORDLIMIT — The PDF exceeds 1,000,000 cells. |
+| [7830](../../../foundations/error-codes.md#error-7830) | 400 | EXPALLRECORDLIMIT — The exported payload exceeds 100 MB. |
+| [8001](../../../foundations/error-codes.md#error-8001) | 400 | INVALIDRESPFORMAT — responseFormat is not a supported value. |
+| [8014](../../../foundations/error-codes.md#error-8014) | 400 | APIIMAGERESPONSENOTPOSSIBLE — image was requested for a view that is not a chart. |
+| [8015](../../../foundations/error-codes.md#error-8015) | 400 | APIEXPORTCOLUMNNOTPRESENT — A name in selectedColumns does not match any column in the view. |
+| [8017](../../../foundations/error-codes.md#error-8017) | 400 | INVALIDIMAGEFORMAT — imageFormat is not png, jpg, or jpeg. |
+| [8088](../../../foundations/error-codes.md#error-8088) | 400 | SECURITYCONTROLSFEATUREDISABLED — Export is disabled for the organization. |
+| [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
+| [8133](../../../foundations/error-codes.md#error-8133) | 400 | SYNCEXPORTNOTALLOWED — The view is a dashboard, a query table, a live-connect view, or a table above the row limit. |
+| [8188](../../../foundations/error-codes.md#error-8188) | 400 | EXPORTINVALIDPASSWORD — password is blank or shorter than 6 characters. |
+| [8241](../../../foundations/error-codes.md#error-8241) | 409 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. |
+| [8507](../../../foundations/error-codes.md#error-8507) | 400 | MORETHANMAXLENGTH — roleName exceeds 30 characters, or permissions exceeds its size limit. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [8547](../../../foundations/error-codes.md#error-8547) | 400 | viewIds is empty or has more than 1000 entries. |
+| [8547](../../../foundations/error-codes.md#error-8547) | 400 | ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries. |
 
 # Related
 

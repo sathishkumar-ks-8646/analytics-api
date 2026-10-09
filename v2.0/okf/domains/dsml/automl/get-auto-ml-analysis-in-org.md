@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get AutoML Analysis In Org
-description: Returns all the AutoML analyses available in the organization.
+description: "Returns every AutoML analysis across all workspaces in the organization, each tagged with the workspace it belongs to."
 resource: https://analyticsapi.zoho.com/restapi/v2/automl/analysis
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -54,10 +54,6 @@ status: stable
 Returns every AutoML analysis across **all workspaces** in the organization, each tagged with the workspace it belongs to. This is the organization-wide inventory call.
 
 > This API has no CONFIG parameter and no workspace in its path.
-
-From the OpenAPI specification:
-
-Returns all the AutoML analyses available in the organization. Each entry also carries the workspace it belongs to, so the analysis can be looked up in detail using the Get AutoML Analysis Details API.
 
 # Endpoint
 

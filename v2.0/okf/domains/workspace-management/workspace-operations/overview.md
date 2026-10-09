@@ -58,10 +58,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -188,12 +188,12 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 |---|---|---|
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A view with the given viewName already exists in this workspace. |
+| [7111](../../../foundations/error-codes.md#error-7111) | 400 | METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7951](../../../foundations/error-codes.md#error-7951) | 400 | The organization has reached its workspace creation limit based on the current subscription plan. |
-| [8024](../../../foundations/error-codes.md#error-8024) | 400 | A cross-organization copy was attempted without a valid workspaceKey, or the key provided does not match the secret key of the source workspace. |
-| [8058](../../../foundations/error-codes.md#error-8058) | 400 | The organization ID provided in the ZANALYTICS-DEST-ORGID header does not exist. |
+| [7951](../../../foundations/error-codes.md#error-7951) | 400 | The organisation has reached its workspace creation limit based on the current subscription plan. |
+| [8024](../../../foundations/error-codes.md#error-8024) | 400 | Cross-org copy attempted without a valid workspaceKey, or the provided key does not match the source workspace's secret key. |
+| [8058](../../../foundations/error-codes.md#error-8058) | 400 | The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 
 # Related

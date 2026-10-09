@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Last Import Details
-description: "Returns the details of the most recent load into the specified view, whatever performed it - a datasource sync, a refetch, or an import API call."
+description: "Reports what the most recent load into a table actually did — when it ran, whether it succeeded, and how many rows and columns landed."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/importdetails"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -62,10 +62,6 @@ Reports what the most recent load into a table actually did — when it ran, whe
 | `<view-id>` | Long | ID of the table to report on. Must belong to `<workspace-id>`. |
 
 This API covers **every** kind of load, not only datasource syncs. A table last written by [Import Data into an Existing Table (Synchronous)](../sync-data-import/import-data-existing-table.md) reports that import here too.
-
-From the OpenAPI specification:
-
-Returns the details of the most recent load into the specified view, whatever performed it - a datasource sync, a refetch, or an import API call. Returns 200 with an empty data object when the view has never been loaded. Not available through a Client Portal or White Label domain.
 
 # Endpoint
 

@@ -4,8 +4,8 @@
 
 # Concepts
 
-* [Get Datasources](get-datasources.md) - Returns the list of datasources for the specified workspace, the tables each one feeds, and the state of their last sync.
-* [Get Last Import Details](get-last-import-details.md) - Returns the details of the most recent load into the specified view, whatever performed it - a datasource sync, a refetch, or an import API call.
-* [Refetch Data](refetch-datasource.md) - Sync data from the available datasource for the specified view - one table only.
-* [Sync Data](sync-datasource.md) - Initiate an immediate data sync for the specified datasource - every table it feeds.
-* [Update Datasource Connection](update-datasource-connection.md) - Update the connection details of the specified database datasource.
+* [Get Datasources](get-datasources.md) - Lists every datasource in a workspace, the tables each one feeds, and the state of their last sync.
+* [Get Last Import Details](get-last-import-details.md) - Reports what the most recent load into a table actually did — when it ran, whether it succeeded, and how many rows and columns landed.
+* [Refetch Data](refetch-datasource.md) - Triggers an immediate pull for one table from whatever datasource sits behind it.
+* [Sync Data](sync-datasource.md) - Triggers an immediate pull for a whole datasource — every table it feeds.
+* [Update Datasource Connection](update-datasource-connection.md) - Updates the connection details of a database-style datasource — host, port, credentials, and the service-specific settings that go with them.

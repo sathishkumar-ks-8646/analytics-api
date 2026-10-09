@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Query Tables
-description: Returns the list of query tables in the specified workspace.
+description: "Returns a paginated, filterable, sortable list of all query tables in the workspace."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/querytables"
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -55,7 +55,7 @@ Returns a paginated, filterable, sortable list of all query tables in the worksp
 
 From the OpenAPI specification:
 
-Returns the list of query tables in the specified workspace. The list can be filtered by name or by creator, sorted, and paginated through the CONFIG parameter.
+Returns a paginated, filterable, sortable list of all query tables in the workspace.
 
 The view IDs returned by this API are the entry point for the Edit Query Table and the Get Query Table Details APIs.
 

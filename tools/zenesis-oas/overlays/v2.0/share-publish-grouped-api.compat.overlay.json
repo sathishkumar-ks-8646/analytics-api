@@ -34,11 +34,31 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — User does not have permission to view workspace share info.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].get",
       "update": {
         "x-zenesis-title": "Get Workspace Shared Details"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].get",
+      "update": {
+        "description": "Returns a consolidated view of every share that exists in the workspace — grouped by user, by group, plus any public/private-link shares — in a single call. Intended for workspace-level share auditing/administration."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].get",
@@ -111,11 +131,116 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].post.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "8074",
+            "description": "READPERMSHOULDBETRUEFORSHARING — permissions.read was false or omitted.",
+            "resolution": "Set permissions.read to true."
+          },
+          {
+            "name": "7321",
+            "description": "VIEWALREADYSHARED — The view is already shared with this user.",
+            "resolution": "Use Update Shared Details to modify the existing share instead."
+          },
+          {
+            "name": "7322",
+            "description": "VIEWALREADYSHARED (group form) — The view is already shared with this group.",
+            "resolution": "Use Update Shared Details to modify the existing share instead."
+          },
+          {
+            "name": "7323",
+            "description": "CANNOTSHAREDTOOBJOWNER — Attempted to share the view with its own owner.",
+            "resolution": "Remove the owner's email/group from the share request."
+          },
+          {
+            "name": "7307",
+            "description": "OWNERCANNOTSHAREHIMSELF — The sharer attempted to share a view to themselves.",
+            "resolution": "Remove the sharer's own email from emailIds."
+          },
+          {
+            "name": "7320",
+            "description": "CANNOTSHARETOSELF — Same as above (alternate path).",
+            "resolution": "Same as above."
+          },
+          {
+            "name": "7541",
+            "description": "FILTERCRITERIANOTSUPPORTEDFORMULTIVIEWSHARE — criteria supplied with more than one viewIds entry.",
+            "resolution": "Share one view at a time when using row-level criteria."
+          },
+          {
+            "name": "7543",
+            "description": "VUDORDRILLCOLUMNSEDITNOTSUPPORTEDFORMULTIVIEWSHARE — vudColumns/drillColumns supplied with more than one view.",
+            "resolution": "Share one view at a time when restricting VUD/drill columns."
+          },
+          {
+            "name": "7545",
+            "description": "SHAREANDWRITEPERMISSIONSNOTALLOWEDFORROUSERS — A Read-Only/embedded user was granted share together with a write permission.",
+            "resolution": "Do not combine share: true with write permissions for Read-Only users."
+          },
+          {
+            "name": "7533",
+            "description": "CANNOTSHAREOBJECTTOGROUP — The view's type does not support group sharing.",
+            "resolution": "Share to individual emailIds instead."
+          },
+          {
+            "name": "7535",
+            "description": "CANNOTSHARETOMEMBERSNOTPARTOFORG — One or more emailIds do not belong to the organization.",
+            "resolution": "Verify the recipients are valid organization/portal users."
+          },
+          {
+            "name": "7549",
+            "description": "CANNOTSHARETOCUSTOMROLEUSER — Attempted to share directly to a user who only has a custom-role-based org-level permission.",
+            "resolution": "Share via the appropriate group/role mechanism instead."
+          },
+          {
+            "name": "8029",
+            "description": "SHAREINVALIDEMAILADDRESS — One or more emailIds entries is not a valid email address.",
+            "resolution": "Correct the malformed email address(es)."
+          },
+          {
+            "name": "8085",
+            "description": "SHAREDTOEXTERNALDOMAINNOTALLOWED — Sharing to an email outside the allowed domain(s) is disabled by org policy.",
+            "resolution": "Share only to users within the permitted domain(s), or contact the Org Admin to adjust the policy."
+          },
+          {
+            "name": "8086",
+            "description": "SHAREDTOEXTERNALDOMAINNOTALLOWED — Sharing to an email outside the allowed domain(s) is disabled by org policy.",
+            "resolution": "Share only to users within the permitted domain(s), or contact the Org Admin to adjust the policy."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION (HTTP 409) — A view being shared carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false to confirm."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is malformed or missing a required field.",
+            "resolution": "Validate the CONFIG JSON against the parameter table above."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — User does not have Share permission on one or more viewIds.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on all specified views."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].post",
       "update": {
         "x-zenesis-title": "Share Views"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].post",
+      "update": {
+        "description": "Shares one or more views with a set of users and/or groups, with a specific permission set, optional column/row restrictions, and optional invite email."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].post",
@@ -174,11 +299,61 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "8031",
+            "description": "REMOVESHAREAPIPARAMS — Neither viewIds nor removeAllViews: true was supplied.",
+            "resolution": "Supply either a viewIds array or set removeAllViews: true."
+          },
+          {
+            "name": "8105",
+            "description": "REMOVESHAREALLVIEWSPRESENT — Both viewIds and removeAllViews: true were supplied together.",
+            "resolution": "Supply only one of the two — viewIds for a targeted removal, or removeAllViews: true alone for a bulk removal."
+          },
+          {
+            "name": "8032",
+            "description": "VIEWNOTSHARED — The specified view is not currently shared with this user.",
+            "resolution": "Verify the share exists via Get Shared Details before removing."
+          },
+          {
+            "name": "8150",
+            "description": "VIEWNOTSHAREDTOGROUP — The specified view is not currently shared with this group.",
+            "resolution": "Verify the share exists via Get Shared Details before removing."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is malformed or missing a required field.",
+            "resolution": "Validate the CONFIG JSON against the parameter table above."
+          },
+          {
+            "name": "7533",
+            "description": "CANNOTSHAREOBJECTTOGROUP — The view's type does not support group-based sharing/unsharing.",
+            "resolution": "Only applicable to user-based (emailIds) removal for this view type."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — User lacks Share permission on the targeted view(s), or attempted removeAllViews: true without Workspace Admin privileges.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin (required for removeAllViews), or has Share permission on the specified views."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].delete",
       "update": {
         "x-zenesis-title": "Remove Share"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].delete",
+      "update": {
+        "description": "Removes an existing share of one or more views from a set of users and/or groups, or removes all of a user's/group's shared views in the workspace at once."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share'].delete",
@@ -237,11 +412,66 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share'].put.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "8032",
+            "description": "VIEWNOTSHARED — The view is not currently shared with the specified user.",
+            "resolution": "Share the view first via Share Views."
+          },
+          {
+            "name": "8150",
+            "description": "VIEWNOTSHAREDTOGROUP — The view is not currently shared with the specified group.",
+            "resolution": "Share the view to this group first via Share Views."
+          },
+          {
+            "name": "8074",
+            "description": "READPERMSHOULDBETRUEFORSHARING — permissions.read was explicitly set to false.",
+            "resolution": "Keep permissions.read as true."
+          },
+          {
+            "name": "7545",
+            "description": "SHAREANDWRITEPERMISSIONSNOTALLOWEDFORROUSERS — A Read-Only user was granted share together with a write permission.",
+            "resolution": "Do not combine share: true with write permissions for Read-Only users."
+          },
+          {
+            "name": "7542",
+            "description": "FILTERCRITERIANOTPERMITTEDFORSHAREDUSER — criteria update is not permitted for this share type.",
+            "resolution": "Remove or adjust the criteria field."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION (HTTP 409) — <view-id> carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false to confirm."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is malformed or missing a required field.",
+            "resolution": "Validate the CONFIG JSON against the parameter table above."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — User does not have Share permission on <view-id>.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on the view."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share'].put",
       "update": {
         "x-zenesis-title": "Update Shared Details For View"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share'].put",
+      "update": {
+        "description": "Updates the permission set, column/row restrictions, or filter criteria of an existing share on a single view, for the users/groups specified."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share'].put",
@@ -314,11 +544,36 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share/shareddetails'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — viewIds missing or malformed.",
+            "resolution": "Supply a valid, non-empty viewIds JSONArray."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — User does not have Share permission on one or more requested viewIds.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on all requested views."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share/shareddetails'].get",
       "update": {
         "x-zenesis-title": "Get Shared Details For Views"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share/shareddetails'].get",
+      "update": {
+        "description": "Returns detailed share information — per user and per group, including permission booleans, a human-readable permissionString, filter criteria, and restricted columns — for one or more specific views."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/share/shareddetails'].get",
@@ -335,49 +590,62 @@
       "x-migration": "HTML restatement of `description`. Retire it."
     },
     {
-      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions'].get.responses['200'].content['application/json'].examples.readOnlyAccess",
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions'].get.responses['200'].content['application/json'].examples.readOnlyAccess",
       "update": {
         "description": "Read only access"
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions'].get.responses['200'].content['application/json'].examples.readOnlyAccess",
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions'].get.responses['200'].content['application/json'].examples.readOnlyAccess",
       "update": {
         "summary": "User who can only view the report, with no export or underlying data access."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions'].get.responses['200'].content['application/json'].examples.fullAccess",
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions'].get.responses['200'].content['application/json'].examples.fullAccess",
       "update": {
         "description": "Full access"
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions'].get.responses['200'].content['application/json'].examples.fullAccess",
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions'].get.responses['200'].content['application/json'].examples.fullAccess",
       "update": {
         "summary": "User who owns the table and therefore holds every permission on it."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions'].get",
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The calling user has no access at all to <view-id> (view does not belong to the workspace, or user has neither ownership nor a share).",
+            "resolution": "Verify <view-id> belongs to <workspace-id> and that the calling user has been shared this view."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions'].get",
       "update": {
         "x-zenesis-title": "Get User Permissions"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
     },
     {
-      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions'].get",
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions'].get",
       "update": {
-        "description": "Returns the permissions that the requesting user holds on the specified view. The permissions returned are the effective ones, whether they were granted directly to the user or inherited through a group."
+        "description": "Returns the effective permission set the calling user currently has on a specific view.\n\nThe original path `/share/mypermissions` is a deprecated alias of this API and continues to function; use `/share/userpermissions`."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions'].get",
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions'].get",
       "update": {
         "x-zenesis-sections": {
           "apiInfo": {
@@ -447,11 +715,121 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6054",
+            "description": "PUBLISHCNTVIOLATION — The current plan does not allow this publish operation.",
+            "resolution": "Upgrade the plan, or publish as a private link instead."
+          },
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — View not found.",
+            "resolution": "Verify <view-id> exists."
+          },
+          {
+            "name": "7138",
+            "description": "METAOBJECTNOTPRESENT — A tableName in vudColumns / drillColumns is not a table involved in this view.",
+            "resolution": "Use only tables that the view actually reads from."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user cannot make this view public (no Make Public permission, or the workspace/view is restricted).",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Make Public permission on the view."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "7500",
+            "description": "UNAUTHORIZEDORGCANNOTMAKEPUBLIC — publicPermLevel: \"3\" requested but the caller does not belong to the workspace admin's business organization.",
+            "resolution": "Use publicPermLevel 1 or 2, or call as a user of the same business organization."
+          },
+          {
+            "name": "7531",
+            "description": "PUBLICTOORGNOTSUPPORTEDINFREE — publicPermLevel 2 or 3 is not supported on the Free plan.",
+            "resolution": "Upgrade the plan, or use publicPermLevel: \"1\"."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "8054",
+            "description": "INVALIDFILTERCRITERIA — criteria could not be parsed.",
+            "resolution": "Correct the criteria syntax (e.g. \"Table\".\"Column\"='Value')."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAINNOTEXIST — The domainName supplied does not exist.",
+            "resolution": "Use a domain returned by the Domain and White Label APIs."
+          },
+          {
+            "name": "8061",
+            "description": "DOMAINDOESNOTBELONGSTOUSER — The caller is not an admin of the supplied domainName.",
+            "resolution": "Call as an admin of that portal domain, or omit domainName."
+          },
+          {
+            "name": "8074",
+            "description": "READPERMSHOULDBETRUEFORSHARING — permissions.read was sent as false.",
+            "resolution": "Omit read or set it to true."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a type/length/allowed-value constraint (e.g. publicPermLevel outside 1/2/3).",
+            "resolution": "Send only the documented keys with the documented types."
+          },
+          {
+            "name": "8088",
+            "description": "SECURITYCONTROLSFEATUREDISABLED — Public sharing has been disabled for this organization/workspace by security controls.",
+            "resolution": "Ask the Organization Admin to re-enable public sharing in Security Controls."
+          },
+          {
+            "name": "8154",
+            "description": "COLUMNNOTPRESENTINTABLE — A column in vudColumns / drillColumns (or in criteria) does not exist in the given table.",
+            "resolution": "Verify column names via Get Columns."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false to confirm."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.create."
+          },
+          {
+            "name": "12052",
+            "description": "WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain.",
+            "resolution": "Enable the workspace for that Client Portal domain first."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public'].post",
       "update": {
         "x-zenesis-title": "Make Views Public"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public'].post",
+      "update": {
+        "description": "Publishes a view as a Public URL and, in the same call, defines the read-only permission set, the row-level filter criteria, and the column restrictions that apply to public visitors. Calling it again on an already-public view updates the existing public share in place."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public'].post",
@@ -468,11 +846,61 @@
       "x-migration": "HTML restatement of `description`. Retire it."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — View not found.",
+            "resolution": "Verify <view-id> exists."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user cannot un-publish this view.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Make Public / Share permission on the view."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "8032",
+            "description": "VIEWNOTSHARED — The view is not shared to anyone, so there is no public permission to remove.",
+            "resolution": "Confirm the view is public via Get Publish Configurations before calling."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public'].delete",
       "update": {
         "x-zenesis-title": "Remove Public Permission"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public'].delete",
+      "update": {
+        "description": "Un-publishes the view's Public URL, revoking access for all public visitors. The private link (if any) and the publish configuration are left untouched."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].post.requestBody.content['application/x-www-form-urlencoded'].examples.basicPrivateUrl",
@@ -545,6 +973,124 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6055",
+            "description": "REGENERATEVIOLATION — The current plan does not allow regenerating a private-link key.",
+            "resolution": "Upgrade the plan, or omit regenerateKey."
+          },
+          {
+            "name": "6057",
+            "description": "SHAREDUSRREGENERATEVIOLATION — A shared user attempted a plan-restricted key regeneration.",
+            "resolution": "Ask the workspace owner to regenerate the key, or upgrade the plan."
+          },
+          {
+            "name": "6054",
+            "description": "PUBLISHCNTVIOLATION — The current plan does not allow private links.",
+            "resolution": "Upgrade the plan."
+          },
+          {
+            "name": "6056",
+            "description": "SHAREDUSRPUBLISHCNTVIOLATION — A shared user attempted a plan-restricted private-link creation.",
+            "resolution": "Ask the workspace owner to create the link, or upgrade the plan."
+          },
+          {
+            "name": "6121",
+            "description": "EXCEEDINGUSRPLNPRIVATELINKS — The organization has used all private links allowed by its plan.",
+            "resolution": "Remove an unused private link via Remove Private Access, or upgrade the plan."
+          },
+          {
+            "name": "6122",
+            "description": "EXCEEDINGUSRPLNPRIVATELINKSDM — Same limit, reported to a non-super-admin caller.",
+            "resolution": "Ask the Organization Admin to free up a private link or upgrade the plan."
+          },
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — View not found.",
+            "resolution": "Verify <view-id> exists."
+          },
+          {
+            "name": "7138",
+            "description": "METAOBJECTNOTPRESENT — A tableName in vudColumns / drillColumns is not a table involved in this view.",
+            "resolution": "Use only tables that the view actually reads from."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user does not have Publish permission on the view, or publishing is restricted for the workspace.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish permission on the view."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "8054",
+            "description": "INVALIDFILTERCRITERIA — criteria could not be parsed.",
+            "resolution": "Correct the criteria syntax (e.g. \"Table\".\"Column\"='Value')."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAINNOTEXIST — The domainName supplied does not exist.",
+            "resolution": "Use a domain returned by the Domain and White Label APIs."
+          },
+          {
+            "name": "8061",
+            "description": "DOMAINDOESNOTBELONGSTOUSER — The caller is not an admin of the supplied domainName.",
+            "resolution": "Call as an admin of that portal domain, or omit domainName."
+          },
+          {
+            "name": "8074",
+            "description": "READPERMSHOULDBETRUEFORSHARING — permissions.read was sent as false.",
+            "resolution": "Omit read or set it to true."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a constraint (e.g. password shorter than 6 characters, malformed expiryDate).",
+            "resolution": "Send only the documented keys with the documented types and formats."
+          },
+          {
+            "name": "8088",
+            "description": "SECURITYCONTROLSFEATUREDISABLED — Private links have been disabled for this organization/workspace by security controls.",
+            "resolution": "Ask the Organization Admin to re-enable private links in Security Controls."
+          },
+          {
+            "name": "8154",
+            "description": "COLUMNNOTPRESENTINTABLE — A column in vudColumns / drillColumns (or in criteria) does not exist in the given table.",
+            "resolution": "Verify column names via Get Columns."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false to confirm."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.update."
+          },
+          {
+            "name": "12052",
+            "description": "WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain.",
+            "resolution": "Enable the workspace for that Client Portal domain first."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].post",
       "update": {
         "x-zenesis-title": "Create Private URL"
@@ -554,7 +1100,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].post",
       "update": {
-        "description": "Creates a private URL for the specified view and returns it. The private URL can be protected with a password and given a validity period, and the permissions granted through it are controlled by the config."
+        "description": "Creates a Private URL for a view — generating the secret private key if one does not exist — and, in the same call, sets the link's permission set, row-level filter criteria, column restrictions, password, and expiry date. The freshly built private URL is returned in the response."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -615,11 +1161,76 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — View not found.",
+            "resolution": "Verify <view-id> exists."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user does not have Publish permission on the view.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish permission on the view."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAINNOTEXIST — The domainName supplied does not exist.",
+            "resolution": "Use a domain returned by the Domain and White Label APIs."
+          },
+          {
+            "name": "8061",
+            "description": "DOMAINDOESNOTBELONGSTOUSER — The caller is not an admin of the supplied domainName.",
+            "resolution": "Call as an admin of that portal domain, or omit domainName."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is not valid JSON or contains an unsupported key.",
+            "resolution": "Send only domainName and/or withCustomDomain."
+          },
+          {
+            "name": "8115",
+            "description": "VIEWNOTPUBLISHEDASPRIVATE — The view has no private link.",
+            "resolution": "Call Create Private URL first."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.read."
+          },
+          {
+            "name": "12052",
+            "description": "WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain.",
+            "resolution": "Enable the workspace for that Client Portal domain first."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].get",
       "update": {
         "x-zenesis-title": "Get Private URL"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].get",
+      "update": {
+        "description": "Returns the existing Private URL of a view — the open-view URL with the view's secret 32-character private key appended. Read-only: it neither creates nor regenerates a key."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].get",
@@ -636,11 +1247,61 @@
       "x-migration": "HTML restatement of `description`. Retire it."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — View not found.",
+            "resolution": "Verify <view-id> exists."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user does not have Publish permission on the workspace or Share permission on the view.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish / Share permission."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "8115",
+            "description": "VIEWNOTPUBLISHEDASPRIVATE — The view has no private link.",
+            "resolution": "Nothing to remove; the link is already absent."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].delete",
       "update": {
         "x-zenesis-title": "Remove Private Access"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink'].delete",
+      "update": {
+        "description": "Removes the view's Private URL entirely — the private key, the associated permission set, the password, and the expiry date. Every previously distributed private URL for the view stops working. The public URL (if any) and the publish configuration are left untouched."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config'].get.responses['200'].content['application/json'].examples.publicView",
@@ -671,11 +1332,51 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — View not found.",
+            "resolution": "Verify <view-id> exists."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user has neither Publish nor Make Public permission on the view.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish / Make Public permission on the view."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config'].get",
       "update": {
         "x-zenesis-title": "Get Publish Configurations"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config'].get",
+      "update": {
+        "description": "Returns the complete publish state of a view in one call: the public channel's audience and listing state, the private channel's password/expiry state, and the presentation configuration used to render the published page."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config'].get",
@@ -734,6 +1435,69 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config'].put.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — View not found.",
+            "resolution": "Verify <view-id> exists."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user has neither Publish nor Make Public permission on the view.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish / Make Public permission on the view."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "8054",
+            "description": "INVALIDFILTERCRITERIA — URLCriteria could not be parsed.",
+            "resolution": "Correct the criteria syntax (e.g. \"Table\".\"Column\"='Value')."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a type constraint (e.g. a non-alphabetic legendPosition).",
+            "resolution": "Send only the documented keys with the documented types."
+          },
+          {
+            "name": "8152",
+            "description": "INTERVALSHOULDBE120ORABOVE — autoRefresh is a positive value below 120 seconds.",
+            "resolution": "Use -1 to disable auto-refresh, or a value of at least 120."
+          },
+          {
+            "name": "8154",
+            "description": "COLUMNNOTPRESENTINTABLE — A column referenced in URLCriteria does not exist.",
+            "resolution": "Verify column names via Get Columns."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false to confirm."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.update."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config'].put",
       "update": {
         "x-zenesis-title": "Update Publish Configurations"
@@ -743,7 +1507,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config'].put",
       "update": {
-        "description": "Updates the publish configurations of the specified view. These settings control how the view is rendered when it is accessed in the embedded, public, or private link mode."
+        "description": "Updates the presentation configuration of the view's published page — title, description, toolbar, search box, dimensions, auto-refresh interval, legend position, URL-level criteria, Ask Zia — and, when the workspace is public, its public-listing flag."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -832,11 +1596,106 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — View not found.",
+            "resolution": "Verify <view-id> exists in the workspace."
+          },
+          {
+            "name": "7138",
+            "description": "METAOBJECTNOTPRESENT — A tableName in a vudColumns/drillColumns array is not a table involved in this view.",
+            "resolution": "Use only tables that the view actually reads from."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain (where this API is disabled), or a non-owner caller is not in the organization's OEM-enabled users list, or the user lacks Publish / Make Public permission on the view.",
+            "resolution": "Call from the standard API host; ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish / Make Public permission, and is OEM-enabled if not a workspace owner."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <view-id> are consistent."
+          },
+          {
+            "name": "8023",
+            "description": "OEMOPERATIONNOTALLOWED — The organization/workspace is not enabled for Embedded Analytics.",
+            "resolution": "Embedded Analytics must be enabled for the account; contact Zoho Analytics support/sales."
+          },
+          {
+            "name": "8054",
+            "description": "INVALIDFILTERCRITERIA — criteria could not be parsed.",
+            "resolution": "Correct the criteria syntax (e.g. \"Table\".\"Column\"='Value')."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAINNOTEXIST — The domainName supplied does not exist.",
+            "resolution": "Use a domain returned by the Domain and White Label APIs."
+          },
+          {
+            "name": "8061",
+            "description": "DOMAINDOESNOTBELONGSTOUSER — The caller is not an admin of the supplied domainName.",
+            "resolution": "Call as an admin of that portal domain, or omit domainName."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type/length constraint.",
+            "resolution": "Stringify and URL-encode the CONFIG object, and send only the documented keys."
+          },
+          {
+            "name": "8154",
+            "description": "COLUMNNOTPRESENTINTABLE — A column in a vudColumns/drillColumns array (or in criteria) does not exist in the given table.",
+            "resolution": "Verify column names via Get Columns."
+          },
+          {
+            "name": "8177",
+            "description": "MAXALLOWEDVALUEEXCEEDED — validityPeriod exceeds the maximum of 86400 seconds (1 day).",
+            "resolution": "Send a value of 86400 seconds or less."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false to confirm."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.read."
+          },
+          {
+            "name": "9102",
+            "description": "LANGUAGENOTSUPPORTED — language is not one of the supported language names.",
+            "resolution": "Use a value from language Values."
+          },
+          {
+            "name": "12052",
+            "description": "WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain.",
+            "resolution": "Enable the workspace for that Client Portal domain first."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed'].get",
       "update": {
         "x-zenesis-title": "Get Embed URL"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed'].get",
+      "update": {
+        "description": "Mints a new, short-lived embed URL for a view. Everything the eventual viewer can see and do — which rows, which columns, whether they can export or drill — is fixed at the moment of this call and baked into the URL's stored configuration. The URL requires no sign-in.\n\n> **Note:** This API is available only to Embedded Analytics customers."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed'].get",
@@ -901,11 +1760,101 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6054",
+            "description": "PUBLISHCNTVIOLATION — accessType: 1 requested but the plan does not allow login-free (private-link style) access.",
+            "resolution": "Use accessType: 0, or upgrade the plan."
+          },
+          {
+            "name": "6056",
+            "description": "SHAREDUSRPUBLISHCNTVIOLATION — A shared user requested accessType: 1 on a plan that restricts it.",
+            "resolution": "Ask the workspace owner to create the slideshow, use accessType: 0, or upgrade the plan."
+          },
+          {
+            "name": "6063",
+            "description": "SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature.",
+            "resolution": "Upgrade the plan to one that supports slideshows."
+          },
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — A view in viewIds does not exist.",
+            "resolution": "Verify the IDs via Get View List."
+          },
+          {
+            "name": "7196",
+            "description": "SLIDENAMEALREADYEXISTS — Another slideshow in this workspace already uses slideName.",
+            "resolution": "Choose a different name, or update the existing slideshow via Update Slide Show."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — A view in viewIds belongs to a different workspace.",
+            "resolution": "Include only views from <workspace-id>."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "8078",
+            "description": "EMPTYJSONATTRIBUTEFOUND — slideName is blank, or viewIds is an empty array.",
+            "resolution": "Supply a non-empty name and at least one view ID."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — slideName or viewIds is missing from CONFIG.",
+            "resolution": "Both are mandatory; include them."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a constraint (e.g. punctuation in slideName, more than 100 entries in viewIds).",
+            "resolution": "Send only the documented keys with the documented types and value constraints."
+          },
+          {
+            "name": "8088",
+            "description": "SECURITYCONTROLSFEATUREDISABLED — accessType: 1 requested but login-free links are disabled for this organization/workspace by security controls.",
+            "resolution": "Use accessType: 0, or ask the Organization Admin to re-enable private links in Security Controls."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A view in viewIds carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false to confirm."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides'].post",
       "update": {
         "x-zenesis-title": "Create Slideshow"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides'].post",
+      "update": {
+        "description": "Creates a new slideshow in the workspace from an ordered set of views, and returns its new ID together with a ready-to-use presentation URL built with default rendering options."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides'].post",
@@ -950,11 +1899,46 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6063",
+            "description": "SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature.",
+            "resolution": "Upgrade the plan to one that supports slideshows."
+          },
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides'].get",
       "update": {
         "x-zenesis-title": "Get Slideshows"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides'].get",
+      "update": {
+        "description": "Returns every slideshow that exists in the workspace, with its ID, name, and access type. This is the discovery call for <slide-id>, which every other API in this family needs."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].put.requestBody.content['application/x-www-form-urlencoded'].examples.renameSlideshow",
@@ -999,11 +1983,96 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].put.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6054",
+            "description": "PUBLISHCNTVIOLATION — accessType: 1 or regenerateSlideKey: true requested but the plan does not allow login-free (private-link style) access.",
+            "resolution": "Use accessType: 0 and omit regenerateSlideKey, or upgrade the plan."
+          },
+          {
+            "name": "6056",
+            "description": "SHAREDUSRPUBLISHCNTVIOLATION — A shared user requested a plan-restricted accessType: 1 or key rotation.",
+            "resolution": "Ask the workspace owner to perform the update, or upgrade the plan."
+          },
+          {
+            "name": "6063",
+            "description": "SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature.",
+            "resolution": "Upgrade the plan to one that supports slideshows."
+          },
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — A view in viewIds does not exist.",
+            "resolution": "Verify the IDs via Get View List."
+          },
+          {
+            "name": "7196",
+            "description": "SLIDENAMEALREADYEXISTS — Another slideshow in this workspace already uses the requested slideName.",
+            "resolution": "Choose a different name."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — A view in viewIds belongs to a different workspace.",
+            "resolution": "Include only views from <workspace-id>."
+          },
+          {
+            "name": "7351",
+            "description": "SLIDESHOWNOTBELONGSTODB — The slideshow does not exist, or belongs to a different workspace.",
+            "resolution": "Verify <slide-id> against Get Slide List for this workspace."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a constraint (e.g. punctuation in slideName, more than 100 entries in viewIds).",
+            "resolution": "Send only the documented keys with the documented types and value constraints."
+          },
+          {
+            "name": "8088",
+            "description": "SECURITYCONTROLSFEATUREDISABLED — accessType: 1 or key rotation requested but login-free links are disabled for this organization/workspace by security controls.",
+            "resolution": "Ask the Organization Admin to re-enable private links in Security Controls."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A view in viewIds carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false to confirm."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.update."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].put",
       "update": {
         "x-zenesis-title": "Update Slideshow"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].put",
+      "update": {
+        "description": "Updates an existing slideshow: renames it, replaces its set of views, changes its access type, and/or rotates its slide key. Unlike the publish configuration APIs, this one is a genuine partial update — only the attributes present in CONFIG are touched."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].put",
@@ -1020,11 +2089,56 @@
       "x-migration": "HTML restatement of `description`. Retire it."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6063",
+            "description": "SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature.",
+            "resolution": "Upgrade the plan to one that supports slideshows."
+          },
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace."
+          },
+          {
+            "name": "7351",
+            "description": "SLIDESHOWNOTBELONGSTODB — The slideshow does not exist, was already deleted, or belongs to a different workspace.",
+            "resolution": "Verify <slide-id> against Get Slide List for this workspace."
+          },
+          {
+            "name": "7565",
+            "description": "UNVERIFIEDEMAIL — The calling user's primary email address is not verified.",
+            "resolution": "Verify the account's primary email address and retry."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].delete",
       "update": {
         "x-zenesis-title": "Delete Slideshow"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].delete",
+      "update": {
+        "description": "Deletes a slideshow from the workspace. The views that were part of it are untouched — only the slideshow definition, its slide key, and therefore its presentation URL are removed."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].get.responses['200'].content['application/json'].examples.loginRequired",
@@ -1055,11 +2169,56 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6063",
+            "description": "SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature.",
+            "resolution": "Upgrade the plan to one that supports slideshows."
+          },
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace."
+          },
+          {
+            "name": "7351",
+            "description": "SLIDESHOWNOTBELONGSTODB — The slideshow does not exist, or belongs to a different workspace.",
+            "resolution": "Verify <slide-id> against Get Slide List for this workspace."
+          },
+          {
+            "name": "7396",
+            "description": "SLIDENOTPRESENTINDB — The slideshow record exists but no slide details could be read for it.",
+            "resolution": "Re-check the slideshow via Get Slide List; recreate it if it is in an inconsistent state."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].get",
       "update": {
         "x-zenesis-title": "Get Slideshow Details"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}'].get",
+      "update": {
+        "description": "Returns the full definition of a single slideshow: its name, its access type, its secret slide key, and the ordered list of view IDs it contains."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish'].get.parameters[3].examples.autoplaySlideshow",
@@ -1118,11 +2277,66 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6063",
+            "description": "SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature.",
+            "resolution": "Upgrade the plan to one that supports slideshows."
+          },
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission.",
+            "resolution": "Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace."
+          },
+          {
+            "name": "7351",
+            "description": "SLIDESHOWNOTBELONGSTODB — The slideshow does not exist, or belongs to a different workspace.",
+            "resolution": "Verify <slide-id> against Get Slide List for this workspace."
+          },
+          {
+            "name": "7396",
+            "description": "SLIDENOTPRESENTINDB — The slideshow record exists but no slide details could be read for it.",
+            "resolution": "Re-check the slideshow via Get Slide List; recreate it if it is in an inconsistent state."
+          },
+          {
+            "name": "8080",
+            "description": "INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, was not URL-encoded correctly, or contains an unsupported key.",
+            "resolution": "Stringify and URL-encode the CONFIG object, and send only the documented keys."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — slideInterval is outside the permitted 10-300 range.",
+            "resolution": "Send a value between 10 and 300 seconds, or omit it to use the default of 25."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish'].get",
       "update": {
         "x-zenesis-title": "Get Slideshow URL"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish'].get",
+      "update": {
+        "description": "Builds and returns the presentation URL for an existing slideshow. The rendering options sent in CONFIG are not stored — they are baked into the query string of the URL that comes back, so different callers can obtain differently configured URLs for the same slideshow."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish'].get",

@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Delete AutoML Analysis
-description: Deletes the specified AutoML analysis from the workspace.
+description: "Deletes an analysis and everything beneath it — all its models, and all deployments attached to those models."
 resource: "https://analyticsapi.zoho.com/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}"
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -54,10 +54,6 @@ status: stable
 Deletes an analysis **and everything beneath it** — all its models, and all deployments attached to those models.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Deletes the specified AutoML analysis from the workspace. The analysis ID can be obtained using the Get AutoML Analysis In Workspace API.
 
 # Endpoint
 

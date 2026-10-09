@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Unified Metrics in Workspace
-description: "Returns every aggregate formula across all the views and tables of the workspace, together with the table that owns each one."
+description: "Returns the full list of aggregate formulas (Unified Metrics) across every view/table in the workspace, along with the table that owns each formula."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/aggregateformulas"
 tags:
   - zoho-analytics
@@ -39,10 +39,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

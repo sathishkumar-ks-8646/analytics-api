@@ -1,7 +1,7 @@
 ---
 type: API Group
 title: Dashboards
-description: "APIs for listing dashboards accessible to a user, and for creating, reading and updating dashboards inside a workspace."
+description: "APIs for creating a dashboard, reading its stored layout, settings and themes, replacing any of those three sections, and listing the dashboards a user owns or can see."
 tags:
   - zoho-analytics
   - rest-api-v2
@@ -13,18 +13,6 @@ api:
   group: dashboards
   endpoint_count: 6
   endpoints:
-    - operation_id: getDashboards
-      method: GET
-      path: "/restapi/v2/dashboards"
-      doc: "/domains/reports-and-dashboards/dashboards/get-dashboards.md"
-    - operation_id: getOwnedDashboards
-      method: GET
-      path: "/restapi/v2/dashboards/owned"
-      doc: "/domains/reports-and-dashboards/dashboards/get-owned-dashboards.md"
-    - operation_id: getSharedDashboards
-      method: GET
-      path: "/restapi/v2/dashboards/shared"
-      doc: "/domains/reports-and-dashboards/dashboards/get-shared-dashboards.md"
     - operation_id: createDashboard
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/dashboards"
@@ -37,310 +25,263 @@ api:
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}"
       doc: "/domains/reports-and-dashboards/dashboards/update-dashboard.md"
+    - operation_id: getDashboards
+      method: GET
+      path: "/restapi/v2/dashboards"
+      doc: "/domains/reports-and-dashboards/dashboards/get-dashboards.md"
+    - operation_id: getOwnedDashboards
+      method: GET
+      path: "/restapi/v2/dashboards/owned"
+      doc: "/domains/reports-and-dashboards/dashboards/get-owned-dashboards.md"
+    - operation_id: getSharedDashboards
+      method: GET
+      path: "/restapi/v2/dashboards/shared"
+      doc: "/domains/reports-and-dashboards/dashboards/get-shared-dashboards.md"
 sources:
   - id: openapi-spec
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
 # Summary
 
-This document describes the V2 **Dashboards** REST APIs of Zoho Analytics — covering dashboard listing, creation, metadata retrieval, and updates.
-APIs are documented with URL, method, OAuth scope, permissions, sample requests/responses, and error codes.
+A **dashboard** is a canvas of cards. Each card occupies a rectangle on a fixed 80-unit-wide grid and
+holds either a saved report, a block of HTML, a title, an image, an embedded URL, or the interactive
+user-filter panel. Dashboards are stored as three independent sections — **layout** (the cards and their
+geometry), **settings** (viewer behaviour flags) and **themes** (background, card styling, typography) —
+and the APIs in this document let you create a dashboard, read those three sections back, and replace any
+of them.
 
-> Notes that apply to every API in this document:
-> - All requests are authenticated via OAuth (`Authorization: Zoho-oauthtoken <token>`).
-> - `ZohoAnalytics_Server_URI` depends on the data center (`analyticsapi.zoho.com`, `.eu`, etc.).
-> - **Get All Dashboards, Get Owned Dashboards, and Get Shared Dashboards** (the listing APIs) operate at the **user service level** — they return dashboards across all organizations the caller belongs to. No `ZANALYTICS-ORGID` header is required.
-> - **Create Dashboard, Get Dashboard Metadata, and Update Dashboard** (the workspace-scoped APIs) operate on a specific workspace. The `ZANALYTICS-ORGID` header is **mandatory**.
-> - The three listing APIs are user-scoped — the OAuth token must be issued with user-level scope.
-> - Get All Dashboards and Get Owned Dashboards are disabled on custom domains. Get Shared Dashboards works on custom domains. The three workspace-scoped APIs are accessible on custom domains, subject to permission checks.
+> **The three sections are replaced wholesale, never merged.** Update Dashboard deletes every stored row
+> for a section before writing the new one. Sending `settings` with a single key does not patch the
+> existing settings — it discards them. Always read, modify, then write back.
+
+> **Tabbed dashboards are out of scope.** Read and Update both reject a tabbed dashboard with error
+> **7511**. Only single-canvas dashboards can be managed through these APIs.
 
 ---
 
-APIs for listing dashboards accessible to a user, and for creating, reading and updating dashboards inside a workspace.
-
-The module splits into two families that behave differently.
-
-- **Listing APIs** - Get All Dashboards, Get Owned Dashboards and Get Shared Dashboards. These operate at user service level and return dashboards across every organization the caller belongs to. No `ZANALYTICS-ORGID` header is needed, and the OAuth token must be issued with user level scope.
-- **Workspace-scoped APIs** - Create Dashboard, Get Dashboard Metadata and Update Dashboard. These operate on one workspace and require the `ZANALYTICS-ORGID` header.
-
-## Common request conventions
-
-| Header | Value | Required |
-|---|---|---|
-| `Authorization` | `Zoho-oauthtoken <oauth-token>` | Mandatory for every API |
-| `ZANALYTICS-ORGID` | Organization ID owning the workspace | Workspace-scoped APIs only |
-| `Content-Type` | `application/x-www-form-urlencoded` | Create and Update only |
-
-Get Shared Dashboards works on custom domains. Get All Dashboards and Get Owned Dashboards are disabled on custom domains. The workspace-scoped APIs are reachable on custom domains subject to additional permission checks.
-
-## OAuth scopes
-
-| API | Method | Scope |
-|---|---|---|
-| Get All Dashboards | GET | `ZohoAnalytics.metadata.read` |
-| Get Owned Dashboards | GET | `ZohoAnalytics.metadata.read` |
-| Get Shared Dashboards | GET | `ZohoAnalytics.metadata.read` |
-| Create Dashboard | POST | `ZohoAnalytics.modeling.create` |
-| Get Dashboard Metadata | GET | `ZohoAnalytics.modeling.read` |
-| Update Dashboard | PUT | `ZohoAnalytics.modeling.update` |
-
-## Response envelope
-
-- **status** - `success` or `failure`.
-- **summary** - human readable description of the completed operation.
-- **data.ownedViews** and **data.sharedViews** - Get All Dashboards only.
-- **data.views** - Get Owned Dashboards and Get Shared Dashboards; a single list, owned-only or shared-only depending on the endpoint.
-- **data.dashboardId** and **data.displayName** - Create Dashboard only.
-- **data.dashboardConfig** - Get Dashboard Metadata only.
-
-`viewId`, `workspaceId` and `orgId` are returned as strings even though the underlying values are long integers. `createdTime` and `lastModifiedTime` are epoch timestamps in milliseconds, as strings - divide by 1000 for epoch seconds. `sharedBy` is present on every entry, empty in owned items and populated with an email in shared ones. `isFavorite` is user specific and reflects the requesting user.
-
-`dashboardConfig.objId`, `data.dashboardId` and `viewId` are the same value under three different names.
-
-## Update replaces sections wholesale
-
-Update Dashboard does not merge. When `layout`, `themes` or `settings` is included, every stored row for that section is deleted and exactly what was sent is stored in its place. Sending `{"settings":{"enableGlobalUF":"true"}}` reverts every other setting to its system default. A section left out of the CONFIG is not touched.
-
-**Read-modify-write**
-
-1. `GET .../metadata?CONFIG={"include":"settings"}` to fetch just the section being changed.
-2. Merge the change into the returned object, keeping every key that came back.
-3. `PUT` the complete section.
-
-**Adding a layout card without losing the others**
-
-The layout is a complete card map keyed by index string. Fetch it with `include=layout`, append the new card under the next sequential key, and PUT the whole map back.
-
-**Cloning a dashboard**
-
-Fetch the full metadata, take `layout`, `themes` and `settings` from `dashboardConfig`, drop `objId`, `displayName` and `description` (they are read-only in the response and are not valid Create CONFIG fields other than `displayName`/`description`, which must be supplied fresh), then POST with a new `displayName`. The `viewName` values inside `layout` must match views that exist in the target workspace.
-
-## Behaviour worth knowing before the first call
-
-| Case | Behaviour | Recommendation |
-|---|---|---|
-| Partial `settings` on Update | Only the keys sent are stored; the rest revert to defaults. | Send the full settings object fetched via GET. |
-| Section omitted on Update | Left unchanged. | Include only the sections being replaced. |
-| `layoutType` grid preset (1-4) | The server auto-injects a USERFILTERS card at index `"1"` and rearranges view cards into columns, renumbering the input. | Omit `layoutType`, or send 0, for free form layouts; confirm with a GET afterwards. |
-| `viewName` in a layout card | Identifies an analysis view by display name, not ID. A renamed or deleted view renders as a broken card. | Verify view names through the Reports APIs first. |
-| Resetting the theme | `{"themes":{"default":"true"}}` clears all theme customization in one call. | Use it to undo theme changes without knowing the original values. |
-| Tabbed dashboards | Get Dashboard Metadata and Update Dashboard fail with error 8102. | Check the dashboard type first. |
-| `include` with several sections | `include=themes,layout` returns both sections but omits `objId`, `displayName` and `description`. | Use `include=all` when identity fields are needed, such as for clone workflows. |
-| Scalar types in the response | Theme and settings scalars come back as strings even where the CONFIG accepts numbers. | Coerce before comparing, and send back the form the CONFIG documents. |
+APIs for creating a dashboard, reading its stored layout, settings and themes, replacing any of those three sections, and listing the dashboards a user owns or can see. A dashboard is a canvas of cards on a fixed 80-unit-wide grid; `layout` travels as a JSON-encoded string on write and comes back as an object on read. Tabbed dashboards cannot be managed through these APIs (7511).
 
 # Endpoints
 
 | Endpoint | Method | Path | Operation ID | OAuth scope | Success |
 |---|---|---|---|---|---|
+| [Create Dashboard](create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `createDashboard` | `ZohoAnalytics.modeling.create` | 200 |
+| [Read Dashboard Metadata](get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `getDashboardMetadata` | `ZohoAnalytics.modeling.read` | 200 |
+| [Update Dashboard](update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `updateDashboard` | `ZohoAnalytics.modeling.update` | 204 |
 | [Get All Dashboards](get-dashboards.md) | GET | `/restapi/v2/dashboards` | `getDashboards` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get Owned Dashboards](get-owned-dashboards.md) | GET | `/restapi/v2/dashboards/owned` | `getOwnedDashboards` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get Shared Dashboards](get-shared-dashboards.md) | GET | `/restapi/v2/dashboards/shared` | `getSharedDashboards` | `ZohoAnalytics.metadata.read` | 200 |
-| [Create Dashboard](create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `createDashboard` | `ZohoAnalytics.modeling.create` | 200 |
-| [Get Dashboard Metadata](get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `getDashboardMetadata` | `ZohoAnalytics.modeling.read` | 200 |
-| [Update Dashboard](update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `updateDashboard` | `ZohoAnalytics.modeling.update` | 204 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 
-# Response Payload Notes
+# The layout model
 
-| Field | Description |
-|-------|-------------|
-| `status` | `success` or `failure`. Standard Zoho Analytics V2 response envelope. |
-| `summary` | Human-readable description of the completed operation. |
-| `data.ownedViews` | (Get All Dashboards only) Dashboards created/owned by the requesting user. |
-| `data.sharedViews` | (Get All Dashboards only) Dashboards shared with the requesting user by others. |
-| `data.views` | (Get Owned Dashboards and Get Shared Dashboards) Single unified list — owned-only or shared-only based on the endpoint. |
-| `viewId` | Returned as a **string** even though the underlying value is a long integer. |
-| `workspaceId` | Returned as a **string**. Use this as `<workspace-id>` in workspace-scoped API calls. |
-| `orgId` | Returned as a **string**. Corresponds to the `ZANALYTICS-ORGID` header value in workspace-scoped APIs. |
-| `createdTime` / `lastModifiedTime` | Epoch timestamps in **milliseconds** as strings. Divide by 1000 to convert to Unix epoch seconds. |
-| `sharedBy` | Present in all dashboard entries; empty string (`""`) in owned items, populated with email in shared items. |
-| `isFavorite` | User-specific: `true` if the **requesting user** has marked this dashboard as a favorite. |
-| `data.dashboardId` | (Create API only) ID of the newly created dashboard, returned as a string. |
-| `data.displayName` | (Create API only) Display name of the newly created dashboard as stored. |
-| `data.dashboardConfig` | (Get Metadata API only) Wrapper object containing full dashboard configuration. |
-| `data.dashboardConfig.objId` | Dashboard ID as a string. |
-| `data.dashboardConfig.themes` | Object describing the active visual theme (type, background, fonts, cards, palette, effects). |
-| `data.dashboardConfig.settings` | Object describing dashboard behaviour settings (export, drill-down, UF, etc.). |
-| `data.dashboardConfig.layout` | Object where each key is a card index string (`"1"`, `"2"`, …) and each value is a card configuration. |
+## `layout` is a JSON **string**, not a JSON object
 
-> **Custom domain note:** Get Shared Dashboards works on custom domains. Get All Dashboards and Get Owned Dashboards are disabled on custom domains. Create Dashboard, Get Dashboard Metadata, and Update Dashboard are accessible on custom domains but subject to additional permission checks.
+This is the single most common integration mistake. The `layout` attribute inside `CONFIG` is declared as
+text and is parsed by the server as a second, nested JSON document:
+
+```
+CONFIG={"displayName":"Sales Overview","layout":"{\"1\":{\"type\":\"VIEW\",\"viewName\":\"Sales Chart\",\"width\":80,\"height\":20,\"left\":0,\"top\":0}}"}
+```
+
+`themes` and `settings`, by contrast, *are* ordinary nested JSON objects — they are declared
+`type="JSONObject"` in the request schema, while `layout` is declared as text. Send `layout` as a string.
+
+> Note the asymmetry with Read Dashboard Metadata, which returns `layout` as a **genuine nested JSON
+> object**. A read response cannot be fed straight back into Create or Update; the `layout` value has to
+> be re-serialised to a string first. See [Round-tripping a dashboard](overview.md#round-tripping-a-dashboard).
+
+## Card addressing and geometry
+
+The decoded `layout` is an object keyed by arbitrary string card IDs (`"1"`, `"2"`, …). The keys carry no
+meaning beyond uniqueness — they are not persisted and the read API renumbers cards from `"1"` in storage
+order. Every card carries five positional fields:
+
+| Field | Type | Mandatory | Description |
+|-------|------|-----------|-------------|
+| `type` | String | **Yes** | Card kind. See [Card types](overview.md#card-types). Must be a JSON string. |
+| `width` | Integer | **Yes** | Width in grid units. Must satisfy `left + width <= 80`. |
+| `height` | Integer | **Yes** | Height in grid units. |
+| `left` | Integer | **Yes** | Zero-based horizontal offset from the left edge of the grid. |
+| `top` | Integer | **Yes** | Zero-based vertical offset from the top of the canvas. |
+
+Rules enforced in order, each with its own error code:
+
+1. All five fields present — else **7479**.
+2. `width`, `height`, `left`, `top` are JSON integers and `type` is a JSON string — else **7486**.
+   Quoted numbers, floats and `null` are all rejected.
+3. `type` is one of the eight recognised card types — else **7485**.
+4. `left >= 0`, `top >= 0`, `width > 1`, `height > 1`, `left + width <= 80` — else **7480**.
+5. The card meets the **per-type minimum size** — else **7512**.
+6. Non-`VIEW`, non-`USERFILTERS` cards carry a non-empty `content` — else **7483**.
+7. `VIEW` cards resolve to a view that exists (**8027**) and that the caller can read (**7481**).
+8. No two cards overlap — else **7482**.
+9. At most 100 cards — else **7484**.
+10. At least one card is not a `USERFILTERS` card — else **9001**.
+
+## Card types
+
+| `type` | Extra fields | Min height | Min width | Notes |
+|--------|--------------|-----------:|----------:|-------|
+| `VIEW` | `viewName` (String) | 5 | 10 | Embeds a saved report. `viewName` is matched **case-insensitively** against view display names in the workspace. |
+| `HTML` | `content` (String) | 1 | 5 | Free HTML block. Content is XSS-filtered with the `antisamyfilter_reports` profile before storage. |
+| `TITLE` | `content` (String) | 3 | 5 | Heading card. |
+| `PARA` | `content` (String) | 1 | 5 | Paragraph / text card. |
+| `IMAGE` | `content` (String) | 3 | 5 | Image card. A `content` value consisting only of digits is treated as a stored file ID. |
+| `EMBED` | `content` (String) | 5 | 5 | External URL / iframe embed. |
+| `USERFILTERS` | — | 1 | **80** | The interactive filter panel. Must span the full grid width. |
+| `DELETED` | `viewId` (String, optional) | 5 | 10 | Placeholder left behind when an embedded view is removed. Present in read responses; accepted on write for round-tripping. |
+
+> **`properties` on a `VIEW` card is ignored.** The server overwrites it with `{}` on every write. You do
+> not need to send it, and sending it has no effect. On non-`VIEW` cards, `properties` and
+> `image_properties` *are* stored as card-level key/value properties — values must be strings, and
+> `htmlBgColor` is discarded unless it matches `rgb(r, g, b)`.
+
+> **`content` must be non-empty.** An absent key, an explicit `null`, and `""` are all treated the same
+> and raise **7483**.
+
+## Generated layouts (`layoutType`)
+
+Setting the top-level `layoutType` attribute to **1, 2, 3 or 4** switches the server into auto-layout
+mode. In this mode the geometry you supply is **discarded** and a fresh layout is generated:
+
+1. A full-width `USERFILTERS` card (width 80, height 3) is placed at the top.
+2. One full-width `HTML` card (height 5) for every `content` value found anywhere in your input,
+   stacked in order.
+3. One `VIEW` card (height 20) for every distinct `viewName` found in your input, flowed across
+   `layoutType` columns of equal width (the last card in each row absorbs any remainder).
+
+Omitting `layoutType`, or sending `0`, keeps your layout exactly as submitted. Values outside `1-4` are
+rejected by the schema with **8509**.
 
 ---
 
-# Working with Get, Create, and Update Together
+# Round-tripping a dashboard
 
-## Why Get Dashboard Metadata Before Update
+[Read Dashboard Metadata](get-dashboard-metadata.md) is an **inspection** endpoint. Its response is not
+a valid Create or Update payload, and several things you write are never read back. Transform the
+response as follows before using it as the basis of an update, and keep your own copy of the CONFIG you
+submitted for anything in the "lost" list.
 
-The **Update Dashboard** API performs a **full section replacement** — not a merge. When you include `layout`, `themes`, or `settings` in an Update request, the server:
+## Transformations required
 
-1. Deletes **all** stored rows for that section
-2. Stores exactly what you sent
+| Difference | What to do |
+|---|---|
+| `layout` is written as a **string** but returned as a nested **object** | Re-serialise it: `CONFIG.layout = JSON.stringify(response.data.dashboardConfig.layout)`. |
+| `objId` is returned but not accepted | Delete it. Otherwise **8542**. |
+| `displayName` is returned but rejected by Update | Delete it before an update. Otherwise **8542**. |
+| `description` is returned but rejected by Update | Delete it before an update. Otherwise **8542**. |
+| Theme numbers are returned as **strings** (`"4"`, `"0.9"`, `"2"`) | `card.blur`, `card.radius`, `card.margin` and `image.transparency` are declared `type="int"`, and `image.flip` as `type="boolean"`. Convert those five back to numbers/booleans before writing. The remaining theme keys are regex-validated and accept the string form. |
+| Card IDs are **renumbered** `"1"`…`"N"` in storage order | Do not key your own state off a card ID across a write. |
+| `allowExport` always comes back with all six sub-keys | Expected — sub-keys you omit on write are stored as `"false"`. |
 
-If you only send `{"settings": {"enableGlobalUF": "true"}}`, every other setting reverts to the system default. To avoid unintended data loss, always **fetch first, modify, then update**.
+## Written but never returned
 
----
+These are silently lost by a read-modify-write cycle:
 
-## Workflow 1 — Read-Modify-Write (Safe Update)
+| Key | Note |
+|---|---|
+| `layoutType` (1–4) | Auto-layout is not recorded in the read response. Omit it on update to preserve the stored geometry. |
+| Card `properties` | Accepted and stored on non-`VIEW` cards, never returned. (On `VIEW` cards it is overwritten with `{}` at write time, so nothing is lost there.) |
+| Card `image_properties` | Accepted and stored, never returned. |
+| `allowAllExport` | Reads back as `allowExport`; the alias itself is not recoverable. |
 
-**Step 1: Fetch only the section you need to change**
+## Returned but not writable
 
-Use `include` to avoid fetching the full config when you only need one section:
+| Key | Note |
+|---|---|
+| `respContent` on `DELETED` cards | A localised explanation of why the card is a placeholder. Not a write key; drop it. |
 
-```http
-GET /restapi/v2/workspaces/320873000000001001/dashboards/320873000000597763/metadata?CONFIG={"include":"settings"}
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 320873000000000001
-```
+## Values that change across a round trip
 
-Response — only the stored (non-default) settings are returned:
-
-```json
-{
-  "data": {
-    "dashboardConfig": {
-      "settings": {
-        "smartAlignCharts": "true",
-        "fitToWidth": "true",
-        "allowDrillDown": "true",
-        "allowExport": { "pdf": "true", "excel": "true", "csv": "true", "html": "true", "image": "true", "zohoSheet": "true" }
-      }
-    }
-  }
-}
-```
-
-**Step 2: Modify the desired key(s) in the returned object**
-
-Add `enableGlobalUF` to the settings object from the response:
-
-```json
-{
-  "smartAlignCharts": "true",
-  "fitToWidth": "true",
-  "allowDrillDown": "true",
-  "enableGlobalUF": "true",
-  "allowExport": { "pdf": "true", "excel": "true", "csv": "true", "html": "true", "image": "true", "zohoSheet": "true" }
-}
-```
-
-**Step 3: Send the complete modified object in the Update**
-
-```http
-PUT /restapi/v2/workspaces/320873000000001001/dashboards/320873000000597763
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 320873000000000001
-Content-Type: application/x-www-form-urlencoded
-
-CONFIG={"settings":{"smartAlignCharts":"true","fitToWidth":"true","allowDrillDown":"true","enableGlobalUF":"true","allowExport":{"pdf":"true","excel":"true","csv":"true","html":"true","image":"true","zohoSheet":"true"}}}
-```
-
-> Apply the same pattern for `themes` and `layout` — always send the full section back, not just the changed keys.
+| Key | Behaviour |
+|---|---|
+| `viewName` | Matched case-insensitively on write; returned in the view's stored casing. |
+| `content` | Passed through the `antisamyfilter_reports` XSS filter on write, and rewritten on read so that stored file IDs become URLs. The string you read is not necessarily the string you wrote — writing it back can change an `IMAGE` or `EMBED` card. |
+| `themes.card.border.width` | One submitted value is stored on all four edges and collapses back to one key on read. |
+| Background colour | `solid.background`, `gradient.background` and `image.background` share one storage row, re-expanded on read using the stored background type. If that type row is absent the read defaults to `solid.background`. |
 
 ---
 
-## Workflow 2 — Layout Update Without Losing Cards
+# Card Type Quick Reference
 
-The layout is a complete card map. Sending a partial layout (e.g., only 2 cards) replaces the entire layout with those 2 cards. To add a card without removing others:
-
-**Step 1: Fetch the current layout**
-
-```http
-GET .../metadata?CONFIG={"include":"layout"}
-```
-
-**Step 2: Append the new card to the returned layout object**
-
-The card index key must be the next sequential number. Existing card indices from the GET response are preserved:
-
-```json
-{
-  "1": { "type": "USERFILTERS", "width": 80, "height": 3, "left": 0, "top": 0 },
-  "2": { "type": "VIEW", "width": 40, "height": 20, "left": 0, "top": 3, "viewName": "Sales_Report" },
-  "3": { "type": "VIEW", "width": 40, "height": 20, "left": 40, "top": 3, "viewName": "Revenue_Chart" }
-}
-```
-
-**Step 3: PUT the full layout back**
-
-```http
-PUT .../dashboards/320873000000597763
-...
-CONFIG={"layout":{"1":{"type":"USERFILTERS","width":80,"height":3,"left":0,"top":0},"2":{"type":"VIEW","width":40,"height":20,"left":0,"top":3,"viewName":"Sales_Report"},"3":{"type":"VIEW","width":40,"height":20,"left":40,"top":3,"viewName":"Revenue_Chart"}}}
-```
+| `type` | Needs `viewName` | Needs `content` | Min H × W | Returned by Read |
+|--------|:----------------:|:---------------:|----------:|:----------------:|
+| `VIEW` | Yes | No | 5 × 10 | Yes, with `viewName` |
+| `HTML` | No | Yes | 1 × 5 | Yes, with `content` |
+| `TITLE` | No | Yes | 3 × 5 | Yes, with `content` |
+| `PARA` | No | Yes | 1 × 5 | Yes, with `content` |
+| `IMAGE` | No | Yes | 3 × 5 | Yes, with `content` |
+| `EMBED` | No | Yes | 5 × 5 | Yes, with `content` |
+| `USERFILTERS` | No | No | 1 × 80 | Yes, positional only |
+| `DELETED` | No | No | 5 × 10 | Yes, with `viewId` and `respContent` |
 
 ---
 
-## Workflow 3 — Cloning a Dashboard (Get → Create)
+# Operational Notes and Failure Cases
 
-Use the full metadata of an existing dashboard as a template for a new one:
-
-**Step 1: Fetch full metadata of the source dashboard**
-
-```http
-GET /restapi/v2/workspaces/320873000000001001/dashboards/320873000000597763/metadata
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 320873000000000001
-```
-
-**Step 2: Take `layout`, `themes`, `settings` from the response `dashboardConfig` object**
-
-Strip out `objId`, `displayName`, `description` — these are read-only fields in the GET response and are not valid CONFIG fields for Create.
-
-**Step 3: POST to Create Dashboard with a new `displayName`**
-
-```http
-POST /restapi/v2/workspaces/320873000000001001/dashboards
-Content-Type: application/x-www-form-urlencoded
-
-CONFIG={
-  "displayName": "Sales Overview - Copy",
-  "description": "Cloned from Sales Overview dashboard",
-  "layout": { <layout from GET response> },
-  "themes": { <themes from GET response> },
-  "settings": { <settings from GET response> }
-}
-```
-
-> **Note:** `viewName` values inside `layout` must match the display names of existing analysis views in the **target workspace**. If cloning across workspaces, update the `viewName` values accordingly before posting.
-
----
-
-## Special Cases and Caveats
-
-| Case | Behaviour | Recommendation |
-|------|-----------|----------------|
-| **Partial settings in Update** | If you send `settings` with only some keys, all other settings revert to system defaults. Only explicitly-set values are stored. | Always send the full settings object (fetched via GET) with your changes merged in. |
-| **Omitting a section in Update** | If `layout`, `themes`, or `settings` is absent from the CONFIG, that section is **not changed**. Safe to omit sections you are not modifying. | Only include the section(s) you intend to replace. |
-| **`layoutType` preset in Create/Update** | When `layoutType` is `1`–`4` (grid preset), the server **auto-injects** a USERFILTERS card at position `"1"` and rearranges view cards into columns. Your input card order may be renumbered. | Omit `layoutType` (or set to `0`) for free-form layouts. Use GET after Create/Update to confirm the final stored layout. |
-| **`viewName` in layout cards** | Identifies an analysis view by its **display name** (not ID). If the referenced view is renamed or deleted, the card will show as broken in the dashboard. | Always verify view names using the Reports API before sending layout. |
-| **Reset theme to defaults** | Send `{"themes": {"default": "true"}}` in Update to clear all custom theme settings and restore the system default theme. | Use this to undo theme customizations in a single call without needing to know the original values. |
-| **`objId` in GET response** | The `dashboardConfig.objId` field is the dashboard ID. Use it directly as `<dashboard-id>` in the Update URL. | `objId` = `dashboardId` (Create response) = `viewId` (listing API response). Same value, different field names. |
-| **Tabbed dashboards** | Error `8102` is returned if you call Get Metadata or Update on a tabbed dashboard. These are not supported via the V2 API. | Use the UI or check the dashboard type before calling these APIs. |
-| **`include` with comma-separated values** | Requesting `include=themes,layout` returns both sections without `objId`, `displayName`, or `description`. These top-level identity fields are only included when `include=all` (or omitted). | Always use `include=all` (default) when you need identity fields for clone workflows. |
+| Scenario | Behaviour |
+|----------|-----------|
+| `layout` sent as a nested JSON object instead of a string | Rejected by schema validation. Encode the layout as a string. |
+| Two cards reference the same `viewName` | Permitted. The name is resolved once and both cards point at the same view. |
+| `viewName` differs only by case from the stored display name | Resolves correctly — lookup is case-insensitive. |
+| `layoutType` set to 2 with hand-placed cards | The hand-placed geometry is discarded and a two-column layout is generated from the view names and content strings found in the input. |
+| `settings` supplied with one key on Update | The dashboard ends up with exactly one stored setting. Always write the full section. |
+| `themes` omitted on Create | The default theme `{"default":"true","type":"2"}` is written. |
+| `themes` omitted on Update | The existing theme is left untouched. |
+| A `VIEW` card points at a view the caller cannot read | **7481**. The card is not silently dropped. |
+| A card is exactly 1 unit tall or wide | **7480** — the minimum is strictly greater than 1, before the per-type minimum is even checked. |
+| A `USERFILTERS` card narrower than 80 units | **7512**, not 7480 — the per-type minimum width for the filter panel is the full grid. |
+| Dashboard contains only `USERFILTERS` cards | **9001** `DASHBOARD_EMPTY`. |
+| Create fails after partial validation | Nothing is written. Create validates the whole CONFIG before persisting, and Update runs inside a transaction. |
 
 # Error Codes Used in This Group
 
 | Code | HTTP | Meaning |
 |---|---|---|
+| [7018](../../../foundations/error-codes.md#error-7018) | 400 | Malformed URL — the ID is not a valid numeric path segment. |
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A view with the given viewName already exists in this workspace. |
+| [7111](../../../foundations/error-codes.md#error-7111) | 400 | METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [8072](../../../foundations/error-codes.md#error-8072) | 400 | The target object is not a valid dashboard. |
-| [8102](../../../foundations/error-codes.md#error-8102) | 400 | Dashboard view type not supported for this operation. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
+| [7309](../../../foundations/error-codes.md#error-7309) | 400 | SECURITYNEEDSLOGIN — No authentication was supplied. |
+| [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
+| [7479](../../../foundations/error-codes.md#error-7479) | 400 | A card is missing one or more of type, width, height, left, top. |
+| [7480](../../../foundations/error-codes.md#error-7480) | 400 | Negative offset, width/height of 1 or less, or left + width > 80. |
+| [7481](../../../foundations/error-codes.md#error-7481) | 400 | The referenced view exists but the caller cannot read it. |
+| [7482](../../../foundations/error-codes.md#error-7482) | 400 | Two cards overlap. |
+| [7483](../../../foundations/error-codes.md#error-7483) | 400 | A HTML, TITLE, PARA, IMAGE or EMBED card has absent, null or empty content. |
+| [7484](../../../foundations/error-codes.md#error-7484) | 400 | More than 100 cards in the layout. |
+| [7485](../../../foundations/error-codes.md#error-7485) | 400 | Unrecognised card type. |
+| [7486](../../../foundations/error-codes.md#error-7486) | 400 | A positional field has the wrong JSON type. |
+| [7487](../../../foundations/error-codes.md#error-7487) | 400 | displayName or layout is absent, null or empty. |
+| [7488](../../../foundations/error-codes.md#error-7488) | 400 | A settings or themes key has an empty or null value, or an unrecognised key reached the server. |
+| [7491](../../../foundations/error-codes.md#error-7491) | 400 | The sub-object required by themes.type is missing, or card is absent. |
+| [7492](../../../foundations/error-codes.md#error-7492) | 400 | A required field inside the type sub-object or inside card is missing. |
+| [7493](../../../foundations/error-codes.md#error-7493) | 400 | A sub-object belonging to a different theme type is present, or a forbidden key accompanies default. |
+| [7507](../../../foundations/error-codes.md#error-7507) | 400 | displayName exceeds 100 characters, or description exceeds 250. |
+| [7510](../../../foundations/error-codes.md#error-7510) | 400 | layout is not parseable JSON, or a themes sub-object is null. |
+| [7511](../../../foundations/error-codes.md#error-7511) | 400 | The target is a tabbed dashboard. |
+| [7512](../../../foundations/error-codes.md#error-7512) | 400 | INVALIDDATEFORMAT — A date pattern could not be parsed. |
+| [7513](../../../foundations/error-codes.md#error-7513) | 400 | chartEffect.type supplied while chartEffect.apply is 1. |
+| [7514](../../../foundations/error-codes.md#error-7514) | 400 | chartEffect.apply is 2 but chartEffect.type is absent. |
+| [8027](../../../foundations/error-codes.md#error-8027) | 400 | One or more VIEW cards name a view that does not exist in this workspace, or viewName is absent / null / non-string. |
+| [8504](../../../foundations/error-codes.md#error-8504) | 400 | LESSTHANMINOCCURANCE — CONFIG was not sent. |
+| [8509](../../../foundations/error-codes.md#error-8509) | 400 | PATTERNNOTMATCHED — roleName contains disallowed characters, or accessType is not one of the three values. |
+| [8517](../../../foundations/error-codes.md#error-8517) | 400 | A field has the wrong JSON data type — exclude: "yes", isAxisMerge: "maybe", compType: 123. |
+| [8534](../../../foundations/error-codes.md#error-8534) | 400 | JSONPARSEERROR — CONFIG is not valid JSON. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
+| [8542](../../../foundations/error-codes.md#error-8542) | 400 | An unknown key is present in CONFIG, or a windowFunction is mis-configured. |
+| [9001](../../../foundations/error-codes.md#error-9001) | 400 | Every card in the layout is a USERFILTERS card. |
 
 # Related
 

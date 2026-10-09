@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Add Aggregate Formula
-description: Creates an aggregate formula owned by the specified view.
+description: Creates a new aggregate formula owned by the specified view.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas"
 tags:
   - zoho-analytics
@@ -48,10 +48,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -63,7 +63,7 @@ Creates a new aggregate formula owned by the specified view.
 
 From the OpenAPI specification:
 
-Creates an aggregate formula owned by the specified view. The formula applies an aggregate function across the rows of a table to produce a single summarized value, such as total sales or average order value.
+Creates a new aggregate formula owned by the specified view.
 
 Synonyms and a priority ranking can be supplied so that the metric is matched to natural-language queries by the search and insight features.
 

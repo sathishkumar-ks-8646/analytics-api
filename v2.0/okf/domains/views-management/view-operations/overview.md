@@ -58,10 +58,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -222,18 +222,18 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 |---|---|---|
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A view with the given viewName already exists in this workspace. |
+| [7111](../../../foundations/error-codes.md#error-7111) | 400 | METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists. |
 | [7144](../../../foundations/error-codes.md#error-7144) | 400 | The specified folder does not exist. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
 | [7413](../../../foundations/error-codes.md#error-7413) | 400 | TABLENAME is missing or null. |
-| [8058](../../../foundations/error-codes.md#error-8058) | 400 | The organization ID provided in the ZANALYTICS-DEST-ORGID header does not exist. |
+| [8058](../../../foundations/error-codes.md#error-8058) | 400 | The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist. |
 | [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
-| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the organization's Account Admin. |
-| [8062](../../../foundations/error-codes.md#error-8062) | 400 | withCustomDomain is true but no custom domain is configured for this workspace. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
+| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
+| [8062](../../../foundations/error-codes.md#error-8062) | 400 | ADDROWREQUESTSTILLINPROGRESS — Another row-write request for this table is still being processed. |
+| [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [15007](../../../foundations/error-codes.md#error-15007) | 400 | The copy is not allowed because the organisation of the destination workspace does not match that of the caller and no valid workspace key was supplied. |
+| [15007](../../../foundations/error-codes.md#error-15007) | 400 | The copy operation is not allowed — the destination workspace's organisation does not match the caller's organisation, and no valid workspaceKey was supplied (or it does not match). |
 
 # Related
 

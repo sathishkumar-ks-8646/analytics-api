@@ -50,10 +50,10 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -198,12 +198,12 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 |---|---|---|
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [7390](../../../foundations/error-codes.md#error-7390) | 400 | The workspace does not belong to the organization in the ZANALYTICS-ORGID header. |
-| [7550](../../../foundations/error-codes.md#error-7550) | 400 | The specified role name does not exist as a custom role in the organization. |
-| [8040](../../../foundations/error-codes.md#error-8040) | 400 | One or more of the specified email addresses are not currently Workspace Admins of this workspace. |
+| [7390](../../../foundations/error-codes.md#error-7390) | 400 | WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID. |
+| [7550](../../../foundations/error-codes.md#error-7550) | 400 | The specified role name does not exist as a custom role in the org. |
+| [8040](../../../foundations/error-codes.md#error-8040) | 400 | One or more specified email addresses are not currently Workspace Admins in this workspace. |
 | [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
-| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the organization's Account Admin. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
+| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
+| [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 
 # Related

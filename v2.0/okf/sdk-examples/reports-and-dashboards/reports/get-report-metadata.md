@@ -1,6 +1,6 @@
 ---
 type: SDK Example
-title: SDK examples - Get Report Metadata
+title: SDK examples - Read Report Metadata
 description: "Code samples in 9 languages for GET /restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata (getReportMetadata)."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata"
 tags:
@@ -38,19 +38,19 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: endpoint-doc
     resource: "/domains/reports-and-dashboards/reports/get-report-metadata.md"
-    title: Endpoint reference - Get Report Metadata
+    title: Endpoint reference - Read Report Metadata
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
 # Summary
 
-Code samples for [Get Report Metadata](../../../domains/reports-and-dashboards/reports/get-report-metadata.md) (`GET /restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata`). Replace the placeholder client ID, client secret, refresh token, organization ID, workspace ID and view ID values with your own. The SDK client construction pattern for each language is explained in [SDK clients](../../../foundations/sdk-clients.md).
+Code samples for [Read Report Metadata](../../../domains/reports-and-dashboards/reports/get-report-metadata.md) (`GET /restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata`). Replace the placeholder client ID, client secret, refresh token, organization ID, workspace ID and view ID values with your own. The SDK client construction pattern for each language is explained in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Examples
 
@@ -275,6 +275,6 @@ info response;
 
 # Related
 
-- [Get Report Metadata](../../../domains/reports-and-dashboards/reports/get-report-metadata.md) - full endpoint reference.
+- [Read Report Metadata](../../../domains/reports-and-dashboards/reports/get-report-metadata.md) - full endpoint reference.
 - [Reports (Analysis Views) overview](../../../domains/reports-and-dashboards/reports/overview.md).
 - [SDK clients](../../../foundations/sdk-clients.md).

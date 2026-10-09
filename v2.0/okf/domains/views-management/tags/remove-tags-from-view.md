@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Remove Multiple Tags From View
-description: "Detaches a batch of tags from one view, or clears the view of every tag."
+description: "Detaches a batch of tags from one view, or clears the view entirely."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags"
 tags:
   - zoho-analytics
@@ -49,10 +49,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -71,7 +71,7 @@ Detaches a batch of **tags** from one view, or clears the view entirely.
 
 From the OpenAPI specification:
 
-Detaches a batch of tags from one view, or clears the view of every tag.
+Detaches a batch of tags from one view, or clears the view entirely.
 
 The tags survive and stay attached to every other view - only this view's links are removed. Setting dissociateAll to true is scoped to this single view, which makes it the safe way to reset a view's labels and to free slots against the ten-tag ceiling.
 

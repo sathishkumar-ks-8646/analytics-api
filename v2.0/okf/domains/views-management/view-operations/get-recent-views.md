@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Recent Views
-description: "Returns the views most recently accessed by the authenticated user, ordered with the most recent first."
+description: "Returns a list of views recently accessed by the authenticated user across all workspaces the user has access to, sorted by access time (most recently accessed first)."
 resource: https://analyticsapi.zoho.com/restapi/v2/recentviews
 tags:
   - zoho-analytics
@@ -39,10 +39,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -53,12 +53,6 @@ status: stable
 Returns a list of views recently accessed by the authenticated user across **all workspaces** the user has access to, sorted by access time (most recently accessed first). This is a user-scoped, cross-workspace API — no workspace ID is required in the URL.
 
 > This API has no CONFIG parameter. Results are personal to the calling user — different users calling this API see their own respective recent view history.
-
-From the OpenAPI specification:
-
-Returns the views most recently accessed by the authenticated user, ordered with the most recent first.
-
-The API is user-scoped and spans workspaces: views from every workspace and organization the user can reach are returned together in one list, each carrying the workspace it belongs to. No workspace ID is needed in the URL, and the history returned is personal to the token used to make the call.
 
 # Endpoint
 

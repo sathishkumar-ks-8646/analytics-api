@@ -1,8 +1,8 @@
 ---
 type: SDK Example
 title: SDK examples - Get My Permissions
-description: "Code samples in 9 languages for GET /restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions (getUserPermissions)."
-resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions"
+description: "Code samples in 9 languages for GET /restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions (getUserPermissions)."
+resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions"
 tags:
   - zoho-analytics
   - sdk
@@ -21,7 +21,7 @@ tags:
 api:
   operation_id: getUserPermissions
   method: GET
-  path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions"
+  path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions"
   endpoint_doc: "/domains/share-and-publish/sharing/get-user-permissions.md"
   languages:
     - cURL
@@ -38,26 +38,26 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: endpoint-doc
     resource: "/domains/share-and-publish/sharing/get-user-permissions.md"
     title: Endpoint reference - Get My Permissions
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
 # Summary
 
-Code samples for [Get My Permissions](../../../domains/share-and-publish/sharing/get-user-permissions.md) (`GET /restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions`). Replace the placeholder client ID, client secret, refresh token, organization ID, workspace ID and view ID values with your own. The SDK client construction pattern for each language is explained in [SDK clients](../../../foundations/sdk-clients.md).
+Code samples for [Get My Permissions](../../../domains/share-and-publish/sharing/get-user-permissions.md) (`GET /restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions`). Replace the placeholder client ID, client secret, refresh token, organization ID, workspace ID and view ID values with your own. The SDK client construction pattern for each language is explained in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Examples
 
 ## cURL
 
 ```bash
-curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/35130000001055707/views/35130000001055717/share/mypermissions" -H 'ZANALYTICS-ORGID: <org-id>' -H 'Authorization: Zoho-oauthtoken <access_token>'
+curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/35130000001055707/views/35130000001055717/share/userpermissions" -H 'ZANALYTICS-ORGID: <org-id>' -H 'Authorization: Zoho-oauthtoken <access_token>'
 ```
 
 ## C#
@@ -270,7 +270,7 @@ headersMap = Map();
 headersMap.put("ZANALYTICS-ORGID", orgId);
 response = invokeurl
 [
-  url :"https://analyticsapi.zoho.com/restapi/v2/workspaces/" + workspaceId + "/views/" + viewId + "/share/mypermissions"
+  url :"https://analyticsapi.zoho.com/restapi/v2/workspaces/" + workspaceId + "/views/" + viewId + "/share/userpermissions"
   type :GET
   headers:headersMap
   connection:"analytics_oauth_connection"

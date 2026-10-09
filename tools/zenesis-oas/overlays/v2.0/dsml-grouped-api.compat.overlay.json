@@ -62,11 +62,76 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7005",
+            "description": "COMMONINTERNALSERVERERROR — Surfaces when trainingTableId does not identify a real table.",
+            "resolution": "Verify the ID via Get View List."
+          },
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an owner of the workspace."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The training table belongs to a different workspace.",
+            "resolution": "Use a table from <workspace-id>."
+          },
+          {
+            "name": "8078",
+            "description": "EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent empty.",
+            "resolution": "Supply a value."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing.",
+            "resolution": "The message names the attribute."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — serverOption or predictionType is outside its allowed set.",
+            "resolution": "The message names the attribute and permitted values."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG is absent, or a required key is missing at the template level.",
+            "resolution": "Send a complete CONFIG object."
+          },
+          {
+            "name": "8547",
+            "description": "ARRAYSIZEOUTOFRANGE — features is empty or exceeds the allowed array size.",
+            "resolution": "Send between 3 and 20 feature names."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis'].post",
       "update": {
         "x-zenesis-title": "Create AutoML Analysis"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis'].post",
+      "update": {
+        "description": "Creates an analysis and immediately starts training one model per configured algorithm. Returns as soon as the training job is queued — it does not wait for training to finish."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis'].post",
@@ -111,11 +176,64 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an Account Admin, Organization Admin, or the workspace's own admin."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis'].get",
       "update": {
         "x-zenesis-title": "Get AutoML Analysis In Workspace"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis'].get",
+      "update": {
+        "description": "Returns every AutoML analysis defined in one workspace. Identical to Get AutoML Analysis In Org except that it is workspace-scoped and therefore omits the workspace fields."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}/execute'].post.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an owner of the workspace."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
     },
     {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}/execute'].post",
@@ -125,11 +243,48 @@
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}/execute'].post",
+      "update": {
+        "description": "Triggers a deployment immediately — the \"run now\" action. Scores the input table with the deployed model and writes the results to the output table according to the deployment's importType."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an owner of the workspace."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}'].delete",
       "update": {
         "x-zenesis-title": "Delete AutoML Analysis"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}'].delete",
+      "update": {
+        "description": "Deletes an analysis and everything beneath it — all its models, and all deployments attached to those models."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}'].get.responses['200'].content['application/json'].examples.singleModel",
@@ -160,11 +315,41 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an owner of the workspace."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}'].get",
       "update": {
         "x-zenesis-title": "Get AutoML Analysis Details"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}'].get",
+      "update": {
+        "description": "Returns the full definition of one analysis together with every model trained under it — including each model's ID, score, training status, and hyperparameters. This is the pivotal read in the family: it is the only source of modelId."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}'].get",
@@ -209,6 +394,24 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/analysis'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller is not an Account Admin / Organization Admin of the organization.",
+            "resolution": "Call from the standard API host as an Account Admin or Organization Admin."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/analysis'].get",
       "update": {
         "x-zenesis-title": "Get AutoML Analysis In Org"
@@ -216,11 +419,48 @@
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/analysis'].get",
+      "update": {
+        "description": "Returns every AutoML analysis across all workspaces in the organization, each tagged with the workspace it belongs to. This is the organization-wide inventory call."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an owner of the workspace."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}'].delete",
       "update": {
         "x-zenesis-title": "Delete AutoML Analysis Model"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}'].delete",
+      "update": {
+        "description": "Deletes one model from an analysis, along with the deployment attached to it. The analysis and its other models are unaffected."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments'].get.responses['200'].content['application/json'].examples.truncateAddDeployment",
@@ -251,11 +491,41 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an owner of the workspace."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments'].get",
       "update": {
         "x-zenesis-title": "Get Deployments For A Model"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments'].get",
+      "update": {
+        "description": "Returns the deployment configured for a model — its input and output tables, schedule outcome, and last run status."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments'].post.requestBody.content['application/x-www-form-urlencoded'].examples.hourlyAppend",
@@ -328,11 +598,71 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an owner of the workspace."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — The input table belongs to a different workspace.",
+            "resolution": "Use a table from <workspace-id>."
+          },
+          {
+            "name": "8050",
+            "description": "INVALIDVALUE — timezone is not a recognised timezone name.",
+            "resolution": "Use a standard timezone identifier such as Asia/Kolkata."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A required attribute is missing; for weekly/monthly schedules this reports 'day'.",
+            "resolution": "The message names the attribute. See the schedule caveat above."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — serverOption, hour, minute, or interval is outside its permitted set.",
+            "resolution": "The message names the attribute and the allowed values."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG is absent or a mandatory key is missing at the template level.",
+            "resolution": "Send a complete CONFIG object."
+          },
+          {
+            "name": "8544",
+            "description": "OUTOFRANGE — A schedule value is outside its declared range.",
+            "resolution": "Correct the value."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments'].post",
       "update": {
         "x-zenesis-title": "Create AutoML Analysis Deployment"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments'].post",
+      "update": {
+        "description": "Binds a trained model to an input table and an output table so that predictions can be generated — on a recurring schedule, on demand, or both. Returns the new deployment ID and the ID of the output table it created."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments'].post",
@@ -349,11 +679,41 @@
       "x-migration": "HTML restatement of `description`. Retire it."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an owner of the workspace."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}'].delete",
       "update": {
         "x-zenesis-title": "Delete AutoML Analysis Model Deployment"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}'].delete",
+      "update": {
+        "description": "Deletes a deployment. The model becomes deployable again; the analysis, the model, and the output table are unaffected."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/whatif'].post.requestBody.content['application/x-www-form-urlencoded'].examples.regressionInputs",
@@ -412,11 +772,56 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/whatif'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+            "resolution": "Call from the standard API host as an owner of the workspace."
+          },
+          {
+            "name": "8078",
+            "description": "EMPTYJSONATTRIBUTEFOUND — features was sent as an empty object.",
+            "resolution": "Supply every training feature and its value."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — features is missing from CONFIG.",
+            "resolution": "Include the features object."
+          },
+          {
+            "name": "8504",
+            "description": "LESSTHANMINOCCURANCE — CONFIG is absent.",
+            "resolution": "Send a CONFIG object containing features."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/whatif'].post",
       "update": {
         "x-zenesis-title": "AutoML What If Analysis"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/whatif'].post",
+      "update": {
+        "description": "Generates a single prediction for a hypothetical set of feature values — a live \"what if I changed these inputs?\" query against a trained model. Nothing is stored and no table is written."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/whatif'].post",

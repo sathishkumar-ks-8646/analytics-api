@@ -43,7 +43,7 @@
           "Row Operations"
         ],
         "summary": "Add Row",
-        "description": "Adds a single row to the specified table.",
+        "description": "Inserts a single row into a table.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7092 | DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock on this table. | Retry once the import has finished. |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify . |\n| 7137 | NOTATABLE — The target view is not a table. | Target a table; reports, dashboards, and query tables cannot accept rows. |\n| 7164 | SYSTEMTABLEDATAMOD — System table data cannot be modified. | System tables are managed by Zoho Analytics. Target a user-created table instead. |\n| 7165 | SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified. | Target a non-snapshot table. |\n| 7301 | SECURITYNOTPERMITTED — The user cannot add rows to this view. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, View Owner, or has Add Row permission on the view. |\n| 7405 | DMLNOTALLOWED — Row modification is not allowed for this table. | Use a table that permits DML. |\n| 7512 | INVALIDDATEFORMAT — A pattern in dateFormat / columnDateFormat could not be parsed. | Supply a valid date pattern such as dd-MMM-yyyy. |\n| 7515 | UNKNOWNLOOKUPVALUE — A value for a lookup column does not exist in the parent table. | Add the value to the parent table first, or send an existing one. |\n| 8016 | APINOCOLUMNPRESENT — None of the supplied column names matched a column in the table. | Check the names via Get Columns. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG was not sent, or columns is missing. | Send a CONFIG object containing columns. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.create. |\n| 101021 | NOTASTREAMTABLE — Row operations are not supported on a stream table. | Target a non-stream table. |",
         "operationId": "addRow",
         "parameters": [
           {
@@ -163,7 +163,7 @@
           "Row Operations"
         ],
         "summary": "Update Rows",
-        "description": "Updates rows in the specified table.",
+        "description": "Updates the rows of a table that match a filter, or every row. Can optionally insert a row when nothing matches.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7092 | DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock on this table. | Retry once the import has finished. |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify . |\n| 7137 | NOTATABLE — The target view is not a table. | Target a table. |\n| 7164 | SYSTEMTABLEDATAMOD — System table data cannot be modified. | Target a user-created table instead. |\n| 7165 | SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified. | Target a non-snapshot table. |\n| 7301 | SECURITYNOTPERMITTED — The user cannot update rows in this view, or lacks Add Row permission when addIfNotExist fires. | Ensure the user has Update Row permission — and Add Row permission too if addIfNotExist is used. |\n| 7330 | UNKNOWNCOLUMNINFILTERCRITERIA — A column referenced in criteria does not exist in the table. | Verify the column names in criteria via Get Columns. |\n| 7405 | DMLNOTALLOWED — Row modification is not allowed for this table. | Use a table that permits DML. |\n| 7512 | INVALIDDATEFORMAT — A pattern in dateFormat / columnDateFormat could not be parsed. | Supply a valid date pattern. |\n| 7515 | UNKNOWNLOOKUPVALUE — A value for a lookup column does not exist in the parent table. | Send an existing lookup value. |\n| 8016 | APINOCOLUMNPRESENT — None of the supplied column names matched a column in the table. | Check the names via Get Columns. |\n| 8062 | ADDROWREQUESTSTILLINPROGRESS — Another row-write request for this table is still being processed. | Retry after the in-flight request completes. |\n| 8130 | INVALIDUPDATECRITERIACONFIGURATION — Both criteria and updateAllRows were sent, or neither was. | Send exactly one of the two. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG was not sent, or columns is missing. | Send a CONFIG object containing columns. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.update. |\n| 101021 | NOTASTREAMTABLE — Row operations are not supported on a stream table. | Target a non-stream table. |",
         "operationId": "updateRows",
         "parameters": [
           {
@@ -293,7 +293,7 @@
         ],
         "summary": "Delete Row",
         "operationId": "deleteRows",
-        "description": "Deletes rows from the specified table. Note: While OpenAPI generally discourages request bodies for DELETE operations, this API supports it for detailed filtering.",
+        "description": "Deletes the rows of a table that match a filter, or every row.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7092 | DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock on this table. | Retry once the import has finished. |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify . |\n| 7137 | NOTATABLE — The target view is not a table. | Target a table. |\n| 7164 | SYSTEMTABLEDATAMOD — System table data cannot be modified. | Target a user-created table instead. |\n| 7165 | SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified. | Target a non-snapshot table. |\n| 7301 | SECURITYNOTPERMITTED — The user cannot delete rows from this view. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, View Owner, or has Delete All Rows permission on the view. |\n| 7330 | UNKNOWNCOLUMNINFILTERCRITERIA — A column referenced in criteria does not exist in the table. | Verify the column names in criteria via Get Columns. |\n| 7405 | DMLNOTALLOWED — Row modification is not allowed for this table. | Use a table that permits DML. |\n| 8062 | ADDROWREQUESTSTILLINPROGRESS — Another row-write request for this table is still being processed. | Retry after the in-flight request completes. |\n| 8131 | INVALIDDELETECRITERIACONFIGURATION — Both criteria and deleteAllRows were sent, or neither was. | Send exactly one of the two. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG was not sent. | Send a CONFIG object containing criteria or deleteAllRows. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.delete. |",
         "parameters": [
           {
             "name": "ZANALYTICS-ORGID",
@@ -405,7 +405,7 @@
           }
         ],
         "summary": "Import Data into a New Table",
-        "description": "Use the Bulk APIs to create a new table and import data into it synchronously. ",
+        "description": "Creates a new table in the workspace from the uploaded data and returns the new table's ID along with the import result.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7092 | DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock in this workspace. | Retry once the import has finished. |\n| 7111 | METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists in the workspace. | Choose a different name, or import into the existing table with Import Data into an Existing Table (Synchronous). |\n| 7208 | IMPORTFILENUMBEROFFIELDSEXCEEDSSIZE — A row contains more fields than the header defines. | Correct the source data, or set the right delimiter. |\n| 7232 | IMPORTABORTED — A value could not be parsed and onError is ABORT. errorMessage carries the per-line detail. | Fix the data, or resend with onError set to SKIPROW or SETCOLUMNEMPTY. |\n| 7248 | INVALIDFILECONTENT — The payload could not be parsed as the declared fileType. | Check that fileType matches the actual content. |\n| 7301 | SECURITYNOTPERMITTED — The user cannot create tables in this workspace. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Table permission. |\n| 7478 | MORETHANMAXCOLUMN — The source has more columns than a table can hold. | Reduce the columns, or use selectedColumns to import a subset. |\n| 7512 | INVALIDDATEFORMAT — A pattern in dateFormat / columnDateFormat could not be parsed. | Supply a valid date pattern such as dd-MMM-yyyy. |\n| 8046 | INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source data. | Match the names to the source's header row. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing; with autoIdentify: false this is usually delimiter or quoted. | The message names the attribute. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. | The message names the attribute and the allowed values. |\n| 8139 | PASTEDDATALIMITEXCEEDED — The DATA parameter exceeds 10,000,000 characters. | Send the payload as a FILE upload instead. |\n| 8148 | DECIMALANDTHOUSANDSEPARATORSAME — The thousand and decimal separators resolve to the same character. | Choose different separators. |\n| 8149 | DECIMALANDTHOUSANDCOLUMNSEPARATORLEGNTHVALIDATION — A columnSeparators entry has fewer than two values. | Send [thousandSeparator, decimalSeparator] for each column. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG was not sent, or a mandatory key is missing at the template level. | Send a complete CONFIG object. |\n| 8516 | UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type. | Check that booleans are booleans and integers are integers. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.create. |",
         "operationId": "importDataNewTable",
         "parameters": [
           {
@@ -543,7 +543,7 @@
           }
         ],
         "summary": "Import Data into an Existing Table",
-        "description": "Use Bulk APIs to import data into an existing specified table synchronously.",
+        "description": "Loads the uploaded data into an existing table, appending, replacing, or merging according to importType.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7092 | DDLLOCKSINCEIMPORTINPROGRESS — Another import is holding a DDL lock on this table. | Retry once it has finished. |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify . |\n| 7107 | METAOBJECTNOTPRESENT — A column named in matchingColumns is not present in the table. | Verify the names via Get Columns. |\n| 7164 | SYSTEMTABLEDATAMOD — System table data cannot be modified. | Target a user-created table instead. |\n| 7165 | SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified. | Target a non-snapshot table. |\n| 7208 | IMPORTFILENUMBEROFFIELDSEXCEEDSSIZE — A row contains more fields than expected. | Correct the source data or the delimiter. |\n| 7232 | IMPORTABORTED — A value could not be parsed and onError is ABORT. | Fix the data, or resend with SKIPROW / SETCOLUMNEMPTY. |\n| 7248 | INVALIDFILECONTENT — The payload could not be parsed as the declared fileType. | Check that fileType matches the content. |\n| 7301 | SECURITYNOTPERMITTED — The user lacks the import permission matching importType, or is outside the workspace's permitted IP range. | Grant the specific import permission (see Permission Model), or use an importType the user is allowed. |\n| 7319 | OBJIDNOTBELONGSTODB — The table does not belong to the specified workspace. | Ensure and are consistent. |\n| 7478 | MORETHANMAXCOLUMN — The source has more columns than the table can hold. | Reduce the columns, or use selectedColumns. |\n| 7512 | INVALIDDATEFORMAT — A date pattern could not be parsed. | Supply a valid pattern. |\n| 8046 | INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source data. | Match the names to the source's header row. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing — commonly matchingColumns for UPDATEADD, or delimiter/quoted when autoIdentify is false. | The message names the attribute. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — importType, fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. | The message names the attribute and the allowed values. |\n| 8139 | PASTEDDATALIMITEXCEEDED — The DATA parameter exceeds 10,000,000 characters. | Send the payload as a FILE upload instead. |\n| 8148 | DECIMALANDTHOUSANDSEPARATORSAME — The thousand and decimal separators are the same character. | Choose different separators. |\n| 8149 | DECIMALANDTHOUSANDCOLUMNSEPARATORLEGNTHVALIDATION — A columnSeparators entry has fewer than two values. | Send [thousandSeparator, decimalSeparator] per column. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG was not sent, or a mandatory key is missing. | Send a complete CONFIG object. |\n| 8516 | UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type. | Check booleans and integers are sent as such. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.create. |",
         "operationId": "importDataExistingTable",
         "parameters": [
           {
@@ -599,7 +599,7 @@
                   "value": {
                     "FILE": "@/path/to/Sales.csv",
                     "CONFIG": {
-                      "importType": "updateadd",
+                      "importType": "UPDATEADD",
                       "fileType": "csv",
                       "autoIdentify": true,
                       "matchingColumns": [
@@ -615,7 +615,7 @@
                   "value": {
                     "DATA": "[{\"Region\":\"East\",\"Sales\":\"1000\"},{\"Region\":\"West\",\"Sales\":\"2000\"}]",
                     "CONFIG": {
-                      "importType": "updateadd",
+                      "importType": "UPDATEADD",
                       "fileType": "json",
                       "autoIdentify": true,
                       "matchingColumns": [
@@ -690,7 +690,7 @@
           }
         ],
         "summary": "Export Data from a View",
-        "description": "Use Bulk APIs to export data from the specified view synchronously.\n\nNote: Export Data API is restricted for certain resources (given below). For these cases, use the Asynchronous Export APIs instead:\n\n  - Tables having more than one million rows.\n  - Tables and Views from live connect workspaces.\n  - Dashboard and QueryTable view types.",
+        "description": "Exports the data of a view and returns the generated file in the response body.\n\nNote: Export Data API is restricted for certain resources (given below). For these cases, use the Asynchronous Export APIs instead:\n\n  - Tables having more than one million rows.\n  - Tables and Views from live connect workspaces.\n  - Dashboard and QueryTable view types.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify with Get View List. |\n| 7301 | SECURITYNOTPERMITTED — The caller lacks Export permission on the view, or the view does not belong to . | Ensure the caller is an Account Admin, Organization Admin, Workspace Admin, or View Owner, or holds Export permission on the view. |\n| 7327 | FILTERCRITERIAINVALID — criteria parsed but could not be converted into a query. | Simplify the expression and check operator and value types. |\n| 7330 | UNKNOWNCOLUMNINFILTERCRITERIA — A column named in criteria does not exist in the view. | Check the name against Get Columns. |\n| 7331 | FILTERCRITERIAPARSEERROR — criteria is syntactically malformed. | Check quoting: double quotes around column names, single quotes around string literals. |\n| 7332 | UNKNOWNTABLEINFILTERCRITERIA — A table qualifier in criteria is not part of the view. | Qualify columns only with tables the view actually uses. |\n| 7333 | INVALIDGROUPFUNCUSEINFILTERCRITERIA — An aggregate function was used in criteria. | Remove sum, avg, count, and similar functions; filter on raw column values instead. |\n| 7543 | ONLYBASETABLECOLINTABULARFILTERCRITERIA — criteria on a tabular view referenced a column outside its base table. | Filter using only the base table's own columns. |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 7801 | MARGINVALUEEXCEEDS — A PDF margin is outside 0–1 inches. | Send a value between 0 and 1. |\n| 7803 | INVALIDDIMENSION — width or height is outside the permitted image range. | Use width 250–2000 and height 200–2000. |\n| 7806 | XLSCELLLIMITEXCEEDS — The XLS export exceeds the per-sheet cell limit. | Narrow the export with criteria or selectedColumns, or export as CSV. |\n| 7807 | XLSCOLLIMITEXCEEDS — More than 256 columns were requested for an XLS export. | Reduce the column count with selectedColumns, or export as CSV. |\n| 7808 | XLSCELLCHARLIMITEXCEEDS — A single cell exceeds 32,767 characters. | Exclude the offending column, or export as CSV. |\n| 7809 | XLSNODATA — The XLS export produced no data. | Widen or remove criteria. |\n| 7824 | EXPORTREQBLOCKED — Export has been blocked for this workspace. | Contact Zoho Analytics support using the address in the error message. |\n| 7827 | EXPPDFRECORDLIMIT — The PDF exceeds 1,000,000 cells (visible columns × rows). | Narrow the export with criteria or selectedColumns, or choose a non-paginated format. |\n| 7830 | EXPALLRECORDLIMIT — The exported payload exceeds 100 MB. | Split the export with criteria, or use the asynchronous export. |\n| 8001 | INVALIDRESPFORMAT — responseFormat is not a supported value. | Send one of csv, json, xml, xls, pdf, html, image. |\n| 8014 | APIIMAGERESPONSENOTPOSSIBLE — image was requested for a view that is not a chart. | Export charts as images; use pdf or html for tables and reports. |\n| 8015 | APIEXPORTCOLUMNNOTPRESENT — A name in selectedColumns does not match any column in the view. | Check the display names with Get Columns. |\n| 8017 | INVALIDIMAGEFORMAT — imageFormat is not png, jpg, or jpeg. | Send one of the three supported values. |\n| 8088 | SECURITYCONTROLSFEATUREDISABLED — Export has been disabled for the organization by an administrator. | Ask an Organization Admin to re-enable export in the organization's security controls. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — A numeric or enumerated attribute is outside its permitted set. The message names the attribute and the accepted values. | Correct the value; see Appendix E. |\n| 8133 | SYNCEXPORTNOTALLOWED — The view is a dashboard, a query table, a live-connect view, or a table above the row limit. | Use the asynchronous export API for this view. |\n| 8188 | EXPORTINVALIDPASSWORD — password is empty, blank, or shorter than 6 characters. | Send a password of 6–256 characters. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false. |\n| 8507 | MORETHANMAXLENGTH — CONFIG exceeds 100,000 characters. | Shorten criteria or selectedColumns. |\n| 8547 | ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries. | Send between 1 and 300 column names, or omit the attribute. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.data.read. |",
         "operationId": "exportDataView",
         "parameters": [
           {
@@ -848,7 +848,7 @@
           }
         ],
         "summary": "Create Import Job for a New Table",
-        "description": "Create an import job to import data into a new table asynchronously. Max allowed file size is 100 MB.\n\nWorkflow of Asynchronous Import API:\n\n1. Create Import Job:\n   - Initiate the import by calling the Create Import Job API.\n   - A unique JOBID will be returned in the response, which serves as the reference for tracking the import job.\n\n2. Check Job Status:\n   - Use the Get Import Job Details API to monitor the status of the import job.\n   - The JOBID must be used in the request to check the status periodically (e.g., every 10 seconds).\n   - The response will include a JOBCODE, which indicates the current state of the job.\n\nHandling Import Job Status Based on JOBCODE:\n  - If the JOBCODE is 1001 or 1002, wait for a few seconds and repeat the status check loop.\n  - If the JOBCODE is 1003, stop the status check and inspect the error message for details.\n  - If the JOBCODE is 1005, verify the validity of the JOBID and terminate the status check.\n  - If the JOBCODE is 1004, the job is complete, and the import summary will be returned.\n\nLimitations:\n  - The import job summary is retained only for one hour after job completion.\n  - A maximum of 5 simultaneous import jobs is allowed per organization.\n  - A maximum file size of 100 MB can be imported.",
+        "description": "Uploads a file, creates a new table from it, and returns a job ID for tracking. The table is created and populated in the background.\n\nWorkflow of Asynchronous Import API:\n\n1. Create Import Job:\n   - Initiate the import by calling the Create Import Job API.\n   - A unique JOBID will be returned in the response, which serves as the reference for tracking the import job.\n\n2. Check Job Status:\n   - Use the Get Import Job Details API to monitor the status of the import job.\n   - The JOBID must be used in the request to check the status periodically (e.g., every 10 seconds).\n   - The response will include a JOBCODE, which indicates the current state of the job.\n\nHandling Import Job Status Based on JOBCODE:\n  - If the JOBCODE is 1001 or 1002, wait for a few seconds and repeat the status check loop.\n  - If the JOBCODE is 1003, stop the status check and inspect the error message for details.\n  - If the JOBCODE is 1005, verify the validity of the JOBID and terminate the status check.\n  - If the JOBCODE is 1004, the job is complete, and the import summary will be returned.\n\nLimitations:\n  - The import job summary is retained only for one hour after job completion.\n  - A maximum of 5 simultaneous import jobs is allowed per organization.\n  - A maximum file size of 100 MB can be imported.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7092 | DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock in this workspace. | Retry once it has finished. |\n| 7111 | METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists. | Choose a different name, or import into the existing table with Create Import Job for an Existing Table (Asynchronous). |\n| 7203 | IMPORTFILEEMPTY — No file was uploaded, or the uploaded file is empty. | Attach a non-empty FILE part. |\n| 7248 | INVALIDFILECONTENT — The file could not be parsed as the declared fileType. | Check that fileType matches the actual content. |\n| 7301 | SECURITYNOTPERMITTED — The user cannot create tables in this workspace. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Table permission. |\n| 7478 | MORETHANMAXCOLUMN — The source has more columns than a table can hold. | Reduce the columns, or use selectedColumns. |\n| 7512 | INVALIDDATEFORMAT — A date pattern could not be parsed. | Supply a valid pattern such as dd-MMM-yyyy. |\n| 8046 | INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source. | Match the names to the source's header row. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing; with autoIdentify: false this is usually delimiter, quoted, or commentChar. | The message names the attribute. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. | The message names the attribute and allowed values. |\n| 8125 | CALLBACKURLNOTVALID — callbackUrl is not a well-formed URL. | Supply a valid absolute http/https URL. |\n| 8126 | CALLBACKURLCONNECTIONERROR — The callback endpoint could not be reached. | Ensure the endpoint is publicly reachable. |\n| 8127 | CALLBACKURLRESTRICTED — The callback URL resolves to a private or internal address. | Use a publicly routable endpoint. |\n| 8134 | ASYNCIMPORTLIMITEXCEEDED — The organization already has the maximum number of import jobs in progress. | Wait for a running job to finish and retry. |\n| 8148 | DECIMALANDTHOUSANDSEPARATORSAME — The thousand and decimal separators are the same character. | Choose different separators. |\n| 8149 | DECIMALANDTHOUSANDCOLUMNSEPARATORLEGNTHVALIDATION — A columnSeparators entry has fewer than two values. | Send [thousandSeparator, decimalSeparator] per column. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG was not sent, or a mandatory key is missing. | Send a complete CONFIG object. |\n| 8516 | UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type. | Check booleans and integers are sent as such. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.create. |",
         "operationId": "createImportJobNewTable",
         "parameters": [
           {
@@ -959,7 +959,7 @@
           }
         ],
         "summary": "Create Export Job using SQL Query",
-        "description": "Create an export job using an SQL SELECT statement to initiate data export asynchronously.\n\nWorkflow:\n1. Create Export Job:\n  - Call the Create Export Job API.\n  - Receive a unique JOBID to track the export status.\n\n2. Check Export Job Status:\n  - Use the JOBID with the Get Export Job Details API.\n  - Poll every few seconds to get the current JOBCODE.\n\n   JOBCODEs and Meaning:\n   - 1001: JOB NOT INITIATED\n     → Export job acknowledged but not started. Retry after a short delay.\n   - 1002: JOB IN PROGRESS\n     → Export is currently being processed. Continue polling.\n   - 1003: ERROR OCCURRED\n     → An error occurred. Stop polling and investigate the error.\n   - 1004: JOB COMPLETED\n     → Export process completed. Proceed to download.\n   - 1005: JOB NOT FOUND\n     → Provided JOBID is invalid. Stop polling and verify the JOBID.\n\n3. Download Exported Data:\n  - Once JOBCODE is 1004, use the Download Exported Data API to download the exported file.\n\nLimitations:\n- Exported file will be available only for 1 hour after job completion.\n- Maximum 5 concurrent export jobs are allowed per organization.",
+        "description": "Creates an export job whose source is an ad-hoc SQL SELECT statement rather than a saved view.\n\nWorkflow:\n1. Create Export Job:\n  - Call the Create Export Job API.\n  - Receive a unique JOBID to track the export status.\n\n2. Check Export Job Status:\n  - Use the JOBID with the Get Export Job Details API.\n  - Poll every few seconds to get the current JOBCODE.\n\n   JOBCODEs and Meaning:\n   - 1001: JOB NOT INITIATED\n     → Export job acknowledged but not started. Retry after a short delay.\n   - 1002: JOB IN PROGRESS\n     → Export is currently being processed. Continue polling.\n   - 1003: ERROR OCCURRED\n     → An error occurred. Stop polling and investigate the error.\n   - 1004: JOB COMPLETED\n     → Export process completed. Proceed to download.\n   - 1005: JOB NOT FOUND\n     → Provided JOBID is invalid. Stop polling and verify the JOBID.\n\n3. Download Exported Data:\n  - Once JOBCODE is 1004, use the Download Exported Data API to download the exported file.\n\nLimitations:\n- Exported file will be available only for 1 hour after job completion.\n- Maximum 5 concurrent export jobs are allowed per organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITYNOTPERMITTED — The caller lacks Export permission on at least one table referenced by the query. | Ensure the caller holds Export permission on every table in the statement. |\n| 7401 | The SQL statement is not a valid or allowed construct. | Review the syntax; only SELECT statements over the workspace's own tables are accepted. |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 7571 | UNKNOWNVIEWIDPASSED — A tableCriteriaList[].viewId does not exist in this workspace. | Verify the IDs with Get View List. |\n| 7801 | MARGINVALUEEXCEEDS — A PDF margin is outside 0–1 inches. | Send a value between 0 and 1. |\n| 7824 | EXPORTREQBLOCKED — Export has been blocked for this workspace. | Contact Zoho Analytics support using the address in the error message. |\n| 7827 | EXPPDFRECORDLIMIT — The PDF exceeds 1,000,000 cells. | Narrow the statement or use selectedColumns. |\n| 7835 | NOTABLESINVOLVEDINSQLEXPORT — The statement references no table. | Query at least one table of the workspace. |\n| 7836 | GIVENTABLENOTINVOLVEDINSQLEXPORT — A tableCriteriaList[].viewId is not used by the statement. | List only tables the query actually references. |\n| 7837 | INVOLVEDTABLEDOESNOTHAVEPERMISSION — A table used by the query has no matching tableCriteriaList entry where one is required. | Supply a criteria entry for every participating table. |\n| 8001 | INVALIDRESPFORMAT — responseFormat is not a supported value. | Send one of csv, json, xml, xls, pdf, html. |\n| 8014 | APIIMAGERESPONSENOTPOSSIBLE — image was requested. | A query result cannot be rendered as an image; choose another format. |\n| 8015 | APIEXPORTCOLUMNNOTPRESENT — A name in selectedColumns is not in the result set. | Match the names to the columns the statement projects. |\n| 8088 | SECURITYCONTROLSFEATUREDISABLED — Export is disabled for the organization. | Ask an Organization Admin to re-enable export. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — A numeric or enumerated attribute is outside its permitted set. | Correct the value; see Appendix E. |\n| 8125 | CALLBACKURLNOTVALID — callbackUrl is malformed. | Send a well-formed absolute http/https URL. |\n| 8126 | CALLBACKURLCONNECTIONERROR — callbackUrl could not be reached during validation. | Make the endpoint publicly reachable before creating the job. |\n| 8127 | CALLBACKURLRESTRICTED — callbackUrl resolves to a private or internal address. | Use a publicly routable host. |\n| 8128 | INTERNALERRORONINITIATINGEXPORT — The job could not be queued. | Retry; if it persists, contact support. |\n| 8132 | ASYNCEXPORTLIMITEXCEEDED — 5 export jobs are already queued or running for the organization. | Wait for an in-flight job to finish, then retry. |\n| 8188 | EXPORTINVALIDPASSWORD — password is blank or shorter than 6 characters. | Send 6–256 characters. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A source table carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false. |\n| 8077 | EMPTYJSONCONFIGURATION — CONFIG was not sent, or was sent empty. | Send a CONFIG object containing at least sqlQuery. |\n| 8078 | EMPTYJSONATTRIBUTEFOUND — sqlQuery was sent but is blank. | Send a non-empty SELECT statement. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing — sqlQuery on the request itself, or viewId / criteria inside a tableCriteriaList entry. | The message names the attribute. |\n| 8507 | MORETHANMAXLENGTH — CONFIG exceeds 200,000 characters, or sqlQuery exceeds 100,000. | Shorten the statement. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.data.read. |\n| 8547 | ARRAYSIZEOUTOFRANGE — tableCriteriaList exceeds 25 entries, or selectedColumns is empty or exceeds 300. | Stay within the documented sizes. |",
         "operationId": "createExportJobSQLQuery",
         "parameters": [
           {
@@ -1130,7 +1130,7 @@
           }
         ],
         "summary": "Create Import Job for an Existing Table",
-        "description": "Create an import job to import data into a specified existing table asynchronously. Max allowed file size is 100 MB. \n\nWorkflow of Asynchronous Import API:\n\n1. Create Import Job:\n   - Initiate the import by calling the Create Import Job API.\n   - A unique JOBID will be returned in the response, which serves as the reference for tracking the import job.\n\n2. Check Job Status:\n   - Use the Get Import Job Details API to monitor the status of the import job.\n   - The JOBID must be used in the request to check the status periodically (e.g., every 10 seconds).\n   - The response will include a JOBCODE, which indicates the current state of the job.\n\nHandling Import Job Status Based on JOBCODE:\n  - If the JOBCODE is 1001 or 1002, wait for a few seconds and repeat the status check loop.\n  - If the JOBCODE is 1003, stop the status check and inspect the error message for details.\n  - If the JOBCODE is 1005, verify the validity of the JOBID and terminate the status check.\n  - If the JOBCODE is 1004, the job is complete, and the import summary will be returned.\n\nLimitations:\n  - The import job summary is retained only for one hour after job completion.\n  - A maximum of 5 simultaneous import jobs is allowed per organization.\n  - A maximum file size of 100 MB can be imported.",
+        "description": "Uploads a file and loads it into an existing table in the background, appending, replacing, or merging according to importType.\n\nWorkflow of Asynchronous Import API:\n\n1. Create Import Job:\n   - Initiate the import by calling the Create Import Job API.\n   - A unique JOBID will be returned in the response, which serves as the reference for tracking the import job.\n\n2. Check Job Status:\n   - Use the Get Import Job Details API to monitor the status of the import job.\n   - The JOBID must be used in the request to check the status periodically (e.g., every 10 seconds).\n   - The response will include a JOBCODE, which indicates the current state of the job.\n\nHandling Import Job Status Based on JOBCODE:\n  - If the JOBCODE is 1001 or 1002, wait for a few seconds and repeat the status check loop.\n  - If the JOBCODE is 1003, stop the status check and inspect the error message for details.\n  - If the JOBCODE is 1005, verify the validity of the JOBID and terminate the status check.\n  - If the JOBCODE is 1004, the job is complete, and the import summary will be returned.\n\nLimitations:\n  - The import job summary is retained only for one hour after job completion.\n  - A maximum of 5 simultaneous import jobs is allowed per organization.\n  - A maximum file size of 100 MB can be imported.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7092 | DDLLOCKSINCEIMPORTINPROGRESS — Another import is holding a DDL lock on this table. | Retry once it has finished. |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify . |\n| 7107 | METAOBJECTNOTPRESENT — A column named in matchingColumns is not present in the table. | Verify the names via Get Columns. |\n| 7164 | SYSTEMTABLEDATAMOD — System table data cannot be modified. | Target a user-created table. |\n| 7165 | SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified. | Target a non-snapshot table. |\n| 7203 | IMPORTFILEEMPTY — No file was uploaded, or it is empty. | Attach a non-empty FILE part. |\n| 7248 | INVALIDFILECONTENT — The file could not be parsed as the declared fileType. | Check that fileType matches the content. |\n| 7301 | SECURITYNOTPERMITTED — The user lacks the import permission matching importType, or is outside the workspace's permitted IP range. | Grant the specific import permission, or use an importType the user is allowed. |\n| 7319 | OBJIDNOTBELONGSTODB — The table does not belong to the specified workspace. | Ensure and are consistent. |\n| 7478 | MORETHANMAXCOLUMN — The source has more columns than the table can hold. | Reduce the columns, or use selectedColumns. |\n| 7512 | INVALIDDATEFORMAT — A date pattern could not be parsed. | Supply a valid pattern. |\n| 8046 | INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source. | Match the names to the source's header row. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing — commonly matchingColumns for UPDATEADD, or the CSV attributes when autoIdentify is false. | The message names the attribute. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — importType, fileType, onError, or a parsing attribute is outside its permitted set. | The message names the attribute and allowed values. |\n| 8125 | CALLBACKURLNOTVALID / CALLBACKURLCONNECTIONERROR / CALLBACKURLRESTRICTED — The callback URL is malformed, unreachable, or points at a private address. | See The callbackUrl Attribute. |\n| 8126 | CALLBACKURLNOTVALID / CALLBACKURLCONNECTIONERROR / CALLBACKURLRESTRICTED — The callback URL is malformed, unreachable, or points at a private address. | See The callbackUrl Attribute. |\n| 8127 | CALLBACKURLNOTVALID / CALLBACKURLCONNECTIONERROR / CALLBACKURLRESTRICTED — The callback URL is malformed, unreachable, or points at a private address. | See The callbackUrl Attribute. |\n| 8134 | ASYNCIMPORTLIMITEXCEEDED — The maximum number of simultaneous import jobs is already in progress. | Wait for a running job to finish. |\n| 8148 | Separator configuration errors. | See Number Separator Values. |\n| 8149 | Separator configuration errors. | See Number Separator Values. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG was not sent, or a mandatory key is missing. | Send a complete CONFIG object. |\n| 8516 | UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type. | Check booleans and integers. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.create. |",
         "operationId": "createImportJobExistingTable",
         "parameters": [
           {
@@ -1180,7 +1180,7 @@
                   "value": {
                     "FILE": "@/path/to/Sales.csv",
                     "CONFIG": {
-                      "importType": "append",
+                      "importType": "APPEND",
                       "fileType": "csv",
                       "autoIdentify": true
                     }
@@ -1192,7 +1192,7 @@
                   "value": {
                     "FILE": "@/path/to/Sales.json",
                     "CONFIG": {
-                      "importType": "updateadd",
+                      "importType": "UPDATEADD",
                       "fileType": "json",
                       "autoIdentify": true,
                       "matchingColumns": [
@@ -1248,7 +1248,7 @@
           }
         ],
         "summary": "Create Export Job using View ID",
-        "description": "Create an export job to initiate data export for the mentioned view asynchronously. \n\nWorkflow:\n1. Create Export Job:\n  - Call the Create Export Job API.\n  - Receive a unique JOBID to track the export status.\n\n2. Check Export Job Status:\n  - Use the JOBID with the Get Export Job Details API.\n  - Poll every few seconds to get the current JOBCODE.\n\n   JOBCODEs and Meaning:\n   - 1001: JOB NOT INITIATED\n     → Export job acknowledged but not started. Retry after a short delay.\n   - 1002: JOB IN PROGRESS\n     → Export is currently being processed. Continue polling.\n   - 1003: ERROR OCCURRED\n     → An error occurred. Stop polling and investigate the error.\n   - 1004: JOB COMPLETED\n     → Export process completed. Proceed to download.\n   - 1005: JOB NOT FOUND\n     → Provided JOBID is invalid. Stop polling and verify the JOBID.\n\n3. Download Exported Data:\n  - Once JOBCODE is 1004, use the Download Exported Data API to download the exported file.\n\nLimitations:\n- Exported file will be available only for 1 hour after job completion.\n- Maximum 5 concurrent export jobs are allowed per organization.",
+        "description": "Creates an export job whose source is a saved view — including the view types the synchronous export refuses.\n\nWorkflow:\n1. Create Export Job:\n  - Call the Create Export Job API.\n  - Receive a unique JOBID to track the export status.\n\n2. Check Export Job Status:\n  - Use the JOBID with the Get Export Job Details API.\n  - Poll every few seconds to get the current JOBCODE.\n\n   JOBCODEs and Meaning:\n   - 1001: JOB NOT INITIATED\n     → Export job acknowledged but not started. Retry after a short delay.\n   - 1002: JOB IN PROGRESS\n     → Export is currently being processed. Continue polling.\n   - 1003: ERROR OCCURRED\n     → An error occurred. Stop polling and investigate the error.\n   - 1004: JOB COMPLETED\n     → Export process completed. Proceed to download.\n   - 1005: JOB NOT FOUND\n     → Provided JOBID is invalid. Stop polling and verify the JOBID.\n\n3. Download Exported Data:\n  - Once JOBCODE is 1004, use the Download Exported Data API to download the exported file.\n\nLimitations:\n- Exported file will be available only for 1 hour after job completion.\n- Maximum 5 concurrent export jobs are allowed per organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify with Get View List. |\n| 7301 | SECURITYNOTPERMITTED — The caller lacks Export permission on the view, or the view does not belong to . | Ensure the caller is an Account Admin, Organization Admin, Workspace Admin, or View Owner, or holds Export permission on the view. |\n| 7327 | FILTERCRITERIAINVALID — criteria parsed but could not be converted into a query. | Simplify the expression and check operator and value types. |\n| 7330 | UNKNOWNCOLUMNINFILTERCRITERIA — A column named in criteria does not exist in the view. | Check the name against Get Columns. |\n| 7331 | FILTERCRITERIAPARSEERROR — criteria is syntactically malformed. | Check quoting: double quotes around column names, single quotes around string literals. |\n| 7332 | UNKNOWNTABLEINFILTERCRITERIA — A table qualifier in criteria is not part of the view. | Qualify columns only with tables the view uses. |\n| 7333 | INVALIDGROUPFUNCUSEINFILTERCRITERIA — An aggregate function was used in criteria. | Filter on raw column values instead. |\n| 7543 | ONLYBASETABLECOLINTABULARFILTERCRITERIA — criteria on a tabular view referenced a column outside its base table. | Filter using only the base table's own columns. |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 7801 | MARGINVALUEEXCEEDS — A PDF margin is outside 0–1 inches. | Send a value between 0 and 1. |\n| 7803 | INVALIDDIMENSION — width or height is outside the permitted image range. | Use width 250–2000 and height 200–2000. |\n| 7824 | EXPORTREQBLOCKED — Export has been blocked for this workspace. | Contact Zoho Analytics support using the address in the error message. |\n| 7827 | EXPPDFRECORDLIMIT — The PDF exceeds 1,000,000 cells. | Narrow the export with criteria or selectedColumns. |\n| 8001 | INVALIDRESPFORMAT — responseFormat is not a supported value. | Send one of csv, json, xml, xls, pdf, html, image. |\n| 8014 | APIIMAGERESPONSENOTPOSSIBLE — image was requested for a view that is not a chart. | Export charts as images; use pdf or html otherwise. |\n| 8015 | APIEXPORTCOLUMNNOTPRESENT — A name in selectedColumns does not match any column in the view. | Check the display names with Get Columns. |\n| 8017 | INVALIDIMAGEFORMAT — imageFormat is not png, jpg, or jpeg. | Send one of the three supported values. |\n| 8088 | SECURITYCONTROLSFEATUREDISABLED — Export is disabled for the organization. | Ask an Organization Admin to re-enable export. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — A numeric or enumerated attribute is outside its permitted set, or a dashboard was requested in a format other than PDF or HTML. | Correct the value; see Appendix E. |\n| 8125 | CALLBACKURLNOTVALID — callbackUrl is malformed. | Send a well-formed absolute http/https URL. |\n| 8126 | CALLBACKURLCONNECTIONERROR — callbackUrl could not be reached during validation. | Make the endpoint publicly reachable before creating the job. |\n| 8127 | CALLBACKURLRESTRICTED — callbackUrl resolves to a private or internal address. | Use a publicly routable host. |\n| 8128 | INTERNALERRORONINITIATINGEXPORT — The job could not be queued. | Retry; if it persists, contact support. |\n| 8132 | ASYNCEXPORTLIMITEXCEEDED — 5 export jobs are already queued or running for the organization. | Wait for an in-flight job to finish, then retry. |\n| 8188 | EXPORTINVALIDPASSWORD — password is blank or shorter than 6 characters. | Send 6–256 characters. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false. |\n| 8507 | MORETHANMAXLENGTH — CONFIG exceeds 100,000 characters. | Shorten criteria or selectedColumns. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.data.read. |\n| 8547 | ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries. | Send between 1 and 300 column names, or omit the attribute. |",
         "operationId": "createExportJobViewId",
         "parameters": [
           {
@@ -1417,7 +1417,7 @@
           }
         ],
         "summary": "Batch Import Data into New Table",
-        "description": "Initiate an import job to create a new table and import data in batches into the created table.\n\n The Batch Import API allows you to upload large amounts of data in batches. A large data file is split into small batches, each batch not exceeding 100 MB, and imported using batch import. Alternatively, you can also use Zoho Analytics SDKs to simplify the batching process.\n\nTo import large amounts of data using Batch Import, follow the steps below:\n\n- Split the large CSV file into batches (each batch not exceeding 100MB) and upload the first batch using the Batch Import API's {\"batchKey\":\"start\"} attribute.\n- The server will generate a unique job ID and batch key for the import job and send them to the user in the response.\n- Use the received batch key to submit the subsequent batches to the Batch Import API.\n- Mark the end of the upload by adding {\"isLastBatch\":true} to the final batch.\n\nYou can check the import job status using the 'Get Import Job Details' API with the jobId received in the response.\n\nNotes:\n- After the first batch is imported, scheduled import of the remaining batches begins automatically.\n- For 'Append' and 'UpdateAdd' import types, each batch is committed individually.\n- For 'TruncateAdd', data is committed only after the final batch is uploaded.\n- Batch order is preserved throughout.\n- An import summary is stored upon job completion or failure.",
+        "description": "Creates a new table and loads it from several uploads, all belonging to one import job. Called once per batch.\n\n The Batch Import API allows you to upload large amounts of data in batches. A large data file is split into small batches, each batch not exceeding 100 MB, and imported using batch import. Alternatively, you can also use Zoho Analytics SDKs to simplify the batching process.\n\nTo import large amounts of data using Batch Import, follow the steps below:\n\n- Split the large CSV file into batches (each batch not exceeding 100MB) and upload the first batch using the Batch Import API's {\"batchKey\":\"start\"} attribute.\n- The server will generate a unique job ID and batch key for the import job and send them to the user in the response.\n- Use the received batch key to submit the subsequent batches to the Batch Import API.\n- Mark the end of the upload by adding {\"isLastBatch\":true} to the final batch.\n\nYou can check the import job status using the 'Get Import Job Details' API with the jobId received in the response.\n\nNotes:\n- After the first batch is imported, scheduled import of the remaining batches begins automatically.\n- For 'Append' and 'UpdateAdd' import types, each batch is committed individually.\n- For 'TruncateAdd', data is committed only after the final batch is uploaded.\n- Batch order is preserved throughout.\n- An import summary is stored upon job completion or failure.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7092 | DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock in this workspace. | Retry once it has finished. |\n| 7111 | METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists. | Choose a different name, or use Batch Import Data into Existing Table. |\n| 7203 | IMPORTFILEEMPTY — No file was uploaded for this batch, or it is empty. | Attach a non-empty FILE part to every batch. |\n| 7248 | INVALIDFILECONTENT — The batch could not be parsed as CSV. | Batch import accepts CSV only. |\n| 7301 | SECURITYNOTPERMITTED — The user cannot create tables in this workspace. | Ensure the user has Create Table permission. |\n| 7336 | BATCHIMPORTLIMITEXCEEDED — More than 100 batches were sent for one job. | Use larger batches so the job fits within the limit. |\n| 7337 | BATCHIMPORTLASTBATCHALREADYRECEIVED — A batch was sent after isLastBatch: true. | Start a new job for additional data. |\n| 7338 | BATCHIMPORTINVALIDKEY — The batchKey is not recognised, or its job is no longer active. | Use the batchKey returned by the first batch, and start a new job if it has expired. |\n| 7478 | MORETHANMAXCOLUMN — The source has more columns than a table can hold. | Reduce the columns, or use selectedColumns on the first batch. |\n| 7512 | INVALIDDATEFORMAT — A date pattern could not be parsed. | Supply a valid pattern on the first batch. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing; on the first batch this is usually tableName or autoIdentify. | The message names the attribute. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — onError or a parsing attribute is outside its permitted set. | The message names the attribute and allowed values. |\n| 8125 | Callback URL is malformed, unreachable, or private. | See The callbackUrl Attribute. |\n| 8126 | Callback URL is malformed, unreachable, or private. | See The callbackUrl Attribute. |\n| 8127 | Callback URL is malformed, unreachable, or private. | See The callbackUrl Attribute. |\n| 8134 | ASYNCIMPORTLIMITEXCEEDED — The maximum number of simultaneous import jobs is in progress. | Wait for a running job to finish, or close an abandoned batch job. |\n| 8148 | Separator configuration errors. | See Number Separator Values. |\n| 8149 | Separator configuration errors. | See Number Separator Values. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG was not sent, or batchKey is missing. | Every batch must carry a CONFIG containing batchKey. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.create. |",
         "operationId": "batchImportNewTable",
         "parameters": [
           {
@@ -1468,7 +1468,7 @@
                       "isLastBatch": false,
                       "tableName": "SalesTable",
                       "autoIdentify": true,
-                      "onError": "setcolumnempty"
+                      "onError": "SETCOLUMNEMPTY"
                     }
                   }
                 },
@@ -1482,7 +1482,7 @@
                       "isLastBatch": false,
                       "tableName": "SalesTable",
                       "autoIdentify": true,
-                      "onError": "setcolumnempty"
+                      "onError": "SETCOLUMNEMPTY"
                     }
                   }
                 },
@@ -1496,7 +1496,7 @@
                       "isLastBatch": true,
                       "tableName": "SalesTable",
                       "autoIdentify": true,
-                      "onError": "setcolumnempty"
+                      "onError": "SETCOLUMNEMPTY"
                     }
                   }
                 }
@@ -1549,7 +1549,7 @@
           }
         ],
         "summary": "Batch Import Data into Existing Table",
-        "description": "Initiate an import job to import data present in multiple batch files into the specified existing table.\n\n The Batch Import API allows you to upload large amounts of data in batches. A large data file is split into small batches, each batch not exceeding 100 MB, and imported using batch import. Alternatively, you can also use Zoho Analytics SDKs to simplify the batching process.\n\nTo import large amounts of data using Batch Import, follow the steps below:\n\n- Split the large CSV file into batches (each batch not exceeding 100MB) and upload the first batch using the Batch Import API's {\"batchKey\":\"start\"} attribute.\n- The server will generate a unique job ID and batch key for the import job and send them to the user in the response.\n- Use the received batch key to submit the subsequent batches to the Batch Import API.\n- Mark the end of the upload by adding {\"isLastBatch\":true} to the final batch.\n\nYou can check the import job status using the 'Get Import Job Details' API with the jobId received in the response.\n\nNotes:\n- After the first batch is imported, scheduled import of the remaining batches begins automatically.\n- For 'Append' and 'UpdateAdd' import types, each batch is committed individually.\n- For 'TruncateAdd', data is committed only after the final batch is uploaded.\n- Batch order is preserved throughout.\n- An import summary is stored upon job completion or failure.",
+        "description": "Loads an existing table from several uploads belonging to one import job. Called once per batch.\n\n The Batch Import API allows you to upload large amounts of data in batches. A large data file is split into small batches, each batch not exceeding 100 MB, and imported using batch import. Alternatively, you can also use Zoho Analytics SDKs to simplify the batching process.\n\nTo import large amounts of data using Batch Import, follow the steps below:\n\n- Split the large CSV file into batches (each batch not exceeding 100MB) and upload the first batch using the Batch Import API's {\"batchKey\":\"start\"} attribute.\n- The server will generate a unique job ID and batch key for the import job and send them to the user in the response.\n- Use the received batch key to submit the subsequent batches to the Batch Import API.\n- Mark the end of the upload by adding {\"isLastBatch\":true} to the final batch.\n\nYou can check the import job status using the 'Get Import Job Details' API with the jobId received in the response.\n\nNotes:\n- After the first batch is imported, scheduled import of the remaining batches begins automatically.\n- For 'Append' and 'UpdateAdd' import types, each batch is committed individually.\n- For 'TruncateAdd', data is committed only after the final batch is uploaded.\n- Batch order is preserved throughout.\n- An import summary is stored upon job completion or failure.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7092 | DDLLOCKSINCEIMPORTINPROGRESS — Another import holds a DDL lock on this table. | Retry once it has finished. |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify . |\n| 7107 | METAOBJECTNOTPRESENT — A column named in matchingColumns is not present. | Verify the names via Get Columns. |\n| 7164 | SYSTEMTABLEDATAMOD — System table data cannot be modified. | Target a user-created table. |\n| 7165 | SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified. | Target a non-snapshot table. |\n| 7203 | IMPORTFILEEMPTY — No file was uploaded for this batch, or it is empty. | Attach a non-empty FILE part. |\n| 7248 | INVALIDFILECONTENT — The batch could not be parsed as CSV. | Batch import accepts CSV only. |\n| 7301 | SECURITYNOTPERMITTED — The user lacks the import permission matching importType. | Grant the specific import permission, or use a permitted importType. |\n| 7319 | OBJIDNOTBELONGSTODB — The table does not belong to the specified workspace. | Ensure and are consistent. |\n| 7336 | BATCHIMPORTLIMITEXCEEDED — More than 100 batches were sent for one job. | Use larger batches. |\n| 7337 | BATCHIMPORTLASTBATCHALREADYRECEIVED — A batch was sent after isLastBatch: true. | Start a new job for additional data. |\n| 7338 | BATCHIMPORTINVALIDKEY — The batchKey is not recognised or is no longer active. | Use the key returned by the first batch. |\n| 7340 | BATCHIMPORTVIEWIDMISMATCH — The batchKey belongs to a different table. | Send every batch of a job to the same . |\n| 7512 | INVALIDDATEFORMAT — A date pattern could not be parsed. | Supply a valid pattern on the first batch. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing; on the first batch this is usually importType, autoIdentify, or matchingColumns. | The message names the attribute. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — importType, onError, or a parsing attribute is outside its permitted set. | The message names the attribute and allowed values. |\n| 8125 | Callback URL is malformed, unreachable, or private. | See The callbackUrl Attribute. |\n| 8126 | Callback URL is malformed, unreachable, or private. | See The callbackUrl Attribute. |\n| 8127 | Callback URL is malformed, unreachable, or private. | See The callbackUrl Attribute. |\n| 8134 | ASYNCIMPORTLIMITEXCEEDED — The maximum number of simultaneous import jobs is in progress. | Wait for a running job to finish. |\n| 8148 | Separator configuration errors. | See Number Separator Values. |\n| 8149 | Separator configuration errors. | See Number Separator Values. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG was not sent, or batchKey is missing. | Every batch must carry a CONFIG containing batchKey. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.create. |",
         "operationId": "batchImportExistingTable",
         "parameters": [
           {
@@ -1601,13 +1601,13 @@
                     "CONFIG": {
                       "batchKey": "start",
                       "isLastBatch": false,
-                      "importType": "updateadd",
+                      "importType": "UPDATEADD",
                       "autoIdentify": true,
                       "matchingColumns": [
                         "Region",
                         "Product"
                       ],
-                      "onError": "setcolumnempty"
+                      "onError": "SETCOLUMNEMPTY"
                     }
                   }
                 },
@@ -1619,13 +1619,13 @@
                     "CONFIG": {
                       "batchKey": "1694703482470_1767024000008426012_SalesTable",
                       "isLastBatch": false,
-                      "importType": "updateadd",
+                      "importType": "UPDATEADD",
                       "autoIdentify": true,
                       "matchingColumns": [
                         "Region",
                         "Product"
                       ],
-                      "onError": "setcolumnempty"
+                      "onError": "SETCOLUMNEMPTY"
                     }
                   }
                 },
@@ -1637,13 +1637,13 @@
                     "CONFIG": {
                       "batchKey": "1694703482470_1767024000008426012_SalesTable",
                       "isLastBatch": true,
-                      "importType": "updateadd",
+                      "importType": "UPDATEADD",
                       "autoIdentify": true,
                       "matchingColumns": [
                         "Region",
                         "Product"
                       ],
-                      "onError": "setcolumnempty"
+                      "onError": "SETCOLUMNEMPTY"
                     }
                   }
                 }
@@ -1696,7 +1696,7 @@
           }
         ],
         "summary": "Get Import Job Details",
-        "description": "Check the status of the specified import job periodically. Upon job completion the system notifies the user in the callback URL, if one was provided in the import job's CONFIG.\n\nJob codes returned in the response:\n  - 1001 - JOB NOT INITIATED: wait for a few seconds and repeat the status check.\n  - 1002 - JOB IN PROGRESS: wait for a few seconds and repeat the status check.\n  - 1003 - ERROR OCCURRED: stop the status check and inspect the error message for details.\n  - 1004 - JOB COMPLETED: the job is complete and the import summary is returned.\n  - 1005 - JOB NOT FOUND: verify the validity of the job ID and terminate the status check.\n\nNote: the import job summary is retained only for one hour after job completion.",
+        "description": "Returns the current state of an import job and, once it has finished, the full import summary. This is the monitoring API for all four import APIs above.\n\nJob codes returned in the response:\n  - 1001 - JOB NOT INITIATED: wait for a few seconds and repeat the status check.\n  - 1002 - JOB IN PROGRESS: wait for a few seconds and repeat the status check.\n  - 1003 - ERROR OCCURRED: stop the status check and inspect the error message for details.\n  - 1004 - JOB COMPLETED: the job is complete and the import summary is returned.\n  - 1005 - JOB NOT FOUND: verify the validity of the job ID and terminate the status check.\n\nNote: the import job summary is retained only for one hour after job completion.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 8137 | IMPORTJOBNOTFOUND — No import job exists with this ID. | Verify the jobId. Note that a job whose summary has expired is also reported as jobCode 1005. |\n| 8138 | IMPORTJOBACCESSDENIED — The job was created by a different user. | Poll under the same account that created the job. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.data.create. |",
         "operationId": "getImportJobDetails",
         "parameters": [
           {
@@ -1778,7 +1778,7 @@
           }
         ],
         "summary": "Get Export Job Details",
-        "description": "Returns details of the specified asynchronous export job. The HTTP status reports the request, not the job - a failed job is returned as 200 with jobCode 1003. downloadUrl and expiryTime are present only when jobCode is 1004. Only the user who created the job may poll it.",
+        "description": "Reports the progress of an export job, and once it has finished, where to collect the file.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8120 | EXPORTJOBNOTFOUND — No export job exists for the given ID (HTTP 404). | Verify the jobId returned by the create call, and that the job has not passed its 72-hour retention. |\n| 8124 | EXPORTJOBACCESSDENIED — The caller did not create this job (HTTP 403). | Poll with the same user that created the job. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.data.read. |",
         "operationId": "getExportJobDetails",
         "parameters": [
           {
@@ -1839,7 +1839,7 @@
           }
         ],
         "summary": "Download Exported Data",
-        "description": "Download the file produced by a completed asynchronous export job. The job must have reached jobCode 1004; calling earlier fails with 8121 (queued) or 8122 (running), and 8123 if the job failed. Only the user who created the job may download it.\n\n**Notes**\n\n> Note:\n>\n> The exported file is available only for one hour after the export job completes.",
+        "description": "Returns the exported file produced by a completed export job.\n\n**Notes**\n\n> Note:\n>\n> The exported file is available only for one hour after the export job completes.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8120 | EXPORTJOBNOTFOUND — No export job exists for the given ID, or it has passed its 72-hour retention (HTTP 404). | Verify the jobId; if it has expired, create a new job. |\n| 8121 | EXPORTJOBNOTINITIATED — The job is queued but has not started (jobCode 1001). | Poll Get Export Job Details until jobCode is 1004. |\n| 8122 | EXPORTJOBNOTCOMPLETED — The job is still running (jobCode 1002). | Poll Get Export Job Details until jobCode is 1004. |\n| 8123 | EXPORTJOBERROROCCURRED — The job failed (jobCode 1003). | Nothing to download. Create a new job; if the failure repeats, contact support. |\n| 8124 | EXPORTJOBACCESSDENIED — The caller did not create this job (HTTP 403). | Download with the same user that created the job. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.data.read. |",
         "operationId": "downloadExportedData",
         "parameters": [
           {
@@ -1889,7 +1889,7 @@
           }
         ],
         "summary": "Get Last Import Details",
-        "description": "Returns the details of the most recent load into the specified view, whatever performed it - a datasource sync, a refetch, or an import API call. Returns 200 with an empty data object when the view has never been loaded. Not available through a Client Portal or White Label domain.",
+        "description": "Reports what the most recent load into a table actually did — when it ran, whether it succeeded, and how many rows and columns landed.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify with Get View List. |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller is neither an admin nor the View Owner and lacks View Datasource or an import permission on the view. | Call from the standard API host with the required permission. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.metadata.read. |",
         "operationId": "getLastImportDetails",
         "parameters": [
           {
@@ -1961,7 +1961,7 @@
           }
         ],
         "summary": "Refetch Data",
-        "description": "Sync data from the available datasource for the specified view - one table only. Returns 204 once the refetch has been started; the outcome is read from Get Last Import Details. A table with no datasource behind it fails with 18056. Consumes the daily manual sync quota. Not available through a Client Portal or White Label domain.",
+        "description": "Triggers an immediate pull for one table from whatever datasource sits behind it.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7104 | METAOBJECTNOTPRESENT — The view does not exist. | Verify with Get View List. |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller is neither an admin nor the View Owner and lacks Sync Data permission. | Call from the standard API host with the required permission. |\n| 8507 | MORETHANMAXLENGTH — CONFIG exceeds 3,000 characters, or a credential exceeds 1,000. | Shorten the value. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.metadata.create. |\n| 18056 | NOSOURCEAVAILABLEFORTABLE — The table has no datasource behind it. | Refetch only tables fed by a datasource; use the import APIs otherwise. |\n| 18072 | TABLESYNCINPROGRESS — A sync for this table is already running. | Wait for it to finish, then retry. |",
         "operationId": "refetchDatasource",
         "parameters": [
           {
@@ -2037,7 +2037,7 @@
           }
         ],
         "summary": "Sync Data",
-        "description": "Initiate an immediate data sync for the specified datasource - every table it feeds. Returns 204 once the sync has been started; it does not wait for completion, and the outcome is read from Get Last Import Details. Consumes the daily manual sync quota reported as syncUsed / totalSyncAllowed by Get Datasources. Not available through a Client Portal or White Label domain.",
+        "description": "Triggers an immediate pull for a whole datasource — every table it feeds.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller lacks Create Table and Sync Data permission on the workspace. | Call from the standard API host with one of the two permissions. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing. | The message names the attribute. |\n| 8182 | SYNCCANNOTBEINITIATEDFORCONNECTORWITHMULTIPLESCHEDULES — The datasource has more than one sync interval and none was named. | Send syncIntervalId; read the options from Get Datasources. |\n| 8183 | SCHEDULEIDNOTASSOCIATEDWITHCONNECTOR — The syncIntervalId does not belong to this datasource. | Use a syncIntervalId listed under this datasource's syncIntervals. |\n| 8507 | MORETHANMAXLENGTH — CONFIG exceeds 3,000 characters, or a credential exceeds 1,000. | Shorten the value. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.metadata.create. |\n| 18061 | CONNECTIONIDNOTASSOSIATEDFORWORKSPACE — The datasource ID does not exist in this workspace, or the source type cannot be synced this way (HTTP 404). | Verify with Get Datasources. |\n| 18073 | DATASOURCESYNCINPROGRESS — A sync for this datasource is already running. | Wait for the running sync to finish. |",
         "operationId": "syncDatasource",
         "parameters": [
           {
@@ -2119,7 +2119,7 @@
           }
         ],
         "summary": "Update Datasource Connection",
-        "description": "Update the connection details of the specified database datasource. This is a full replace - omitted attributes are reset rather than preserved. Applies only to database style datasources; file, web, cloud storage, integration connector, snapshot and local drive datasources are rejected with 18061. A 204 means the details were stored, not that they were tested. Not available through a Client Portal or White Label domain.",
+        "description": "Updates the connection details of a database-style datasource — host, port, credentials, and the service-specific settings that go with them.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller lacks Create Table and Edit Datasource permission on the workspace. | Call from the standard API host with one of the two permissions. |\n| 8077 | EMPTYJSONCONFIGURATION — CONFIG was not sent, or was sent empty. | Send a CONFIG object with at least serviceName, hostName, and userName. |\n| 8078 | EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent blank. | The message names the attribute. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing — usually databaseType for a service that supports several engines. | The message names the attribute. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is missing entirely. | Send the CONFIG object. |\n| 8507 | MORETHANMAXLENGTH — An attribute exceeds its length limit. | See Limitations. |\n| 8509 | PATTERNNOTMATCHED — serviceName or databaseType is not one of the accepted values. | Send a value from serviceName values. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.metadata.update. |\n| 18055 | DBTYPESERVICENAMENOTMACHED — The databaseType is not available for the given serviceName. | Pick an engine the service actually offers. |\n| 18057 | INVALIDCLOUDSERVICENAME — serviceName is not a recognised service. | Send a value from serviceName values. |\n| 18061 | CONNECTIONIDNOTASSOSIATEDFORWORKSPACE — The datasource ID does not exist in this workspace, or is not a database connection (HTTP 404). | Verify with Get Datasources. |\n| 18063 | DBTYPECANNOTBEUPDATEDFORLIVECONNECTDB — databaseType differs from the stored one on a Live Connect database. | Resend the existing databaseType. |\n| 18064 | SERVICENAMECANNOTBEUPDATEDFORLIVECONNECTDB — serviceName differs from the stored one on a Live Connect database. | Resend the existing serviceName. |",
         "operationId": "updateDatasourceConnection",
         "parameters": [
           {
@@ -2213,7 +2213,7 @@
           }
         ],
         "summary": "Get Datasources",
-        "description": "Returns the list of datasources for the specified workspace, the tables each one feeds, and the state of their last sync. This is the only API that returns datasourceId, syncIntervalId and the datasource-to-view mapping. The entry shape varies by source family, so test for the presence of a field rather than assuming a fixed schema. Not available through a Client Portal or White Label domain.",
+        "description": "Lists every datasource in a workspace, the tables each one feeds, and the state of their last sync.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller lacks View Datasource and Create Table permission on the workspace. | Call from the standard API host with one of the two permissions. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.metadata.read. |",
         "operationId": "getDatasources",
         "parameters": [
           {
@@ -2711,6 +2711,14 @@
           "importErrors": {
             "type": "string",
             "description": "Errors raised during the import. Empty when the import completed without errors."
+          },
+          "errorCode": {
+            "type": "number",
+            "description": "Present when jobCode is 1003. The error code that caused the job to fail."
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Present when jobCode is 1003. The failure detail, often an HTML fragment naming the offending line and field."
           }
         },
         "examples": [
@@ -3606,6 +3614,10 @@
                 "examples": [
                   "1623764592309"
                 ]
+              },
+              "batchKey": {
+                "type": "string",
+                "description": "Present only for batch-import jobs. The batch key the job was assembled under. Absent for asynchronous imports."
               }
             }
           }
@@ -3810,6 +3822,10 @@
               },
               "invalidColumns": {
                 "$ref": "#/components/schemas/InvalidColumns"
+              },
+              "newRowAdded": {
+                "type": "boolean",
+                "description": "Present only when addIfNotExist caused an insert, in which case it is true. Absent on a normal update — test for key presence, not for a false value."
               }
             }
           }
@@ -3870,9 +3886,9 @@
             "type": "string",
             "description": "Controls the action to be taken in case there is an error during import.\n\n- **abort** - In case of any error, abort the whole import.\n- **skiprow** - In case of any error, skip that specific row(s) which has the problem and continue importing the rest.\n- **setcolumnempty** - In case of any error, set the value of the error column for the row to empty and continue importing.",
             "enum": [
-              "abort",
-              "skiprow",
-              "setcolumnempty"
+              "ABORT",
+              "SKIPROW",
+              "SETCOLUMNEMPTY"
             ]
           },
           "selectedColumns": {
@@ -3935,6 +3951,41 @@
           },
           "columnDataTypes": {
             "$ref": "#/components/schemas/ColumnDataTypes"
+          },
+          "columnSeparators": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Per-column separator overrides — column name → [thousandSeparator, decimalSeparator], both as strings. The array must have at least two entries (8149), and the two separators must differ (8148)."
+          },
+          "columnTimeFormat": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Per-column time pattern overrides. An invalid pattern is rejected."
+          },
+          "columnDurationFormat": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Per-column duration pattern overrides. An invalid pattern is rejected."
+          },
+          "matchNulls": {
+            "type": "boolean",
+            "default": false,
+            "description": "Treat empty values in the source as nulls when matching."
+          },
+          "updateNullForNegativeValues": {
+            "type": "boolean",
+            "default": false,
+            "description": "Store a null instead of the value when a negative number is found in a column that does not accept one."
+          },
+          "importHiddenRows": {
+            "type": "boolean",
+            "default": false,
+            "description": "For Excel sources, include rows hidden in the sheet."
+          },
+          "importHiddenColumns": {
+            "type": "boolean",
+            "default": false,
+            "description": "For Excel sources, include columns hidden in the sheet."
           }
         },
         "oneOf": [
@@ -4031,9 +4082,9 @@
             "type": "string",
             "description": "Controls the type of import.\n\n- **append** - Appends the data into the table.\n- **truncateadd** - Deletes all existing rows in the table and adds the imported data as a new entry.\n- **updateadd** - Updates the row if the mentioned column values are matched, else a new entry will be added.",
             "enum": [
-              "append",
-              "truncateadd",
-              "updateadd"
+              "APPEND",
+              "TRUNCATEADD",
+              "UPDATEADD"
             ]
           },
           "fileType": {
@@ -4060,9 +4111,9 @@
             "type": "string",
             "description": "Controls the action to be taken in case there is an error during import.\n\n- **abort** - In case of any error, abort the whole import.\n- **skiprow** - In case of any error, skip that specific row(s) which has the problem and continue importing the rest.\n- **setcolumnempty** - In case of any error, set the value of the error column for the row to empty and continue importing.",
             "enum": [
-              "abort",
-              "skiprow",
-              "setcolumnempty"
+              "ABORT",
+              "SKIPROW",
+              "SETCOLUMNEMPTY"
             ]
           },
           "matchingColumns": {
@@ -4128,6 +4179,41 @@
           },
           "columnDataTypes": {
             "$ref": "#/components/schemas/ColumnDataTypes"
+          },
+          "columnSeparators": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Per-column separator overrides."
+          },
+          "columnTimeFormat": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Per-column time pattern overrides."
+          },
+          "columnDurationFormat": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Per-column duration pattern overrides."
+          },
+          "matchNulls": {
+            "type": "boolean",
+            "default": false,
+            "description": "Treat empty source values as nulls when matching rows. Relevant to UPDATEADD."
+          },
+          "updateNullForNegativeValues": {
+            "type": "boolean",
+            "default": false,
+            "description": "Store null instead of a negative value in columns that do not accept one."
+          },
+          "importHiddenRows": {
+            "type": "boolean",
+            "default": false,
+            "description": "For Excel sources, include hidden rows."
+          },
+          "importHiddenColumns": {
+            "type": "boolean",
+            "default": false,
+            "description": "For Excel sources, include hidden columns."
           }
         },
         "oneOf": [
@@ -4204,7 +4290,7 @@
         ],
         "examples": [
           {
-            "importType": "updateadd",
+            "importType": "UPDATEADD",
             "fileType": "csv",
             "autoIdentify": true,
             "matchingColumns": [
@@ -4255,9 +4341,9 @@
             "type": "string",
             "description": "Controls the action to be taken in case there is an error during import.\n\n- **abort** - In case of any error, abort the whole import.\n- **skiprow** - In case of any error, skip that specific row(s) which has the problem and continue importing the rest.\n- **setcolumnempty** - In case of any error, set the value of the error column for the row to empty and continue importing.",
             "enum": [
-              "abort",
-              "skiprow",
-              "setcolumnempty"
+              "ABORT",
+              "SKIPROW",
+              "SETCOLUMNEMPTY"
             ]
           },
           "selectedColumns": {
@@ -4424,9 +4510,9 @@
             "type": "string",
             "description": "Controls the type of import.\n\n- **append** - Appends the data into the table.\n- **truncateadd** - Deletes all existing rows in the table and adds the imported data as a new entry.\n- **updateadd** - Updates the row if the mentioned column values are matched, else a new entry will be added.",
             "enum": [
-              "append",
-              "truncateadd",
-              "updateadd"
+              "APPEND",
+              "TRUNCATEADD",
+              "UPDATEADD"
             ]
           },
           "fileType": {
@@ -4453,9 +4539,9 @@
             "type": "string",
             "description": "Controls the action to be taken in case there is an error during import.\n\n- **abort** - In case of any error, abort the whole import.\n- **skiprow** - In case of any error, skip that specific row(s) which has the problem and continue importing the rest.\n- **setcolumnempty** - In case of any error, set the value of the error column for the row to empty and continue importing.",
             "enum": [
-              "abort",
-              "skiprow",
-              "setcolumnempty"
+              "ABORT",
+              "SKIPROW",
+              "SETCOLUMNEMPTY"
             ]
           },
           "matchingColumns": {
@@ -4605,7 +4691,7 @@
         ],
         "examples": [
           {
-            "importType": "append",
+            "importType": "APPEND",
             "fileType": "csv",
             "autoIdentify": true
           }
@@ -4617,7 +4703,6 @@
         "description": "JSONObject with configuration to initiate a batch import job that creates a new table and imports the data present in multiple batch files into it.",
         "required": [
           "batchKey",
-          "isLastBatch",
           "tableName",
           "autoIdentify"
         ],
@@ -4657,9 +4742,9 @@
             "type": "string",
             "description": "Controls the action to be taken in case there is an error during import.\n\n- **abort** - In case of any error, abort the whole import.\n- **skiprow** - In case of any error, skip that specific row(s) which has the problem and continue importing the rest.\n- **setcolumnempty** - In case of any error, set the value of the error column for the row to empty and continue importing.",
             "enum": [
-              "abort",
-              "skiprow",
-              "setcolumnempty"
+              "ABORT",
+              "SKIPROW",
+              "SETCOLUMNEMPTY"
             ]
           },
           "selectedColumns": {
@@ -4787,7 +4872,7 @@
             "isLastBatch": false,
             "tableName": "SalesTable",
             "autoIdentify": true,
-            "onError": "setcolumnempty"
+            "onError": "SETCOLUMNEMPTY"
           }
         ]
       },
@@ -4797,7 +4882,6 @@
         "description": "JSONObject with configuration to initiate a batch import job that imports the data present in multiple batch files into the specified table.",
         "required": [
           "batchKey",
-          "isLastBatch",
           "importType",
           "autoIdentify"
         ],
@@ -4822,9 +4906,9 @@
             "type": "string",
             "description": "Controls the type of import.\n\n- **append** - Appends the data into the table.\n- **truncateadd** - Deletes all existing rows in the table and adds the imported data as a new entry.\n- **updateadd** - Updates the row if the mentioned column values are matched, else a new entry will be added.",
             "enum": [
-              "append",
-              "truncateadd",
-              "updateadd"
+              "APPEND",
+              "TRUNCATEADD",
+              "UPDATEADD"
             ]
           },
           "autoIdentify": {
@@ -4839,9 +4923,9 @@
             "type": "string",
             "description": "Controls the action to be taken in case there is an error during import.\n\n- **abort** - In case of any error, abort the whole import.\n- **skiprow** - In case of any error, skip that specific row(s) which has the problem and continue importing the rest.\n- **setcolumnempty** - In case of any error, set the value of the error column for the row to empty and continue importing.",
             "enum": [
-              "abort",
-              "skiprow",
-              "setcolumnempty"
+              "ABORT",
+              "SKIPROW",
+              "SETCOLUMNEMPTY"
             ]
           },
           "matchingColumns": {
@@ -4970,13 +5054,13 @@
           {
             "batchKey": "start",
             "isLastBatch": false,
-            "importType": "updateadd",
+            "importType": "UPDATEADD",
             "autoIdentify": true,
             "matchingColumns": [
               "Region",
               "Product"
             ],
-            "onError": "setcolumnempty"
+            "onError": "SETCOLUMNEMPTY"
           }
         ]
       },

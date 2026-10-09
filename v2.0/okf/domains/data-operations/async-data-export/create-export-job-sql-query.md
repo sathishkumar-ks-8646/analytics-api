@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create Export Job using SQL Query (Asynchronous)
-description: Create an export job using an SQL SELECT statement to initiate data export asynchronously.
+description: Creates an export job whose source is an ad-hoc SQL SELECT statement rather than a saved view.
 resource: "https://analyticsapi.zoho.com/restapi/v2/bulk/workspaces/{workspace-id}/data"
 tags:
   - zoho-analytics
@@ -66,10 +66,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -87,7 +87,7 @@ Creates an export job whose source is an ad-hoc SQL `SELECT` statement rather th
 
 From the OpenAPI specification:
 
-Create an export job using an SQL SELECT statement to initiate data export asynchronously.
+Creates an export job whose source is an ad-hoc SQL SELECT statement rather than a saved view.
 
 Workflow:
 1. Create Export Job:

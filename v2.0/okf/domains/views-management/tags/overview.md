@@ -58,10 +58,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -452,24 +452,24 @@ Colours observed in real workspaces include `#e72d35`, `#f5a623`, `#55acee`, and
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [7390](../../../foundations/error-codes.md#error-7390) | 400 | The workspace does not belong to the organization in the ZANALYTICS-ORGID header. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A mandatory attribute is missing from the configuration. |
+| [7390](../../../foundations/error-codes.md#error-7390) | 400 | WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
 | [8083](../../../foundations/error-codes.md#error-8083) | 400 | The ZANALYTICS-ORGID header is missing from a request that requires it. |
-| [8174](../../../foundations/error-codes.md#error-8174) | 403 | A tag with the given name already exists in this workspace. Tag names must be unique within a workspace. |
-| [8179](../../../foundations/error-codes.md#error-8179) | 403 | The calling user is not an Account Admin, Organization Admin or Workspace Admin of the workspace. |
-| [8180](../../../foundations/error-codes.md#error-8180) | 403 | The calling user is a read-only user. Read-only users cannot change tag associations regardless of any other permission. |
-| [8181](../../../foundations/error-codes.md#error-8181) | 403 | One or more views would exceed the limit of 10 tags per view. The error message lists the offending views. |
-| [8182](../../../foundations/error-codes.md#error-8182) | 403 | resetSort and sortOrder cannot be used together. |
-| [8184](../../../foundations/error-codes.md#error-8184) | 403 | The tag does not exist in this workspace. |
-| [8185](../../../foundations/error-codes.md#error-8185) | 400 | The operation matched no tag row. |
-| [8187](../../../foundations/error-codes.md#error-8187) | 400 | The tag does not exist in this workspace. |
-| [8201](../../../foundations/error-codes.md#error-8201) | 400 | viewIds is empty or absent and dissociateAll is not true. |
-| [8202](../../../foundations/error-codes.md#error-8202) | 400 | tagIds is empty or absent and dissociateAll is not true. |
-| [8504](../../../foundations/error-codes.md#error-8504) | 400 | CONFIG was not sent. |
-| [8507](../../../foundations/error-codes.md#error-8507) | 400 | roleName exceeds 30 characters, or the serialized permissions object exceeds its size limit. |
-| [8509](../../../foundations/error-codes.md#error-8509) | 400 | roleName contains characters other than letters, digits, spaces, underscore and hyphen, or accessType is not one of the three allowed values. |
+| [8174](../../../foundations/error-codes.md#error-8174) | 403 | DUPLICATETAGNAMEFOUND — A tag with this name already exists in the workspace. |
+| [8179](../../../foundations/error-codes.md#error-8179) | 403 | DONTHAVEPERMISSIONTOCREATETAGS — The caller is not an Account Admin, Organization Admin, or Workspace Admin. |
+| [8180](../../../foundations/error-codes.md#error-8180) | 403 | DONTHAVEPERMISSIONTOASSOCIATEANDUNASSOCIATETAGS — The caller is a read-only user. |
+| [8181](../../../foundations/error-codes.md#error-8181) | 403 | TAGCOUNTEXCEEDS — One or more views would exceed 10 tags. The message lists them. |
+| [8182](../../../foundations/error-codes.md#error-8182) | 403 | resetSort: true and sortOrder cannot be used together. |
+| [8184](../../../foundations/error-codes.md#error-8184) | 403 | VIEWORTAGNOTPRESENTINDBTOTAG — The tag does not exist in this workspace. |
+| [8185](../../../foundations/error-codes.md#error-8185) | 400 | CANNOTDELETEORUPDATETAG — The update matched no row. |
+| [8187](../../../foundations/error-codes.md#error-8187) | 400 | TAGNOTPRESENTINDB — The tag does not exist in this workspace. |
+| [8201](../../../foundations/error-codes.md#error-8201) | 400 | INVALIDCONFIGURATIONREMOVEVIEWSLINKEDWITHTAG — viewIds is empty or absent and dissociateAll is not true. |
+| [8202](../../../foundations/error-codes.md#error-8202) | 400 | INVALIDCONFIGURATIONREMOVETAGSFORVIEW — tagIds is empty or absent and dissociateAll is not true. |
+| [8504](../../../foundations/error-codes.md#error-8504) | 400 | LESSTHANMINOCCURANCE — CONFIG was not sent. |
+| [8507](../../../foundations/error-codes.md#error-8507) | 400 | MORETHANMAXLENGTH — roleName exceeds 30 characters, or permissions exceeds its size limit. |
+| [8509](../../../foundations/error-codes.md#error-8509) | 400 | PATTERNNOTMATCHED — roleName contains disallowed characters, or accessType is not one of the three values. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [8547](../../../foundations/error-codes.md#error-8547) | 400 | viewIds is empty or has more than 1000 entries. |
+| [8547](../../../foundations/error-codes.md#error-8547) | 400 | ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries. |
 
 # Related
 

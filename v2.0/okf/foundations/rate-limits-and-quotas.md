@@ -119,55 +119,55 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -197,6 +197,9 @@ Throttles are counted per user. Crossing the threshold inside the window locks t
 | [Add Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/add-aggregate-formula.md) | 20 requests / user / 60 s | 10 minutes | 20 requests per user per minute (10-minute lockout on breach). |
 | [Edit Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/edit-aggregate-formula.md) | 20 requests / user / 60 s | 10 minutes | 20 requests per user per minute (10-minute lockout on breach). |
 | [Delete Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/delete-aggregate-formula.md) | 20 requests / user / 60 s | 10 minutes | 20 requests per user per minute (10-minute lockout on breach). |
+| [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md) | 10 requests / user / 60 s | 10 minutes |  |
+| [Read Dashboard Metadata](../domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md) | 20 requests / user / 60 s | - |  |
+| [Update Dashboard](../domains/reports-and-dashboards/dashboards/update-dashboard.md) | 10 requests / user / 60 s | 10 minutes |  |
 
 Additional documented limits:
 

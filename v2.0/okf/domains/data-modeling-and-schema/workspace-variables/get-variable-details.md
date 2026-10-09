@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Variable Details
-description: "Returns the full definition of a specific variable, including its values or range, every per-user override and its display format."
+description: "Returns the full definition of a specific variable, including its values/range, all per-user overrides, and display format."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}"
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -54,12 +54,6 @@ status: stable
 Returns the full definition of a specific variable, including its values/range, all per-user overrides, and display format.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Returns the full definition of a specific variable, including its values or range, every per-user override and its display format.
-
-Call this API before the Edit Variable API, which replaces the whole definition and therefore needs the current state to be fetched first.
 
 # Endpoint
 

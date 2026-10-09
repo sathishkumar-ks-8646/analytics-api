@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -168,11 +168,11 @@ Groups are the building block for bulk view-level access management. When a view
 | Code | HTTP | Meaning |
 |---|---|---|
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
-| [7282](../../../foundations/error-codes.md#error-7282) | 400 | A group with the same name already exists in this workspace. Group names must be unique within a workspace. |
+| [7282](../../../foundations/error-codes.md#error-7282) | 400 | A group with the same name already exists in this workspace. Group names must be unique per workspace. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [7338](../../../foundations/error-codes.md#error-7338) | 400 | The specified group-id does not belong to this workspace. |
+| [7338](../../../foundations/error-codes.md#error-7338) | 400 | The specified <group-id> does not belong to this workspace. |
 | [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
-| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the organization's Account Admin. |
+| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 
 # Related

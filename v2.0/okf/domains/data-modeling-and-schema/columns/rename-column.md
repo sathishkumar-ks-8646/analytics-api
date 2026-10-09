@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Rename Column
-description: Renames the specified column of a table.
+description: Renames the specified column in the given table.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}"
 tags:
   - zoho-analytics
@@ -45,10 +45,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -60,7 +60,7 @@ Renames the specified column in the given table. The column is identified by its
 
 From the OpenAPI specification:
 
-Renames the specified column of a table. The column is identified by its column ID in the request URL.
+Renames the specified column in the given table. The column is identified by its numeric column ID in the URL.
 
 Every view, formula and report that refers to the column is updated automatically to use the new name.
 

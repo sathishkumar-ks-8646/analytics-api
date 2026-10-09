@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Shared Workspace List
-description: Returns all the workspaces that have been shared with the requesting user from other organizations.
+description: Returns all workspaces that have been shared with the authenticated user from other organisations.
 resource: https://analyticsapi.zoho.com/restapi/v2/workspaces/shared
 tags:
   - zoho-analytics
@@ -39,10 +39,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

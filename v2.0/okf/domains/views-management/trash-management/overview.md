@@ -30,10 +30,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -175,9 +175,9 @@ product_Vs_sales → AnalysisView (7617000032567467, child of Sales)
 | [7082](../../../foundations/error-codes.md#error-7082) | 400 | An unexpected error occurred during the trash restore operation. |
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [7929](../../../foundations/error-codes.md#error-7929) | 400 | The view has already been restored from the trash. |
-| [7941](../../../foundations/error-codes.md#error-7941) | 400 | The view has parent dependencies that are also in the trash and must be restored together. |
-| [7942](../../../foundations/error-codes.md#error-7942) | 400 | The view has child dependent views in the trash that must be deleted together. |
+| [7929](../../../foundations/error-codes.md#error-7929) | 400 | The view has already been restored from trash. |
+| [7941](../../../foundations/error-codes.md#error-7941) | 400 | The view has parent dependencies that are also in trash and must be restored together. |
+| [7942](../../../foundations/error-codes.md#error-7942) | 400 | The view has child dependent views in trash that must be deleted together. |
 | [7943](../../../foundations/error-codes.md#error-7943) | 400 | The requesting user does not have permission to restore this specific trashed view. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 

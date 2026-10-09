@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Delete Custom Role
-description: Deletes a custom role definition from the organization.
+description: Deletes a custom role definition.
 resource: "https://analyticsapi.zoho.com/restapi/v2/orgs/roles/{role-id}"
 tags:
   - zoho-analytics
@@ -44,10 +44,10 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -65,7 +65,7 @@ Deletes a custom role definition.
 
 From the OpenAPI specification:
 
-Deletes a custom role definition from the organization.
+Deletes a custom role definition.
 
 Only the definition is removed. Users who held the role are not deleted, and reassigning them is done through the user management APIs. The operation cannot be undone, and re-creating the same name later produces a new role with a new identifier.
 

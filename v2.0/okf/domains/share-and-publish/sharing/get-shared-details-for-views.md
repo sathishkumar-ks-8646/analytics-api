@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Shared Details
-description: Returns the shared details of the specified views.
+description: "Returns detailed share information — per user and per group, including permission booleans, a human-readable permissionString, filter criteria, and restricted columns — for one or more specific views."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/share/shareddetails"
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -52,10 +52,6 @@ status: stable
 **GET `/restapi/v2/workspaces/{workspace-id}/share/shareddetails`** - Get Shared Details (Sharing / Share & Publish).
 
 Returns detailed share information — per user and per group, including permission booleans, a human-readable `permissionString`, filter criteria, and restricted columns — for one or more specific views.
-
-From the OpenAPI specification:
-
-Returns the shared details of the specified views. For every view, the response lists each user or group it is shared to, along with the permissions granted, the filter criteria applied, and any column level restrictions in effect.
 
 # Endpoint
 

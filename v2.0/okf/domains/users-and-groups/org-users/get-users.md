@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Users
-description: "Returns the list of all the users who are members of the specified organization, along with their current status and org-level role."
+description: "Returns the list of all users who are members of the specified organisation, along with their current status (active/inactive) and org-level role."
 resource: https://analyticsapi.zoho.com/restapi/v2/users
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -55,12 +55,6 @@ status: stable
 Returns the list of all users who are members of the specified organisation, along with their current status (active/inactive) and org-level role.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Returns the list of all the users who are members of the specified organization, along with their current status and org-level role.
-
-The org-level role governs what the user can do across the entire organization. It is distinct from the workspace-level role, which governs what the user can do within a specific workspace and is managed using the workspace sharing APIs.
 
 # Endpoint
 

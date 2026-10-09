@@ -13,55 +13,55 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -111,7 +111,7 @@ All identifiers are numeric but are transmitted as **strings** (JSON strings in 
 - **Where it is sent:** URL path segment `{view-id}`.
 - **OpenAPI description:** ID of the view.
 
-- **Obtained from:** [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md), [Get View List](../domains/views-management/view-operations/get-views.md), [Create Table](../domains/data-modeling-and-schema/table-and-schema/create-table.md), [Create Query Table](../domains/data-modeling-and-schema/query-tables/create-query-table.md), [Import Data into a New Table (Synchronous)](../domains/data-operations/sync-data-import/import-data-new-table.md), [Create Analysis View](../domains/reports-and-dashboards/reports/create-report.md), [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md).
+- **Obtained from:** [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md), [Get View List](../domains/views-management/view-operations/get-views.md), [Create Table](../domains/data-modeling-and-schema/table-and-schema/create-table.md), [Create Query Table](../domains/data-modeling-and-schema/query-tables/create-query-table.md), [Import Data into a New Table (Synchronous)](../domains/data-operations/sync-data-import/import-data-new-table.md), [Create Report](../domains/reports-and-dashboards/reports/create-report.md), [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md).
 
 - **Used by:** 58 operations, for example [Get Table Metadata](../domains/data-modeling-and-schema/table-and-schema/get-table-metadata.md), [Add Column](../domains/data-modeling-and-schema/columns/add-column.md), [Rename Column](../domains/data-modeling-and-schema/columns/rename-column.md), [Delete Column](../domains/data-modeling-and-schema/columns/delete-column.md), [Hide Columns](../domains/data-modeling-and-schema/columns/hide-columns.md), [Show Columns](../domains/data-modeling-and-schema/columns/show-columns.md), and others.
 
@@ -265,11 +265,11 @@ All identifiers are numeric but are transmitted as **strings** (JSON strings in 
 
 - **What it is:** Dashboard ID (a view ID whose type is Dashboard)
 - **Where it is sent:** URL path segment `{dashboard-id}`.
-- **OpenAPI description:** ID of the dashboard whose metadata is retrieved.
+- **OpenAPI description:** ID of the dashboard whose configuration is returned.
 
 - **Obtained from:** [Get All Dashboards](../domains/reports-and-dashboards/dashboards/get-dashboards.md), [Get Owned Dashboards](../domains/reports-and-dashboards/dashboards/get-owned-dashboards.md), [Get Shared Dashboards](../domains/reports-and-dashboards/dashboards/get-shared-dashboards.md), [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md), [Get View List](../domains/views-management/view-operations/get-views.md).
 
-- **Used by:** 2 operations, for example [Get Dashboard Metadata](../domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md), [Update Dashboard](../domains/reports-and-dashboards/dashboards/update-dashboard.md).
+- **Used by:** 2 operations, for example [Read Dashboard Metadata](../domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md), [Update Dashboard](../domains/reports-and-dashboards/dashboards/update-dashboard.md).
 
 # Related
 

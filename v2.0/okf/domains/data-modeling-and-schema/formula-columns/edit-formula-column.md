@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Edit Custom Formula
-description: "Updates the expression of an existing custom formula column, together with its display name and description where needed."
+description: Updates the expression and/or description of an existing custom formula column.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas/{formula-id}"
 tags:
   - zoho-analytics
@@ -51,10 +51,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -66,7 +66,7 @@ Updates the expression and/or description of an existing custom formula column.
 
 From the OpenAPI specification:
 
-Updates the expression of an existing custom formula column, together with its display name and description where needed.
+Updates the expression and/or description of an existing custom formula column.
 
 The new expression replaces the previous one entirely - there is no partial update of individual clauses.
 

@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Slide Info
-description: "Returns the details of the specified slideshow, including its slide key, its access type, and the IDs of the views it contains."
+description: "Returns the full definition of a single slideshow: its name, its access type, its secret slide key, and the ordered list of view IDs it contains."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}"
 tags:
   - zoho-analytics
@@ -44,10 +44,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

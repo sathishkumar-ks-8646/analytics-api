@@ -4,7 +4,7 @@
 
 # Concepts
 
-* [Create Custom Role](create-custom-role.md) - Creates one custom role in the organization identified by the ZANALYTICS-ORGID header, and returns its identifier.
-* [Delete Custom Role](delete-custom-role.md) - Deletes a custom role definition from the organization.
-* [Get Custom Roles](get-custom-roles.md) - Returns every custom role defined in the organization identified by the ZANALYTICS-ORGID header, along with the complete permission definition of each role.
-* [Update Custom Role](update-custom-role.md) - Renames a custom role, replaces its access type and permissions, or does both in one call.
+* [Create Custom Role](create-custom-role.md) - Creates one custom role in the organization.
+* [Delete Custom Role](delete-custom-role.md) - Deletes a custom role definition.
+* [Get Custom Roles](get-custom-roles.md) - Returns every custom role defined in the organization, with its full permission definition.
+* [Update Custom Role](update-custom-role.md) - Renames a custom role, replaces its access type and permissions, or both.

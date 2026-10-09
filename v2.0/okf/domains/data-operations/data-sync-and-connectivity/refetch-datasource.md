@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Refetch Data
-description: Sync data from the available datasource for the specified view - one table only.
+description: Triggers an immediate pull for one table from whatever datasource sits behind it.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/sync"
 tags:
   - zoho-analytics
@@ -44,10 +44,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -63,10 +63,6 @@ Triggers an immediate pull for **one table** from whatever datasource sits behin
 |-----------|------|-------------|
 | `<workspace-id>` | Long | ID of the workspace that owns the view. |
 | `<view-id>` | Long | ID of the table to refresh. Must belong to `<workspace-id>` and must have a datasource behind it. |
-
-From the OpenAPI specification:
-
-Sync data from the available datasource for the specified view - one table only. Returns 204 once the refetch has been started; the outcome is read from Get Last Import Details. A table with no datasource behind it fails with 18056. Consumes the daily manual sync quota. Not available through a Client Portal or White Label domain.
 
 # Endpoint
 

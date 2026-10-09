@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create Private URL
-description: Creates a private URL for the specified view and returns it.
+description: "Creates a Private URL for a view — generating the secret private key if one does not exist — and, in the same call, sets the link's permission set, row-level filter criteria, column restrictions, password, and expiry date."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink"
 tags:
   - zoho-analytics
@@ -61,10 +61,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -73,10 +73,6 @@ status: stable
 **POST `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink`** - Create Private URL (Publish / Share & Publish).
 
 Creates a **Private URL** for a view — generating the secret private key if one does not exist — and, in the same call, sets the link's permission set, row-level filter criteria, column restrictions, password, and expiry date. The freshly built private URL is returned in the response.
-
-From the OpenAPI specification:
-
-Creates a private URL for the specified view and returns it. The private URL can be protected with a password and given a validity period, and the permissions granted through it are controlled by the config.
 
 # Endpoint
 

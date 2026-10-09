@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get View Details
-description: Returns the metadata of a single view identified by its view ID.
+description: Returns detailed metadata for a single view identified by its view ID.
 resource: "https://analyticsapi.zoho.com/restapi/v2/views/{view-id}"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -58,7 +58,7 @@ Returns detailed metadata for a single view identified by its view ID. Unlike th
 
 From the OpenAPI specification:
 
-Returns the metadata of a single view identified by its view ID. The view is resolved globally, so unlike the other APIs in this module no workspace ID is needed in the URL - the workspace is derived from the view itself.
+Returns detailed metadata for a single view identified by its view ID. Unlike the Get View List API, this API does not require a workspace ID in the URL — the view is resolved directly by its ID. Optionally returns extended metadata including column definitions and involved views.
 
 By default only the base attributes are returned. Setting `withInvolvedMetaInfo` to `true` adds extended metadata whose shape depends on the view type: column definitions and a row count for tables and query tables, the tab structure for a tabbed dashboard, and the list of parent views for an analysis view or a regular dashboard. Some of those extended fields are restricted to Workspace Admins.
 

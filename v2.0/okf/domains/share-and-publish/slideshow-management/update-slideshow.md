@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Update Slide Show
-description: Updates the details of the specified slideshow.
+description: "Updates an existing slideshow: renames it, replaces its set of views, changes its access type, and/or rotates its slide key."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}"
 tags:
   - zoho-analytics
@@ -52,10 +52,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -64,10 +64,6 @@ status: stable
 **PUT `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}`** - Update Slide Show (Slideshow Management / Share & Publish).
 
 Updates an existing slideshow: renames it, replaces its set of views, changes its access type, and/or rotates its slide key. Unlike the publish configuration APIs, this one is a genuine **partial update** — only the attributes present in CONFIG are touched.
-
-From the OpenAPI specification:
-
-Updates the details of the specified slideshow. The name, the views it contains, and its access type can all be changed, and the slide key can be regenerated to invalidate the URL issued previously.
 
 # Endpoint
 

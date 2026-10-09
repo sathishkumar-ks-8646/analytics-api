@@ -34,10 +34,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -126,7 +126,7 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 |---|---|---|
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [7415](../../../foundations/error-codes.md#error-7415) | 400 | The specified workspace is not the current default workspace of the requesting user. This API does not succeed silently for a workspace that is not the default. |
+| [7415](../../../foundations/error-codes.md#error-7415) | 400 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 
 # Related

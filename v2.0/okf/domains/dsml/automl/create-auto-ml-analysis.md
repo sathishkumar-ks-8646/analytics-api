@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create AutoML Analysis
-description: Creates a new AutoML analysis within the workspace.
+description: Creates an analysis and immediately starts training one model per configured algorithm.
 resource: "https://analyticsapi.zoho.com/restapi/v2/automl/workspaces/{workspace-id}/analysis"
 tags:
   - zoho-analytics
@@ -49,10 +49,10 @@ sources:
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -61,10 +61,6 @@ status: stable
 **POST `/restapi/v2/automl/workspaces/{workspace-id}/analysis`** - Create AutoML Analysis (AutoML / Data Science & Machine Learning (AutoML)).
 
 Creates an analysis and **immediately starts training one model per configured algorithm**. Returns as soon as the training job is queued — it does not wait for training to finish.
-
-From the OpenAPI specification:
-
-Creates a new AutoML analysis within the workspace. An analysis is defined by the training table, the target column, the input features and the set of algorithms to be trained. The prediction type chosen determines which algorithms can be configured - regression, classification or clustering.
 
 # Endpoint
 

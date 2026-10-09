@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Datasources
-description: "Returns the list of datasources for the specified workspace, the tables each one feeds, and the state of their last sync."
+description: "Lists every datasource in a workspace, the tables each one feeds, and the state of their last sync."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/datasources"
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -58,10 +58,6 @@ Lists every datasource in a workspace, the tables each one feeds, and the state 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `<workspace-id>` | Long | ID of the workspace whose datasources are listed. |
-
-From the OpenAPI specification:
-
-Returns the list of datasources for the specified workspace, the tables each one feeds, and the state of their last sync. This is the only API that returns datasourceId, syncIntervalId and the datasource-to-view mapping. The entry shape varies by source family, so test for the presence of a field rather than assuming a fixed schema. Not available through a Client Portal or White Label domain.
 
 # Endpoint
 

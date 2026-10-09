@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Workspace Shared Details
-description: Returns the shared details of the specified workspace.
+description: "Returns a consolidated view of every share that exists in the workspace — grouped by user, by group, plus any public/private-link shares — in a single call."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/share"
 tags:
   - zoho-analytics
@@ -39,10 +39,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -53,10 +53,6 @@ status: stable
 Returns a consolidated view of every share that exists in the workspace — grouped by user, by group, plus any public/private-link shares — in a single call. Intended for workspace-level share auditing/administration.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Returns the shared details of the specified workspace. The response groups the sharing into four blocks - views shared directly with individual users, views shared with groups, views published publicly, and views shared through a private link.
 
 # Endpoint
 

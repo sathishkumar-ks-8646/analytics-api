@@ -34,10 +34,10 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -437,34 +437,34 @@ Every recognised permission key, by group. All are booleans, and **an omitted ke
 
 | Code | HTTP | Meaning |
 |---|---|---|
-| [6142](../../../foundations/error-codes.md#error-6142) | 400 | The subscription plan of the organization does not include custom roles. |
+| [6142](../../../foundations/error-codes.md#error-6142) | 400 | CUSTOMROLESNOTALLOWEDINPLAN — The plan does not include custom roles. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [7309](../../../foundations/error-codes.md#error-7309) | 400 | No authentication was supplied with the request. |
-| [7548](../../../foundations/error-codes.md#error-7548) | 400 | No custom role exists for the given role-id in this organization. |
-| [7553](../../../foundations/error-codes.md#error-7553) | 400 | A role with the given roleName already exists in the organization. The check covers built-in role names as well as other custom roles. |
-| [7554](../../../foundations/error-codes.md#error-7554) | 400 | The accessType value did not resolve to a known access level. |
-| [7559](../../../foundations/error-codes.md#error-7559) | 400 | manageEmailSchedules is enabled but export is not. |
-| [7573](../../../foundations/error-codes.md#error-7573) | 400 | A dataPermissions flag is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS. |
-| [7574](../../../foundations/error-codes.md#error-7574) | 400 | designModify is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS. |
-| [7575](../../../foundations/error-codes.md#error-7575) | 400 | createTable, createQueryTable or createFormula is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS. |
-| [7576](../../../foundations/error-codes.md#error-7576) | 400 | manageDataAlerts is enabled while accessType is ALL_DASHBOARDS. |
-| [7577](../../../foundations/error-codes.md#error-7577) | 400 | dataArchives is enabled but not every other dataPermissions flag is enabled. |
-| [7578](../../../foundations/error-codes.md#error-7578) | 400 | designModify is enabled without both accessAdminPresets and createPreset. |
-| [7579](../../../foundations/error-codes.md#error-7579) | 400 | interactionPermissions.read is missing or false. Read permission must always be enabled. |
-| [7580](../../../foundations/error-codes.md#error-7580) | 400 | One of accessType and permissions was sent without the other. |
-| [7581](../../../foundations/error-codes.md#error-7581) | 400 | The CONFIG contained neither roleName nor accessType, so there is nothing to update. |
-| [7584](../../../foundations/error-codes.md#error-7584) | 400 | A datasourcePermissions flag is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS. |
-| [7585](../../../foundations/error-codes.md#error-7585) | 400 | useDatasource is enabled but createTable is not. |
-| [7586](../../../foundations/error-codes.md#error-7586) | 400 | editDatasource, syncData, useDatasource or removeDatasource is enabled without viewDatasource. |
-| [8078](../../../foundations/error-codes.md#error-8078) | 400 | A mandatory attribute was sent with an empty value. The error message names the attribute. |
+| [7309](../../../foundations/error-codes.md#error-7309) | 400 | SECURITYNEEDSLOGIN — No authentication was supplied. |
+| [7548](../../../foundations/error-codes.md#error-7548) | 400 | NOSUCHROLEEXIST — No role exists for the given <role-id>. |
+| [7553](../../../foundations/error-codes.md#error-7553) | 400 | ROLENAMEEXISTS — A role with this name already exists in the organization. |
+| [7554](../../../foundations/error-codes.md#error-7554) | 400 | INVALIDVIEWTYPEGROUP — accessType did not resolve to a known level. |
+| [7559](../../../foundations/error-codes.md#error-7559) | 400 | EXPORTPERMNEEDEDFOREMAILSCH — manageEmailSchedules is true but export is not. |
+| [7573](../../../foundations/error-codes.md#error-7573) | 400 | CRDATAPERMNOTALLOWEDFORACCESSTYPE — A data permission was enabled below the full access level. |
+| [7574](../../../foundations/error-codes.md#error-7574) | 400 | CRDESIGNPERMNOTALLOWEDFORACCESSTYPE — designModify was enabled below the full access level. |
+| [7575](../../../foundations/error-codes.md#error-7575) | 400 | CRCREATEPERMNOTALLOWEDFORACCESSTYPE — createTable, createQueryTable, or createFormula was enabled below the full access level. |
+| [7576](../../../foundations/error-codes.md#error-7576) | 400 | CRALERTPERMNOTALLOWEDFORACCESSTYPE — manageDataAlerts was enabled with ALLDASHBOARDS. |
+| [7577](../../../foundations/error-codes.md#error-7577) | 400 | CRSCHEDULEDDATADELETIONPERMNOTALLOWED — dataArchives is true but not every data permission is enabled. |
+| [7578](../../../foundations/error-codes.md#error-7578) | 400 | CRDESIGNMODIFYREQUIRESPRESETPERMS — designModify is true without both preset permissions. |
+| [7579](../../../foundations/error-codes.md#error-7579) | 400 | CRREADPERMMUSTBEENABLED — interactionPermissions.read is missing or false. |
+| [7580](../../../foundations/error-codes.md#error-7580) | 400 | CRACCESSTYPEANDPERMSREQUIREDTOGETHER — One of accessType / permissions was sent without the other. |
+| [7581](../../../foundations/error-codes.md#error-7581) | 400 | CRNOFIELDSTOUPDATE — Neither roleName nor accessType was supplied. |
+| [7584](../../../foundations/error-codes.md#error-7584) | 400 | CRDATASOURCEPERMNOTALLOWEDFORACCESSTYPE — A datasource permission was enabled below the full access level. |
+| [7585](../../../foundations/error-codes.md#error-7585) | 400 | CRUSEDATASOURCEREQUIRESCREATETABLE — useDatasource is true but createTable is not. |
+| [7586](../../../foundations/error-codes.md#error-7586) | 400 | CRVIEWDATASOURCEREQUIREDFORDATASOURCEPERMS — Another datasource permission is enabled without viewDatasource. |
+| [8078](../../../foundations/error-codes.md#error-8078) | 400 | EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent blank. |
 | [8083](../../../foundations/error-codes.md#error-8083) | 400 | The ZANALYTICS-ORGID header is missing from a request that requires it. |
-| [8504](../../../foundations/error-codes.md#error-8504) | 400 | CONFIG was not sent. |
-| [8507](../../../foundations/error-codes.md#error-8507) | 400 | roleName exceeds 30 characters, or the serialized permissions object exceeds its size limit. |
-| [8509](../../../foundations/error-codes.md#error-8509) | 400 | roleName contains characters other than letters, digits, spaces, underscore and hyphen, or accessType is not one of the three allowed values. |
-| [8525](../../../foundations/error-codes.md#error-8525) | 400 | The role-id in the request URI is not numeric, so the request matched no route. |
-| [8534](../../../foundations/error-codes.md#error-8534) | 400 | CONFIG is not valid JSON. |
+| [8504](../../../foundations/error-codes.md#error-8504) | 400 | LESSTHANMINOCCURANCE — CONFIG was not sent. |
+| [8507](../../../foundations/error-codes.md#error-8507) | 400 | MORETHANMAXLENGTH — roleName exceeds 30 characters, or permissions exceeds its size limit. |
+| [8509](../../../foundations/error-codes.md#error-8509) | 400 | PATTERNNOTMATCHED — roleName contains disallowed characters, or accessType is not one of the three values. |
+| [8525](../../../foundations/error-codes.md#error-8525) | 400 | URLRULENOTCONFIGURED — <role-id> is not numeric, so the request matched no route. |
+| [8534](../../../foundations/error-codes.md#error-8534) | 400 | JSONPARSEERROR — CONFIG is not valid JSON. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [8539](../../../foundations/error-codes.md#error-8539) | 400 | An attribute carries a value that is structurally valid but not accepted, such as an empty roleName. |
+| [8539](../../../foundations/error-codes.md#error-8539) | 400 | INVALIDVALUENOTALLOWED — An attribute carries a value that is structurally valid but not accepted, such as an empty roleName. |
 
 # Related
 

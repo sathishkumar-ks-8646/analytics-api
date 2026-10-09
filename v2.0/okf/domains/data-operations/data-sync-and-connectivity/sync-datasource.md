@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Sync Data
-description: Initiate an immediate data sync for the specified datasource - every table it feeds.
+description: "Triggers an immediate pull for a whole datasource — every table it feeds."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}/sync"
 tags:
   - zoho-analytics
@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -65,10 +65,6 @@ Triggers an immediate pull for a whole datasource — every table it feeds.
 |-----------|------|-------------|
 | `<workspace-id>` | Long | ID of the workspace that owns the datasource. |
 | `<datasource-id>` | Long | `dataSources[].datasourceId` from [Get Datasources](get-datasources.md). |
-
-From the OpenAPI specification:
-
-Initiate an immediate data sync for the specified datasource - every table it feeds. Returns 204 once the sync has been started; it does not wait for completion, and the outcome is read from Get Last Import Details. Consumes the daily manual sync quota reported as syncUsed / totalSyncAllowed by Get Datasources. Not available through a Client Portal or White Label domain.
 
 # Endpoint
 

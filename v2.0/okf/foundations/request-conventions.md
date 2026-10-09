@@ -18,7 +18,7 @@ sources:
     title: OpenAPI 3 specifications (parameters, requestBody encodings)
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

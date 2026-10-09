@@ -230,12 +230,12 @@
               {
                 "name": "7111",
                 "description": "A table or view with the same name already exists in the workspace.",
-                "resolution": "Use a TABLENAME that is unique within the workspace."
+                "resolution": "Use a unique TABLENAME within the workspace."
               },
               {
                 "name": "7125",
-                "description": "The specified data type is not compatible with the configuration of the column.",
-                "resolution": "Verify the DATATYPE value and the associated format settings."
+                "description": "The specified data type is not compatible with the column's configuration.",
+                "resolution": "Verify the DATATYPE value and any associated format settings."
               },
               {
                 "name": "7126",
@@ -245,61 +245,61 @@
               {
                 "name": "7127",
                 "description": "A column name exceeds the maximum allowed length.",
-                "resolution": "Keep every COLUMNNAME value within 1000 characters."
+                "resolution": "Keep COLUMNNAME values within 1000 characters."
               },
               {
                 "name": "7128",
-                "description": "Duplicate column names were found in the COLUMNS array.",
-                "resolution": "Ensure that every COLUMNNAME value is unique within the table definition."
+                "description": "Duplicate column names found in the COLUMNS array.",
+                "resolution": "Ensure all COLUMNNAME values are unique within the same table definition."
               },
               {
                 "name": "7143",
-                "description": "A DEFAULT value was provided for an AUTO_NUMBER column.",
-                "resolution": "Remove the DEFAULT key from AUTO_NUMBER column definitions."
+                "description": "A DEFAULT value was provided for an AUTONUMBER column.",
+                "resolution": "Remove the DEFAULT field from AUTONUMBER column definitions."
               },
               {
                 "name": "7144",
                 "description": "The specified FOLDERNAME does not exist in this workspace.",
-                "resolution": "Use the Get Folder List API to verify the exact folder display name before calling this API."
+                "resolution": "Use Get Folder List to verify the exact folder display name before calling this API."
               },
               {
                 "name": "7146",
                 "description": "The DATATYPE value is not a recognised data type.",
-                "resolution": "Use one of the values listed in the DATATYPE attribute."
+                "resolution": "Use one of the supported values from the Supported Data Types table."
               },
               {
                 "name": "7183",
-                "description": "The data type of the lookup column is incompatible with the data type of the referenced column.",
-                "resolution": "Ensure that both columns use compatible data types."
+                "description": "The lookup column's data type is incompatible with the referenced column's data type.",
+                "resolution": "Ensure both columns use compatible data types."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Table permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Table permission on the workspace."
               },
               {
                 "name": "7379",
-                "description": "A lookup column cannot refer to a column within the same table.",
+                "description": "A lookup column cannot reference a column within the same table.",
                 "resolution": "Set LOOKUPCOLUMN.TABLENAME to a different existing table, not the table being created."
               },
               {
                 "name": "7395",
                 "description": "The column specified in LOOKUPCOLUMN.COLUMNNAME does not exist in the referenced table.",
-                "resolution": "Verify the column name using the Get Table Metadata API on the referenced table."
+                "resolution": "Verify the column name using Get Table Metadata on the referenced table."
               },
               {
                 "name": "7413",
                 "description": "TABLENAME is missing or null.",
-                "resolution": "Ensure that the tableDesign.TABLENAME key is present and non-empty."
+                "resolution": "Ensure the tableDesign.TABLENAME field is present and non-empty."
               },
               {
                 "name": "7478",
                 "description": "The number of columns exceeds the maximum allowed for a table.",
-                "resolution": "Reduce the number of entries in the COLUMNS array."
+                "resolution": "Reduce the number of columns in the COLUMNS array."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -323,7 +323,7 @@
         ],
         "x-zenesis-title": "Get Table Metadata",
         "summary": "Get Table Metadata",
-        "description": "Returns the complete column schema of the specified table, including column names, data types, descriptions, lookup relationships, formula expressions and formatting details.\n\nOnly the columns that the calling user has been granted access to are included in the response.",
+        "description": "Returns the complete column schema of the specified table — including column names, data types, descriptions, lookup relationships, formula expressions, and formatting details. Only columns the calling user has been granted access to are included in the response.\n\nOnly the columns that the calling user has been granted access to are included in the response.",
         "operationId": "getTableMetadata",
         "parameters": [
           {
@@ -534,26 +534,26 @@
               {
                 "name": "7105",
                 "description": "The specified view does not exist.",
-                "resolution": "Verify the view-id using the Get View List API."
+                "resolution": "Verify the <view-id> using the Get View List API."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the specified view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the specified view."
               },
               {
                 "name": "7319",
                 "description": "The specified view ID does not belong to the given workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm the <view-id> belongs to the workspace identified by <workspace-id>."
               },
               {
                 "name": "7397",
                 "description": "The specified view is not a table.",
-                "resolution": "This API returns metadata only for tables. Use the Get View List API to confirm the view type before calling."
+                "resolution": "This API only returns metadata for tables. Use Get View List to confirm the view type is a table before calling."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -734,57 +734,57 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7089",
-                "description": "All the columns of the table cannot be hidden at the same time.",
-                "resolution": "Ensure that at least one column of the table remains visible."
+                "description": "(For hide) All columns cannot be hidden simultaneously.",
+                "resolution": "—"
               },
               {
                 "name": "7092",
-                "description": "A DDL lock is active because an import or a schema operation is in progress on the table.",
-                "resolution": "Wait for the current import or schema operation to complete and then retry."
+                "description": "DDL lock is active — an import or schema operation is in progress on the table.",
+                "resolution": "Wait for the current import or schema operation to complete before adding a column."
               },
               {
                 "name": "7111",
                 "description": "A view with the same name already exists.",
-                "resolution": "Use a name that is unique within the workspace."
+                "resolution": "—"
               },
               {
                 "name": "7125",
-                "description": "The data type is not compatible with the configuration of the column.",
+                "description": "The data type is not compatible with the column's configuration.",
                 "resolution": "Verify the dataType value."
               },
               {
                 "name": "7146",
                 "description": "The dataType value is not recognised.",
-                "resolution": "Use one of the values listed in the dataType attribute."
+                "resolution": "Use one of the values from the Supported Data Types table."
               },
               {
                 "name": "7157",
                 "description": "A column with the same name already exists in the table.",
-                "resolution": "Use a columnName that is unique within the table."
+                "resolution": "Use a unique columnName within the table."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the workspace."
               },
               {
                 "name": "7397",
-                "description": "The specified view is not a table.",
-                "resolution": "This API operates only on tables. Verify the view type using the Get View List API."
+                "description": "The view is not a table.",
+                "resolution": "This API only operates on tables. Verify the view type using Get View List."
               },
               {
                 "name": "7439",
                 "description": "The view ID provided is not a table.",
-                "resolution": "Provide the view ID of a table, not of a report or a dashboard."
+                "resolution": "Provide the view ID of a table, not a report or dashboard."
               },
               {
                 "name": "8173",
-                "description": "The number of columns sent in bulk mode exceeds the allowed limit.",
-                "resolution": "Reduce the number of columns per request or split the request into several calls."
+                "description": "The number of columns in bulk mode exceeds the allowed limit.",
+                "resolution": "Reduce the number of columns per request or split into multiple calls."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -821,7 +821,7 @@
         ],
         "x-zenesis-title": "Rename Column",
         "summary": "Rename Column",
-        "description": "Renames the specified column of a table. The column is identified by its column ID in the request URL.\n\nEvery view, formula and report that refers to the column is updated automatically to use the new name.",
+        "description": "Renames the specified column in the given table. The column is identified by its numeric column ID in the URL.\n\nEvery view, formula and report that refers to the column is updated automatically to use the new name.",
         "operationId": "renameColumn",
         "parameters": [
           {
@@ -884,42 +884,42 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7092",
-                "description": "A DDL lock is active on the table.",
-                "resolution": "Wait for the in-progress operation to complete and then retry."
+                "description": "DDL lock is active on the table.",
+                "resolution": "Wait for the in-progress operation to complete."
               },
               {
                 "name": "7107",
                 "description": "The specified column does not exist in the table.",
-                "resolution": "Verify the column-id using the Get Table Metadata API."
+                "resolution": "Verify the <column-id> using Get Table Metadata."
               },
               {
                 "name": "7111",
                 "description": "A column with the new name already exists in the table.",
-                "resolution": "Use a column name that is unique within the table."
+                "resolution": "Use a unique column name within the table."
               },
               {
                 "name": "7157",
-                "description": "The column name already exists.",
-                "resolution": "Use a columnName that is unique within the table."
+                "description": "Column name already exists.",
+                "resolution": "Use a unique columnName within the table."
               },
               {
                 "name": "7164",
-                "description": "The table is a snapshot table and its columns cannot be renamed.",
-                "resolution": "Snapshot tables are read-only with respect to their schema. Create a new table when schema changes are needed."
+                "description": "The table is a snapshot table; columns cannot be renamed.",
+                "resolution": "Snapshot tables are read-only schema-wise. Create a new table if schema changes are needed."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the workspace."
               },
               {
                 "name": "7439",
-                "description": "The specified view is not a table.",
+                "description": "The view is not a table.",
                 "resolution": "Provide the view ID of a table."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1008,32 +1008,32 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7092",
-                "description": "A DDL lock is active on the table.",
-                "resolution": "Wait for the in-progress operation to complete and then retry."
+                "description": "DDL lock is active on the table.",
+                "resolution": "Wait for the in-progress operation to complete."
               },
               {
                 "name": "7107",
                 "description": "The specified column does not exist in the table.",
-                "resolution": "Verify the column-id using the Get Table Metadata API."
+                "resolution": "Verify <column-id> using Get Table Metadata."
               },
               {
                 "name": "7277",
-                "description": "The column has dependent views and the deletion has been blocked.",
-                "resolution": "Call the Get Column Dependents API to identify them, then either delete them first or set deleteDependentViews to true to delete them along with the column."
+                "description": "The column has dependent views; deletion blocked.",
+                "resolution": "Call Get Column Dependents to identify them, then either delete them manually first or set deleteDependentViews: true to cascade delete."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the workspace."
               },
               {
                 "name": "7439",
-                "description": "The specified view is not a table.",
+                "description": "The view is not a table.",
                 "resolution": "Provide the view ID of a table."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1057,7 +1057,7 @@
         ],
         "x-zenesis-title": "Reorder Columns",
         "summary": "Reorder Columns",
-        "description": "Changes the display order of the columns of the specified table. The complete set of non-system column IDs must be sent in the wanted order, because this API does not support reordering a subset of the columns.\n\nThis API is not available in white label or client portal contexts and can be called only through the standard host.",
+        "description": "Changes the display order of all columns in the specified table. The complete set of non-system column IDs must be supplied in the desired order — this API does not support reordering a partial subset of columns.\n\nThis API is not available in white label or client portal contexts and can be called only through the standard host.",
         "operationId": "reorderColumns",
         "parameters": [
           {
@@ -1135,27 +1135,27 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view ID does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id is correct."
+                "resolution": "Confirm the <view-id> is correct."
               },
               {
                 "name": "8179",
-                "description": "One or more non-system columns are missing from the columns array.",
-                "resolution": "Include every non-system column ID of the table in the array, not only the ones being moved."
+                "description": "One or more required (non-system) columns are missing from the columns array.",
+                "resolution": "Include every non-system column ID of the table in columns, not just the ones being moved."
               },
               {
                 "name": "8180",
                 "description": "One or more column IDs in the columns array do not belong to this view.",
-                "resolution": "Verify every column ID using the Get Table Metadata API."
+                "resolution": "Verify all column IDs using Get Table Metadata."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1179,7 +1179,7 @@
         ],
         "x-zenesis-title": "Hide Columns",
         "summary": "Hide Columns",
-        "description": "Hides one or more columns of the specified table. Hidden columns are not visible to users viewing the table but are retained in the schema and can be made visible again using the Show Columns API.\n\nAt least one column must remain visible at all times.",
+        "description": "Hides one or more columns in the specified table. Hidden columns are not visible to users viewing the table but are retained in the schema and can be shown again using Show Columns. At least one column must remain visible at all times.\n\nAt least one column must remain visible at all times.",
         "operationId": "hideColumns",
         "parameters": [
           {
@@ -1254,27 +1254,27 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7089",
-                "description": "Hiding these columns would leave no visible column in the table.",
-                "resolution": "Ensure that at least one column is left out of the columnIds array."
+                "description": "Hiding these columns would leave no visible columns in the table.",
+                "resolution": "Ensure at least one column is not in the columnIds list."
               },
               {
                 "name": "7107",
-                "description": "One or more of the column IDs do not exist in the table.",
-                "resolution": "Verify every ID using the Get Table Metadata API."
+                "description": "One or more column IDs do not exist in the table.",
+                "resolution": "Verify all IDs using Get Table Metadata."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the view."
               },
               {
                 "name": "7397",
-                "description": "The specified view is not a table.",
-                "resolution": "This API works only on tables."
+                "description": "The view is not a table.",
+                "resolution": "This API only works on tables."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1372,22 +1372,22 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7107",
-                "description": "One or more of the column IDs do not exist in the table.",
-                "resolution": "Verify every ID using the Get Table Metadata API."
+                "description": "One or more column IDs do not exist in the table.",
+                "resolution": "Verify all IDs using Get Table Metadata."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the view."
               },
               {
                 "name": "7397",
-                "description": "The specified view is not a table.",
-                "resolution": "This API works only on tables."
+                "description": "The view is not a table.",
+                "resolution": "This API only works on tables."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1411,7 +1411,7 @@
         ],
         "x-zenesis-title": "Get Column Dependents",
         "summary": "Get Column Dependents",
-        "description": "Returns every view, custom formula column and aggregate formula that depends on the specified column.\n\nCall this API before deleting or renaming a column to understand the full impact of the change.",
+        "description": "Returns all views, custom formula columns, and aggregate formulas that depend on the specified column. Use this before deleting or renaming a column to understand the full impact.\n\nCall this API before deleting or renaming a column to understand the full impact of the change.",
         "operationId": "getColumnDependents",
         "parameters": [
           {
@@ -1506,21 +1506,21 @@
               {
                 "name": "7107",
                 "description": "The specified column does not exist in the table.",
-                "resolution": "Verify the column-id using the Get Table Metadata API."
+                "resolution": "Verify <column-id> using Get Table Metadata."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
+                "description": "User does not have permission.",
                 "resolution": "Only Workspace Admins can call this API."
               },
               {
                 "name": "7319",
                 "description": "The view ID does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm the <view-id> belongs to the workspace in the URL."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1544,7 +1544,7 @@
         ],
         "x-zenesis-title": "Sort Data by Columns",
         "summary": "Sort Data by Columns",
-        "description": "Sets the default sort order for the rows of the specified table. The API supports two modes.\n\n- **Set sort** - a `columns` array of column IDs and a `sortOrder` are sent to sort the rows by those columns.\n- **Reset sort** - `resetSort` is set to true to clear every sort setting on the table.\n\nThis API is not available in white label or client portal contexts and can be called only through the standard host.",
+        "description": "Sets the default sort order for rows in the specified table view. Supports two operational modes:\n\n- **Set sort** - a `columns` array of column IDs and a `sortOrder` are sent to sort the rows by those columns.\n- **Reset sort** - `resetSort` is set to true to clear every sort setting on the table.\n\nThis API is not available in white label or client portal contexts and can be called only through the standard host.",
         "operationId": "sortDataByColumns",
         "parameters": [
           {
@@ -1629,32 +1629,32 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view ID does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id is correct."
+                "resolution": "Confirm the <view-id> is correct."
               },
               {
                 "name": "8119",
-                "description": "Invalid value for sortOrder.",
-                "resolution": "Send 1 for ascending or 2 for descending. No other value is accepted."
+                "description": "Invalid value for sortOrder. Only 1 (Ascending) and 2 (Descending) are accepted.",
+                "resolution": "Use 1 for ascending or 2 for descending."
               },
               {
                 "name": "8180",
                 "description": "One or more column IDs in the columns array do not belong to this view.",
-                "resolution": "Verify every column ID using the Get Table Metadata API."
+                "resolution": "Verify all column IDs using Get Table Metadata."
               },
               {
                 "name": "8182",
-                "description": "resetSort and sortOrder cannot be used together.",
-                "resolution": "Send either resetSort set to true on its own, or columns together with sortOrder without resetSort."
+                "description": "resetSort: true and sortOrder cannot be used together.",
+                "resolution": "Use either resetSort: true (with no other fields) or columns + sortOrder (without resetSort)."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1678,7 +1678,7 @@
         ],
         "x-zenesis-title": "Add Lookup",
         "summary": "Add Lookup",
-        "description": "Creates a lookup relationship from the specified child column to a column in a reference table. A lookup links two tables of a workspace through a shared column, in the same way that a foreign key constraint links two relational tables.\n\nThe child column identified by `column-id` in the request URL is the many side of the relationship, and `referenceColumnId` in the reference table is the one, or unique key, side. Once the relationship exists, multi-table reports, pivot tables and query tables can pull data from both tables without a manual join, and the relationship becomes visible in the Schema View of the workspace.",
+        "description": "Creates a lookup relationship from the specified child column to a column in a reference (parent) table. The child column in the URL is the \"many\" side of the relationship; the referenceColumnId in the reference table is the \"one\" (unique key) side.\n\nThe child column identified by `column-id` in the request URL is the many side of the relationship, and `referenceColumnId` in the reference table is the one, or unique key, side. Once the relationship exists, multi-table reports, pivot tables and query tables can pull data from both tables without a manual join, and the relationship becomes visible in the Schema View of the workspace.",
         "operationId": "addLookup",
         "parameters": [
           {
@@ -1752,57 +1752,57 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7107",
-                "description": "The specified child column does not exist in the child table.",
-                "resolution": "Verify the column-id using the Get Table Metadata API on the child view."
+                "description": "The specified child column (<column-id>) does not exist in the child table.",
+                "resolution": "Verify <column-id> using Get Table Metadata on the child view."
               },
               {
                 "name": "7166",
-                "description": "The child column is itself a lookup-derived column, and a lookup on a lookup is not allowed.",
-                "resolution": "Use a regular base column of the child table, not a column pulled in from a parent table through an existing lookup."
+                "description": "The child column is itself a lookup-derived column (lookup-on-lookup is not allowed).",
+                "resolution": "Use a regular (base) column of the child table, not a column pulled in from a parent via an existing lookup."
               },
               {
                 "name": "7183",
                 "description": "The child column and the reference column have incompatible data types.",
-                "resolution": "Ensure that both columns share a compatible data type. For GEO columns the geo role level must match as well."
+                "resolution": "Ensure both columns share a compatible data type (e.g., both PLAIN, both NUMBER). For GEO columns, the geo role level must also match."
               },
               {
                 "name": "7184",
                 "description": "Adding this lookup would create a circular relationship chain across tables.",
-                "resolution": "Review the existing relationships and choose a reference table that does not already refer to the child table, either directly or transitively."
+                "resolution": "Review existing relationships and choose a reference table that does not already reference the child table (directly or transitively)."
               },
               {
                 "name": "7280",
                 "description": "A lookup relationship already exists on this child column.",
-                "resolution": "Remove the existing lookup using the Remove Lookup API and then add the new one."
+                "resolution": "Remove the existing lookup first (using Remove Lookup), then add the new one."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the workspace."
               },
               {
                 "name": "7319",
-                "description": "The reference table does not belong to the same workspace as the child table.",
-                "resolution": "Both tables must belong to the workspace identified by workspace-id."
+                "description": "The reference table (referenceViewId) does not belong to the same workspace as the child table.",
+                "resolution": "Both tables must be in the workspace identified by <workspace-id>."
               },
               {
                 "name": "7377",
-                "description": "An identical lookup relationship between the same child column and the same reference column is already defined.",
-                "resolution": "No action is needed because the relationship already exists."
+                "description": "An identical lookup relationship (same child column → same reference column) is already defined.",
+                "resolution": "No action needed — the relationship already exists."
               },
               {
                 "name": "7379",
-                "description": "The reference table is the same as the child table, and a self-referential lookup is not allowed.",
-                "resolution": "Provide a referenceViewId that is different from the view-id in the request URL."
+                "description": "The reference table is the same as the child table (self-referential lookup not allowed).",
+                "resolution": "Provide a referenceViewId that is different from <view-id>."
               },
               {
                 "name": "7509",
-                "description": "The reference column holds duplicate values and cannot serve as the reference side.",
-                "resolution": "Choose a column in the reference table that holds unique values, or de-duplicate the data of the reference column first."
+                "description": "The reference column contains duplicate values; it must be unique to serve as the reference side.",
+                "resolution": "Choose a column in the reference table that has unique values, or de-duplicate the reference column's data first."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1891,32 +1891,32 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7107",
-                "description": "The specified child column does not exist in the child table.",
-                "resolution": "Verify the column-id using the Get Table Metadata API."
+                "description": "The specified child column (<column-id>) does not exist in the child table.",
+                "resolution": "Verify <column-id> using Get Table Metadata."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the workspace."
               },
               {
                 "name": "7319",
-                "description": "The child table does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id is a table within the workspace identified by workspace-id."
+                "description": "The child table (<view-id>) does not belong to the specified workspace.",
+                "resolution": "Confirm <view-id> is a table within <workspace-id>."
               },
               {
                 "name": "7367",
-                "description": "The lookup is used by one or more dependent views and the removal has been blocked.",
-                "resolution": "Call the Get Column Dependents API to identify the dependent views, then either delete them first or set deleteDependentViews to true to remove them along with the relationship."
+                "description": "The lookup is used by one or more dependent views; removal blocked.",
+                "resolution": "Call Get Column Dependents to identify dependent views. Either delete them manually first, or set deleteDependentViews: true to cascade-delete them automatically."
               },
               {
                 "name": "7378",
                 "description": "No lookup relationship is defined on this column.",
-                "resolution": "Verify the column-id and the view-id. The lookup may have been removed already."
+                "resolution": "Verify the correct <column-id> and <view-id>. The lookup may have already been removed."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1940,7 +1940,7 @@
         ],
         "x-zenesis-title": "Get Query Tables",
         "summary": "Get Query Tables",
-        "description": "Returns the list of query tables in the specified workspace. The list can be filtered by name or by creator, sorted, and paginated through the CONFIG parameter.\n\nThe view IDs returned by this API are the entry point for the Edit Query Table and the Get Query Table Details APIs.",
+        "description": "Returns a paginated, filterable, sortable list of all query tables in the workspace.\n\nThe view IDs returned by this API are the entry point for the Edit Query Table and the Get Query Table Details APIs.",
         "operationId": "getQueryTables",
         "parameters": [
           {
@@ -2064,17 +2064,17 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Query Table permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Query Table permission on the workspace."
               },
               {
                 "name": "8119",
                 "description": "Invalid value for sortedColumn or sortedOrder.",
-                "resolution": "Send a value between 0 and 2 for sortedColumn and 0 or 1 for sortedOrder."
+                "resolution": "Use 0–2 for sortedColumn and 0–1 for sortedOrder."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2096,7 +2096,7 @@
         ],
         "x-zenesis-title": "Create Query Table",
         "summary": "Create Query Table",
-        "description": "Creates a query table by running a SQL SELECT statement against the existing tables and views of the workspace. A query table is a view whose data is computed by executing the statement at query time rather than by storing imported data, which allows joining, aggregating and transforming data from several tables using standard SQL.\n\nThe columns of the query table and their data types are derived from the SELECT clause and cannot be configured separately. The response returns only the view ID of the new query table.",
+        "description": "Creates a new query table by executing a user-supplied SQL SELECT statement against existing tables/views in the workspace.\n\nThe columns of the query table and their data types are derived from the SELECT clause and cannot be configured separately. The response returns only the view ID of the new query table.",
         "operationId": "createQueryTable",
         "parameters": [
           {
@@ -2196,58 +2196,58 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Query Table permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Query Table permission on the workspace."
               },
               {
                 "name": "7399",
-                "description": "The query refers to a spatial file-based table, which is not supported for query tables.",
-                "resolution": "Remove the reference to the spatial table from the SQL query."
+                "description": "The query references a spatial (GEO) file-based table, which is not supported for query tables.",
+                "resolution": "Remove the spatial table reference from the SQL query."
               },
               {
                 "name": "7400",
-                "description": "Query tables are not allowed for this workspace.",
-                "resolution": "Contact your administrator, because this is a workspace-level restriction."
+                "description": "Query tables are not supported/allowed for this workspace.",
+                "resolution": "Contact your administrator; this is a workspace-level restriction."
               },
               {
                 "name": "7401",
-                "description": "The SQL statement is not a valid or allowed SQL construct.",
-                "resolution": "Review the SQL for unsupported syntax. Only SELECT queries are permitted, not DDL or DML statements."
+                "description": "The SQL statement is not a valid/allowed SQL construct.",
+                "resolution": "Review the SQL for unsupported syntax (e.g., DDL/DML statements). Only SELECT queries are permitted."
               },
               {
                 "name": "7402",
                 "description": "The SQL statement is invalid.",
-                "resolution": "Verify the SQL syntax and the names of the referenced objects."
+                "resolution": "Verify the SQL syntax and referenced object names."
               },
               {
                 "name": "7403",
                 "description": "Parsing of the SQL query failed.",
-                "resolution": "Check for typos, mismatched parentheses or unsupported SQL grammar."
+                "resolution": "Check for typos, mismatched parentheses, or unsupported SQL grammar."
               },
               {
                 "name": "7404",
                 "description": "Conversion of the SQL query to the internal execution engine failed.",
-                "resolution": "Simplify the query or check it for unsupported functions and constructs."
+                "resolution": "Simplify the query or check for unsupported functions/constructs."
               },
               {
                 "name": "7407",
-                "description": "An invalid column was referred to in the SELECT clause.",
-                "resolution": "Verify that every column named in the SELECT clause exists in the source tables."
+                "description": "An invalid column was referenced in the SELECT clause.",
+                "resolution": "Verify all column names referenced exist in the source table(s)."
               },
               {
                 "name": "7408",
-                "description": "An invalid column was referred to elsewhere in the query, such as in the WHERE or GROUP BY clause.",
-                "resolution": "Verify every column name used in the query."
+                "description": "An invalid column was referenced elsewhere in the query (e.g., WHERE, GROUP BY).",
+                "resolution": "Verify all column names used in the query."
               },
               {
                 "name": "7409",
-                "description": "An unknown table was referred to in the query.",
-                "resolution": "Verify that the table or view name matches the display name of an existing view in the workspace. The match is case-sensitive."
+                "description": "An invalid/unknown table was referenced in the query.",
+                "resolution": "Verify the table/view name matches an existing view in the workspace (case-sensitive display name)."
               },
               {
                 "name": "7413",
                 "description": "The number of arguments passed to a SQL function does not match its expected signature.",
-                "resolution": "Check the expected argument count of the function."
+                "resolution": "Check the function's expected argument count."
               },
               {
                 "name": "7421",
@@ -2256,17 +2256,17 @@
               },
               {
                 "name": "7433",
-                "description": "Duplicate column names were detected in the SELECT clause after aliasing.",
-                "resolution": "Use unique AS aliases for columns that share a name across different tables."
+                "description": "Duplicate column names detected in the SELECT clause (after aliasing).",
+                "resolution": "Use unique aliases (AS) for columns with the same name from different tables."
               },
               {
                 "name": "7447",
-                "description": "The result of the query would exceed the allowed row or column limit.",
-                "resolution": "Add a WHERE clause or reduce the number of selected columns to bring the result within the limits."
+                "description": "The query result would exceed the allowed row/column limit.",
+                "resolution": "Add filters (WHERE clause) or reduce the number of selected columns to bring the result within limits."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2299,7 +2299,7 @@
         ],
         "x-zenesis-title": "Edit Query Table",
         "summary": "Edit Query Table",
-        "description": "Updates the SQL definition of an existing query table and, optionally, moves it to another folder. The data of the query table is recomputed from the new SQL statement.\n\nThe new statement replaces the existing one entirely - there is no partial update of individual clauses. The display name and the description of a query table cannot be changed through this API.",
+        "description": "Updates the SQL definition and/or folder of an existing query table. The query table's data is recomputed based on the new SQL statement.\n\nThe new statement replaces the existing one entirely - there is no partial update of individual clauses. The display name and the description of a query table cannot be changed through this API.",
         "operationId": "editQueryTable",
         "parameters": [
           {
@@ -2369,23 +2369,23 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the query table."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the query table."
               },
               {
                 "name": "7319",
                 "description": "The query table does not belong to the specified workspace.",
-                "resolution": "Confirm that the querytable-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <querytable-id> belongs to <workspace-id>."
               },
               {
                 "name": "7401",
-                "description": "The SQL statement is not a valid or allowed SQL construct.",
+                "description": "The SQL statement is not a valid/allowed SQL construct.",
                 "resolution": "Only SELECT queries are permitted."
               },
               {
                 "name": "7402",
                 "description": "The SQL statement is invalid.",
-                "resolution": "Verify the SQL syntax and the names of the referenced objects."
+                "resolution": "Verify SQL syntax and referenced object names."
               },
               {
                 "name": "7403",
@@ -2395,36 +2395,36 @@
               {
                 "name": "7404",
                 "description": "Conversion of the SQL query to the internal execution engine failed.",
-                "resolution": "Simplify the query or check it for unsupported functions and constructs."
+                "resolution": "Simplify the query or check for unsupported functions/constructs."
               },
               {
                 "name": "7407",
-                "description": "An invalid column was referred to in the SELECT clause.",
-                "resolution": "Verify that every column name exists in the source tables."
+                "description": "An invalid column was referenced in the SELECT clause.",
+                "resolution": "Verify all column names exist in the source table(s)."
               },
               {
                 "name": "7409",
-                "description": "An unknown table was referred to in the query.",
-                "resolution": "Verify that the table or view name matches an existing view in the workspace."
+                "description": "An invalid/unknown table was referenced in the query.",
+                "resolution": "Verify the table/view name matches an existing view in the workspace."
               },
               {
                 "name": "7422",
-                "description": "The query table is used as a source by a child view, which prevents this kind of structural change.",
-                "resolution": "Review the dependent views before making incompatible schema changes."
+                "description": "The query table is referenced as a source by a child view, preventing this type of structural change.",
+                "resolution": "Review dependent views before making incompatible schema changes."
               },
               {
                 "name": "7429",
-                "description": "A design edit is already in progress for this query table.",
-                "resolution": "Wait for the in-progress operation to complete and then retry."
+                "description": "A design edit (schema change) is already in progress for this query table.",
+                "resolution": "Wait for the in-progress operation to complete, then retry."
               },
               {
                 "name": "7447",
-                "description": "The result of the query would exceed the allowed row or column limit.",
-                "resolution": "Add a filter or reduce the number of selected columns."
+                "description": "The query result would exceed the allowed row/column limit.",
+                "resolution": "Add filters or reduce selected columns."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2455,7 +2455,7 @@
         ],
         "x-zenesis-title": "Get Query Table Details",
         "summary": "Get Query Table Details",
-        "description": "Returns the full metadata of the specified query table, including its SQL definition, the source views that the statement refers to, and the derived column schema.\n\nThis is the only API that exposes the SQL text of a query table, so use it to audit the definition and to fetch the current statement before calling the Edit Query Table API.",
+        "description": "Returns the full metadata of a query table, including its SQL definition, the tables involved, and its column schema.\n\nThis is the only API that exposes the SQL text of a query table, so use it to audit the definition and to fetch the current statement before calling the Edit Query Table API.",
         "operationId": "getQueryTableDetails",
         "parameters": [
           {
@@ -2651,17 +2651,17 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Design Modify permission on the query table."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Design Modify permission on the query table."
               },
               {
                 "name": "7319",
                 "description": "The query table does not belong to the specified workspace.",
-                "resolution": "Confirm that the querytable-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <querytable-id> belongs to <workspace-id>."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2685,7 +2685,7 @@
         ],
         "x-zenesis-title": "Add Custom Formula",
         "summary": "Add Custom Formula",
-        "description": "Creates a custom formula column on the specified view. The value of the column is computed for each row from the supplied expression.\n\nThe data type of the resulting column is inferred from the expression and cannot be set explicitly.",
+        "description": "Creates a new custom formula column on the specified view. The formula's value is computed for each row using the supplied expression.\n\nThe data type of the resulting column is inferred from the expression and cannot be set explicitly.",
         "operationId": "addFormulaColumn",
         "parameters": [
           {
@@ -2788,62 +2788,62 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7112",
-                "description": "The formula expression could not be parsed because of a syntax error.",
-                "resolution": "Review the expression for unbalanced parentheses, missing operators or incorrectly quoted column names."
+                "description": "The formula expression could not be parsed (syntax error).",
+                "resolution": "Review the expression for unbalanced parentheses, missing operators, or incorrect quoting of column names."
               },
               {
                 "name": "7113",
-                "description": "The expression refers to an unknown or unsupported function.",
+                "description": "The expression references an unknown/unsupported function.",
                 "resolution": "Verify the function name against the Zoho Analytics formula function reference."
               },
               {
                 "name": "7115",
-                "description": "The expression refers to a column that does not exist in the view.",
-                "resolution": "Verify that every column name used in the expression exists and is spelled exactly as shown by the Get Table Metadata API."
+                "description": "The expression references a column that does not exist in the view, or the formula is otherwise invalid.",
+                "resolution": "Verify all column names referenced in the expression exist and are spelled exactly as shown in Get Table Metadata."
               },
               {
                 "name": "7116",
-                "description": "The formula is invalid.",
-                "resolution": "Verify the expression and every column name that it refers to."
+                "description": "The expression references a column that does not exist in the view, or the formula is otherwise invalid.",
+                "resolution": "Verify all column names referenced in the expression exist and are spelled exactly as shown in Get Table Metadata."
               },
               {
                 "name": "7160",
-                "description": "Formula columns are not allowed for this combination of user and view.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "Formula columns are not allowed for this user/view combination.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7180",
-                "description": "The formula creates a circular dependency.",
-                "resolution": "Remove from the expression the reference to the formula that, directly or indirectly, refers back to this one."
+                "description": "The formula creates a circular dependency (it references a formula that, directly or indirectly, references this one).",
+                "resolution": "Remove the circular reference from the expression."
               },
               {
                 "name": "7181",
-                "description": "The formula creates a circular dependency.",
+                "description": "The formula creates a circular dependency (it references a formula that, directly or indirectly, references this one).",
                 "resolution": "Remove the circular reference from the expression."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <view-id> belongs to <workspace-id>."
               },
               {
                 "name": "7467",
-                "description": "Formula columns are not supported on pipeline tables.",
-                "resolution": "Formula columns can be added only to regular tables and standard views."
+                "description": "Formula columns are not supported on Pipeline Tables.",
+                "resolution": "Formula columns can only be added to regular tables and standard views."
               },
               {
                 "name": "8079",
-                "description": "A mandatory attribute is missing from the configuration.",
-                "resolution": "Ensure that both formulaName and expression are sent."
+                "description": "A required attribute (expression or formulaName) is missing from CONFIG.",
+                "resolution": "Ensure both formulaName and expression are provided."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2874,7 +2874,7 @@
         ],
         "x-zenesis-title": "Get Custom Formulas",
         "summary": "Get Custom Formulas",
-        "description": "Returns the custom formula columns defined on the specified view. A custom formula column is a computed column whose value is derived, for each row, from an expression referring to other columns of the same view.\n\nThe identifiers returned here are the entry point for the Edit Custom Formula and Delete Custom Formula APIs.",
+        "description": "Returns the list of custom formula columns defined on the specified view.\n\nThe identifiers returned here are the entry point for the Edit Custom Formula and Delete Custom Formula APIs.",
         "operationId": "getCustomFormulaList",
         "parameters": [
           {
@@ -2936,22 +2936,22 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7160",
-                "description": "Formula columns are not allowed for this combination of user and view.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "The authenticated user is not permitted to view/manage formula columns on this view.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <view-id> belongs to <workspace-id>."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2984,7 +2984,7 @@
         ],
         "x-zenesis-title": "Copy Custom Formulas",
         "summary": "Copy Custom Formulas",
-        "description": "Copies one or more custom formula columns, identified by their display names, from a view of the source workspace to the equivalent view of a destination workspace. It is typically used to replicate formula logic across the workspaces of an organisation, or across the organisations that the caller administers.\n\nThis API is restricted to Account Admins and Organization Admins and is not available in white label or client portal contexts.",
+        "description": "Copies one or more custom formula columns (by name) from a view in the source workspace to the equivalent view in a destination workspace. This is typically used to replicate formula logic across workspaces owned by the same organisation (or across organisations the caller administers).\n\nThis API is restricted to Account Admins and Organization Admins and is not available in white label or client portal contexts.",
         "operationId": "copyFormulas",
         "parameters": [
           {
@@ -3064,27 +3064,27 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is an Account Admin or an Organization Admin of the destination organisation."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is an Account Admin or Organization Admin of the destination organisation."
               },
               {
                 "name": "7319",
                 "description": "The source view does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <view-id> belongs to the workspace identified by <workspace-id>."
               },
               {
                 "name": "8058",
-                "description": "The organisation ID sent in ZANALYTICS-DEST-ORGID does not exist.",
+                "description": "The organisation ID specified in ZANALYTICS-DEST-ORGID does not exist.",
                 "resolution": "Verify the destination organisation ID."
               },
               {
                 "name": "15007",
-                "description": "The copy is not allowed because the organisation of the destination workspace does not match that of the caller and no valid workspace key was supplied.",
-                "resolution": "Send the correct workspaceKey for the destination workspace, or perform the copy within the same organisation."
+                "description": "The copy operation is not allowed — the destination workspace's organisation does not match the caller's organisation, and no valid workspaceKey was supplied (or it does not match).",
+                "resolution": "Supply the correct workspaceKey for the destination workspace (see Get Workspace SecretKey), or perform the copy within the same organisation."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -3108,7 +3108,7 @@
         ],
         "x-zenesis-title": "Edit Custom Formula",
         "summary": "Edit Custom Formula",
-        "description": "Updates the expression of an existing custom formula column, together with its display name and description where needed.\n\nThe new expression replaces the previous one entirely - there is no partial update of individual clauses.",
+        "description": "Updates the expression and/or description of an existing custom formula column.\n\nThe new expression replaces the previous one entirely - there is no partial update of individual clauses.",
         "operationId": "editFormulaColumn",
         "parameters": [
           {
@@ -3182,28 +3182,28 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7112",
-                "description": "The new formula expression could not be parsed because of a syntax error.",
+                "description": "The new formula expression could not be parsed (syntax error).",
                 "resolution": "Review the expression for correct syntax and quoting."
               },
               {
                 "name": "7113",
-                "description": "The expression refers to an unknown or unsupported function.",
+                "description": "The expression references an unknown/unsupported function.",
                 "resolution": "Verify the function name against the Zoho Analytics formula function reference."
               },
               {
                 "name": "7115",
-                "description": "The expression refers to a column that does not exist in the view.",
-                "resolution": "Verify every column name used in the expression."
+                "description": "The expression references a column that does not exist, or the formula is otherwise invalid.",
+                "resolution": "Verify all column names referenced in the expression."
               },
               {
                 "name": "7116",
-                "description": "The formula is invalid.",
-                "resolution": "Verify the expression and every column name that it refers to."
+                "description": "The expression references a column that does not exist, or the formula is otherwise invalid.",
+                "resolution": "Verify all column names referenced in the expression."
               },
               {
                 "name": "7160",
-                "description": "Formula columns are not allowed for this combination of user and view.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "Formula columns are not allowed for this user/view combination.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7180",
@@ -3217,32 +3217,32 @@
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <view-id> belongs to <workspace-id>."
               },
               {
                 "name": "7427",
-                "description": "The specified formula ID is not a valid formula column on this view.",
-                "resolution": "Verify the formula-id using the Get Custom Formulas API."
+                "description": "The specified <formula-id> is not a valid formula column on this view.",
+                "resolution": "Verify the <formula-id> using Get Custom Formulas."
               },
               {
                 "name": "7467",
-                "description": "Formula columns are not supported on pipeline tables.",
-                "resolution": "This API applies only to standard tables and views."
+                "description": "Formula columns are not supported on Pipeline Tables.",
+                "resolution": "This API only applies to standard tables/views."
               },
               {
                 "name": "8079",
-                "description": "The mandatory expression attribute is missing from the configuration.",
-                "resolution": "Send expression in every Edit Custom Formula request."
+                "description": "The required expression attribute is missing from CONFIG.",
+                "resolution": "Ensure expression is provided in every Edit Custom Formula request."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -3341,41 +3341,41 @@
               {
                 "name": "7107",
                 "description": "The specified column ID does not exist in the view.",
-                "resolution": "Verify the formula-id using the Get Custom Formulas API."
+                "resolution": "Verify <formula-id> using Get Custom Formulas."
               },
               {
                 "name": "7160",
-                "description": "Formula columns are not allowed for this combination of user and view.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "Formula columns are not allowed for this user/view combination.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7277",
-                "description": "The formula column has dependent views and the deletion has been blocked.",
-                "resolution": "Call the Get Column Dependents API to identify the dependents, then either delete them first or set deleteDependentViews to true."
+                "description": "The formula column has dependent views; deletion blocked.",
+                "resolution": "Use Get Column Dependents to identify dependents, then either delete them manually first or set deleteDependentViews: true to cascade delete."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <view-id> belongs to <workspace-id>."
               },
               {
                 "name": "7427",
                 "description": "The specified column is not a custom formula column.",
-                "resolution": "Verify that the formula-id refers to a formula column rather than a regular column, using the Get Custom Formulas API."
+                "resolution": "Verify <formula-id> refers to a formula column, not a regular column, using Get Custom Formulas."
               },
               {
                 "name": "7467",
-                "description": "Formula columns are not supported on pipeline tables.",
-                "resolution": "This API applies only to standard tables and views."
+                "description": "Formula columns are not supported on Pipeline Tables.",
+                "resolution": "This API only applies to standard tables/views."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -3408,7 +3408,7 @@
         ],
         "x-zenesis-title": "Add Aggregate Formula",
         "summary": "Add Aggregate Formula",
-        "description": "Creates an aggregate formula owned by the specified view. The formula applies an aggregate function across the rows of a table to produce a single summarized value, such as total sales or average order value.\n\nSynonyms and a priority ranking can be supplied so that the metric is matched to natural-language queries by the search and insight features.",
+        "description": "Creates a new aggregate formula owned by the specified view.\n\nSynonyms and a priority ranking can be supplied so that the metric is matched to natural-language queries by the search and insight features.",
         "operationId": "addAggregateFormula",
         "parameters": [
           {
@@ -3517,47 +3517,47 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7112",
-                "description": "The formula expression could not be parsed because of a syntax error.",
+                "description": "The formula expression could not be parsed (syntax error).",
                 "resolution": "Review the expression for correct aggregate function syntax and column quoting."
               },
               {
                 "name": "7113",
-                "description": "The expression refers to an unknown or unsupported function.",
-                "resolution": "Verify the aggregate function name, such as sum, mean, max, min, count, count_distinct or count_if."
+                "description": "The expression references an unknown/unsupported function.",
+                "resolution": "Verify the aggregate function name (e.g., sum, mean, max, min, count, countdistinct, countif)."
               },
               {
                 "name": "7115",
-                "description": "The expression refers to a column that does not exist.",
-                "resolution": "Verify every table and column name used in the expression."
+                "description": "The expression references a column that does not exist, or the formula is otherwise invalid.",
+                "resolution": "Verify all table/column names referenced in the expression."
               },
               {
                 "name": "7116",
-                "description": "The formula is invalid.",
-                "resolution": "Verify the expression and every table and column name that it refers to."
+                "description": "The expression references a column that does not exist, or the formula is otherwise invalid.",
+                "resolution": "Verify all table/column names referenced in the expression."
               },
               {
                 "name": "7160",
-                "description": "Aggregate formulas are not allowed for this combination of user and view.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "Formula columns/aggregate formulas are not allowed for this user/view combination.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <view-id> belongs to <workspace-id>."
               },
               {
                 "name": "8079",
-                "description": "A mandatory attribute is missing from the configuration.",
-                "resolution": "Ensure that both formulaName and expression are sent."
+                "description": "A required attribute (expression or formulaName) is missing from CONFIG.",
+                "resolution": "Ensure both formulaName and expression are provided."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -3588,7 +3588,7 @@
         ],
         "x-zenesis-title": "Get Aggregate Formula",
         "summary": "Get Aggregate Formula",
-        "description": "Returns the aggregate formulas owned by the specified view. An aggregate formula, also called a unified metric, produces a single summarized value by applying an aggregate function across the rows of a table, and can be reused across the reports, charts and dashboards of the workspace as a single source of truth for a business metric.\n\nThis listing is scoped to one view. Use the Get Unified Metrics in Workspace API for a workspace-wide catalogue.",
+        "description": "Returns the list of aggregate formulas defined on the specified view.\n\nThis listing is scoped to one view. Use the Get Unified Metrics in Workspace API for a workspace-wide catalogue.",
         "operationId": "getAggregateFormulaList",
         "parameters": [
           {
@@ -3662,17 +3662,17 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <view-id> belongs to <workspace-id>."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -3792,52 +3792,52 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7112",
-                "description": "The new expression could not be parsed because of a syntax error.",
+                "description": "The new expression could not be parsed (syntax error).",
                 "resolution": "Review the expression for correct syntax."
               },
               {
                 "name": "7113",
-                "description": "The expression refers to an unknown or unsupported function.",
+                "description": "The expression references an unknown/unsupported function.",
                 "resolution": "Verify the aggregate function name."
               },
               {
                 "name": "7115",
-                "description": "The expression refers to a column that does not exist.",
-                "resolution": "Verify every table and column name that is referenced."
+                "description": "The expression references a column that does not exist, or the formula is otherwise invalid.",
+                "resolution": "Verify all table/column names referenced."
               },
               {
                 "name": "7116",
-                "description": "The formula is invalid.",
-                "resolution": "Verify the expression and every table and column name that it refers to."
+                "description": "The expression references a column that does not exist, or the formula is otherwise invalid.",
+                "resolution": "Verify all table/column names referenced."
               },
               {
                 "name": "7160",
-                "description": "Formula operations are not allowed for this combination of user and view.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "Formula operations are not allowed for this user/view combination.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <view-id> belongs to <workspace-id>."
               },
               {
                 "name": "7428",
-                "description": "The specified formula ID is not a valid aggregate formula on this view.",
-                "resolution": "Verify the formula-id using the Get Aggregate Formula API."
+                "description": "The specified <formula-id> is not a valid aggregate formula on this view.",
+                "resolution": "Verify <formula-id> using Get Aggregate Formula."
               },
               {
                 "name": "8079",
-                "description": "Neither formulaName nor expression was sent.",
-                "resolution": "Send at least one of these two attributes."
+                "description": "Neither formulaName nor expression was provided.",
+                "resolution": "Supply at least one of these two fields."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -3936,36 +3936,36 @@
               {
                 "name": "7107",
                 "description": "The specified formula ID does not exist as a column on this view.",
-                "resolution": "Verify the formula-id using the Get Aggregate Formula API."
+                "resolution": "Verify <formula-id> using Get Aggregate Formula."
               },
               {
                 "name": "7160",
-                "description": "Formula operations are not allowed for this combination of user and view.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "Formula operations are not allowed for this user/view combination.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7173",
-                "description": "The aggregate formula is used by one or more dependent views, dashboards or formulas and the deletion has been blocked.",
-                "resolution": "Call the Get Aggregate Formula Dependents API to identify them, then either remove them first or set deleteDependentViews to true."
+                "description": "The aggregate formula is currently used by one or more dependent views/dashboards/formulas; deletion blocked.",
+                "resolution": "Use Get Aggregate Formula Dependents to identify dependents, then either remove them manually first or set deleteDependentViews: true to cascade delete."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Create Formula permission on the view."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Create Formula permission on the view."
               },
               {
                 "name": "7319",
                 "description": "The view does not belong to the specified workspace.",
-                "resolution": "Confirm that the view-id belongs to the workspace identified by workspace-id."
+                "resolution": "Confirm <view-id> belongs to <workspace-id>."
               },
               {
                 "name": "7428",
                 "description": "The specified column is not a valid aggregate formula.",
-                "resolution": "Verify that the formula-id refers to an aggregate formula rather than a regular or custom formula column."
+                "resolution": "Verify <formula-id> refers to an aggregate formula, not a regular or custom formula column."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -3998,7 +3998,7 @@
         ],
         "x-zenesis-title": "Get Aggregate Formula Value",
         "summary": "Get Aggregate Formula Value",
-        "description": "Computes and returns the current value of the specified aggregate formula by executing its expression against the underlying data at request time.\n\nThis is the only aggregate formula API that returns computed data rather than metadata.",
+        "description": "Computes and returns the current live value of the specified aggregate formula by executing its expression against the underlying data at request time.\n\nThis is the only aggregate formula API that returns computed data rather than metadata.",
         "operationId": "getAggregateFormulaValue",
         "parameters": [
           {
@@ -4059,17 +4059,17 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission, or lacks access to a column or table used by the formula.",
-                "resolution": "Ensure that the user is a Workspace Admin, or has Read permission on the workspace together with visibility into every column used by the formula."
+                "description": "User does not have permission, or the user lacks access to a column/table involved in the formula.",
+                "resolution": "Ensure the user is a Workspace Admin, or has Read permission on the workspace and visibility into all columns used by the formula."
               },
               {
                 "name": "7428",
-                "description": "The specified formula ID is not a valid aggregate formula.",
-                "resolution": "Verify the formula-id using the Get Unified Metrics in Workspace API."
+                "description": "The specified <formula-id> is not a valid aggregate formula.",
+                "resolution": "Verify <formula-id> using Get Unified Metrics in Workspace."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -4093,7 +4093,7 @@
         ],
         "x-zenesis-title": "Get Aggregate Formula Dependents",
         "summary": "Get Aggregate Formula Dependents",
-        "description": "Returns every view, dashboard and aggregate formula that depends on the specified aggregate formula, together with the tables that the formula is built from.\n\nCall this API before deleting a metric or making a breaking change to its expression.",
+        "description": "Returns all views, dashboards, and other aggregate formulas that depend on the specified aggregate formula, along with the parent table(s) it is built from. Use this before deleting or making breaking changes to a formula.\n\nCall this API before deleting a metric or making a breaking change to its expression.",
         "operationId": "getAggregateFormulaDependents",
         "parameters": [
           {
@@ -4194,17 +4194,17 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Read permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Read permission on the workspace."
               },
               {
                 "name": "7428",
-                "description": "The specified formula ID is not a valid aggregate formula, or it does not belong to a view of this workspace.",
-                "resolution": "Verify the formula-id using the Get Unified Metrics in Workspace API."
+                "description": "The specified <formula-id> is not a valid aggregate formula, or does not belong to a view in this workspace.",
+                "resolution": "Verify <formula-id> using Get Unified Metrics in Workspace."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -4228,7 +4228,7 @@
         ],
         "x-zenesis-title": "Get Unified Metrics in Workspace",
         "summary": "Get Unified Metrics in Workspace",
-        "description": "Returns every aggregate formula across all the views and tables of the workspace, together with the table that owns each one. Use this API for a workspace-wide inventory of metrics rather than the formulas owned by a single view.\n\nUnlike the view-scoped create, edit and delete APIs, this listing needs only read permission on the workspace.",
+        "description": "Returns the full list of aggregate formulas (Unified Metrics) across every view/table in the workspace, along with the table that owns each formula. Use this API when you need a workspace-wide inventory of all metrics rather than the formulas owned by a single view.\n\nUnlike the view-scoped create, edit and delete APIs, this listing needs only read permission on the workspace.",
         "operationId": "getAggregateFormulasInWorkspace",
         "parameters": [
           {
@@ -4320,12 +4320,12 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is a Workspace Admin or has Read permission on the workspace."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is a Workspace Admin or has Read permission on the workspace."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -4349,7 +4349,7 @@
         ],
         "x-zenesis-title": "Create Variable",
         "summary": "Create Variable",
-        "description": "Creates a workspace variable. A variable is a reusable placeholder, written as `${Region}` for instance, that can be embedded in formula expressions, SQL queries, filters and reports so that one definition resolves to a different value per user or per portal domain.\n\nThe variable is defined once with a name, a data type and a type that determines how its value is resolved, and can carry per-user overrides that fall back to a workspace-wide default.",
+        "description": "Creates a new workspace variable.\n\nThe variable is defined once with a name, a data type and a type that determines how its value is resolved, and can carry per-user overrides that fall back to a workspace-wide default.",
         "operationId": "createVariable",
         "parameters": [
           {
@@ -4486,112 +4486,112 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "70323",
-                "description": "A variable with this name already exists in the workspace.",
+                "description": "DUPLICATEUSERVARIABLE — A variable with this name already exists in the workspace.",
                 "resolution": "Choose a different variableName, or edit the existing variable instead."
               },
               {
                 "name": "70324",
-                "description": "The variable name is empty.",
-                "resolution": "Send a non-empty variableName."
+                "description": "BLANKVARIABLENAME — variableName is empty.",
+                "resolution": "Provide a non-empty variable name."
               },
               {
                 "name": "70325",
-                "description": "The name uses a reserved pattern, such as a system. prefix, a ${ prefix or a } suffix.",
-                "resolution": "Choose a name that does not collide with the syntax of system variables."
+                "description": "INVALIDVARNAME — The name uses a reserved pattern (system. prefix, ${ prefix, or } suffix).",
+                "resolution": "Choose a name that doesn't collide with system-variable syntax."
               },
               {
                 "name": "70335",
-                "description": "The Range type was combined with the Text data type.",
-                "resolution": "Use a numeric variableDataType of 4, 5, 6, 7 or 8 when variableType is Range."
+                "description": "VARIABLERANGENOTALLOWEDONDT — Range type combined with Text data type.",
+                "resolution": "Use a numeric variableDataType (4, 5, 6, 7, or 8) when variableType is Range."
               },
               {
                 "name": "70336",
-                "description": "No usable value entry could be derived from the request.",
-                "resolution": "Ensure that defaultData, and any userSpecificData entry, carries the attributes required by the chosen variableType."
+                "description": "VARIABLEDATANOTPRESENT — No usable value entries could be derived from the request.",
+                "resolution": "Ensure defaultData (and any userSpecificData entries) contain the required fields for the chosen variableType."
               },
               {
                 "name": "70337",
-                "description": "The default value is not one of the values supplied for a List entry.",
-                "resolution": "Ensure that defaultValue matches one of the entries of values."
+                "description": "VARIABLEDEFAULTVALUENOTPRESENTINLIST — The defaultValue is not one of the values supplied for a List-type entry.",
+                "resolution": "Ensure defaultValue matches one of the entries in values."
               },
               {
                 "name": "70338",
-                "description": "A Range entry is missing a required attribute.",
-                "resolution": "Send exactly minValue, maxValue and stepSize for a Range entry."
+                "description": "VARIABLERANGEINSUFFICIENTDATA / VARIABLERANGEEXCESSDATA — Range entry is missing a required field or has extra unexpected data.",
+                "resolution": "Ensure exactly minValue, maxValue, and stepSize are provided for Range entries."
               },
               {
                 "name": "70339",
-                "description": "A Range entry carries unexpected extra data.",
-                "resolution": "Send exactly minValue, maxValue and stepSize for a Range entry."
+                "description": "VARIABLERANGEINSUFFICIENTDATA / VARIABLERANGEEXCESSDATA — Range entry is missing a required field or has extra unexpected data.",
+                "resolution": "Ensure exactly minValue, maxValue, and stepSize are provided for Range entries."
               },
               {
                 "name": "70340",
-                "description": "The default value falls outside the range.",
-                "resolution": "Ensure that defaultValue lies between minValue and maxValue."
+                "description": "VARIABLERANGEDEFAULTVALUEOUTOFRANGE / VARIABLERANGEDEFBWMINMAXRANGE — The defaultValue falls outside [minValue, maxValue].",
+                "resolution": "Ensure defaultValue lies within the specified range."
+              },
+              {
+                "name": "70356",
+                "description": "VARIABLERANGEDEFAULTVALUEOUTOFRANGE / VARIABLERANGEDEFBWMINMAXRANGE — The defaultValue falls outside [minValue, maxValue].",
+                "resolution": "Ensure defaultValue lies within the specified range."
               },
               {
                 "name": "70341",
-                "description": "The same email address appears in more than one userSpecificData entry.",
-                "resolution": "Ensure that each email address is listed in only one override entry."
+                "description": "VARIABLEDUPLICATEMAILIDORGROUP — The same email address appears in more than one userSpecificData entry.",
+                "resolution": "Ensure each email address is listed in only one override entry."
               },
               {
                 "name": "70342",
-                "description": "Value data was supplied for an All Values variable.",
+                "description": "VARIABLEALLVALUESNOVARIABLEDATA — userSpecificData/defaultData were supplied for an All Values-type variable.",
                 "resolution": "Omit defaultData and userSpecificData entirely when variableType is 3."
               },
               {
                 "name": "70343",
-                "description": "defaultData is missing for a List or a Range variable.",
-                "resolution": "Send defaultData carrying the attributes required by the chosen variableType."
+                "description": "VARIABLENOVARIABLEDATAPRESENT — defaultData is missing for a List or Range-type variable.",
+                "resolution": "Supply defaultData with the fields required for the chosen variableType."
               },
               {
                 "name": "70348",
-                "description": "A userSpecificData entry has an empty emailIds array.",
-                "resolution": "Ensure that every override entry lists at least one email address."
+                "description": "VARIABLEEMAILNOTPRESENT — A userSpecificData entry has an empty emailIds array.",
+                "resolution": "Ensure every userSpecificData entry lists at least one email address."
               },
               {
                 "name": "70350",
-                "description": "variableType is not one of the accepted values.",
-                "resolution": "Use only List, Range or All Values, that is 0, 1 or 3."
+                "description": "VARIABLEINVALIDVARTYPE — variableType is not one of 0, 1, or 3.",
+                "resolution": "Use only List (0), Range (1), or All Values (3)."
               },
               {
                 "name": "70351",
-                "description": "variableDataType is not one of the six supported values.",
-                "resolution": "Use only 1, 4, 5, 6, 7 or 8."
+                "description": "VARIABLEINVALIDDATATYPE — variableDataType is not one of the six supported values.",
+                "resolution": "Use only 1, 4, 5, 6, 7, or 8."
               },
               {
                 "name": "70352",
-                "description": "minValue is not less than maxValue.",
-                "resolution": "Ensure that minValue is smaller than maxValue."
+                "description": "VARIABLERANGEMINLESSTHANMAX — minValue is not less than maxValue.",
+                "resolution": "Ensure minValue < maxValue."
               },
               {
                 "name": "70353",
-                "description": "stepSize is larger than the span of the range.",
-                "resolution": "Reduce stepSize so that it fits within the difference between maxValue and minValue."
+                "description": "VARIABLERANGEINCRLESSTHANRANGESIZE — stepSize is larger than the range span.",
+                "resolution": "Reduce stepSize so it fits within maxValue - minValue."
               },
               {
                 "name": "70354",
-                "description": "stepSize is zero.",
-                "resolution": "Send a non-zero stepSize."
+                "description": "VARIABLERANGEINCRZEROERR — stepSize is zero.",
+                "resolution": "Provide a non-zero stepSize."
               },
               {
                 "name": "70355",
-                "description": "stepSize does not divide the span of the range evenly.",
-                "resolution": "Choose a stepSize that divides the difference between maxValue and minValue evenly."
-              },
-              {
-                "name": "70356",
-                "description": "The default value falls outside the range.",
-                "resolution": "Ensure that defaultValue lies between minValue and maxValue."
+                "description": "VARIABLERANGEINCRDIVEQUALLYERR — stepSize does not evenly divide the range span.",
+                "resolution": "Choose a stepSize that evenly divides maxValue - minValue."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is an Account Admin, an Organization Admin or a Workspace Admin."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -4613,7 +4613,7 @@
         ],
         "x-zenesis-title": "Get Variables",
         "summary": "Get Variables",
-        "description": "Returns a summary list of the variables defined in the workspace.\n\nThe values, the range and the display format of a variable are not included here - use the Get Variable Details API for the full definition of a specific variable.",
+        "description": "Returns a summary list of all variables defined in the workspace.\n\nThe values, the range and the display format of a variable are not included here - use the Get Variable Details API for the full definition of a specific variable.",
         "operationId": "getVariables",
         "parameters": [
           {
@@ -4692,12 +4692,12 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is an Account Admin, an Organization Admin or a Workspace Admin."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -4847,28 +4847,38 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "70323",
-                "description": "The new variable name collides with another existing variable.",
-                "resolution": "Choose a name that is not already used by another variable of the workspace."
-              },
-              {
-                "name": "70329",
-                "description": "The specified variable does not exist in this workspace.",
-                "resolution": "Verify the variable-id using the Get Variables API."
+                "description": "DUPLICATEUSERVARIABLE — The new variableName collides with a different existing variable.",
+                "resolution": "Choose a name not already used by another variable in the workspace."
               },
               {
                 "name": "70324",
-                "description": "The variable name is empty.",
-                "resolution": "Send a non-empty variableName."
+                "description": "BLANKVARIABLENAME — variableName is empty.",
+                "resolution": "Provide a non-empty variable name."
               },
               {
                 "name": "70325",
-                "description": "The name uses a reserved pattern, such as a system. prefix, a ${ prefix or a } suffix.",
-                "resolution": "Choose a name that does not collide with the syntax of system variables."
+                "description": "INVALIDVARNAME — The name uses a reserved pattern.",
+                "resolution": "Choose a name that doesn't collide with system-variable syntax."
+              },
+              {
+                "name": "70329",
+                "description": "CANTDELETEVARIABLE (UNAUTHORIZEDVARACTION) — <variable-id> does not exist in this workspace.",
+                "resolution": "Verify <variable-id> using Get Variables."
               },
               {
                 "name": "70335",
-                "description": "The Range type was combined with the Text data type.",
-                "resolution": "Use a numeric variableDataType of 4, 5, 6, 7 or 8 when variableType is Range."
+                "description": "VARIABLERANGENOTALLOWEDONDT — Range type combined with Text data type.",
+                "resolution": "Use a numeric variableDataType when variableType is Range."
+              },
+              {
+                "name": "70358",
+                "description": "VARIABLECANNOTBEUPDATED — The requested type/data type change conflicts with existing formula/report references to this variable.",
+                "resolution": "Remove or update the dependent formulas/reports first, or keep the existing variableType/variableDataType."
+              },
+              {
+                "name": "7301",
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin."
               },
               {
                 "name": "70336",
@@ -4949,20 +4959,10 @@
                 "name": "70356",
                 "description": "The default value falls outside the range.",
                 "resolution": "Ensure that defaultValue lies between minValue and maxValue."
-              },
-              {
-                "name": "70358",
-                "description": "The requested change of type or data type conflicts with an existing formula or report that refers to this variable.",
-                "resolution": "Remove or update the dependent formulas and reports first, or keep the current variableType and variableDataType."
-              },
-              {
-                "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is an Account Admin, an Organization Admin or a Workspace Admin."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -5010,37 +5010,37 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "70321",
-                "description": "The variable is currently referred to elsewhere and cannot be deleted.",
-                "resolution": "Remove every reference to this variable, in formulas, filters and SQL queries, before deleting it."
+                "description": "USERVARIABLEVARIABLEINUSE — The variable is currently referenced elsewhere and cannot be deleted.",
+                "resolution": "Remove all references to this variable (in formulas, filters, SQL queries) before deleting."
               },
               {
                 "name": "70322",
-                "description": "One or more of the targeted variables are in use.",
-                "resolution": "Remove every reference to the variables before deleting them."
+                "description": "USERVARIABLEVARIABLEINUSE (multi-variable form) — One or more of the requested variables are in use.",
+                "resolution": "Same as above; applies when multiple variables are targeted in a single internal delete operation."
               },
               {
                 "name": "70326",
-                "description": "The variable cannot be deleted by this user because of an ownership restriction.",
-                "resolution": "Ensure that the user is an Account Admin, an Organization Admin or a Workspace Admin."
+                "description": "CANTDELETEVARIABLE — The variable cannot be deleted by this user (ownership restriction).",
+                "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin."
               },
               {
                 "name": "70329",
-                "description": "The specified variable does not exist in this workspace.",
-                "resolution": "Verify the variable-id using the Get Variables API."
+                "description": "CANTDELETEVARIABLE (UNAUTHORIZEDVARACTION) — <variable-id> does not exist in this workspace.",
+                "resolution": "Verify <variable-id> using Get Variables."
               },
               {
                 "name": "70357",
-                "description": "The deletion is blocked because of unresolved references.",
-                "resolution": "Identify the dependent formulas and reports, remove them, then retry."
+                "description": "USERVARIABLEVARIABLECANNOTBEDELETED — Deletion blocked due to unresolved references.",
+                "resolution": "Identify and remove dependent formulas/reports, then retry."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is an Account Admin, an Organization Admin or a Workspace Admin."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -5062,7 +5062,7 @@
         ],
         "x-zenesis-title": "Get Variable Details",
         "summary": "Get Variable Details",
-        "description": "Returns the full definition of a specific variable, including its values or range, every per-user override and its display format.\n\nCall this API before the Edit Variable API, which replaces the whole definition and therefore needs the current state to be fetched first.",
+        "description": "Returns the full definition of a specific variable, including its values/range, all per-user overrides, and display format.\n\nCall this API before the Edit Variable API, which replaces the whole definition and therefore needs the current state to be fetched first.",
         "operationId": "getVariableDetails",
         "parameters": [
           {
@@ -5201,17 +5201,17 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "70320",
-                "description": "The specified variable does not exist in this workspace.",
-                "resolution": "Verify the variable-id using the Get Variables API."
+                "description": "USERVARIABLEVARIABLENOTFOUND — <variable-id> does not exist in this workspace.",
+                "resolution": "Verify <variable-id> using Get Variables."
               },
               {
                 "name": "7301",
-                "description": "The user does not have permission to perform this action.",
-                "resolution": "Ensure that the user is an Account Admin, an Organization Admin or a Workspace Admin."
+                "description": "User does not have permission.",
+                "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin."
               }
             ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {

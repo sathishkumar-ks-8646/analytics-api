@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: endpoint-doc
     resource: "/domains/reports-and-dashboards/dashboards/create-dashboard.md"
     title: Endpoint reference - Create Dashboard
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -57,7 +57,7 @@ Code samples for [Create Dashboard](../../../domains/reports-and-dashboards/dash
 ## cURL
 
 ```bash
-curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/35130000001055707/dashboards" -X 'POST' -H 'ZANALYTICS-ORGID: <org-id>' -H 'Authorization: Zoho-oauthtoken <access_token>' --data-urlencode 'CONFIG={"displayName":"Sales Overview","layout":{"1":{"type":"USERFILTERS","width":80,"height":3,"left":0,"top":0},"2":{"type":"HTML","width":80,"height":5,"left":0,"top":3,"content":"<b>Sales Dashboard</b>"},"3":{"type":"VIEW","width":80,"height":20,"left":0,"top":8,"viewName":"Sales Chart","properties":{}}},"settings":{"allowDrillDown":"true","fitToWidth":"true","allowExport":{"csv":"true","pdf":"true"}},"themes":{"layoutType":2,"type":"solid","solid":{"background":"#333542"},"card":{"background":"#3E3F4D","title":{"border":{"color":"#6F738E"}},"border":{"color":"#6F738E","width":2}}}}'
+curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/35130000001055707/dashboards" -X 'POST' -H 'ZANALYTICS-ORGID: <org-id>' -H 'Authorization: Zoho-oauthtoken <access_token>' --data-urlencode 'CONFIG={"displayName":"Sales Overview","layout":"{\"1\":{\"type\":\"USERFILTERS\",\"width\":80,\"height\":3,\"left\":0,\"top\":0},\"2\":{\"type\":\"HTML\",\"width\":80,\"height\":5,\"left\":0,\"top\":3,\"content\":\"<b>Sales Dashboard</b>\"},\"3\":{\"type\":\"VIEW\",\"width\":80,\"height\":20,\"left\":0,\"top\":8,\"viewName\":\"Sales Chart\",\"properties\":{}}}","settings":{"allowDrillDown":"true","fitToWidth":"true","allowExport":{"csv":"true","pdf":"true"}},"themes":{"layoutType":2,"type":"solid","solid":{"background":"#333542"},"card":{"background":"#3E3F4D","title":{"border":{"color":"#6F738E"}},"border":{"color":"#6F738E","width":2}}}}'
 ```
 
 ## C#
@@ -77,7 +77,7 @@ namespace ZohoAnalyticsTest
         public void CreateDashboard(IAnalyticsClient ac)
         {
             string displayName = "Sales Overview";
-            // Each layout key is a card ID; the value is that card's configuration
+            // Each layout key is a card ID; the value is that card's configuration. The client library sends layout as the JSON-encoded string the API expects.
             Dictionary<string, object> filterCard = new Dictionary<string, object>{{"type","USERFILTERS"},{"width",80},{"height",3},{"left",0},{"top",0}};
             Dictionary<string, object> htmlCard = new Dictionary<string, object>{{"type","HTML"},{"width",80},{"height",5},{"left",0},{"top",3},{"content","<b>Sales Dashboard</b>"}};
             Dictionary<string, object> viewCard = new Dictionary<string, object>{{"type","VIEW"},{"width",80},{"height",20},{"left",0},{"top",8},{"viewName","Sales Chart"},{"properties",new Dictionary<string, object>()}};
@@ -134,7 +134,7 @@ var (
 
 func CreateDashboard(ac ZAnalytics.Client) {
     displayName := "Sales Overview"
-    // Each layout key is a card ID; the value is that card's configuration
+    // Each layout key is a card ID; the value is that card's configuration. The client library sends layout as the JSON-encoded string the API expects.
     layout := map[string]interface{}{
         "1": map[string]interface{}{"type": "USERFILTERS", "width": 80, "height": 3, "left": 0, "top": 0},
         "2": map[string]interface{}{"type": "HTML", "width": 80, "height": 5, "left": 0, "top": 3, "content": "<b>Sales Dashboard</b>"},
@@ -188,7 +188,7 @@ public class Test {
 
     public void createDashboard(AnalyticsClient ac) throws Exception {
         String displayName = "Sales Overview";
-        // Each layout key is a card ID; the value is that card's configuration
+        // Each layout key is a card ID; the value is that card's configuration. The client library sends layout as the JSON-encoded string the API expects.
         JSONObject filterCard = new JSONObject();
         filterCard.put("type", "USERFILTERS");
         filterCard.put("width", 80);
@@ -253,12 +253,12 @@ class Test {
 
     function createDashboard() {
         $display_name = "Sales Overview";
-        // Each layout key is a card ID; the value is that card's configuration
-        $layout = [
+        // Each layout key is a card ID; the value is that card's configuration. layout travels as a JSON-encoded string.
+        $layout = json_encode([
             "1" => ["type" => "USERFILTERS", "width" => 80, "height" => 3, "left" => 0, "top" => 0],
             "2" => ["type" => "HTML", "width" => 80, "height" => 5, "left" => 0, "top" => 3, "content" => "<b>Sales Dashboard</b>"],
             "3" => ["type" => "VIEW", "width" => 80, "height" => 20, "left" => 0, "top" => 8, "viewName" => "Sales Chart", "properties" => (object)[]]
-        ];
+        ]);
         $settings = ["allowDrillDown" => "true", "fitToWidth" => "true", "allowExport" => ["csv" => "true", "pdf" => "true"]];
         $themes = [
             "layoutType" => 2,
@@ -284,6 +284,7 @@ $obj->createDashboard();
 ## Python
 
 ```python
+import json
 from AnalyticsClient import AnalyticsClient
 
 class Config:
@@ -298,12 +299,12 @@ class sample:
 
     def create_dashboard(self, ac):
         display_name = "Sales Overview"
-        # Each layout key is a card ID; the value is that card's configuration
-        layout = {
+        # Each layout key is a card ID; the value is that card's configuration. layout travels as a JSON-encoded string.
+        layout = json.dumps({
             "1": {"type": "USERFILTERS", "width": 80, "height": 3, "left": 0, "top": 0},
             "2": {"type": "HTML", "width": 80, "height": 5, "left": 0, "top": 3, "content": "<b>Sales Dashboard</b>"},
             "3": {"type": "VIEW", "width": 80, "height": 20, "left": 0, "top": 8, "viewName": "Sales Chart", "properties": {}}
-        }
+        })
         settings = {"allowDrillDown": "true", "fitToWidth": "true", "allowExport": {"csv": "true", "pdf": "true"}}
         themes = {
             "layoutType": 2,
@@ -332,12 +333,12 @@ var orgId = '55522777';
 var workspaceId = '35130000001055707';
 
 var displayName = 'Sales Overview';
-// Each layout key is a card ID; the value is that card's configuration
-var layout = {
+// Each layout key is a card ID; the value is that card's configuration. layout travels as a JSON-encoded string.
+var layout = JSON.stringify({
     '1': { type: 'USERFILTERS', width: 80, height: 3, left: 0, top: 0 },
     '2': { type: 'HTML', width: 80, height: 5, left: 0, top: 3, content: '<b>Sales Dashboard</b>' },
     '3': { type: 'VIEW', width: 80, height: 20, left: 0, top: 8, viewName: 'Sales Chart', properties: {} }
-};
+});
 var settings = { allowDrillDown: 'true', fitToWidth: 'true', allowExport: { csv: 'true', pdf: 'true' } };
 var themes = {
     layoutType: 2,
@@ -356,6 +357,7 @@ workspace.createDashboard(displayName, layout, settings, themes).then((dashboard
 ## Ruby
 
 ```ruby
+require "json"
 require 'zoho_analytics_client'
 
 class Config
@@ -374,12 +376,12 @@ class Sample
 
   def create_dashboard
     display_name = "Sales Overview"
-    # Each layout key is a card ID; the value is that card's configuration
-    layout = {
+    # Each layout key is a card ID; the value is that card's configuration. layout travels as a JSON-encoded string.
+    layout = JSON.generate({
       "1" => { "type" => "USERFILTERS", "width" => 80, "height" => 3, "left" => 0, "top" => 0 },
       "2" => { "type" => "HTML", "width" => 80, "height" => 5, "left" => 0, "top" => 3, "content" => "<b>Sales Dashboard</b>" },
       "3" => { "type" => "VIEW", "width" => 80, "height" => 20, "left" => 0, "top" => 8, "viewName" => "Sales Chart", "properties" => {} }
-    }
+    })
     settings = { "allowDrillDown" => "true", "fitToWidth" => "true", "allowExport" => { "csv" => "true", "pdf" => "true" } }
     themes = {
       "layoutType" => 2,
@@ -460,7 +462,7 @@ themes.put("solid", solidTheme);
 themes.put("card", cardTheme);
 config = Map();
 config.put("displayName", "Sales Overview");
-config.put("layout", layout);
+config.put("layout", layout.toString()); // layout travels as a JSON-encoded string
 config.put("settings", settings);
 config.put("themes", themes);
 parameters = "CONFIG=" + zoho.encryption.urlEncode(config.toString());

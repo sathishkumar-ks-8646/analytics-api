@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Copy Custom Formulas
-description: "Copies one or more custom formula columns, identified by their display names, from a view of the source workspace to the equivalent view of a destination workspace."
+description: Copies one or more custom formula columns (by name) from a view in the source workspace to the equivalent view in a destination workspace.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/formulas/copy"
 tags:
   - zoho-analytics
@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

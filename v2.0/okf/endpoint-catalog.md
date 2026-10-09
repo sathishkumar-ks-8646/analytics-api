@@ -16,52 +16,52 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: openapi-spec
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: group-org-info-and-settings
     resource: "/domains/organization-management/org-info-and-settings/overview.md"
     title: Organization Info & Settings - group overview
@@ -169,7 +169,7 @@ sources:
     title: AutoML - group overview
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -315,21 +315,21 @@ Base URL: `https://analyticsapi.zoho.com` (or the data-center equivalent, see [D
 | [Remove Tag From Multiple Views](domains/views-management/tags/remove-tag-from-views.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `removeTagFromViews` | [Tags](domains/views-management/tags/overview.md) | `ZohoAnalytics.modeling.delete` | 204 | required |
 | [Add Multiple Tags To View](domains/views-management/tags/add-tags-to-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `addTagsToView` | [Tags](domains/views-management/tags/overview.md) | `ZohoAnalytics.modeling.create` | 204 | required |
 | [Remove Multiple Tags From View](domains/views-management/tags/remove-tags-from-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `removeTagsFromView` | [Tags](domains/views-management/tags/overview.md) | `ZohoAnalytics.modeling.delete` | 204 | required |
-| [Create Analysis View](domains/reports-and-dashboards/reports/create-report.md) | POST | `/restapi/v2/workspaces/{workspace-id}/reports` | `createReport` | [Reports (Analysis Views)](domains/reports-and-dashboards/reports/overview.md) | `ZohoAnalytics.modeling.create` | 200 | required |
-| [Update Analysis View](domains/reports-and-dashboards/reports/update-report.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}` | `updateReport` | [Reports (Analysis Views)](domains/reports-and-dashboards/reports/overview.md) | `ZohoAnalytics.modeling.update` | 204 | required |
-| [Get Report Metadata](domains/reports-and-dashboards/reports/get-report-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` | `getReportMetadata` | [Reports (Analysis Views)](domains/reports-and-dashboards/reports/overview.md) | `ZohoAnalytics.modeling.read` | 200 | required |
+| [Create Report](domains/reports-and-dashboards/reports/create-report.md) | POST | `/restapi/v2/workspaces/{workspace-id}/reports` | `createReport` | [Reports (Analysis Views)](domains/reports-and-dashboards/reports/overview.md) | `ZohoAnalytics.modeling.create` | 200 | required |
+| [Read Report Metadata](domains/reports-and-dashboards/reports/get-report-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` | `getReportMetadata` | [Reports (Analysis Views)](domains/reports-and-dashboards/reports/overview.md) | `ZohoAnalytics.modeling.read` | 200 | required |
+| [Update Report](domains/reports-and-dashboards/reports/update-report.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}` | `updateReport` | [Reports (Analysis Views)](domains/reports-and-dashboards/reports/overview.md) | `ZohoAnalytics.modeling.update` | 204 | required |
+| [Create Dashboard](domains/reports-and-dashboards/dashboards/create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `createDashboard` | [Dashboards](domains/reports-and-dashboards/dashboards/overview.md) | `ZohoAnalytics.modeling.create` | 200 | required |
+| [Read Dashboard Metadata](domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `getDashboardMetadata` | [Dashboards](domains/reports-and-dashboards/dashboards/overview.md) | `ZohoAnalytics.modeling.read` | 200 | required |
+| [Update Dashboard](domains/reports-and-dashboards/dashboards/update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `updateDashboard` | [Dashboards](domains/reports-and-dashboards/dashboards/overview.md) | `ZohoAnalytics.modeling.update` | 204 | required |
 | [Get All Dashboards](domains/reports-and-dashboards/dashboards/get-dashboards.md) | GET | `/restapi/v2/dashboards` | `getDashboards` | [Dashboards](domains/reports-and-dashboards/dashboards/overview.md) | `ZohoAnalytics.metadata.read` | 200 | not-required |
 | [Get Owned Dashboards](domains/reports-and-dashboards/dashboards/get-owned-dashboards.md) | GET | `/restapi/v2/dashboards/owned` | `getOwnedDashboards` | [Dashboards](domains/reports-and-dashboards/dashboards/overview.md) | `ZohoAnalytics.metadata.read` | 200 | not-required |
 | [Get Shared Dashboards](domains/reports-and-dashboards/dashboards/get-shared-dashboards.md) | GET | `/restapi/v2/dashboards/shared` | `getSharedDashboards` | [Dashboards](domains/reports-and-dashboards/dashboards/overview.md) | `ZohoAnalytics.metadata.read` | 200 | not-required |
-| [Create Dashboard](domains/reports-and-dashboards/dashboards/create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `createDashboard` | [Dashboards](domains/reports-and-dashboards/dashboards/overview.md) | `ZohoAnalytics.modeling.create` | 200 | required |
-| [Get Dashboard Metadata](domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `getDashboardMetadata` | [Dashboards](domains/reports-and-dashboards/dashboards/overview.md) | `ZohoAnalytics.modeling.read` | 200 | required |
-| [Update Dashboard](domains/reports-and-dashboards/dashboards/update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `updateDashboard` | [Dashboards](domains/reports-and-dashboards/dashboards/overview.md) | `ZohoAnalytics.modeling.update` | 204 | required |
 | [Get Workspace Shared Details](domains/share-and-publish/sharing/get-workspace-shared-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share` | `getWorkspaceSharedDetails` | [Sharing](domains/share-and-publish/sharing/overview.md) | `ZohoAnalytics.share.read` | 200 | required |
 | [Share Views](domains/share-and-publish/sharing/share-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/share` | `shareViews` | [Sharing](domains/share-and-publish/sharing/overview.md) | `ZohoAnalytics.share.create` | 204 | required |
 | [Update Shared Details](domains/share-and-publish/sharing/update-shared-details-for-view.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share` | `UpdateSharedDetailsForView` | [Sharing](domains/share-and-publish/sharing/overview.md) | `ZohoAnalytics.share.update` | 204 | required |
 | [Get Shared Details](domains/share-and-publish/sharing/get-shared-details-for-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share/shareddetails` | `getSharedDetailsForViews` | [Sharing](domains/share-and-publish/sharing/overview.md) | `ZohoAnalytics.share.read` | 200 | required |
 | [Remove Shared Views](domains/share-and-publish/sharing/remove-share.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/share` | `removeShare` | [Sharing](domains/share-and-publish/sharing/overview.md) | `ZohoAnalytics.share.delete` | 204 | required |
-| [Get My Permissions](domains/share-and-publish/sharing/get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions` | `getUserPermissions` | [Sharing](domains/share-and-publish/sharing/overview.md) | `ZohoAnalytics.share.read` | 200 | required |
+| [Get My Permissions](domains/share-and-publish/sharing/get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions` | `getUserPermissions` | [Sharing](domains/share-and-publish/sharing/overview.md) | `ZohoAnalytics.share.read` | 200 | required |
 | [Make View Public](domains/share-and-publish/publish/make-views-public.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public` | `makeViewsPublic` | [Publish](domains/share-and-publish/publish/overview.md) | `ZohoAnalytics.embed.create` | 200 | required |
 | [Remove Public Permission](domains/share-and-publish/publish/remove-public-permission.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public` | `removePublicPermission` | [Publish](domains/share-and-publish/publish/overview.md) | `ZohoAnalytics.embed.delete` | 204 | required |
 | [Get Private URL](domains/share-and-publish/publish/get-private-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink` | `getPrivateUrl` | [Publish](domains/share-and-publish/publish/overview.md) | `ZohoAnalytics.embed.read` | 200 | required |

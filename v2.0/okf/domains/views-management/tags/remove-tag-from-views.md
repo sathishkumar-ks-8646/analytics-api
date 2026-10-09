@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Remove Tag From Multiple Views
-description: "Detaches one tag from a batch of views, or from every view in the workspace at once."
+description: "Detaches one tag from a batch of views, or from every view at once."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views"
 tags:
   - zoho-analytics
@@ -49,10 +49,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -71,7 +71,7 @@ Detaches **one tag** from a batch of views, or from every view at once.
 
 From the OpenAPI specification:
 
-Detaches one tag from a batch of views, or from every view in the workspace at once.
+Detaches one tag from a batch of views, or from every view at once.
 
 Only the associations are removed - the tag survives and can be re-attached, which is the difference from the Delete Tag API. Either name the views in viewIds, or set dissociateAll to true to strip the tag from every view in the workspace.
 

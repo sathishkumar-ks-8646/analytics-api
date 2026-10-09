@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Owned Workspace List
-description: "Returns all the workspaces present in the organization of the requesting user, irrespective of how they are shared."
+description: "Returns all workspaces owned by (created within) the authenticated user's organisation."
 resource: https://analyticsapi.zoho.com/restapi/v2/workspaces/owned
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

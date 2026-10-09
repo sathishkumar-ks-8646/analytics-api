@@ -26,10 +26,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -102,22 +102,22 @@ Get Workspace List
 | Code | HTTP | Meaning |
 |---|---|---|
 | [7105](../../../foundations/error-codes.md#error-7105) | 400 | The specified view does not exist. |
-| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A view with the given viewName already exists in this workspace. |
-| [7125](../../../foundations/error-codes.md#error-7125) | 400 | The specified data type is not compatible with the configuration of the column. |
+| [7111](../../../foundations/error-codes.md#error-7111) | 400 | METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists. |
+| [7125](../../../foundations/error-codes.md#error-7125) | 400 | The specified data type is not compatible with the column's configuration. |
 | [7126](../../../foundations/error-codes.md#error-7126) | 400 | A column name is empty or missing. |
 | [7127](../../../foundations/error-codes.md#error-7127) | 400 | A column name exceeds the maximum allowed length. |
-| [7128](../../../foundations/error-codes.md#error-7128) | 400 | Duplicate column names were found in the COLUMNS array. |
-| [7143](../../../foundations/error-codes.md#error-7143) | 400 | A DEFAULT value was provided for an AUTO_NUMBER column. |
+| [7128](../../../foundations/error-codes.md#error-7128) | 400 | Duplicate column names found in the COLUMNS array. |
+| [7143](../../../foundations/error-codes.md#error-7143) | 400 | A DEFAULT value was provided for an AUTONUMBER column. |
 | [7144](../../../foundations/error-codes.md#error-7144) | 400 | The specified folder does not exist. |
 | [7146](../../../foundations/error-codes.md#error-7146) | 400 | The DATATYPE value is not a recognised data type. |
-| [7183](../../../foundations/error-codes.md#error-7183) | 400 | The data type of the lookup column is incompatible with the data type of the referenced column. |
+| [7183](../../../foundations/error-codes.md#error-7183) | 400 | The lookup column's data type is incompatible with the referenced column's data type. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7379](../../../foundations/error-codes.md#error-7379) | 400 | A lookup column cannot refer to a column within the same table. |
+| [7379](../../../foundations/error-codes.md#error-7379) | 400 | A lookup column cannot reference a column within the same table. |
 | [7395](../../../foundations/error-codes.md#error-7395) | 400 | The column specified in LOOKUPCOLUMN.COLUMNNAME does not exist in the referenced table. |
-| [7397](../../../foundations/error-codes.md#error-7397) | 400 | The specified view is not a table. |
+| [7397](../../../foundations/error-codes.md#error-7397) | 400 | The view is not a table. |
 | [7413](../../../foundations/error-codes.md#error-7413) | 400 | TABLENAME is missing or null. |
-| [7478](../../../foundations/error-codes.md#error-7478) | 400 | The number of columns exceeds the maximum allowed for a table. |
+| [7478](../../../foundations/error-codes.md#error-7478) | 400 | MORETHANMAXCOLUMN — The source has more columns than a table can hold. |
 
 # Related
 

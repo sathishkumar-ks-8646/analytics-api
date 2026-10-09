@@ -42,7 +42,7 @@
           }
         ],
         "summary": "Get Workspace Shared Details",
-        "description": "Returns the shared details of the specified workspace. The response groups the sharing into four blocks - views shared directly with individual users, views shared with groups, views published publicly, and views shared through a private link.",
+        "description": "Returns a consolidated view of every share that exists in the workspace — grouped by user, by group, plus any public/private-link shares — in a single call. Intended for workspace-level share auditing/administration.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITYNOTPERMITTED — User does not have permission to view workspace share info. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin. |",
         "operationId": "getWorkspaceSharedDetails",
         "parameters": [
           {
@@ -245,7 +245,7 @@
           }
         ],
         "summary": "Share Views",
-        "description": "Shares the specified views with the specified users or groups, with the selected permissions. A filter criteria can be applied while sharing, so that the shared users see only the matching subset of the data.",
+        "description": "Shares one or more views with a set of users and/or groups, with a specific permission set, optional column/row restrictions, and optional invite email.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8074 | READPERMSHOULDBETRUEFORSHARING — permissions.read was false or omitted. | Set permissions.read to true. |\n| 7321 | VIEWALREADYSHARED — The view is already shared with this user. | Use Update Shared Details to modify the existing share instead. |\n| 7322 | VIEWALREADYSHARED (group form) — The view is already shared with this group. | Use Update Shared Details to modify the existing share instead. |\n| 7323 | CANNOTSHAREDTOOBJOWNER — Attempted to share the view with its own owner. | Remove the owner's email/group from the share request. |\n| 7307 | OWNERCANNOTSHAREHIMSELF — The sharer attempted to share a view to themselves. | Remove the sharer's own email from emailIds. |\n| 7320 | CANNOTSHARETOSELF — Same as above (alternate path). | Same as above. |\n| 7541 | FILTERCRITERIANOTSUPPORTEDFORMULTIVIEWSHARE — criteria supplied with more than one viewIds entry. | Share one view at a time when using row-level criteria. |\n| 7543 | VUDORDRILLCOLUMNSEDITNOTSUPPORTEDFORMULTIVIEWSHARE — vudColumns/drillColumns supplied with more than one view. | Share one view at a time when restricting VUD/drill columns. |\n| 7545 | SHAREANDWRITEPERMISSIONSNOTALLOWEDFORROUSERS — A Read-Only/embedded user was granted share together with a write permission. | Do not combine share: true with write permissions for Read-Only users. |\n| 7533 | CANNOTSHAREOBJECTTOGROUP — The view's type does not support group sharing. | Share to individual emailIds instead. |\n| 7535 | CANNOTSHARETOMEMBERSNOTPARTOFORG — One or more emailIds do not belong to the organization. | Verify the recipients are valid organization/portal users. |\n| 7549 | CANNOTSHARETOCUSTOMROLEUSER — Attempted to share directly to a user who only has a custom-role-based org-level permission. | Share via the appropriate group/role mechanism instead. |\n| 8029 | SHAREINVALIDEMAILADDRESS — One or more emailIds entries is not a valid email address. | Correct the malformed email address(es). |\n| 8085 | SHAREDTOEXTERNALDOMAINNOTALLOWED — Sharing to an email outside the allowed domain(s) is disabled by org policy. | Share only to users within the permitted domain(s), or contact the Org Admin to adjust the policy. |\n| 8086 | SHAREDTOEXTERNALDOMAINNOTALLOWED — Sharing to an email outside the allowed domain(s) is disabled by org policy. | Share only to users within the permitted domain(s), or contact the Org Admin to adjust the policy. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION (HTTP 409) — A view being shared carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false to confirm. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is malformed or missing a required field. | Validate the CONFIG JSON against the parameter table above. |\n| 7301 | SECURITYNOTPERMITTED — User does not have Share permission on one or more viewIds. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on all specified views. |",
         "operationId": "shareViews",
         "parameters": [
           {
@@ -400,7 +400,7 @@
           }
         ],
         "summary": "Remove Share",
-        "description": "Removes the shared views for the specified users or groups. The sharing can be removed for a specific set of views, or for every view that is currently shared with those users.",
+        "description": "Removes an existing share of one or more views from a set of users and/or groups, or removes all of a user's/group's shared views in the workspace at once.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8031 | REMOVESHAREAPIPARAMS — Neither viewIds nor removeAllViews: true was supplied. | Supply either a viewIds array or set removeAllViews: true. |\n| 8105 | REMOVESHAREALLVIEWSPRESENT — Both viewIds and removeAllViews: true were supplied together. | Supply only one of the two — viewIds for a targeted removal, or removeAllViews: true alone for a bulk removal. |\n| 8032 | VIEWNOTSHARED — The specified view is not currently shared with this user. | Verify the share exists via Get Shared Details before removing. |\n| 8150 | VIEWNOTSHAREDTOGROUP — The specified view is not currently shared with this group. | Verify the share exists via Get Shared Details before removing. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is malformed or missing a required field. | Validate the CONFIG JSON against the parameter table above. |\n| 7533 | CANNOTSHAREOBJECTTOGROUP — The view's type does not support group-based sharing/unsharing. | Only applicable to user-based (emailIds) removal for this view type. |\n| 7301 | SECURITYNOTPERMITTED — User lacks Share permission on the targeted view(s), or attempted removeAllViews: true without Workspace Admin privileges. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin (required for removeAllViews), or has Share permission on the specified views. |",
         "operationId": "removeShare",
         "parameters": [
           {
@@ -506,7 +506,7 @@
           }
         ],
         "summary": "Update Shared Details For View",
-        "description": "Updates the existing sharing configuration of the specified view for the given users or groups. The permissions, filter criteria, and column restrictions sent in the config replace the ones currently in effect for that view.",
+        "description": "Updates the permission set, column/row restrictions, or filter criteria of an existing share on a single view, for the users/groups specified.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8032 | VIEWNOTSHARED — The view is not currently shared with the specified user. | Share the view first via Share Views. |\n| 8150 | VIEWNOTSHAREDTOGROUP — The view is not currently shared with the specified group. | Share the view to this group first via Share Views. |\n| 8074 | READPERMSHOULDBETRUEFORSHARING — permissions.read was explicitly set to false. | Keep permissions.read as true. |\n| 7545 | SHAREANDWRITEPERMISSIONSNOTALLOWEDFORROUSERS — A Read-Only user was granted share together with a write permission. | Do not combine share: true with write permissions for Read-Only users. |\n| 7542 | FILTERCRITERIANOTPERMITTEDFORSHAREDUSER — criteria update is not permitted for this share type. | Remove or adjust the criteria field. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION (HTTP 409) — carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false to confirm. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is malformed or missing a required field. | Validate the CONFIG JSON against the parameter table above. |\n| 7301 | SECURITYNOTPERMITTED — User does not have Share permission on . | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on the view. |",
         "operationId": "UpdateSharedDetailsForView",
         "parameters": [
           {
@@ -627,7 +627,7 @@
           }
         ],
         "summary": "Get Shared Details For Views",
-        "description": "Returns the shared details of the specified views. For every view, the response lists each user or group it is shared to, along with the permissions granted, the filter criteria applied, and any column level restrictions in effect.",
+        "description": "Returns detailed share information — per user and per group, including permission booleans, a human-readable permissionString, filter criteria, and restricted columns — for one or more specific views.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8080 | INVALIDJSONCONFIGURATION — viewIds missing or malformed. | Supply a valid, non-empty viewIds JSONArray. |\n| 7301 | SECURITYNOTPERMITTED — User does not have Share permission on one or more requested viewIds. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on all requested views. |",
         "operationId": "getSharedDetailsForViews",
         "parameters": [
           {
@@ -802,7 +802,7 @@
         }
       }
     },
-    "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions": {
+    "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions": {
       "get": {
         "tags": [
           "Sharing"
@@ -815,7 +815,7 @@
           }
         ],
         "summary": "Get User Permissions",
-        "description": "Returns the permissions that the requesting user holds on the specified view. The permissions returned are the effective ones, whether they were granted directly to the user or inherited through a group.\n\n**Notes**\n\n> Note:\n>\n> - The permissions are returned for the user whose access token is used in the request, not for an arbitrary user.\n> - The endpoint path retains the `mypermissions` segment.",
+        "description": "Returns the effective permission set the calling user currently has on a specific view.\n\nThe original path `/share/mypermissions` is a deprecated alias of this API and continues to function; use `/share/userpermissions`.\n\n**Notes**\n\n> Note:\n>\n> - The permissions are returned for the user whose access token is used in the request, not for an arbitrary user.\n> - The endpoint path retains the `mypermissions` segment.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITYNOTPERMITTED — The calling user has no access at all to (view does not belong to the workspace, or user has neither ownership nor a share). | Verify belongs to and that the calling user has been shared this view. |",
         "operationId": "getUserPermissions",
         "parameters": [
           {
@@ -923,7 +923,7 @@
           }
         ],
         "summary": "Make Views Public",
-        "description": "Makes the specified view publicly accessible and returns the public URL. The audience, the permissions granted on the view, and the rows and columns visible through it are all controlled by the config.",
+        "description": "Publishes a view as a Public URL and, in the same call, defines the read-only permission set, the row-level filter criteria, and the column restrictions that apply to public visitors. Calling it again on an already-public view updates the existing public share in place.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6054 | PUBLISHCNTVIOLATION — The current plan does not allow this publish operation. | Upgrade the plan, or publish as a private link instead. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | METAOBJECTNOTPRESENT — View not found. | Verify exists. |\n| 7138 | METAOBJECTNOTPRESENT — A tableName in vudColumns / drillColumns is not a table involved in this view. | Use only tables that the view actually reads from. |\n| 7301 | SECURITYNOTPERMITTED — The user cannot make this view public (no Make Public permission, or the workspace/view is restricted). | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Make Public permission on the view. |\n| 7319 | OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace. | Ensure and are consistent. |\n| 7500 | UNAUTHORIZEDORGCANNOTMAKEPUBLIC — publicPermLevel: \"3\" requested but the caller does not belong to the workspace admin's business organization. | Use publicPermLevel 1 or 2, or call as a user of the same business organization. |\n| 7531 | PUBLICTOORGNOTSUPPORTEDINFREE — publicPermLevel 2 or 3 is not supported on the Free plan. | Upgrade the plan, or use publicPermLevel: \"1\". |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 8054 | INVALIDFILTERCRITERIA — criteria could not be parsed. | Correct the criteria syntax (e.g. \"Table\".\"Column\"='Value'). |\n| 8060 | DOMAINNOTEXIST — The domainName supplied does not exist. | Use a domain returned by the Domain and White Label APIs. |\n| 8061 | DOMAINDOESNOTBELONGSTOUSER — The caller is not an admin of the supplied domainName. | Call as an admin of that portal domain, or omit domainName. |\n| 8074 | READPERMSHOULDBETRUEFORSHARING — permissions.read was sent as false. | Omit read or set it to true. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a type/length/allowed-value constraint (e.g. publicPermLevel outside 1/2/3). | Send only the documented keys with the documented types. |\n| 8088 | SECURITYCONTROLSFEATUREDISABLED — Public sharing has been disabled for this organization/workspace by security controls. | Ask the Organization Admin to re-enable public sharing in Security Controls. |\n| 8154 | COLUMNNOTPRESENTINTABLE — A column in vudColumns / drillColumns (or in criteria) does not exist in the given table. | Verify column names via Get Columns. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false to confirm. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.create. |\n| 12052 | WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain. | Enable the workspace for that Client Portal domain first. |",
         "operationId": "makeViewsPublic",
         "parameters": [
           {
@@ -1059,7 +1059,7 @@
           }
         ],
         "summary": "Remove Public Permission",
-        "description": "Removes the public access granted on the specified view. Once removed, the public URL generated for the view no longer resolves.",
+        "description": "Un-publishes the view's Public URL, revoking access for all public visitors. The private link (if any) and the publish configuration are left untouched.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — View not found. | Verify exists. |\n| 7301 | SECURITYNOTPERMITTED — The user cannot un-publish this view. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Make Public / Share permission on the view. |\n| 7319 | OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace. | Ensure and are consistent. |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 8032 | VIEWNOTSHARED — The view is not shared to anyone, so there is no public permission to remove. | Confirm the view is public via Get Publish Configurations before calling. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.delete. |",
         "operationId": "removePublicPermission",
         "parameters": [
           {
@@ -1098,7 +1098,7 @@
           }
         ],
         "summary": "Create Private URL",
-        "description": "Creates a private URL for the specified view and returns it. The private URL can be protected with a password and given a validity period, and the permissions granted through it are controlled by the config.\n\n**Notes**\n\n> Note:\n>\n> - `CONFIG` may be omitted entirely. When it is, a private URL is created with the default settings.\n> - `password` and `removePassword` are mutually exclusive, as are `expiryDate` and `removeExpiryDate`.\n> - `vudColumns` is applicable only when the `vud` permission is set to true.\n> - `drillColumns` is applicable only when the `drillDown` permission is set to true.\n> - Setting `regenerateKey` to true disables the private link that was issued previously.",
+        "description": "Creates a Private URL for a view — generating the secret private key if one does not exist — and, in the same call, sets the link's permission set, row-level filter criteria, column restrictions, password, and expiry date. The freshly built private URL is returned in the response.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6055 | REGENERATEVIOLATION — The current plan does not allow regenerating a private-link key. | Upgrade the plan, or omit regenerateKey. |\n| 6057 | SHAREDUSRREGENERATEVIOLATION — A shared user attempted a plan-restricted key regeneration. | Ask the workspace owner to regenerate the key, or upgrade the plan. |\n| 6054 | PUBLISHCNTVIOLATION — The current plan does not allow private links. | Upgrade the plan. |\n| 6056 | SHAREDUSRPUBLISHCNTVIOLATION — A shared user attempted a plan-restricted private-link creation. | Ask the workspace owner to create the link, or upgrade the plan. |\n| 6121 | EXCEEDINGUSRPLNPRIVATELINKS — The organization has used all private links allowed by its plan. | Remove an unused private link via Remove Private Access, or upgrade the plan. |\n| 6122 | EXCEEDINGUSRPLNPRIVATELINKSDM — Same limit, reported to a non-super-admin caller. | Ask the Organization Admin to free up a private link or upgrade the plan. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — View not found. | Verify exists. |\n| 7138 | METAOBJECTNOTPRESENT — A tableName in vudColumns / drillColumns is not a table involved in this view. | Use only tables that the view actually reads from. |\n| 7301 | SECURITYNOTPERMITTED — The user does not have Publish permission on the view, or publishing is restricted for the workspace. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish permission on the view. |\n| 7319 | OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace. | Ensure and are consistent. |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 8054 | INVALIDFILTERCRITERIA — criteria could not be parsed. | Correct the criteria syntax (e.g. \"Table\".\"Column\"='Value'). |\n| 8060 | DOMAINNOTEXIST — The domainName supplied does not exist. | Use a domain returned by the Domain and White Label APIs. |\n| 8061 | DOMAINDOESNOTBELONGSTOUSER — The caller is not an admin of the supplied domainName. | Call as an admin of that portal domain, or omit domainName. |\n| 8074 | READPERMSHOULDBETRUEFORSHARING — permissions.read was sent as false. | Omit read or set it to true. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a constraint (e.g. password shorter than 6 characters, malformed expiryDate). | Send only the documented keys with the documented types and formats. |\n| 8088 | SECURITYCONTROLSFEATUREDISABLED — Private links have been disabled for this organization/workspace by security controls. | Ask the Organization Admin to re-enable private links in Security Controls. |\n| 8154 | COLUMNNOTPRESENTINTABLE — A column in vudColumns / drillColumns (or in criteria) does not exist in the given table. | Verify column names via Get Columns. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false to confirm. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.update. |\n| 12052 | WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain. | Enable the workspace for that Client Portal domain first. |",
         "operationId": "createPrivateUrl",
         "parameters": [
           {
@@ -1245,7 +1245,7 @@
           }
         ],
         "summary": "Get Private URL",
-        "description": "Returns the private URL through which the specified view can be accessed. A custom domain can be supplied so that the URL is returned with that domain address.",
+        "description": "Returns the existing Private URL of a view — the open-view URL with the view's secret 32-character private key appended. Read-only: it neither creates nor regenerates a key.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — View not found. | Verify exists. |\n| 7301 | SECURITYNOTPERMITTED — The user does not have Publish permission on the view. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish permission on the view. |\n| 7319 | OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace. | Ensure and are consistent. |\n| 8060 | DOMAINNOTEXIST — The domainName supplied does not exist. | Use a domain returned by the Domain and White Label APIs. |\n| 8061 | DOMAINDOESNOTBELONGSTOUSER — The caller is not an admin of the supplied domainName. | Call as an admin of that portal domain, or omit domainName. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is not valid JSON or contains an unsupported key. | Send only domainName and/or withCustomDomain. |\n| 8115 | VIEWNOTPUBLISHEDASPRIVATE — The view has no private link. | Call Create Private URL first. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.read. |\n| 12052 | WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain. | Enable the workspace for that Client Portal domain first. |",
         "operationId": "getPrivateUrl",
         "parameters": [
           {
@@ -1327,7 +1327,7 @@
           }
         ],
         "summary": "Remove Private Access",
-        "description": "Removes the private link access granted on the specified view. Once removed, the private URL generated for the view no longer resolves.",
+        "description": "Removes the view's Private URL entirely — the private key, the associated permission set, the password, and the expiry date. Every previously distributed private URL for the view stops working. The public URL (if any) and the publish configuration are left untouched.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — View not found. | Verify exists. |\n| 7301 | SECURITYNOTPERMITTED — The user does not have Publish permission on the workspace or Share permission on the view. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish / Share permission. |\n| 7319 | OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace. | Ensure and are consistent. |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 8115 | VIEWNOTPUBLISHEDASPRIVATE — The view has no private link. | Nothing to remove; the link is already absent. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.delete. |",
         "operationId": "removePrivateAccess",
         "parameters": [
           {
@@ -1366,7 +1366,7 @@
           }
         ],
         "summary": "Get Publish Configurations",
-        "description": "Returns the publish configurations of the specified view. The response groups them into three blocks - the public access settings, the private link settings, and the rendering settings applied when the view is accessed through a published URL.",
+        "description": "Returns the complete publish state of a view in one call: the public channel's audience and listing state, the private channel's password/expiry state, and the presentation configuration used to render the published page.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — View not found. | Verify exists. |\n| 7301 | SECURITYNOTPERMITTED — The user has neither Publish nor Make Public permission on the view. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish / Make Public permission on the view. |\n| 7319 | OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace. | Ensure and are consistent. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.read. |",
         "operationId": "getPublishConfigurations",
         "parameters": [
           {
@@ -1492,7 +1492,7 @@
           }
         ],
         "summary": "Update Publish Configurations",
-        "description": "Updates the publish configurations of the specified view. These settings control how the view is rendered when it is accessed in the embedded, public, or private link mode.\n\n**Notes**\n\n> Note:\n>\n> - Only the attributes sent in the config are updated; the ones omitted retain their current values.\n> - `autoRefresh` takes the interval in minutes. Send `-1` to disable the automatic refresh.\n> - `isListed` applies to the workspace, not to the individual view.",
+        "description": "Updates the presentation configuration of the view's published page — title, description, toolbar, search box, dimensions, auto-refresh interval, legend position, URL-level criteria, Ask Zia — and, when the workspace is public, its public-listing flag.\n\n**Notes**\n\n> Note:\n>\n> - Only the attributes sent in the config are updated; the ones omitted retain their current values.\n> - `autoRefresh` takes the interval in minutes. Send `-1` to disable the automatic refresh.\n> - `isListed` applies to the workspace, not to the individual view.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — View not found. | Verify exists. |\n| 7301 | SECURITYNOTPERMITTED — The user has neither Publish nor Make Public permission on the view. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish / Make Public permission on the view. |\n| 7319 | OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace. | Ensure and are consistent. |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 8054 | INVALIDFILTERCRITERIA — URLCriteria could not be parsed. | Correct the criteria syntax (e.g. \"Table\".\"Column\"='Value'). |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a type constraint (e.g. a non-alphabetic legendPosition). | Send only the documented keys with the documented types. |\n| 8152 | INTERVALSHOULDBE120ORABOVE — autoRefresh is a positive value below 120 seconds. | Use -1 to disable auto-refresh, or a value of at least 120. |\n| 8154 | COLUMNNOTPRESENTINTABLE — A column referenced in URLCriteria does not exist. | Verify column names via Get Columns. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false to confirm. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.update. |",
         "operationId": "updatePublishConfigurations",
         "parameters": [
           {
@@ -1592,7 +1592,7 @@
           }
         ],
         "summary": "Get Embed URL",
-        "description": "Returns an embed URL through which the specified view can be accessed. The generated URL is short-lived, which adds more security to it. It does not require a login, and what the viewer can see and do is governed entirely by the permissions, filter criteria, and column restrictions sent in the config.\n\n> **Note:** This API is available only to Embedded Analytics customers.",
+        "description": "Mints a new, short-lived embed URL for a view. Everything the eventual viewer can see and do — which rows, which columns, whether they can export or drill — is fixed at the moment of this call and baked into the URL's stored configuration. The URL requires no sign-in.\n\n> **Note:** This API is available only to Embedded Analytics customers.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | METAOBJECTNOTPRESENT — View not found. | Verify exists in the workspace. |\n| 7138 | METAOBJECTNOTPRESENT — A tableName in a vudColumns/drillColumns array is not a table involved in this view. | Use only tables that the view actually reads from. |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain (where this API is disabled), or a non-owner caller is not in the organization's OEM-enabled users list, or the user lacks Publish / Make Public permission on the view. | Call from the standard API host; ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish / Make Public permission, and is OEM-enabled if not a workspace owner. |\n| 7319 | OBJIDNOTBELONGSTODB — The view does not belong to the specified workspace. | Ensure and are consistent. |\n| 8023 | OEMOPERATIONNOTALLOWED — The organization/workspace is not enabled for Embedded Analytics. | Embedded Analytics must be enabled for the account; contact Zoho Analytics support/sales. |\n| 8054 | INVALIDFILTERCRITERIA — criteria could not be parsed. | Correct the criteria syntax (e.g. \"Table\".\"Column\"='Value'). |\n| 8060 | DOMAINNOTEXIST — The domainName supplied does not exist. | Use a domain returned by the Domain and White Label APIs. |\n| 8061 | DOMAINDOESNOTBELONGSTOUSER — The caller is not an admin of the supplied domainName. | Call as an admin of that portal domain, or omit domainName. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type/length constraint. | Stringify and URL-encode the CONFIG object, and send only the documented keys. |\n| 8154 | COLUMNNOTPRESENTINTABLE — A column in a vudColumns/drillColumns array (or in criteria) does not exist in the given table. | Verify column names via Get Columns. |\n| 8177 | MAXALLOWEDVALUEEXCEEDED — validityPeriod exceeds the maximum of 86400 seconds (1 day). | Send a value of 86400 seconds or less. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false to confirm. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.read. |\n| 9102 | LANGUAGENOTSUPPORTED — language is not one of the supported language names. | Use a value from language Values. |\n| 12052 | WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain. | Enable the workspace for that Client Portal domain first. |",
         "operationId": "getEmbedUrl",
         "parameters": [
           {
@@ -1719,7 +1719,7 @@
           }
         ],
         "summary": "Create Slideshow",
-        "description": "Creates a slideshow in the specified workspace from the given set of views, and returns its ID along with the URL through which it can be accessed.",
+        "description": "Creates a new slideshow in the workspace from an ordered set of views, and returns its new ID together with a ready-to-use presentation URL built with default rendering options.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6054 | PUBLISHCNTVIOLATION — accessType: 1 requested but the plan does not allow login-free (private-link style) access. | Use accessType: 0, or upgrade the plan. |\n| 6056 | SHAREDUSRPUBLISHCNTVIOLATION — A shared user requested accessType: 1 on a plan that restricts it. | Ask the workspace owner to create the slideshow, use accessType: 0, or upgrade the plan. |\n| 6063 | SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature. | Upgrade the plan to one that supports slideshows. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — A view in viewIds does not exist. | Verify the IDs via Get View List. |\n| 7196 | SLIDENAMEALREADYEXISTS — Another slideshow in this workspace already uses slideName. | Choose a different name, or update the existing slideshow via Update Slide Show. |\n| 7301 | SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace. |\n| 7319 | OBJIDNOTBELONGSTODB — A view in viewIds belongs to a different workspace. | Include only views from . |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 8078 | EMPTYJSONATTRIBUTEFOUND — slideName is blank, or viewIds is an empty array. | Supply a non-empty name and at least one view ID. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — slideName or viewIds is missing from CONFIG. | Both are mandatory; include them. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a constraint (e.g. punctuation in slideName, more than 100 entries in viewIds). | Send only the documented keys with the documented types and value constraints. |\n| 8088 | SECURITYCONTROLSFEATUREDISABLED — accessType: 1 requested but login-free links are disabled for this organization/workspace by security controls. | Use accessType: 0, or ask the Organization Admin to re-enable private links in Security Controls. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A view in viewIds carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false to confirm. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.create. |",
         "operationId": "createSlideshow",
         "parameters": [
           {
@@ -1828,7 +1828,7 @@
           }
         ],
         "summary": "Get Slideshows",
-        "description": "Returns the list of slideshows available in the specified workspace, along with the access type of each of them.",
+        "description": "Returns every slideshow that exists in the workspace, with its ID, name, and access type. This is the discovery call for <slide-id>, which every other API in this family needs.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6063 | SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature. | Upgrade the plan to one that supports slideshows. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.read. |",
         "operationId": "getSlideshows",
         "parameters": [
           {
@@ -1906,7 +1906,7 @@
           }
         ],
         "summary": "Update Slideshow",
-        "description": "Updates the details of the specified slideshow. The name, the views it contains, and its access type can all be changed, and the slide key can be regenerated to invalidate the URL issued previously.",
+        "description": "Updates an existing slideshow: renames it, replaces its set of views, changes its access type, and/or rotates its slide key. Unlike the publish configuration APIs, this one is a genuine partial update — only the attributes present in CONFIG are touched.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6054 | PUBLISHCNTVIOLATION — accessType: 1 or regenerateSlideKey: true requested but the plan does not allow login-free (private-link style) access. | Use accessType: 0 and omit regenerateSlideKey, or upgrade the plan. |\n| 6056 | SHAREDUSRPUBLISHCNTVIOLATION — A shared user requested a plan-restricted accessType: 1 or key rotation. | Ask the workspace owner to perform the update, or upgrade the plan. |\n| 6063 | SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature. | Upgrade the plan to one that supports slideshows. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — A view in viewIds does not exist. | Verify the IDs via Get View List. |\n| 7196 | SLIDENAMEALREADYEXISTS — Another slideshow in this workspace already uses the requested slideName. | Choose a different name. |\n| 7301 | SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace. |\n| 7319 | OBJIDNOTBELONGSTODB — A view in viewIds belongs to a different workspace. | Include only views from . |\n| 7351 | SLIDESHOWNOTBELONGSTODB — The slideshow does not exist, or belongs to a different workspace. | Verify against Get Slide List for this workspace. |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, contains an unsupported key, or violates a constraint (e.g. punctuation in slideName, more than 100 entries in viewIds). | Send only the documented keys with the documented types and value constraints. |\n| 8088 | SECURITYCONTROLSFEATUREDISABLED — accessType: 1 or key rotation requested but login-free links are disabled for this organization/workspace by security controls. | Ask the Organization Admin to re-enable private links in Security Controls. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A view in viewIds carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false to confirm. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.update. |",
         "operationId": "updateSlideshow",
         "parameters": [
           {
@@ -1999,7 +1999,7 @@
           }
         ],
         "summary": "Delete Slideshow",
-        "description": "Deletes the specified slideshow from the workspace. The views included in the slideshow are not affected; only the slideshow itself and its URL are removed.",
+        "description": "Deletes a slideshow from the workspace. The views that were part of it are untouched — only the slideshow definition, its slide key, and therefore its presentation URL are removed.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6063 | SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature. | Upgrade the plan to one that supports slideshows. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace. |\n| 7351 | SLIDESHOWNOTBELONGSTODB — The slideshow does not exist, was already deleted, or belongs to a different workspace. | Verify against Get Slide List for this workspace. |\n| 7565 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.delete. |",
         "operationId": "deleteSlideshow",
         "parameters": [
           {
@@ -2036,7 +2036,7 @@
           }
         ],
         "summary": "Get Slideshow Details",
-        "description": "Returns the details of the specified slideshow, including its slide key, its access type, and the IDs of the views it contains.",
+        "description": "Returns the full definition of a single slideshow: its name, its access type, its secret slide key, and the ordered list of view IDs it contains.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6063 | SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature. | Upgrade the plan to one that supports slideshows. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace. |\n| 7351 | SLIDESHOWNOTBELONGSTODB — The slideshow does not exist, or belongs to a different workspace. | Verify against Get Slide List for this workspace. |\n| 7396 | SLIDENOTPRESENTINDB — The slideshow record exists but no slide details could be read for it. | Re-check the slideshow via Get Slide List; recreate it if it is in an inconsistent state. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.read. |",
         "operationId": "getSlideshowDetails",
         "parameters": [
           {
@@ -2125,7 +2125,7 @@
           }
         ],
         "summary": "Get Slideshow URL",
-        "description": "Returns the URL through which the specified slideshow can be accessed. The rendering options sent in the config - the title, description, social widgets, autoplay, and the switching interval - are carried in the query string of the returned URL.",
+        "description": "Builds and returns the presentation URL for an existing slideshow. The rendering options sent in CONFIG are not stored — they are baked into the query string of the URL that comes back, so different callers can obtain differently configured URLs for the same slideshow.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6063 | SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature. | Upgrade the plan to one that supports slideshows. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace. |\n| 7351 | SLIDESHOWNOTBELONGSTODB — The slideshow does not exist, or belongs to a different workspace. | Verify against Get Slide List for this workspace. |\n| 7396 | SLIDENOTPRESENTINDB — The slideshow record exists but no slide details could be read for it. | Re-check the slideshow via Get Slide List; recreate it if it is in an inconsistent state. |\n| 8080 | INVALIDJSONCONFIGURATION — CONFIG is not valid JSON, was not URL-encoded correctly, or contains an unsupported key. | Stringify and URL-encode the CONFIG object, and send only the documented keys. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — slideInterval is outside the permitted 10-300 range. | Send a value between 10 and 300 seconds, or omit it to use the default of 25. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.embed.read. |",
         "operationId": "getSlideshowUrl",
         "parameters": [
           {
@@ -2388,6 +2388,15 @@
               true,
               false
             ]
+          },
+          "domainName": {
+            "type": "string",
+            "description": "Client Portal / White Label domain to build the returned URL on. Only usable by a Client Portal admin of the workspace. Max 200 characters."
+          },
+          "withCustomDomain": {
+            "type": "boolean",
+            "default": false,
+            "description": "Legacy flag. If true, builds the returned URL on the workspace's configured portal domain without naming it. Requires the caller to be an Organization Admin or Super Admin and a Client Portal admin of the workspace. Prefer domainName."
           }
         },
         "examples": [
@@ -2708,6 +2717,30 @@
               true,
               false
             ]
+          },
+          "vudColumnsToExclude": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exclude model. Applies only when permissions.vud is true. Hides exactly the listed columns from \"View Underlying Data\" and shows the rest. Same shape as vudColumns. When both are sent, the exclude model wins."
+          },
+          "drillColumnsToExclude": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exclude model. Applies only when permissions.drillDown is true. Excludes exactly the listed columns from drill-down. When both are sent, the exclude model wins."
+          },
+          "withCustomDomain": {
+            "type": "boolean",
+            "default": false,
+            "description": "Legacy flag. Builds the URL on the workspace's configured portal domain without naming it. Requires the caller to be an Organization Admin or Super Admin and a Client Portal admin of the workspace. Prefer domainName."
+          },
+          "includeShowHideOption": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether the viewer can show/hide columns. Table-type views and tabular reports only."
           }
         },
         "examples": [
@@ -2786,6 +2819,11 @@
               true,
               false
             ]
+          },
+          "withCustomDomain": {
+            "type": "boolean",
+            "default": false,
+            "description": "Legacy flag. If true, builds the URL on the workspace's configured portal domain without naming it. Requires the caller to be an Organization Admin or Super Admin and a Client Portal admin of the workspace. Prefer domainName."
           }
         },
         "examples": [
@@ -2896,6 +2934,9 @@
             "$ref": "#/components/schemas/ShareViewIds"
           }
         },
+        "required": [
+          "viewIds"
+        ],
         "examples": [
           {
             "viewIds": [
@@ -3082,6 +3123,10 @@
             "examples": [
               25
             ]
+          },
+          "domainName": {
+            "type": "string",
+            "description": "Accepted by the request template (max 200 characters) but not used by the slideshow URL builder. It has no effect on the returned URL; use withCustomDomain instead."
           }
         },
         "examples": [
@@ -3453,6 +3498,15 @@
               true,
               false
             ]
+          },
+          "includeAllColsForVUD": {
+            "type": "boolean",
+            "default": false,
+            "description": "Applies only when permissions.vud is true. If true, \"View Underlying Data\" shows all columns of the underlying table instead of only the columns involved in the report."
+          },
+          "domainName": {
+            "type": "string",
+            "description": "Client Portal / White Label domain to publish under. Only usable by a Client Portal admin of the workspace; the returned publicUrl is then built on that portal domain instead of the Zoho Analytics domain. Max 200 characters."
           }
         },
         "examples": [
@@ -3654,6 +3708,31 @@
               true,
               false
             ]
+          },
+          "vudSelectedColumns": {
+            "type": "boolean",
+            "default": false,
+            "description": "Restricts \"View Underlying Data\" to only the columns listed in vudColumns (paired with vud)."
+          },
+          "drillThrough": {
+            "type": "boolean",
+            "default": false,
+            "description": "Allows drill-through actions from this view into linked views."
+          },
+          "drillActions": {
+            "type": "boolean",
+            "default": false,
+            "description": "Allows executing configured drill actions."
+          },
+          "accessAdminPresets": {
+            "type": "boolean",
+            "default": false,
+            "description": "Allows the shared user to view/apply admin-defined report presets."
+          },
+          "createPreset": {
+            "type": "boolean",
+            "default": false,
+            "description": "Allows the shared user to create their own report presets."
           }
         },
         "required": [
@@ -4105,6 +4184,21 @@
               true,
               false
             ]
+          },
+          "read": {
+            "type": "boolean",
+            "default": true,
+            "description": "View/read access. Always granted and always present in the stored configuration — it cannot be switched off."
+          },
+          "drillThrough": {
+            "type": "boolean",
+            "default": false,
+            "description": "Allows drill-through actions from this view into linked views. Public links only — for a private link this field is always forced to false."
+          },
+          "accessAdminPresets": {
+            "type": "boolean",
+            "default": false,
+            "description": "Allows the visitor to view/apply presets defined by the view's admin/owner."
           }
         },
         "examples": [
@@ -4144,9 +4238,6 @@
             "$ref": "#/components/schemas/ShareGroupIds"
           }
         },
-        "required": [
-          "emailIds"
-        ],
         "examples": [
           {
             "emailIds": [
@@ -4380,9 +4471,7 @@
           }
         },
         "required": [
-          "emailIds",
-          "viewIds",
-          "permissions"
+          "viewIds"
         ],
         "examples": [
           {
@@ -4652,6 +4741,10 @@
               true,
               false
             ]
+          },
+          "sharedToGroupId": {
+            "type": "string",
+            "description": "Group ID of the recipient. Present only for group shares (isGroupShare: true)."
           }
         },
         "examples": [
@@ -5026,6 +5119,16 @@
               true,
               false
             ]
+          },
+          "includeShowHideOption": {
+            "type": "boolean",
+            "default": false,
+            "description": "Let the visitor show/hide columns. Table-type views and tabular reports only."
+          },
+          "legendPosition": {
+            "type": "string",
+            "default": "RIGHT",
+            "description": "Legend placement for chart views, as an uppercase alphabetic keyword (the API validates only that the value is alphabetic; use the legend positions supported by the chart type, e.g. RIGHT). Ignored for non-chart views."
           }
         },
         "examples": [
@@ -5100,9 +5203,6 @@
             ]
           }
         },
-        "required": [
-          "permissions"
-        ],
         "examples": [
           {
             "emailIds": [

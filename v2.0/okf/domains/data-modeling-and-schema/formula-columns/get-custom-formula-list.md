@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Custom Formulas
-description: Returns the custom formula columns defined on the specified view.
+description: Returns the list of custom formula columns defined on the specified view.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas"
 tags:
   - zoho-analytics
@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -59,7 +59,7 @@ Returns the list of custom formula columns defined on the specified view.
 
 From the OpenAPI specification:
 
-Returns the custom formula columns defined on the specified view. A custom formula column is a computed column whose value is derived, for each row, from an expression referring to other columns of the same view.
+Returns the list of custom formula columns defined on the specified view.
 
 The identifiers returned here are the entry point for the Edit Custom Formula and Delete Custom Formula APIs.
 

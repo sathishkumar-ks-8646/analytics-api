@@ -4,7 +4,7 @@
 
 # Concepts
 
-* [Add Default Workspace](add-default-workspace.md) - Marks the specified workspace as the default workspace of the requesting user.
-* [Add Favourite Workspace](add-favorite-workspace.md) - Adds the specified workspace to the list of favourite workspaces of the requesting user.
-* [Remove Default Workspace](remove-default-workspace.md) - Removes the default workspace designation from the specified workspace for the requesting user.
-* [Remove Favourite Workspace](remove-favorite-workspace.md) - Removes the specified workspace from the list of favourite workspaces of the requesting user.
+* [Add Default Workspace](add-default-workspace.md) - Marks the specified workspace as the calling user's default workspace.
+* [Add Favourite Workspace](add-favorite-workspace.md) - Adds the specified workspace to the calling user's list of favourite workspaces.
+* [Remove Default Workspace](remove-default-workspace.md) - Removes the default workspace designation from the specified workspace for the calling user.
+* [Remove Favourite Workspace](remove-favorite-workspace.md) - Removes the specified workspace from the calling user's list of favourite workspaces.

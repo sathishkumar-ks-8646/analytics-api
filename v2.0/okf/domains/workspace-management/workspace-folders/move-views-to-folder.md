@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Move Views To Folder
-description: "Moves one or more views, covering tables, reports and dashboards, into the specified destination folder of the workspace."
+description: "Moves one or more views (tables, reports, dashboards) into the specified destination folder within the workspace."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/movetofolder"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Sort Data by Columns
-description: Sets the default sort order for the rows of the specified table.
+description: Sets the default sort order for rows in the specified table view.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data/sort"
 tags:
   - zoho-analytics
@@ -43,10 +43,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

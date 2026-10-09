@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Make View Public
-description: Makes the specified view publicly accessible and returns the public URL.
+description: "Publishes a view as a Public URL and, in the same call, defines the read-only permission set, the row-level filter criteria, and the column restrictions that apply to public visitors."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public"
 tags:
   - zoho-analytics
@@ -58,10 +58,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -70,10 +70,6 @@ status: stable
 **POST `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public`** - Make View Public (Publish / Share & Publish).
 
 Publishes a view as a **Public URL** and, in the same call, defines the read-only permission set, the row-level filter criteria, and the column restrictions that apply to public visitors. Calling it again on an already-public view **updates** the existing public share in place.
-
-From the OpenAPI specification:
-
-Makes the specified view publicly accessible and returns the public URL. The audience, the permissions granted on the view, and the rows and columns visible through it are all controlled by the config.
 
 # Endpoint
 

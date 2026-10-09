@@ -5151,7 +5151,7 @@
     },
     {
       "operation_id": "createReport",
-      "title": "Create Analysis View",
+      "title": "Create Report",
       "method": "POST",
       "path": "/restapi/v2/workspaces/{workspace-id}/reports",
       "domain": "reports-and-dashboards",
@@ -5171,18 +5171,49 @@
       "response_content_types": [
         "application/json"
       ],
-      "permission_required": "The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or a Shared User, or a Group Member, or any user with Create Report permission on the workspace.",
+      "permission_required": "Workspace Admin / Organization Admin, or a shared or group user holding Create Report permission on the base table.",
       "error_codes": [
-        7103,
-        7104,
+        7005,
+        7016,
         7111,
+        7138,
         7301,
+        7362,
+        7701,
+        7703,
+        7727,
+        8008,
         8021,
         8050,
-        8075,
-        8119,
+        8051,
+        8052,
+        8057,
+        8059,
+        8092,
+        8144,
+        8147,
+        8162,
+        8166,
+        8167,
+        8168,
+        8170,
+        8191,
+        8250,
         8252,
-        8535
+        8253,
+        8254,
+        8255,
+        8256,
+        8257,
+        8258,
+        8504,
+        8507,
+        8509,
+        8516,
+        8517,
+        8534,
+        8535,
+        8542
       ],
       "doc": "/domains/reports-and-dashboards/reports/create-report.md",
       "sdk_examples": "/sdk-examples/reports-and-dashboards/reports/create-report.md",
@@ -5192,49 +5223,8 @@
       }
     },
     {
-      "operation_id": "updateReport",
-      "title": "Update Analysis View",
-      "method": "PUT",
-      "path": "/restapi/v2/workspaces/{workspace-id}/reports/{view-id}",
-      "domain": "reports-and-dashboards",
-      "domain_title": "Reports & Dashboards",
-      "group": "reports",
-      "group_title": "Reports (Analysis Views)",
-      "oauth_scopes": [
-        "ZohoAnalytics.modeling.update"
-      ],
-      "org_id_header": "required",
-      "config_parameter": {
-        "location": "form",
-        "required": true
-      },
-      "request_content_type": "application/x-www-form-urlencoded",
-      "success_status": 204,
-      "response_content_types": [],
-      "permission_required": "The authenticated user must be an Account Admin or Organization Admin, or the View Owner, or a Shared User, or a Group Member, or any user with Design Modify permission on the view.",
-      "error_codes": [
-        7103,
-        7104,
-        7111,
-        7301,
-        8021,
-        8050,
-        8075,
-        8100,
-        8119,
-        8252,
-        8535
-      ],
-      "doc": "/domains/reports-and-dashboards/reports/update-report.md",
-      "sdk_examples": "/sdk-examples/reports-and-dashboards/reports/update-report.md",
-      "openapi": {
-        "file": "/references/openapi/reports-dashboards-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1reports~1{view-id}/put"
-      }
-    },
-    {
       "operation_id": "getReportMetadata",
-      "title": "Get Report Metadata",
+      "title": "Read Report Metadata",
       "method": "GET",
       "path": "/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata",
       "domain": "reports-and-dashboards",
@@ -5254,11 +5244,13 @@
       "response_content_types": [
         "application/json"
       ],
-      "permission_required": "The authenticated user must be an Account Admin or Organization Admin, or the View Owner, or any user with Design Modify permission on the view.",
+      "permission_required": "Design Modify on the report. A read-only shared user cannot call this endpoint.",
       "error_codes": [
         7103,
         7104,
+        7106,
         7301,
+        7319,
         8021,
         8535
       ],
@@ -5267,6 +5259,246 @@
       "openapi": {
         "file": "/references/openapi/reports-dashboards-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1reports~1{view-id}~1metadata/get"
+      }
+    },
+    {
+      "operation_id": "updateReport",
+      "title": "Update Report",
+      "method": "PUT",
+      "path": "/restapi/v2/workspaces/{workspace-id}/reports/{view-id}",
+      "domain": "reports-and-dashboards",
+      "domain_title": "Reports & Dashboards",
+      "group": "reports",
+      "group_title": "Reports (Analysis Views)",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.update"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "Design Modify on the report — the owner, a Workspace Admin, an Organization Admin, or a shared or group user granted edit rights.",
+      "error_codes": [
+        7005,
+        7016,
+        7104,
+        7106,
+        7111,
+        7138,
+        7301,
+        7362,
+        7701,
+        7703,
+        7727,
+        8008,
+        8021,
+        8050,
+        8051,
+        8052,
+        8057,
+        8059,
+        8092,
+        8144,
+        8145,
+        8147,
+        8162,
+        8166,
+        8167,
+        8168,
+        8170,
+        8191,
+        8250,
+        8252,
+        8253,
+        8254,
+        8255,
+        8256,
+        8257,
+        8258,
+        8504,
+        8507,
+        8509,
+        8516,
+        8517,
+        8534,
+        8535,
+        8542
+      ],
+      "doc": "/domains/reports-and-dashboards/reports/update-report.md",
+      "sdk_examples": "/sdk-examples/reports-and-dashboards/reports/update-report.md",
+      "openapi": {
+        "file": "/references/openapi/reports-dashboards-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1reports~1{view-id}/put"
+      }
+    },
+    {
+      "operation_id": "createDashboard",
+      "title": "Create Dashboard",
+      "method": "POST",
+      "path": "/restapi/v2/workspaces/{workspace-id}/dashboards",
+      "domain": "reports-and-dashboards",
+      "domain_title": "Reports & Dashboards",
+      "group": "dashboards",
+      "group_title": "Dashboards",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.create"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "Workspace Admin / Organization Admin, or a shared or group user holding Create Report permission on the workspace. A Custom Role user must have the Create Report permission explicitly granted, otherwise the call is rejected before any validation runs.",
+      "error_codes": [
+        7103,
+        7111,
+        7301,
+        7309,
+        7479,
+        7480,
+        7481,
+        7482,
+        7483,
+        7484,
+        7485,
+        7486,
+        7487,
+        7488,
+        7491,
+        7492,
+        7493,
+        7507,
+        7510,
+        7512,
+        7513,
+        7514,
+        8027,
+        8504,
+        8509,
+        8517,
+        8534,
+        8535,
+        8542,
+        9001
+      ],
+      "doc": "/domains/reports-and-dashboards/dashboards/create-dashboard.md",
+      "sdk_examples": "/sdk-examples/reports-and-dashboards/dashboards/create-dashboard.md",
+      "openapi": {
+        "file": "/references/openapi/reports-dashboards-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards/post"
+      }
+    },
+    {
+      "operation_id": "getDashboardMetadata",
+      "title": "Read Dashboard Metadata",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata",
+      "domain": "reports-and-dashboards",
+      "domain_title": "Reports & Dashboards",
+      "group": "dashboards",
+      "group_title": "Dashboards",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "query",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "Read Only or higher on the dashboard. Owners, Workspace Admins, Organization Admins, shared users and group members with read access all qualify.",
+      "error_codes": [
+        7018,
+        7103,
+        7104,
+        7301,
+        7309,
+        7319,
+        7511,
+        8509,
+        8535
+      ],
+      "doc": "/domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md",
+      "sdk_examples": "/sdk-examples/reports-and-dashboards/dashboards/get-dashboard-metadata.md",
+      "openapi": {
+        "file": "/references/openapi/reports-dashboards-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}~1metadata/get"
+      }
+    },
+    {
+      "operation_id": "updateDashboard",
+      "title": "Update Dashboard",
+      "method": "PUT",
+      "path": "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}",
+      "domain": "reports-and-dashboards",
+      "domain_title": "Reports & Dashboards",
+      "group": "dashboards",
+      "group_title": "Dashboards",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.update"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "Design Modify on the dashboard — the owner, a Workspace Admin, an Organization Admin, or a shared user granted edit rights.",
+      "error_codes": [
+        7103,
+        7104,
+        7111,
+        7301,
+        7309,
+        7319,
+        7479,
+        7480,
+        7481,
+        7482,
+        7483,
+        7484,
+        7485,
+        7486,
+        7487,
+        7488,
+        7491,
+        7492,
+        7493,
+        7507,
+        7510,
+        7511,
+        7512,
+        7513,
+        7514,
+        8027,
+        8504,
+        8509,
+        8517,
+        8534,
+        8535,
+        8542,
+        9001
+      ],
+      "doc": "/domains/reports-and-dashboards/dashboards/update-dashboard.md",
+      "sdk_examples": "/sdk-examples/reports-and-dashboards/dashboards/update-dashboard.md",
+      "openapi": {
+        "file": "/references/openapi/reports-dashboards-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}/put"
       }
     },
     {
@@ -5369,120 +5601,6 @@
       "openapi": {
         "file": "/references/openapi/reports-dashboards-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1dashboards~1shared/get"
-      }
-    },
-    {
-      "operation_id": "createDashboard",
-      "title": "Create Dashboard",
-      "method": "POST",
-      "path": "/restapi/v2/workspaces/{workspace-id}/dashboards",
-      "domain": "reports-and-dashboards",
-      "domain_title": "Reports & Dashboards",
-      "group": "dashboards",
-      "group_title": "Dashboards",
-      "oauth_scopes": [
-        "ZohoAnalytics.modeling.create"
-      ],
-      "org_id_header": "required",
-      "config_parameter": {
-        "location": "form",
-        "required": true
-      },
-      "request_content_type": "application/x-www-form-urlencoded",
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or a Shared User, or a Group Member, or any user with Create Report permission on the workspace.",
-      "error_codes": [
-        7103,
-        7111,
-        7301,
-        8072,
-        8119,
-        8535
-      ],
-      "doc": "/domains/reports-and-dashboards/dashboards/create-dashboard.md",
-      "sdk_examples": "/sdk-examples/reports-and-dashboards/dashboards/create-dashboard.md",
-      "openapi": {
-        "file": "/references/openapi/reports-dashboards-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards/post"
-      }
-    },
-    {
-      "operation_id": "getDashboardMetadata",
-      "title": "Get Dashboard Metadata",
-      "method": "GET",
-      "path": "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata",
-      "domain": "reports-and-dashboards",
-      "domain_title": "Reports & Dashboards",
-      "group": "dashboards",
-      "group_title": "Dashboards",
-      "oauth_scopes": [
-        "ZohoAnalytics.modeling.read"
-      ],
-      "org_id_header": "required",
-      "config_parameter": {
-        "location": "query",
-        "required": false
-      },
-      "request_content_type": null,
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "The authenticated user must be an Account Admin or Organization Admin, or the View Owner, or any user with Read Only permission on the dashboard.",
-      "error_codes": [
-        7103,
-        7104,
-        7301,
-        8072,
-        8102,
-        8119,
-        8535
-      ],
-      "doc": "/domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md",
-      "sdk_examples": "/sdk-examples/reports-and-dashboards/dashboards/get-dashboard-metadata.md",
-      "openapi": {
-        "file": "/references/openapi/reports-dashboards-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}~1metadata/get"
-      }
-    },
-    {
-      "operation_id": "updateDashboard",
-      "title": "Update Dashboard",
-      "method": "PUT",
-      "path": "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}",
-      "domain": "reports-and-dashboards",
-      "domain_title": "Reports & Dashboards",
-      "group": "dashboards",
-      "group_title": "Dashboards",
-      "oauth_scopes": [
-        "ZohoAnalytics.modeling.update"
-      ],
-      "org_id_header": "required",
-      "config_parameter": {
-        "location": "form",
-        "required": true
-      },
-      "request_content_type": "application/x-www-form-urlencoded",
-      "success_status": 204,
-      "response_content_types": [],
-      "permission_required": "The authenticated user must be an Account Admin or Organization Admin, or the View Owner, or any user with Design Modify permission on the dashboard.",
-      "error_codes": [
-        7103,
-        7104,
-        7301,
-        8072,
-        8102,
-        8119,
-        8535
-      ],
-      "doc": "/domains/reports-and-dashboards/dashboards/update-dashboard.md",
-      "sdk_examples": "/sdk-examples/reports-and-dashboards/dashboards/update-dashboard.md",
-      "openapi": {
-        "file": "/references/openapi/reports-dashboards-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}/put"
       }
     },
     {
@@ -5679,7 +5797,7 @@
       "operation_id": "getUserPermissions",
       "title": "Get My Permissions",
       "method": "GET",
-      "path": "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions",
+      "path": "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions",
       "domain": "share-and-publish",
       "domain_title": "Share & Publish",
       "group": "sharing",
@@ -5705,7 +5823,7 @@
       "sdk_examples": "/sdk-examples/share-and-publish/sharing/get-user-permissions.md",
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1share~1mypermissions/get"
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1share~1userpermissions/get"
       }
     },
     {

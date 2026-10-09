@@ -48,7 +48,7 @@ sources:
     author: team:zoho-analytics-api-docs
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -165,8 +165,8 @@ Read modeling objects in Zoho Analytics.
 |---|---|---|
 | [Get Variables](../domains/data-modeling-and-schema/workspace-variables/get-variables.md) | GET | `/restapi/v2/workspaces/{workspace-id}/variables` |
 | [Get Variable Details](../domains/data-modeling-and-schema/workspace-variables/get-variable-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` |
-| [Get Report Metadata](../domains/reports-and-dashboards/reports/get-report-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` |
-| [Get Dashboard Metadata](../domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` |
+| [Read Report Metadata](../domains/reports-and-dashboards/reports/get-report-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` |
+| [Read Dashboard Metadata](../domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` |
 
 ## ZohoAnalytics.modeling.create
 
@@ -193,7 +193,7 @@ Create modeling objects in Zoho Analytics.
 | [Create Tag](../domains/views-management/tags/create-tag.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tags` |
 | [Add Tag To Multiple Views](../domains/views-management/tags/add-tag-to-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` |
 | [Add Multiple Tags To View](../domains/views-management/tags/add-tags-to-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` |
-| [Create Analysis View](../domains/reports-and-dashboards/reports/create-report.md) | POST | `/restapi/v2/workspaces/{workspace-id}/reports` |
+| [Create Report](../domains/reports-and-dashboards/reports/create-report.md) | POST | `/restapi/v2/workspaces/{workspace-id}/reports` |
 | [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` |
 | [Create Email Schedule](../domains/schedules-and-alerts/email-schedules/create-email-schedule.md) | POST | `/restapi/v2/workspaces/{workspace-id}/emailschedules` |
 | [Trigger Email Schedule](../domains/schedules-and-alerts/email-schedules/trigger-email-schedule.md) | POST | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` |
@@ -227,7 +227,7 @@ Update modeling objects in Zoho Analytics.
 | [Edit Variable](../domains/data-modeling-and-schema/workspace-variables/update-variable.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` |
 | [Rename View](../domains/views-management/view-operations/rename-view.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}` |
 | [Update Tag](../domains/views-management/tags/update-tag.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}` |
-| [Update Analysis View](../domains/reports-and-dashboards/reports/update-report.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}` |
+| [Update Report](../domains/reports-and-dashboards/reports/update-report.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}` |
 | [Update Dashboard](../domains/reports-and-dashboards/dashboards/update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` |
 | [Update Email Schedule](../domains/schedules-and-alerts/email-schedules/update-email-schedule.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` |
 | [Change Email Schedule Status](../domains/schedules-and-alerts/email-schedules/change-email-schedule-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status` |
@@ -352,7 +352,7 @@ Read shared items in Zoho Analytics.
 | [Get Group Details](../domains/users-and-groups/workspace-groups/get-group-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` |
 | [Get Workspace Shared Details](../domains/share-and-publish/sharing/get-workspace-shared-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share` |
 | [Get Shared Details](../domains/share-and-publish/sharing/get-shared-details-for-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share/shareddetails` |
-| [Get My Permissions](../domains/share-and-publish/sharing/get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions` |
+| [Get My Permissions](../domains/share-and-publish/sharing/get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions` |
 
 ## ZohoAnalytics.share.create
 

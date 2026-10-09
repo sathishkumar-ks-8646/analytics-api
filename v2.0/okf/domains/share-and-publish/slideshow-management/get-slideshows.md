@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Slide List
-description: "Returns the list of slideshows available in the specified workspace, along with the access type of each of them."
+description: "Returns every slideshow that exists in the workspace, with its ID, name, and access type."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/slides"
 tags:
   - zoho-analytics
@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -56,10 +56,6 @@ status: stable
 Returns every slideshow that exists in the workspace, with its ID, name, and access type. This is the discovery call for `<slide-id>`, which every other API in this family needs.
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
-
-From the OpenAPI specification:
-
-Returns the list of slideshows available in the specified workspace, along with the access type of each of them.
 
 # Endpoint
 

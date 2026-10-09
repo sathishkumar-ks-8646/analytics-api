@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Import Job Details
-description: Check the status of the specified import job periodically.
+description: "Returns the current state of an import job and, once it has finished, the full import summary."
 resource: "https://analyticsapi.zoho.com/restapi/v2/bulk/workspaces/{workspace-id}/importjobs/{job-id}"
 tags:
   - zoho-analytics
@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -59,7 +59,7 @@ Returns the current state of an import job and, once it has finished, the full i
 
 From the OpenAPI specification:
 
-Check the status of the specified import job periodically. Upon job completion the system notifies the user in the callback URL, if one was provided in the import job's CONFIG.
+Returns the current state of an import job and, once it has finished, the full import summary. This is the monitoring API for all four import APIs above.
 
 Job codes returned in the response:
   - 1001 - JOB NOT INITIATED: wait for a few seconds and repeat the status check.

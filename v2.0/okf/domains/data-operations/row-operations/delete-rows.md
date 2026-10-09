@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Delete Row
-description: Deletes rows from the specified table.
+description: "Deletes the rows of a table that match a filter, or every row."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows"
 tags:
   - zoho-analytics
@@ -51,10 +51,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -65,10 +65,6 @@ status: stable
 Deletes the rows of a table that match a filter, or every row.
 
 > **Note on the permission.** This API is gated on the **Delete All Rows** permission, not the row-level Delete Row permission — and that holds even when `criteria` targets a single row. A user granted only Delete Row on a shared view cannot call this API and receives [`7301`](../../../foundations/error-codes.md#error-7301).
-
-From the OpenAPI specification:
-
-Deletes rows from the specified table. Note: While OpenAPI generally discourages request bodies for DELETE operations, this API supports it for detailed filtering.
 
 # Endpoint
 

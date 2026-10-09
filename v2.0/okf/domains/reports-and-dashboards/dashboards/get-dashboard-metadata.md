@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
-title: Get Dashboard Metadata
-description: "Retrieves the stored configuration of a dashboard in the specified workspace - its identity attributes, the visual theme, the layout card map and the behaviour settings."
+title: Read Dashboard Metadata
+description: Returns the stored configuration of a dashboard.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata"
 tags:
   - zoho-analytics
@@ -25,14 +25,17 @@ api:
   success_status: 200
   response_content_types:
     - application/json
-  permission_required: "The authenticated user must be an Account Admin or Organization Admin, or the View Owner, or any user with Read Only permission on the dashboard."
+  permission_required: "Read Only or higher on the dashboard. Owners, Workspace Admins, Organization Admins, shared users and group members with read access all qualify."
+  rate_limit: 20 requests per user per 60 seconds
   error_codes:
+    - 7018
     - 7103
     - 7104
     - 7301
-    - 8072
-    - 8102
-    - 8119
+    - 7309
+    - 7319
+    - 7511
+    - 8509
     - 8535
   openapi:
     file: "/references/openapi/reports-dashboards-grouped-api.json"
@@ -45,24 +48,25 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
 # Summary
 
-**GET `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata`** - Get Dashboard Metadata (Dashboards / Reports & Dashboards).
+**GET `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata`** - Read Dashboard Metadata (Dashboards / Reports & Dashboards).
+
+Returns the stored configuration of a dashboard. This is the read half of the read-modify-write cycle
+that [Update Dashboard](update-dashboard.md) requires.
 
 From the OpenAPI specification:
 
-Retrieves the stored configuration of a dashboard in the specified workspace - its identity attributes, the visual theme, the layout card map and the behaviour settings. The optional CONFIG parameter narrows the response to specific sections.
+Returns the stored configuration of a dashboard. This is the read half of the read-modify-write cycle that Update Dashboard requires.
 
-This is the first step of any safe update: fetch the section to be changed, merge the change into it, then send the complete section back through Update Dashboard.
-
-The authenticated user must be an Account Admin or an Organization Admin, or the View Owner, or any user with Read Only permission on the dashboard.
+Permission required: Read Only or higher on the dashboard. Owners, Workspace Admins, Organization Admins, shared users and group members with read access all qualify.
 
 # Endpoint
 
@@ -74,10 +78,12 @@ The authenticated user must be an Account Admin or an Organization Admin, or the
 | Base URL | `https://analyticsapi.zoho.com` (data-center specific, see [Data centers](../../../foundations/data-centers.md)) |
 | OAuth scope | [`ZohoAnalytics.modeling.read`](../../../foundations/oauth-scopes.md#zohoanalyticsmodelingread) |
 | ZANALYTICS-ORGID header | **Required** |
-| Permission required | The authenticated user must be an Account Admin or Organization Admin, or the View Owner, or any user with Read Only permission on the dashboard. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
+| Permission required | Read Only or higher on the dashboard. Owners, Workspace Admins, Organization Admins, shared users and group members with read access all qualify. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `application/json` |
-| API ID | 2061 |
+| Rate limit | 20 requests per user per 60 seconds. See [Rate limits](../../../foundations/rate-limits-and-quotas.md). |
+| Custom domain | Permitted when the workspace is mapped to the calling domain. |
+| Throttle | 20 requests per minute per user. |
 | OpenAPI | [`reports-dashboards-grouped-api.json`](../../../references/openapi/reports-dashboards-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}~1metadata/get`; CONFIG schema `GetDashboardMetadataConfig`; response schema `GetDashboardMetadataResponse` |
 
 # Request
@@ -94,22 +100,27 @@ The authenticated user must be an Account Admin or an Organization Admin, or the
 | Parameter | Type | Description | Source |
 |---|---|---|---|
 | `{workspace-id}` | string | ID of the workspace that contains the dashboard. | [How to obtain](../../../foundations/identifiers.md#workspace-id) |
-| `{dashboard-id}` | string | ID of the dashboard whose metadata is retrieved. | [How to obtain](../../../foundations/identifiers.md#dashboard-id) |
+| `{dashboard-id}` | string | ID of the dashboard whose configuration is returned. | [How to obtain](../../../foundations/identifiers.md#dashboard-id) |
 
-## CONFIG Parameters
+## CONFIG Parameter
 
-See the CONFIG schema in the OpenAPI specification referenced in the Endpoint table.
+Optional. Sent as a query parameter.
+
+| Field | Type | Mandatory | Default | Description |
+|-------|------|-----------|---------|-------------|
+| `include` | String | No | `all` | Which section to return. Exactly one of `all`, `layout`, `themes`, `settings`. Comma-separated lists are **not** accepted. |
+
+When `include` is `all`, the response carries `objId`, `displayName`, `description` and all three
+sections. When `include` names a single section, only that section is returned — the identity fields are
+omitted.
 
 ## Notes from the OpenAPI specification
 
-This is a workspace-scoped API. The **ZANALYTICS-ORGID** header carrying the organization ID that owns the workspace is mandatory. A workspaceKey in the format **orgid/workspacename** (for example, 700000123456/Sales_Analytics) may be used in place of the numeric workspace ID in the URL path.
+This is a workspace-scoped API. The **ZANALYTICS-ORGID** header carrying the organization ID that owns the workspace is mandatory.
 
-The **include** attribute controls which sections are returned.
-- **all**, or omitting CONFIG altogether, returns objId, displayName, description, themes, layout and settings.
-- A specific section such as themes returns only that section, without the objId, displayName and description identity fields.
-- Several sections can be requested as a comma separated list, for example themes,layout.
+Tabbed dashboards are out of scope: Read and Update reject a tabbed dashboard with **7511**.
 
-As this is a GET request, the CONFIG value must be stringified and URL encoded before it is sent.
+CONFIG is optional and travels as a URL encoded JSON query parameter. **include** names exactly one of all, layout, themes, settings; comma-separated lists are rejected with 8509. With a single section only that section is returned and the identity fields are omitted.
 
 # Response
 
@@ -119,51 +130,35 @@ HTTP `200` with content type `application/json`. JSON responses use the standard
 
 ## Notes from the OpenAPI specification
 
-The metadata response serializes theme and settings scalars as strings even where the CONFIG accepts numbers - for example a **layoutType** sent as 6 is returned as "6", and a card **opacity** sent as 0.2 is returned as "0.2". Only the layout card geometry (**width**, **height**, **left**, **top**) is returned as numbers. Sections that were never customized are omitted from the response entirely.
+The response is not a valid Create or Update payload. Re-serialise **layout** to a string, delete **objId**, **displayName** and **description** before an update (8542), convert the theme numbers that come back as strings (**card.blur**, **card.radius**, **card.margin**, **image.transparency**, **image.flip**) back to numbers/booleans, and expect card IDs renumbered from "1". **layoutType**, card **properties**, **image_properties** and **allowAllExport** are written but never returned.
 
-**dashboardConfig.objId** in the metadata response, **data.dashboardId** in the Create Dashboard response and **viewId** in the listing APIs are the same value under three different field names. Any of them can be used as the dashboard ID in the URL path.
-
-Update Dashboard replaces a whole section rather than merging into it. When **layout**, **themes** or **settings** is included, every stored row for that section is deleted and exactly what was sent is stored.
-- Sending only some settings keys reverts all other settings to their system defaults.
-- A section that is absent from the CONFIG is left unchanged, so it is safe to omit sections that are not being modified.
-- Fetch the section with Get Dashboard Metadata, merge the change into it, then send the complete section back.
-
-Tabbed dashboards are not supported by the V2 API. Calling this API on a tabbed dashboard fails with error code 8102.
+**dashboardConfig.objId** in the metadata response, **data.dashboardId** in the Create Dashboard response and **viewId** in the listing APIs are the same value under three field names. Any of them can be used as the dashboard ID in the URL path.
 
 # Examples
 
 ## Sample Requests
 
-**Case 1 — Retrieve full metadata (all sections)**
+**Case 1 — Full configuration**
 
 ```http
-GET /restapi/v2/workspaces/320873000000001001/dashboards/320873000000597763/metadata HTTP/1.1
+GET /restapi/v2/workspaces/466206000000071000/dashboards/466206000000106002/metadata HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 320873000000000001
+ZANALYTICS-ORGID: 700000123456
 ```
 
-**Case 2 — Retrieve only the layout section**
+**Case 2 — Layout only**
 
 ```http
-GET /restapi/v2/workspaces/320873000000001001/dashboards/320873000000597763/metadata?CONFIG={"include":"layout"} HTTP/1.1
+GET /restapi/v2/workspaces/466206000000071000/dashboards/466206000000106002/metadata?CONFIG={"include":"layout"} HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 320873000000000001
-```
-
-**Case 3 — Retrieve themes and settings only**
-
-```http
-GET /restapi/v2/workspaces/320873000000001001/dashboards/320873000000597763/metadata?CONFIG={"include":"themes,settings"} HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 320873000000000001
+ZANALYTICS-ORGID: 700000123456
 ```
 
 ## Sample Responses
 
-**Case 1 — Default theme dashboard with VIEW and USERFILTERS cards (HTTP 200 OK)**
+**Case 1 — `include=all` (default)**
 
 ```json
 {
@@ -171,207 +166,46 @@ ZANALYTICS-ORGID: 320873000000000001
   "summary": "Get dashboard metadata",
   "data": {
     "dashboardConfig": {
-      "objId": "320873000000597763",
-      "displayName": "Dashboard_Freeform_19",
-      "description": "",
+      "objId": "466206000000106002",
+      "displayName": "Regional Performance",
+      "description": "Quarterly regional roll-up",
       "themes": {
         "default": "true",
         "layoutType": "2"
       },
       "settings": {
-        "enableGlobalUF": "false",
+        "allowDrillDown": "true",
+        "hideColumnOptions": "true",
         "smartAlignCharts": "true",
-        "allowExport": {
-          "pdf": "true",
-          "excel": "true",
-          "zohoSheet": "true",
-          "image": "true",
-          "csv": "true",
-          "html": "true"
-        },
-        "showContextualOptions": "true",
-        "allowEmbedInsights": "true",
         "enableSortMenu": "true",
         "reportAsFilter": "false",
-        "hideColumnOptions": "true",
-        "layoutWidth": "1279",
+        "showContextualOptions": "true",
         "allowVUD": "true",
         "allowInsights": "true",
-        "fitToWidth": "true",
-        "layoutType": "web",
-        "allowDrillDown": "true",
-        "applyImmediateUF": "true",
-        "timeSlicer": "false"
-      },
-      "layout": {
-        "1": {
-          "type": "USERFILTERS",
-          "width": 80,
-          "height": 3,
-          "left": 0,
-          "top": 0
-        },
-        "2": {
-          "type": "VIEW",
-          "width": 80,
-          "height": 20,
-          "left": 0,
-          "top": 3,
-          "viewName": "Sales_Report"
-        }
-      }
-    }
-  }
-}
-```
-
-**Case 2 — Dashboard with HTML card (HTTP 200 OK)**
-
-```json
-{
-  "status": "success",
-  "summary": "Get dashboard metadata",
-  "data": {
-    "dashboardConfig": {
-      "objId": "320873000000597796",
-      "displayName": "Dashboard_HtmlCard_26",
-      "description": "",
-      "themes": {
-        "default": "true",
-        "layoutType": "2"
-      },
-      "settings": {
-        "smartAlignCharts": "true",
-        "allowExport": { "pdf": "true", "excel": "true", "zohoSheet": "true", "image": "true", "csv": "true", "html": "true" },
-        "fitToWidth": "true",
-        "allowDrillDown": "true",
-        "applyImmediateUF": "true"
-      },
-      "layout": {
-        "1": {
-          "type": "HTML",
-          "width": 80,
-          "height": 5,
-          "left": 0,
-          "top": 0,
-          "content": "<div><h2 style=\"font-family: Arial; color: #2c3e50;\">Dashboard Header</h2><p>This is a <strong>styled HTML</strong> content card.</p></div>"
-        },
-        "2": {
-          "type": "VIEW",
-          "width": 80,
-          "height": 20,
-          "left": 0,
-          "top": 5,
-          "viewName": "Pivot"
-        }
-      }
-    }
-  }
-}
-```
-
-**Case 3 — Dashboard with IMAGE card**
-
-```json
-{
-  "status": "success",
-  "summary": "Get dashboard metadata",
-  "data": {
-    "dashboardConfig": {
-      "objId": "320873000000597718",
-      "displayName": "Dashboard_ImageCard_9",
-      "description": "",
-      "themes": {
-        "layoutType": "2",
-        "solid": { "background": "#ffffff" },
-        "type": "solid",
-        "card": { "background": "#ffffff" }
-      },
-      "settings": {
-        "smartAlignCharts": "true",
-        "allowExport": { "pdf": "true", "excel": "true", "zohoSheet": "true", "image": "true", "csv": "true", "html": "true" },
-        "fitToWidth": "true",
-        "allowDrillDown": "true"
-      },
-      "layout": {
-        "1": {
-          "type": "IMAGE",
-          "width": 40,
-          "height": 15,
-          "left": 0,
-          "top": 0,
-          "content": "https://example.com/banner.jpg"
-        },
-        "2": {
-          "type": "VIEW",
-          "width": 40,
-          "height": 20,
-          "left": 40,
-          "top": 0,
-          "viewName": "Sales_Table"
-        }
-      }
-    }
-  }
-}
-```
-
-**Case 4 — Dashboard with gradient theme and card styling**
-
-```json
-{
-  "status": "success",
-  "summary": "Get dashboard metadata",
-  "data": {
-    "dashboardConfig": {
-      "objId": "320873000000487179",
-      "displayName": "Dashboard_Gradient_Linear_3",
-      "description": "",
-      "themes": {
-        "card": {
-          "desc": { "font": { "size": "9", "color": "#bf00ff", "family": "verdana", "style": "italic" } },
-          "shadow": "3",
-          "paletteType": "2",
-          "radius": "5",
-          "margin": "10",
-          "opacity": "0.2",
-          "background": "#00ff00",
-          "title": { "font": { "size": "8", "family": "sans-serif", "style": "bold", "color": "#bf00ff" } },
-          "blur": "5"
-        },
-        "palette": { "chart": { "type": "SOLID__BUSINESS" } },
-        "gradient": {
-          "endColor": "#000000",
-          "mode": "linear",
-          "linear": { "angle": "270" },
-          "startColor": "#bf00ff",
-          "background": "#bf00ff"
-        },
-        "type": "gradient",
-        "chartEffect": { "type": "1", "apply": "2" },
-        "layoutType": "6",
-        "font": { "color": "#bf00ff", "family": "arial" }
-      },
-      "settings": {
-        "enableGlobalUF": "true",
-        "smartAlignCharts": "true",
-        "allowExport": { "pdf": "false", "excel": "false", "zohoSheet": "false", "image": "false", "csv": "true", "html": "false" },
-        "showContextualOptions": "false",
         "allowEmbedInsights": "true",
-        "reportAsFilter": "true",
-        "allowDrillDown": "true",
-        "applyImmediateUF": "true"
+        "fitToWidth": "true",
+        "enableGlobalUF": "false",
+        "applyImmediateUF": "true",
+        "timeSlicer": "false",
+        "layoutType": "web",
+        "layoutWidth": "1279",
+        "allowExport": {
+          "csv": "true", "excel": "true", "html": "true",
+          "image": "true", "pdf": "true", "zohoSheet": "true"
+        }
       },
       "layout": {
         "1": { "type": "USERFILTERS", "width": 80, "height": 3, "left": 0, "top": 0 },
-        "2": { "type": "VIEW", "width": 40, "height": 20, "left": 0, "top": 8, "viewName": "Chart2" }
+        "2": { "type": "TITLE", "width": 80, "height": 3, "left": 0, "top": 3, "content": "<b>Q3 Performance</b>" },
+        "3": { "type": "VIEW", "width": 40, "height": 20, "left": 0, "top": 6, "viewName": "Sales by Region" },
+        "4": { "type": "VIEW", "width": 40, "height": 20, "left": 40, "top": 6, "viewName": "Margin by Region" }
       }
     }
   }
 }
 ```
 
-**Case 5 — Full card styling with theme overview (solid type, all card borders and palette)**
+**Case 2 — `include=layout`**
 
 ```json
 {
@@ -379,41 +213,9 @@ ZANALYTICS-ORGID: 320873000000000001
   "summary": "Get dashboard metadata",
   "data": {
     "dashboardConfig": {
-      "objId": "320873000000487208",
-      "displayName": "Dashboard_ThemeOverviewDefault_47",
-      "description": "",
-      "themes": {
-        "chartEffect": { "apply": "1" },
-        "card": {
-          "border": { "color": "#cccccc", "width": "1" },
-          "shadow": "2",
-          "paletteType": "1",
-          "blur": "0",
-          "radius": "5",
-          "margin": "10",
-          "opacity": "0.5",
-          "background": "#ffffff"
-        },
-        "palette": { "chart": { "type": "SOLID__BUSINESS" } },
-        "type": "solid",
-        "font": { "color": "#000000", "family": "Arial" },
-        "layoutType": "1",
-        "solid": { "background": "#ffffff" }
-      },
-      "settings": {
-        "enableGlobalUF": "false",
-        "smartAlignCharts": "true",
-        "allowExport": { "pdf": "true", "excel": "true", "zohoSheet": "true", "image": "true", "csv": "true", "html": "true" },
-        "showContextualOptions": "true",
-        "enableSortMenu": "true",
-        "allowVUD": "true",
-        "allowInsights": "true",
-        "fitToWidth": "true",
-        "allowDrillDown": "true",
-        "applyImmediateUF": "true"
-      },
       "layout": {
-        "1": { "type": "VIEW", "width": 40, "height": 20, "left": 0, "top": 0, "viewName": "Pivot" }
+        "1": { "type": "USERFILTERS", "width": 80, "height": 3, "left": 0, "top": 0 },
+        "2": { "type": "VIEW", "width": 80, "height": 20, "left": 0, "top": 3, "viewName": "Sales Chart" }
       }
     }
   }
@@ -422,19 +224,19 @@ ZANALYTICS-ORGID: 320873000000000001
 
 ## SDK Examples
 
-Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Get Dashboard Metadata](../../../sdk-examples/reports-and-dashboards/dashboards/get-dashboard-metadata.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
+Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Read Dashboard Metadata](../../../sdk-examples/reports-and-dashboards/dashboards/get-dashboard-metadata.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Notes & Behaviour
 
-## CONFIG Parameter (Optional)
-
-| Field | Type | Mandatory | Description | Default | Allowed Values |
-|-------|------|-----------|-------------|---------|----------------|
-| `include` | String | No | Controls which sections of the dashboard config to include in the response. | `all` | `all`, `themes`, `layout`, `settings` |
-
-> When `include` is `"all"`, the response includes `objId`, `displayName`, `description`, `themes`, `layout`, and `settings`.  
-> When `include` is set to a specific section (e.g., `"themes"`), only that section is returned (without `objId`/`displayName`/`description`).  
-> Multiple sections can be requested via comma-separated values (e.g., `"themes,layout"`).
+- The returned `layout` is renumbered from `"1"` in storage order; the card IDs you supplied on create
+  are not preserved.
+- `VIEW` cards are returned with `viewName` resolved to the view's current display name.
+- `DELETED` cards carry a `respContent` message explaining whether the underlying view was deleted or
+  permanently removed.
+- A tabbed dashboard raises **7511** rather than returning a body.
+- The response is **not** a valid Update payload. See
+  [Round-tripping a dashboard](overview.md#round-tripping-a-dashboard) for the transformations required and the
+  list of attributes that are never returned.
 
 # Error Codes
 
@@ -443,13 +245,15 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | Code | HTTP | Reason | Solution |
 |---|---|---|---|
 | [7005](../../../foundations/error-codes.md#error-7005) | 500 | Unexpected error on the Zoho Analytics server while processing an otherwise valid request. Not caused by the request payload. | Retry after a short interval. If the error persists, contact Zoho Analytics support quoting the error code and the time of the request. |
-| [7103](../../../foundations/error-codes.md#error-7103) | 404 | Workspace not found. | Verify the `<workspace-id>` in the URL. |
-| [7104](../../../foundations/error-codes.md#error-7104) | 404 | Dashboard not found. | Verify the `<dashboard-id>` exists and belongs to the specified workspace. |
-| [7301](../../../foundations/error-codes.md#error-7301) | 403 | User does not have permission to view this dashboard. | Ensure the user is an Account Admin, Organization Admin, View Owner, or has Read Only permission on the dashboard. |
-| [8072](../../../foundations/error-codes.md#error-8072) | 400 | The target object is not a valid dashboard. | Verify the `<dashboard-id>` refers to a dashboard (not a report or other view type). |
-| [8102](../../../foundations/error-codes.md#error-8102) | 400 | Dashboard view type not supported for this operation. | The requested dashboard may be a tabbed dashboard, which is not supported via this API. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value supplied for the `include` parameter. | Use one or more of: `all`, `themes`, `layout`, `settings`. |
-| [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid OAuth token. | Provide a valid, non-expired OAuth token with the `ZohoAnalytics.modeling.read` scope. |
+| [7018](../../../foundations/error-codes.md#error-7018) | 400 | Malformed URL — the ID is not a valid numeric path segment. | Use the numeric dashboard ID only. |
+| [7103](../../../foundations/error-codes.md#error-7103) | 404 | Workspace not found. | Verify `<workspace-id>`. |
+| [7104](../../../foundations/error-codes.md#error-7104) | 404 | The dashboard does not exist, or `<dashboard-id>` is `0`. | Verify `<dashboard-id>`. |
+| [7301](../../../foundations/error-codes.md#error-7301) | 403 | The caller lacks read permission on the dashboard, or is on an unmapped white-label domain. | Share the dashboard with the caller. |
+| [7309](../../../foundations/error-codes.md#error-7309) | 400 | `Authorization` header absent. | Send the OAuth header. |
+| [7319](../../../foundations/error-codes.md#error-7319) | 400 | The dashboard exists but belongs to a different workspace. | Make `<workspace-id>` and `<dashboard-id>` consistent. |
+| [7511](../../../foundations/error-codes.md#error-7511) | 400 | The target is a tabbed dashboard. | Tabbed dashboards cannot be read through this API. |
+| [8509](../../../foundations/error-codes.md#error-8509) | 400 | `include` is not one of `all`, `layout`, `themes`, `settings`. | Use a single valid section name. |
+| [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.read`. |
 
 # Related
 
@@ -457,5 +261,5 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Reports & Dashboards](../overview.md) - the parent API domain.
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
-- Other endpoints in this group: [Get All Dashboards](get-dashboards.md), [Get Owned Dashboards](get-owned-dashboards.md), [Get Shared Dashboards](get-shared-dashboards.md), [Create Dashboard](create-dashboard.md), [Update Dashboard](update-dashboard.md).
+- Other endpoints in this group: [Create Dashboard](create-dashboard.md), [Update Dashboard](update-dashboard.md), [Get All Dashboards](get-dashboards.md), [Get Owned Dashboards](get-owned-dashboards.md), [Get Shared Dashboards](get-shared-dashboards.md).
 - [SDK examples](../../../sdk-examples/reports-and-dashboards/dashboards/get-dashboard-metadata.md).

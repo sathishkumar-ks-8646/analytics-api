@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Aggregate Formula
-description: Returns the aggregate formulas owned by the specified view.
+description: Returns the list of aggregate formulas defined on the specified view.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -58,7 +58,7 @@ Returns the list of aggregate formulas defined on the specified view.
 
 From the OpenAPI specification:
 
-Returns the aggregate formulas owned by the specified view. An aggregate formula, also called a unified metric, produces a single summarized value by applying an aggregate function across the rows of a table, and can be reused across the reports, charts and dashboards of the workspace as a single source of truth for a business metric.
+Returns the list of aggregate formulas defined on the specified view.
 
 This listing is scoped to one view. Use the Get Unified Metrics in Workspace API for a workspace-wide catalogue.
 

@@ -1,6 +1,6 @@
 ---
 type: SDK Example
-title: SDK examples - Create Analysis View
+title: SDK examples - Create Report
 description: "Code samples in 9 languages for POST /restapi/v2/workspaces/{workspace-id}/reports (createReport)."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/reports"
 tags:
@@ -38,19 +38,19 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: endpoint-doc
     resource: "/domains/reports-and-dashboards/reports/create-report.md"
-    title: Endpoint reference - Create Analysis View
+    title: Endpoint reference - Create Report
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
 # Summary
 
-Code samples for [Create Analysis View](../../../domains/reports-and-dashboards/reports/create-report.md) (`POST /restapi/v2/workspaces/{workspace-id}/reports`). Replace the placeholder client ID, client secret, refresh token, organization ID, workspace ID and view ID values with your own. The SDK client construction pattern for each language is explained in [SDK clients](../../../foundations/sdk-clients.md).
+Code samples for [Create Report](../../../domains/reports-and-dashboards/reports/create-report.md) (`POST /restapi/v2/workspaces/{workspace-id}/reports`). Replace the placeholder client ID, client secret, refresh token, organization ID, workspace ID and view ID values with your own. The SDK client construction pattern for each language is explained in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Examples
 
@@ -367,6 +367,6 @@ info response;
 
 # Related
 
-- [Create Analysis View](../../../domains/reports-and-dashboards/reports/create-report.md) - full endpoint reference.
+- [Create Report](../../../domains/reports-and-dashboards/reports/create-report.md) - full endpoint reference.
 - [Reports (Analysis Views) overview](../../../domains/reports-and-dashboards/reports/overview.md).
 - [SDK clients](../../../foundations/sdk-clients.md).

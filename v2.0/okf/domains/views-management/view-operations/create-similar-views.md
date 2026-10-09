@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create Similar Views
-description: "Replicates, for a target table, every analysis view - chart, pivot table, summary view and so on - that exists on a reference table in the same workspace."
+description: "Creates copies of all analysis views (charts, pivot tables, summaries, etc.) that exist on a reference table and replicates them for a target table within the same workspace."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/similarviews"
 tags:
   - zoho-analytics
@@ -44,10 +44,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

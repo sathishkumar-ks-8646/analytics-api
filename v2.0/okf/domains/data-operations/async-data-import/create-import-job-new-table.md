@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create Import Job for a New Table (Asynchronous)
-description: Create an import job to import data into a new table asynchronously.
+description: "Uploads a file, creates a new table from it, and returns a job ID for tracking."
 resource: "https://analyticsapi.zoho.com/restapi/v2/bulk/workspaces/{workspace-id}/data"
 tags:
   - zoho-analytics
@@ -58,10 +58,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -73,7 +73,7 @@ Uploads a file, creates a new table from it, and returns a job ID for tracking. 
 
 From the OpenAPI specification:
 
-Create an import job to import data into a new table asynchronously. Max allowed file size is 100 MB.
+Uploads a file, creates a new table from it, and returns a job ID for tracking. The table is created and populated in the background.
 
 Workflow of Asynchronous Import API:
 

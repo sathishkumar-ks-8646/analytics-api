@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create Slide Show
-description: "Creates a slideshow in the specified workspace from the given set of views, and returns its ID along with the URL through which it can be accessed."
+description: "Creates a new slideshow in the workspace from an ordered set of views, and returns its new ID together with a ready-to-use presentation URL built with default rendering options."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/slides"
 tags:
   - zoho-analytics
@@ -54,10 +54,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

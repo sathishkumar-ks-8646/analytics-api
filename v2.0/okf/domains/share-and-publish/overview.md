@@ -33,10 +33,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -62,7 +62,7 @@ API for Share & Publish in Zoho Analytics — covering view sharing, publish con
 | [Update Shared Details](sharing/update-shared-details-for-view.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share` | `UpdateSharedDetailsForView` | `ZohoAnalytics.share.update` | 204 |
 | [Get Shared Details](sharing/get-shared-details-for-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share/shareddetails` | `getSharedDetailsForViews` | `ZohoAnalytics.share.read` | 200 |
 | [Remove Shared Views](sharing/remove-share.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/share` | `removeShare` | `ZohoAnalytics.share.delete` | 204 |
-| [Get My Permissions](sharing/get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions` | `getUserPermissions` | `ZohoAnalytics.share.read` | 200 |
+| [Get My Permissions](sharing/get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions` | `getUserPermissions` | `ZohoAnalytics.share.read` | 200 |
 | [Make View Public](publish/make-views-public.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public` | `makeViewsPublic` | `ZohoAnalytics.embed.create` | 200 |
 | [Remove Public Permission](publish/remove-public-permission.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public` | `removePublicPermission` | `ZohoAnalytics.embed.delete` | 204 |
 | [Get Private URL](publish/get-private-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink` | `getPrivateUrl` | `ZohoAnalytics.embed.read` | 200 |

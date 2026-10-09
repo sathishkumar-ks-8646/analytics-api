@@ -4,5 +4,5 @@
 
 # Concepts
 
-* [Auto Analyse Column](auto-analyse-column.md) - Runs auto analysis on a single column of a table and creates a focused set of views for it - a category breakdown for a dimension column such as Region, or a trend over time for a date column such as Order Date.
-* [Auto Analyse View](auto-analyse-view.md) - Runs auto analysis on an entire table.
+* [Auto Analyse Column](auto-analyse-column.md) - Triggers auto analysis for a single column of a table.
+* [Auto Analyse View](auto-analyse-view.md) - Triggers auto analysis on an entire table.

@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Batch Import Data into Existing Table
-description: Initiate an import job to import data present in multiple batch files into the specified existing table.
+description: Loads an existing table from several uploads belonging to one import job.
 resource: "https://analyticsapi.zoho.com/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data/batch"
 tags:
   - zoho-analytics
@@ -63,10 +63,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -78,7 +78,7 @@ Loads an existing table from several uploads belonging to one import job. Called
 
 From the OpenAPI specification:
 
-Initiate an import job to import data present in multiple batch files into the specified existing table.
+Loads an existing table from several uploads belonging to one import job. Called once per batch.
 
  The Batch Import API allows you to upload large amounts of data in batches. A large data file is split into small batches, each batch not exceeding 100 MB, and imported using batch import. Alternatively, you can also use Zoho Analytics SDKs to simplify the batching process.
 

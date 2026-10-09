@@ -36,7 +36,7 @@
         ],
         "x-zenesis-title": "Get Org Admins",
         "summary": "Get Org Admins",
-        "description": "Returns the email addresses of the users who currently hold the Organization Admin role in the specified organization. This is a convenience endpoint that is equivalent to filtering the Get Users response for the Organization Admin role.",
+        "description": "Returns the list of email addresses of users who currently hold the Organization Admin role in the specified organisation. This is a read-only API accessible only to the Account Admin of the organisation.",
         "operationId": "getOrgAdmins",
         "security": [
           {
@@ -53,23 +53,6 @@
         "responses": {
           "200": {
             "description": "Successful response.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Organization not found.",
-                "resolution": "Verify the ZANALYTICS-ORGID header value."
-              },
-              {
-                "name": "7301",
-                "description": "The calling user is not the Account Admin of the organization.",
-                "resolution": "This API is strictly restricted to the Account Admin. Organization Admins and other roles cannot call this endpoint."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.read."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -117,7 +100,24 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Organisation not found.",
+                "resolution": "Verify the ZANALYTICS-ORGID header value."
+              },
+              {
+                "name": "7301",
+                "description": "The calling user is not the Account Admin of the organisation.",
+                "resolution": "This API is strictly restricted to the Account Admin. Organization Admins and other roles cannot call this endpoint."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.read."
+              }
+            ]
           },
           "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
@@ -143,7 +143,7 @@
         ],
         "x-zenesis-title": "Get Users",
         "summary": "Get Users",
-        "description": "Returns the list of all the users who are members of the specified organization, along with their current status and org-level role.\n\nThe org-level role governs what the user can do across the entire organization. It is distinct from the workspace-level role, which governs what the user can do within a specific workspace and is managed using the workspace sharing APIs.",
+        "description": "Returns the list of all users who are members of the specified organisation, along with their current status (active/inactive) and org-level role.\n\nThe org-level role governs what the user can do across the entire organization. It is distinct from the workspace-level role, which governs what the user can do within a specific workspace and is managed using the workspace sharing APIs.",
         "operationId": "getUsers",
         "security": [
           {
@@ -160,23 +160,6 @@
         "responses": {
           "200": {
             "description": "Successful response.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Organization not found.",
-                "resolution": "Verify the ZANALYTICS-ORGID header value."
-              },
-              {
-                "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization.",
-                "resolution": "Ensure the caller holds the Account Admin or Organization Admin role in the organization."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.read."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -291,7 +274,24 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Organisation not found.",
+                "resolution": "Verify the ZANALYTICS-ORGID header value."
+              },
+              {
+                "name": "7301",
+                "description": "User is not an Account Admin or Organization Admin of the organisation.",
+                "resolution": "Only Account Admins and Organization Admins can list org users."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.read."
+              }
+            ]
           },
           "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
@@ -315,7 +315,7 @@
         ],
         "x-zenesis-title": "Add Users",
         "summary": "Add Users",
-        "description": "Adds one or more users to the specified organization. The invited users receive an email notification. Users who are new to Zoho are prompted to create a Zoho account before accepting the invitation.",
+        "description": "Adds one or more users to the specified organisation. The invited users receive an email notification. If the users are new to Zoho, they are prompted to create a Zoho account before accepting the invitation.",
         "operationId": "addUsers",
         "security": [
           {
@@ -410,17 +410,17 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7103",
-                "description": "Organization not found.",
+                "description": "Organisation not found.",
                 "resolution": "Verify the ZANALYTICS-ORGID header value."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization.",
-                "resolution": "Ensure the caller holds the Account Admin or Organization Admin role in the organization."
+                "description": "User is not an Account Admin or Organization Admin of the organisation.",
+                "resolution": "Ensure the caller has the required role."
               },
               {
                 "name": "6004",
-                "description": "Adding these users would exceed the organization's user seat limit under the current plan.",
+                "description": "Adding these users would exceed the organisation's user seat limit under the current plan.",
                 "resolution": "Upgrade the plan to accommodate more users, or remove unused user accounts before adding new ones."
               },
               {
@@ -430,28 +430,28 @@
               },
               {
                 "name": "6071",
-                "description": "One or more of the specified email addresses is already a member of this organization.",
-                "resolution": "Remove the already-existing email addresses from the emailIds list and retry."
+                "description": "One or more of the specified email addresses is already a member of this organisation.",
+                "resolution": "Remove already-existing email addresses from the emailIds list and retry."
               },
               {
                 "name": "6089",
-                "description": "Attempted to assign the ORGADMIN role through a custom domain (domainName). The Organization Admin role cannot be assigned through a custom portal domain.",
-                "resolution": "Omit domainName when assigning the ORGADMIN role, or use a different role for domain-based additions."
+                "description": "Attempted to assign \"ORGADMIN\" role via a custom domain (domainName). Organization Admin role cannot be assigned through a custom portal domain.",
+                "resolution": "Omit domainName when assigning the \"ORGADMIN\" role, or use a different role for domain-based additions."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name configured for the org."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the calling user or to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the calling user or the org's Account Admin.",
+                "resolution": "Use a domain name that is administered by the Account Admin of this organisation."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.create."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.create."
               }
             ]
           },
@@ -477,7 +477,7 @@
         ],
         "x-zenesis-title": "Remove Users",
         "summary": "Remove Users",
-        "description": "Removes one or more users from the specified organization. The removed users immediately lose access to all the workspaces and views in the organization.",
+        "description": "Removes one or more users from the specified organisation. Removed users immediately lose access to all workspaces and views in the org.",
         "operationId": "removeUsers",
         "security": [
           {
@@ -558,33 +558,33 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7103",
-                "description": "Organization not found.",
+                "description": "Organisation not found.",
                 "resolution": "Verify the ZANALYTICS-ORGID header value."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization.",
-                "resolution": "Ensure the caller holds the Account Admin or Organization Admin role in the organization."
+                "description": "User is not an Account Admin or Organization Admin of the organisation.",
+                "resolution": "Ensure the caller has the required role."
               },
               {
                 "name": "8114",
-                "description": "One or more of the specified email addresses are not members of this organization.",
-                "resolution": "Verify all email addresses using the Get Users API before calling this API."
+                "description": "One or more specified email addresses are not members of this organisation.",
+                "resolution": "Verify all email IDs using the Get Users API before calling Remove Users."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name configured for the org."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the calling user or to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the calling user or the org's Account Admin.",
+                "resolution": "Use a domain name administered by the Account Admin of this organisation."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.delete."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.delete."
               }
             ]
           },
@@ -612,7 +612,7 @@
         ],
         "x-zenesis-title": "Activate Users",
         "summary": "Activate Users",
-        "description": "Reactivates one or more previously deactivated users in the specified organization. Once activated, the users regain access to the organization and to all the workspaces that were shared with them earlier.",
+        "description": "Reactivates one or more previously deactivated users in the specified organisation. Once activated, users regain access to the org and all workspaces they were previously shared with.",
         "operationId": "activateUsers",
         "security": [
           {
@@ -692,38 +692,38 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7103",
-                "description": "Organization not found.",
+                "description": "Organisation not found.",
                 "resolution": "Verify the ZANALYTICS-ORGID header value."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization.",
-                "resolution": "Ensure the caller holds the Account Admin or Organization Admin role in the organization."
+                "description": "User is not an Account Admin or Organization Admin of the organisation.",
+                "resolution": "Ensure the caller has the required role."
               },
               {
                 "name": "6004",
-                "description": "Activating these users would exceed the organization's user seat limit.",
-                "resolution": "Check the current user count using the Get Resource Details API. Upgrade the plan or remove unused users before reactivating."
+                "description": "Activating these users would exceed the organisation's user seat limit.",
+                "resolution": "Check current user count via Get Resource Details. Upgrade the plan or remove unused users before reactivating."
               },
               {
                 "name": "8114",
-                "description": "One or more of the specified email addresses are not members of this organization.",
-                "resolution": "Verify all email addresses using the Get Users API before calling this API."
+                "description": "One or more specified email addresses are not members of this organisation.",
+                "resolution": "Verify all email IDs using Get Users before calling this API."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name configured for the org."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the calling user or to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the calling user or the org's Account Admin.",
+                "resolution": "Use a domain name administered by the Account Admin of this organisation."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.update."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.update."
               }
             ]
           },
@@ -751,7 +751,7 @@
         ],
         "x-zenesis-title": "Deactivate Users",
         "summary": "Deactivate Users",
-        "description": "Deactivates one or more users in the specified organization. Deactivated users cannot log in or access any workspace in the organization. Their data and permissions are retained and can be restored by reactivating them, which makes this the recommended approach for a temporary suspension rather than a permanent removal.",
+        "description": "Deactivates one or more users in the specified organisation. Deactivated users cannot log in or access any workspaces in the org. Their data and permissions are retained and can be restored by reactivating them. This is the recommended approach for temporary suspension (e.g., extended leave) rather than permanent removal.",
         "operationId": "deActivateUsers",
         "security": [
           {
@@ -831,33 +831,33 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7103",
-                "description": "Organization not found.",
+                "description": "Organisation not found.",
                 "resolution": "Verify the ZANALYTICS-ORGID header value."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization.",
-                "resolution": "Ensure the caller holds the Account Admin or Organization Admin role in the organization."
+                "description": "User is not an Account Admin or Organization Admin of the organisation.",
+                "resolution": "Ensure the caller has the required role."
               },
               {
                 "name": "8114",
-                "description": "One or more of the specified email addresses are not members of this organization.",
-                "resolution": "Verify all email addresses using the Get Users API before calling this API."
+                "description": "One or more specified email addresses are not members of this organisation.",
+                "resolution": "Verify all email IDs using Get Users before calling this API."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name configured for the org."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the calling user or to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the calling user or the org's Account Admin.",
+                "resolution": "Use a domain name administered by the Account Admin of this organisation."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.update."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.update."
               }
             ]
           },
@@ -885,7 +885,7 @@
         ],
         "x-zenesis-title": "Change User Role",
         "summary": "Change User Role",
-        "description": "Changes the org-level role of one or more users in the specified organization. The role change takes effect immediately and the access permissions of the users across all the workspaces adjust to reflect the new role.",
+        "description": "Changes the org-level role of one or more users in the specified organisation. Role changes take effect immediately — the user's access permissions across all workspaces adjust to reflect the new role.",
         "operationId": "changeUserRole",
         "security": [
           {
@@ -980,38 +980,38 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7103",
-                "description": "Organization not found.",
+                "description": "Organisation not found.",
                 "resolution": "Verify the ZANALYTICS-ORGID header value."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization.",
-                "resolution": "Ensure the caller holds the Account Admin or Organization Admin role in the organization."
+                "description": "User is not an Account Admin or Organization Admin.",
+                "resolution": "Ensure the caller has the required org-level role."
               },
               {
                 "name": "6089",
-                "description": "Attempted to assign the ORGADMIN role through a custom domain (domainName).",
-                "resolution": "Omit domainName when assigning the Organization Admin role."
+                "description": "Attempted to assign \"ORGADMIN\" role via domainName (custom domain).",
+                "resolution": "Omit domainName when assigning the Org Admin role."
               },
               {
                 "name": "8114",
-                "description": "One or more of the specified email addresses are not members of this organization.",
-                "resolution": "Verify all email addresses using the Get Users API before calling this API."
+                "description": "One or more specified email addresses are not members of this organisation.",
+                "resolution": "Verify all email IDs using Get Users before calling this API."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name configured for the org."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the calling user or to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the calling user or the org's Account Admin.",
+                "resolution": "Use a domain name administered by the Account Admin of this organisation."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.update."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.update."
               }
             ]
           },
@@ -1039,7 +1039,7 @@
         ],
         "x-zenesis-title": "Get Custom Roles",
         "summary": "Get Custom Roles",
-        "description": "Returns every custom role defined in the organization identified by the ZANALYTICS-ORGID header, along with the complete permission definition of each role.\n\nThis is the only way to read a role definition back - there is no get-by-ID variant. The accessType and permissions returned for a role are in exactly the shape accepted by the Update Custom Role API, so a role can be read, edited and posted back without any transformation.",
+        "description": "Returns every custom role defined in the organization, with its full permission definition.\n\nThis is the only way to read a role definition back - there is no get-by-ID variant. The accessType and permissions returned for a role are in exactly the shape accepted by the Update Custom Role API, so a role can be read, edited and posted back without any transformation.",
         "operationId": "getCustomRoles",
         "security": [
           {
@@ -1056,33 +1056,6 @@
         "responses": {
           "200": {
             "description": "Successful response.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "6142",
-                "description": "The subscription plan of the organization does not include custom roles.",
-                "resolution": "Upgrade the plan to one that includes custom roles."
-              },
-              {
-                "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization, custom roles are not enabled for the organization, or the request was made through a Client Portal (White Label) custom domain.",
-                "resolution": "Call the API as an Account Admin or Organization Admin from the standard API host, with the custom roles feature enabled for the organization."
-              },
-              {
-                "name": "7309",
-                "description": "No authentication was supplied with the request.",
-                "resolution": "Send the Authorization header carrying a valid OAuth token."
-              },
-              {
-                "name": "8083",
-                "description": "The ZANALYTICS-ORGID header is missing.",
-                "resolution": "Add the ZANALYTICS-ORGID header to the request."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token, or the token does not carry the usermanagement scope.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.read."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -1228,7 +1201,34 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "6142",
+                "description": "CUSTOMROLESNOTALLOWEDINPLAN — The organization's subscription plan does not include custom roles.",
+                "resolution": "Upgrade the plan."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — The caller is not an Account Admin or Organization Admin, custom roles are not enabled for the organization, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call as an organization administrator from the standard API host, with the feature enabled."
+              },
+              {
+                "name": "7309",
+                "description": "SECURITYNEEDSLOGIN — No authentication was supplied.",
+                "resolution": "Send an Authorization header."
+              },
+              {
+                "name": "8083",
+                "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+                "resolution": "Add the header."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token, or the token lacks the usermanagement scope.",
+                "resolution": "Provide a valid token carrying ZohoAnalytics.usermanagement.read."
+              }
+            ]
           },
           "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
@@ -1252,7 +1252,7 @@
         ],
         "x-zenesis-title": "Create Custom Role",
         "summary": "Create Custom Role",
-        "description": "Creates one custom role in the organization identified by the ZANALYTICS-ORGID header, and returns its identifier.\n\nThe role name, the access type and the permissions are all mandatory. The permissions are validated as a whole against the access type and against the cross-group dependency rules before anything is stored, so a rejected request creates nothing and can be corrected and retried safely.",
+        "description": "Creates one custom role in the organization.\n\nThe role name, the access type and the permissions are all mandatory. The permissions are validated as a whole against the access type and against the cross-group dependency rules before anything is stored, so a rejected request creates nothing and can be corrected and retried safely.",
         "operationId": "createCustomRole",
         "security": [
           {
@@ -1431,128 +1431,6 @@
         "responses": {
           "200": {
             "description": "Successful response.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "6142",
-                "description": "The subscription plan of the organization does not include custom roles.",
-                "resolution": "Upgrade the plan to one that includes custom roles."
-              },
-              {
-                "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization, custom roles are not enabled for the organization, or the request was made through a Client Portal (White Label) custom domain.",
-                "resolution": "Call the API as an Account Admin or Organization Admin from the standard API host, with the custom roles feature enabled for the organization."
-              },
-              {
-                "name": "7309",
-                "description": "No authentication was supplied with the request.",
-                "resolution": "Send the Authorization header carrying a valid OAuth token."
-              },
-              {
-                "name": "7553",
-                "description": "A role with the given roleName already exists in the organization. The check covers built-in role names as well as other custom roles.",
-                "resolution": "Choose a different name for the role."
-              },
-              {
-                "name": "7554",
-                "description": "The accessType value did not resolve to a known access level.",
-                "resolution": "Send one of ALL_DASHBOARDS, ALL_REPORTS_AND_DASHBOARDS or ALL_DATA_REPORTS_AND_DASHBOARDS."
-              },
-              {
-                "name": "7559",
-                "description": "manageEmailSchedules is enabled but export is not.",
-                "resolution": "Set publishPermissions.export to true, or disable manageEmailSchedules."
-              },
-              {
-                "name": "7573",
-                "description": "A dataPermissions flag is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS.",
-                "resolution": "Raise accessType to ALL_DATA_REPORTS_AND_DASHBOARDS, or set every dataPermissions flag to false."
-              },
-              {
-                "name": "7574",
-                "description": "designModify is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS.",
-                "resolution": "Raise accessType to ALL_DATA_REPORTS_AND_DASHBOARDS, or disable designModify."
-              },
-              {
-                "name": "7575",
-                "description": "createTable, createQueryTable or createFormula is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS.",
-                "resolution": "Raise accessType to ALL_DATA_REPORTS_AND_DASHBOARDS, or disable those flags. createFolder is allowed at every level."
-              },
-              {
-                "name": "7576",
-                "description": "manageDataAlerts is enabled while accessType is ALL_DASHBOARDS.",
-                "resolution": "Use ALL_REPORTS_AND_DASHBOARDS or ALL_DATA_REPORTS_AND_DASHBOARDS, or disable manageDataAlerts."
-              },
-              {
-                "name": "7577",
-                "description": "dataArchives is enabled but not every other dataPermissions flag is enabled.",
-                "resolution": "Enable every dataPermissions flag, or disable dataArchives."
-              },
-              {
-                "name": "7578",
-                "description": "designModify is enabled without both accessAdminPresets and createPreset.",
-                "resolution": "Set sharePermissions.accessAdminPresets and sharePermissions.createPreset to true."
-              },
-              {
-                "name": "7579",
-                "description": "interactionPermissions.read is missing or false. Read permission must always be enabled.",
-                "resolution": "Set interactionPermissions.read to true."
-              },
-              {
-                "name": "7584",
-                "description": "A datasourcePermissions flag is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS.",
-                "resolution": "Raise accessType to ALL_DATA_REPORTS_AND_DASHBOARDS, or disable the datasourcePermissions group."
-              },
-              {
-                "name": "7585",
-                "description": "useDatasource is enabled but createTable is not.",
-                "resolution": "Set createPermissions.createTable to true."
-              },
-              {
-                "name": "7586",
-                "description": "editDatasource, syncData, useDatasource or removeDatasource is enabled without viewDatasource.",
-                "resolution": "Set datasourcePermissions.viewDatasource to true."
-              },
-              {
-                "name": "8078",
-                "description": "A mandatory attribute was sent with an empty value. The error message names the attribute.",
-                "resolution": "Provide a non-empty value for the attribute."
-              },
-              {
-                "name": "8083",
-                "description": "The ZANALYTICS-ORGID header is missing.",
-                "resolution": "Add the ZANALYTICS-ORGID header to the request."
-              },
-              {
-                "name": "8504",
-                "description": "CONFIG was not sent, or a mandatory attribute is missing from it.",
-                "resolution": "Send a CONFIG object containing every mandatory attribute."
-              },
-              {
-                "name": "8507",
-                "description": "roleName exceeds 30 characters, or the serialized permissions object exceeds its size limit.",
-                "resolution": "Shorten the value."
-              },
-              {
-                "name": "8509",
-                "description": "roleName contains characters other than letters, digits, spaces, underscore and hyphen, or accessType is not one of the three allowed values.",
-                "resolution": "Correct the value."
-              },
-              {
-                "name": "8534",
-                "description": "CONFIG is not valid JSON.",
-                "resolution": "Fix the JSON and URL encode it correctly."
-              },
-              {
-                "name": "8539",
-                "description": "An attribute carries a value that is structurally valid but not accepted, such as an empty roleName.",
-                "resolution": "Send a non-empty, valid value."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token, or the token does not carry the usermanagement scope.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.create."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -1572,7 +1450,129 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "6142",
+                "description": "CUSTOMROLESNOTALLOWEDINPLAN — The plan does not include custom roles.",
+                "resolution": "Upgrade the plan."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — The caller is not an organization administrator, the feature is not enabled, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call as an organization administrator from the standard API host."
+              },
+              {
+                "name": "7309",
+                "description": "SECURITYNEEDSLOGIN — No authentication was supplied.",
+                "resolution": "Send an Authorization header."
+              },
+              {
+                "name": "7553",
+                "description": "ROLENAMEEXISTS — A role with this name already exists in the organization.",
+                "resolution": "Choose a different name."
+              },
+              {
+                "name": "7554",
+                "description": "INVALIDVIEWTYPEGROUP — accessType did not resolve to a known level.",
+                "resolution": "Send one of the three documented values."
+              },
+              {
+                "name": "7559",
+                "description": "EXPORTPERMNEEDEDFOREMAILSCH — manageEmailSchedules is true but export is not.",
+                "resolution": "Set publishPermissions.export to true."
+              },
+              {
+                "name": "7573",
+                "description": "CRDATAPERMNOTALLOWEDFORACCESSTYPE — A data permission was enabled below the full access level.",
+                "resolution": "Raise accessType, or set every dataPermissions flag to false."
+              },
+              {
+                "name": "7574",
+                "description": "CRDESIGNPERMNOTALLOWEDFORACCESSTYPE — designModify was enabled below the full access level.",
+                "resolution": "Raise accessType, or disable designModify."
+              },
+              {
+                "name": "7575",
+                "description": "CRCREATEPERMNOTALLOWEDFORACCESSTYPE — createTable, createQueryTable, or createFormula was enabled below the full access level.",
+                "resolution": "Raise accessType, or disable those flags. createFolder is allowed at every level."
+              },
+              {
+                "name": "7576",
+                "description": "CRALERTPERMNOTALLOWEDFORACCESSTYPE — manageDataAlerts was enabled with ALLDASHBOARDS.",
+                "resolution": "Use ALLREPORTSANDDASHBOARDS or higher, or disable the flag."
+              },
+              {
+                "name": "7577",
+                "description": "CRSCHEDULEDDATADELETIONPERMNOTALLOWED — dataArchives is true but not every data permission is enabled.",
+                "resolution": "Enable all data permissions, or disable dataArchives."
+              },
+              {
+                "name": "7578",
+                "description": "CRDESIGNMODIFYREQUIRESPRESETPERMS — designModify is true without both preset permissions.",
+                "resolution": "Set accessAdminPresets and createPreset to true."
+              },
+              {
+                "name": "7579",
+                "description": "CRREADPERMMUSTBEENABLED — interactionPermissions.read is missing or false.",
+                "resolution": "Set read to true."
+              },
+              {
+                "name": "7584",
+                "description": "CRDATASOURCEPERMNOTALLOWEDFORACCESSTYPE — A datasource permission was enabled below the full access level.",
+                "resolution": "Raise accessType, or disable the datasource group."
+              },
+              {
+                "name": "7585",
+                "description": "CRUSEDATASOURCEREQUIRESCREATETABLE — useDatasource is true but createTable is not.",
+                "resolution": "Enable createPermissions.createTable."
+              },
+              {
+                "name": "7586",
+                "description": "CRVIEWDATASOURCEREQUIREDFORDATASOURCEPERMS — Another datasource permission is enabled without viewDatasource.",
+                "resolution": "Set datasourcePermissions.viewDatasource to true."
+              },
+              {
+                "name": "8078",
+                "description": "EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent blank.",
+                "resolution": "The message names the attribute."
+              },
+              {
+                "name": "8083",
+                "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+                "resolution": "Add the header."
+              },
+              {
+                "name": "8504",
+                "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or a mandatory attribute is missing.",
+                "resolution": "Send roleName, accessType, and permissions."
+              },
+              {
+                "name": "8507",
+                "description": "MORETHANMAXLENGTH — roleName exceeds 30 characters, or permissions exceeds its size limit.",
+                "resolution": "Shorten the value."
+              },
+              {
+                "name": "8509",
+                "description": "PATTERNNOTMATCHED — roleName contains disallowed characters, or accessType is not one of the three values.",
+                "resolution": "Correct the value."
+              },
+              {
+                "name": "8534",
+                "description": "JSONPARSEERROR — CONFIG is not valid JSON.",
+                "resolution": "Fix the JSON and URL-encode it correctly."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token, or the token lacks the usermanagement scope.",
+                "resolution": "Provide a valid token carrying ZohoAnalytics.usermanagement.create."
+              },
+              {
+                "name": "8539",
+                "description": "INVALIDVALUENOTALLOWED — An attribute carries a value that is structurally valid but not accepted, such as an empty roleName.",
+                "resolution": "Send a non-empty value."
+              }
+            ]
           },
           "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
@@ -1598,7 +1598,7 @@
         ],
         "x-zenesis-title": "Update Custom Role",
         "summary": "Update Custom Role",
-        "description": "Renames a custom role, replaces its access type and permissions, or does both in one call.\n\nThis is a replace, not a merge. Whenever permissions is supplied, the stored definition is discarded and rebuilt from the object sent - every flag left out becomes false. Read the current definition with the Get Custom Roles API, edit it, and send the whole object back. Sending roleName alone is the one edit that leaves the permission definition untouched.",
+        "description": "Renames a custom role, replaces its access type and permissions, or both.\n\nThis is a replace, not a merge. Whenever permissions is supplied, the stored definition is discarded and rebuilt from the object sent - every flag left out becomes false. Read the current definition with the Get Custom Roles API, edit it, and send the whole object back. Sending roleName alone is the one edit that leaves the permission definition untouched.",
         "operationId": "updateCustomRole",
         "security": [
           {
@@ -1736,133 +1736,133 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "6142",
-                "description": "The subscription plan of the organization does not include custom roles.",
-                "resolution": "Upgrade the plan to one that includes custom roles."
+                "description": "CUSTOMROLESNOTALLOWEDINPLAN — The plan does not include custom roles.",
+                "resolution": "Upgrade the plan."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization, custom roles are not enabled for the organization, or the request was made through a Client Portal (White Label) custom domain.",
-                "resolution": "Call the API as an Account Admin or Organization Admin from the standard API host, with the custom roles feature enabled for the organization."
+                "description": "SECURITYNOTPERMITTED — The caller is not an organization administrator, the feature is not enabled, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call as an organization administrator from the standard API host."
               },
               {
                 "name": "7309",
-                "description": "No authentication was supplied with the request.",
-                "resolution": "Send the Authorization header carrying a valid OAuth token."
+                "description": "SECURITYNEEDSLOGIN — No authentication was supplied.",
+                "resolution": "Send an Authorization header."
               },
               {
                 "name": "7548",
-                "description": "No custom role exists for the given role-id in this organization.",
-                "resolution": "Verify the role identifier using the Get Custom Roles API."
+                "description": "NOSUCHROLEEXIST — No role exists for the given <role-id>.",
+                "resolution": "Verify the ID with Get Custom Roles."
               },
               {
                 "name": "7553",
-                "description": "A role with the given roleName already exists in the organization. The check covers built-in role names as well as other custom roles.",
-                "resolution": "Choose a different name for the role."
+                "description": "ROLENAMEEXISTS — Another role already uses the new name.",
+                "resolution": "Choose a different name."
               },
               {
                 "name": "7554",
-                "description": "The accessType value did not resolve to a known access level.",
-                "resolution": "Send one of ALL_DASHBOARDS, ALL_REPORTS_AND_DASHBOARDS or ALL_DATA_REPORTS_AND_DASHBOARDS."
+                "description": "INVALIDVIEWTYPEGROUP — accessType did not resolve to a known level.",
+                "resolution": "Send one of the three documented values."
               },
               {
                 "name": "7559",
-                "description": "manageEmailSchedules is enabled but export is not.",
-                "resolution": "Set publishPermissions.export to true, or disable manageEmailSchedules."
+                "description": "EXPORTPERMNEEDEDFOREMAILSCH — manageEmailSchedules is true but export is not.",
+                "resolution": "Set publishPermissions.export to true."
               },
               {
                 "name": "7573",
-                "description": "A dataPermissions flag is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS.",
-                "resolution": "Raise accessType to ALL_DATA_REPORTS_AND_DASHBOARDS, or set every dataPermissions flag to false."
+                "description": "CRDATAPERMNOTALLOWEDFORACCESSTYPE — A data permission is enabled below the full access level.",
+                "resolution": "Raise accessType, or disable those flags."
               },
               {
                 "name": "7574",
-                "description": "designModify is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS.",
-                "resolution": "Raise accessType to ALL_DATA_REPORTS_AND_DASHBOARDS, or disable designModify."
+                "description": "CRDESIGNPERMNOTALLOWEDFORACCESSTYPE — designModify is enabled below the full access level.",
+                "resolution": "Raise accessType, or disable it."
               },
               {
                 "name": "7575",
-                "description": "createTable, createQueryTable or createFormula is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS.",
-                "resolution": "Raise accessType to ALL_DATA_REPORTS_AND_DASHBOARDS, or disable those flags. createFolder is allowed at every level."
+                "description": "CRCREATEPERMNOTALLOWEDFORACCESSTYPE — A data-level creation flag is enabled below the full access level.",
+                "resolution": "Raise accessType, or disable those flags."
               },
               {
                 "name": "7576",
-                "description": "manageDataAlerts is enabled while accessType is ALL_DASHBOARDS.",
-                "resolution": "Use ALL_REPORTS_AND_DASHBOARDS or ALL_DATA_REPORTS_AND_DASHBOARDS, or disable manageDataAlerts."
+                "description": "CRALERTPERMNOTALLOWEDFORACCESSTYPE — manageDataAlerts is enabled with ALLDASHBOARDS.",
+                "resolution": "Use a higher accessType, or disable the flag."
               },
               {
                 "name": "7577",
-                "description": "dataArchives is enabled but not every other dataPermissions flag is enabled.",
-                "resolution": "Enable every dataPermissions flag, or disable dataArchives."
+                "description": "CRSCHEDULEDDATADELETIONPERMNOTALLOWED — dataArchives is true but not every data permission is enabled.",
+                "resolution": "Enable all data permissions, or disable dataArchives."
               },
               {
                 "name": "7578",
-                "description": "designModify is enabled without both accessAdminPresets and createPreset.",
-                "resolution": "Set sharePermissions.accessAdminPresets and sharePermissions.createPreset to true."
+                "description": "CRDESIGNMODIFYREQUIRESPRESETPERMS — designModify is true without both preset permissions.",
+                "resolution": "Set accessAdminPresets and createPreset to true."
               },
               {
                 "name": "7579",
-                "description": "interactionPermissions.read is missing or false. Read permission must always be enabled.",
-                "resolution": "Set interactionPermissions.read to true."
+                "description": "CRREADPERMMUSTBEENABLED — interactionPermissions.read is missing or false.",
+                "resolution": "Set read to true."
               },
               {
                 "name": "7580",
-                "description": "One of accessType and permissions was sent without the other.",
-                "resolution": "Send accessType and permissions together, or send neither."
+                "description": "CRACCESSTYPEANDPERMSREQUIREDTOGETHER — One of accessType / permissions was sent without the other.",
+                "resolution": "Send both, or neither."
               },
               {
                 "name": "7581",
-                "description": "The CONFIG contained neither roleName nor accessType, so there is nothing to update.",
-                "resolution": "Send roleName, or accessType together with permissions."
+                "description": "CRNOFIELDSTOUPDATE — Neither roleName nor accessType was supplied.",
+                "resolution": "Send at least one."
               },
               {
                 "name": "7584",
-                "description": "A datasourcePermissions flag is enabled while accessType is below ALL_DATA_REPORTS_AND_DASHBOARDS.",
-                "resolution": "Raise accessType to ALL_DATA_REPORTS_AND_DASHBOARDS, or disable the datasourcePermissions group."
+                "description": "CRDATASOURCEPERMNOTALLOWEDFORACCESSTYPE — A datasource permission is enabled below the full access level.",
+                "resolution": "Raise accessType, or disable the group."
               },
               {
                 "name": "7585",
-                "description": "useDatasource is enabled but createTable is not.",
-                "resolution": "Set createPermissions.createTable to true."
+                "description": "CRUSEDATASOURCEREQUIRESCREATETABLE — useDatasource is true but createTable is not.",
+                "resolution": "Enable createPermissions.createTable."
               },
               {
                 "name": "7586",
-                "description": "editDatasource, syncData, useDatasource or removeDatasource is enabled without viewDatasource.",
+                "description": "CRVIEWDATASOURCEREQUIREDFORDATASOURCEPERMS — Another datasource permission is enabled without viewDatasource.",
                 "resolution": "Set datasourcePermissions.viewDatasource to true."
               },
               {
                 "name": "8083",
-                "description": "The ZANALYTICS-ORGID header is missing.",
-                "resolution": "Add the ZANALYTICS-ORGID header to the request."
+                "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+                "resolution": "Add the header."
               },
               {
                 "name": "8504",
-                "description": "CONFIG was not sent, or a mandatory attribute is missing from it.",
-                "resolution": "Send a CONFIG object containing every mandatory attribute."
+                "description": "LESSTHANMINOCCURANCE — CONFIG was not sent.",
+                "resolution": "Send a CONFIG object."
               },
               {
                 "name": "8507",
-                "description": "roleName exceeds 30 characters, or the serialized permissions object exceeds its size limit.",
+                "description": "MORETHANMAXLENGTH — roleName exceeds 30 characters, or permissions exceeds its size limit.",
                 "resolution": "Shorten the value."
               },
               {
                 "name": "8509",
-                "description": "roleName contains characters other than letters, digits, spaces, underscore and hyphen, or accessType is not one of the three allowed values.",
+                "description": "PATTERNNOTMATCHED — roleName contains disallowed characters, or accessType is not one of the three values.",
                 "resolution": "Correct the value."
               },
               {
                 "name": "8525",
-                "description": "The role-id in the request URI is not numeric, so the request matched no route.",
-                "resolution": "Send a numeric role identifier."
+                "description": "URLRULENOTCONFIGURED — <role-id> is not numeric, so the request matched no route.",
+                "resolution": "Send a numeric role ID."
               },
               {
                 "name": "8534",
-                "description": "CONFIG is not valid JSON.",
-                "resolution": "Fix the JSON and URL encode it correctly."
+                "description": "JSONPARSEERROR — CONFIG is not valid JSON.",
+                "resolution": "Fix the JSON and URL-encode it correctly."
               },
               {
                 "name": "8535",
-                "description": "Invalid or expired OAuth token, or the token does not carry the usermanagement scope.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.update."
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token, or the token lacks the usermanagement scope.",
+                "resolution": "Provide a valid token carrying ZohoAnalytics.usermanagement.update."
               }
             ]
           },
@@ -1888,7 +1888,7 @@
         ],
         "x-zenesis-title": "Delete Custom Role",
         "summary": "Delete Custom Role",
-        "description": "Deletes a custom role definition from the organization.\n\nOnly the definition is removed. Users who held the role are not deleted, and reassigning them is done through the user management APIs. The operation cannot be undone, and re-creating the same name later produces a new role with a new identifier.",
+        "description": "Deletes a custom role definition.\n\nOnly the definition is removed. Users who held the role are not deleted, and reassigning them is done through the user management APIs. The operation cannot be undone, and re-creating the same name later produces a new role with a new identifier.",
         "operationId": "deleteCustomRole",
         "security": [
           {
@@ -1911,38 +1911,38 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "6142",
-                "description": "The subscription plan of the organization does not include custom roles.",
-                "resolution": "Upgrade the plan to one that includes custom roles."
+                "description": "CUSTOMROLESNOTALLOWEDINPLAN — The plan does not include custom roles.",
+                "resolution": "Upgrade the plan."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization, custom roles are not enabled for the organization, or the request was made through a Client Portal (White Label) custom domain.",
-                "resolution": "Call the API as an Account Admin or Organization Admin from the standard API host, with the custom roles feature enabled for the organization."
+                "description": "SECURITYNOTPERMITTED — The caller is not an organization administrator, the feature is not enabled, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call as an organization administrator from the standard API host."
               },
               {
                 "name": "7309",
-                "description": "No authentication was supplied with the request.",
-                "resolution": "Send the Authorization header carrying a valid OAuth token."
+                "description": "SECURITYNEEDSLOGIN — No authentication was supplied.",
+                "resolution": "Send an Authorization header."
               },
               {
                 "name": "7548",
-                "description": "No custom role exists for the given role-id in this organization.",
-                "resolution": "Verify the role identifier using the Get Custom Roles API."
+                "description": "NOSUCHROLEEXIST — No role exists for the given <role-id>, or it has already been deleted.",
+                "resolution": "Verify the ID with Get Custom Roles."
               },
               {
                 "name": "8083",
-                "description": "The ZANALYTICS-ORGID header is missing.",
-                "resolution": "Add the ZANALYTICS-ORGID header to the request."
+                "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+                "resolution": "Add the header."
               },
               {
                 "name": "8525",
-                "description": "The role-id in the request URI is not numeric, so the request matched no route.",
-                "resolution": "Send a numeric role identifier."
+                "description": "URLRULENOTCONFIGURED — <role-id> is not numeric, so the request matched no route.",
+                "resolution": "Send a numeric role ID."
               },
               {
                 "name": "8535",
-                "description": "Invalid or expired OAuth token, or the token does not carry the usermanagement scope.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.delete."
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token, or the token lacks the usermanagement scope.",
+                "resolution": "Provide a valid token carrying ZohoAnalytics.usermanagement.delete."
               }
             ]
           },
@@ -1970,7 +1970,7 @@
         ],
         "x-zenesis-title": "Get Workspace Users",
         "summary": "Get Workspace Users",
-        "description": "Returns the list of all the users who have access to the specified workspace, along with their workspace-level role and active status.\n\nThe response covers the Account Admin, the Organization Admins, the Workspace Admins, the standard users, and the users assigned to a custom role.",
+        "description": "Returns the list of all users who have access to the specified workspace, along with their workspace-level role and active status.\n\nThe response covers the Account Admin, the Organization Admins, the Workspace Admins, the standard users, and the users assigned to a custom role.",
         "operationId": "getWorkspaceUsers",
         "security": [
           {
@@ -1990,23 +1990,6 @@
         "responses": {
           "200": {
             "description": "Successful response.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
-              },
-              {
-                "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.read."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -2141,7 +2124,24 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Workspace not found.",
+                "resolution": "Verify <workspace-id>."
+              },
+              {
+                "name": "7301",
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access to the workspace."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.read."
+              }
+            ]
           },
           "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
@@ -2315,32 +2315,32 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
               },
               {
                 "name": "7550",
-                "description": "The specified role name does not exist as a custom role in the organization.",
-                "resolution": "Use WORKSPACEADMIN, USER, or the exact name of a custom role defined in the organization."
+                "description": "The specified role name does not exist as a custom role in the org.",
+                "resolution": "Use \"WORKSPACEADMIN\", \"USER\", or an exact custom role name from the org."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name configured for the org."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the org's Account Admin.",
+                "resolution": "Use a domain administered by the Account Admin of this organisation."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.create."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.create."
               }
             ]
           },
@@ -2464,27 +2464,27 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the org's Account Admin.",
+                "resolution": "Use a domain administered by the Account Admin of this organisation."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.delete."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.delete."
               }
             ]
           },
@@ -2661,32 +2661,32 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization. Workspace Admins cannot invoke this API.",
-                "resolution": "Invoke this API using the credentials of an Account Admin or an Organization Admin."
+                "description": "User is not an Account Admin or Organization Admin of the organisation. Workspace Admins cannot call this API.",
+                "resolution": "Use Account Admin or Organization Admin credentials."
               },
               {
                 "name": "7550",
-                "description": "The specified role name does not exist as a custom role in the organization.",
-                "resolution": "Use WORKSPACEADMIN, USER, or the exact name of a custom role defined in the organization."
+                "description": "The specified role name does not exist as a custom role in the org.",
+                "resolution": "Use \"WORKSPACEADMIN\", \"USER\", or an exact custom role name."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the org's Account Admin.",
+                "resolution": "Use a domain administered by the Account Admin."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.update."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.update."
               }
             ]
           },
@@ -2814,32 +2814,32 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not the Account Admin of the organization. Only the Account Admin can change the status of workspace users.",
-                "resolution": "Invoke this API using the credentials of the Account Admin of the organization."
+                "description": "User is not the Account Admin of the organisation. Only Account Admin can change workspace user status.",
+                "resolution": "Use the Account Admin credentials."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the org's Account Admin.",
+                "resolution": "Use a domain administered by the Account Admin."
               },
               {
                 "name": "8119",
-                "description": "Invalid value for operation. Only activate and deactivate are accepted.",
-                "resolution": "Pass exactly activate or deactivate in the operation field. The value is case-sensitive."
+                "description": "Invalid value for operation. Only \"activate\" and \"deactivate\" are accepted.",
+                "resolution": "Pass exactly \"activate\" or \"deactivate\" in the operation field."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.usermanagement.update."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.update."
               }
             ]
           },
@@ -2867,7 +2867,7 @@
         ],
         "x-zenesis-title": "Get Workspace Admins",
         "summary": "Get Workspace Admins",
-        "description": "Returns the users who currently hold the Workspace Admin role in the specified workspace, grouped by domain context.",
+        "description": "Returns the list of users who currently hold the Workspace Admin role in the specified workspace. When the org's Account Admin is a Client Portal Admin, the response groups admins by portal domain — showing standard org admins and portal-domain admins separately, each with a domainName.",
         "operationId": "getWorkspaceAdmins",
         "security": [
           {
@@ -2887,23 +2887,6 @@
         "responses": {
           "200": {
             "description": "Successful response.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
-              },
-              {
-                "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization.",
-                "resolution": "Only Account Admins and Organization Admins can manage the Workspace Admins of a workspace."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.read."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -2972,7 +2955,24 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Workspace not found.",
+                "resolution": "Verify <workspace-id>."
+              },
+              {
+                "name": "7301",
+                "description": "User is not an Account Admin or Organization Admin of the organisation.",
+                "resolution": "Workspace Admins and regular users cannot call this API."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.read."
+              }
+            ]
           },
           "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
@@ -3082,32 +3082,32 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization.",
-                "resolution": "Only Account Admins and Organization Admins can manage the Workspace Admins of a workspace."
+                "description": "User is not an Account Admin or Organization Admin of the organisation.",
+                "resolution": "Only Account Admins and Organization Admins can manage Workspace Admins."
               },
               {
                 "name": "7390",
                 "description": "One or more of the specified users holds the org-level Viewer role and cannot be promoted to Workspace Admin.",
-                "resolution": "Change the org-level role of those users to USER using the Change User Role API, and then add them as Workspace Admins."
+                "resolution": "Viewers cannot be Workspace Admins. Change their org-level role to \"USER\" first via the Change User Role API."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the org's Account Admin.",
+                "resolution": "Use a domain administered by the Account Admin."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.create."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.create."
               }
             ]
           },
@@ -3218,32 +3218,32 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not an Account Admin or Organization Admin of the organization.",
-                "resolution": "Only Account Admins and Organization Admins can manage the Workspace Admins of a workspace."
+                "description": "User is not an Account Admin or Organization Admin of the organisation.",
+                "resolution": "Only Account Admins and Organization Admins can manage Workspace Admins."
               },
               {
                 "name": "8040",
-                "description": "One or more of the specified email addresses are not currently Workspace Admins of this workspace.",
-                "resolution": "Verify that every email address is a current Workspace Admin using the Get Workspace Admins API before invoking this API."
+                "description": "One or more specified email addresses are not currently Workspace Admins in this workspace.",
+                "resolution": "Verify all email addresses are current Workspace Admins using Get Workspace Admins before calling this API."
               },
               {
                 "name": "8060",
                 "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
+                "resolution": "Provide a valid client portal domain name."
               },
               {
                 "name": "8061",
-                "description": "The specified domainName does not belong to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
+                "description": "The specified domainName does not belong to the org's Account Admin.",
+                "resolution": "Use a domain administered by the Account Admin."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.delete."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.delete."
               }
             ]
           },
@@ -3271,7 +3271,7 @@
         ],
         "x-zenesis-title": "Get Group List",
         "summary": "Get Group List",
-        "description": "Returns all the groups defined in the specified workspace, along with their descriptions and current member lists.\n\nGroups are named collections of users within a workspace. A view shared with a group is accessible to every current and future member of that group, which makes groups the way to manage view-level sharing permissions in bulk.",
+        "description": "Returns all groups defined in the specified workspace, along with their descriptions and current member lists.\n\nGroups are named collections of users within a workspace. A view shared with a group is accessible to every current and future member of that group, which makes groups the way to manage view-level sharing permissions in bulk.",
         "operationId": "getGroups",
         "security": [
           {
@@ -3291,23 +3291,6 @@
         "responses": {
           "200": {
             "description": "Successful response.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
-              },
-              {
-                "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.read."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -3395,7 +3378,24 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Workspace not found.",
+                "resolution": "Verify <workspace-id>."
+              },
+              {
+                "name": "7301",
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.read."
+              }
+            ]
           },
           "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
@@ -3419,7 +3419,7 @@
         ],
         "x-zenesis-title": "Create Group",
         "summary": "Create Group",
-        "description": "Creates a new group in the specified workspace and adds the initial members to it. An invitation email can optionally be sent to those members at creation time.",
+        "description": "Creates a new group in the specified workspace and optionally adds initial members to it. The group name must be unique within the workspace. An optional invitation email can be sent to the initial members at creation time.",
         "operationId": "createGroup",
         "security": [
           {
@@ -3509,38 +3509,6 @@
         "responses": {
           "200": {
             "description": "Successful response.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
-              },
-              {
-                "name": "7282",
-                "description": "A group with the same name already exists in this workspace. Group names must be unique within a workspace.",
-                "resolution": "Choose a different name for the group."
-              },
-              {
-                "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
-              },
-              {
-                "name": "8060",
-                "description": "The specified domainName does not exist.",
-                "resolution": "Provide a valid client portal domain name configured for the organization."
-              },
-              {
-                "name": "8061",
-                "description": "The specified domainName does not belong to the organization's Account Admin.",
-                "resolution": "Use a domain name that is administered by the Account Admin of this organization."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.create."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -3560,7 +3528,39 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Workspace not found.",
+                "resolution": "Verify <workspace-id>."
+              },
+              {
+                "name": "7282",
+                "description": "A group with the same name already exists in this workspace. Group names must be unique per workspace.",
+                "resolution": "Choose a different name for the group."
+              },
+              {
+                "name": "7301",
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
+              },
+              {
+                "name": "8060",
+                "description": "The specified domainName does not exist.",
+                "resolution": "Provide a valid client portal domain name configured for the org."
+              },
+              {
+                "name": "8061",
+                "description": "The specified domainName does not belong to the org's Account Admin.",
+                "resolution": "Use a domain administered by the Account Admin of this organisation."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.create."
+              }
+            ]
           },
           "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
@@ -3586,7 +3586,7 @@
         ],
         "x-zenesis-title": "Get Group Details",
         "summary": "Get Group Details",
-        "description": "Returns the full details of a single group - its name, description and complete member list.",
+        "description": "Returns the full details of a single group — its name, description, and complete member list.",
         "operationId": "getGroupDetails",
         "security": [
           {
@@ -3609,28 +3609,6 @@
         "responses": {
           "200": {
             "description": "Successful response.",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
-              },
-              {
-                "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
-              },
-              {
-                "name": "7338",
-                "description": "The specified group-id does not belong to this workspace.",
-                "resolution": "Retrieve the correct group identifier using the Get Group List API."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.read."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -3679,7 +3657,29 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Workspace not found.",
+                "resolution": "Verify <workspace-id>."
+              },
+              {
+                "name": "7301",
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
+              },
+              {
+                "name": "7338",
+                "description": "The specified <group-id> does not belong to this workspace.",
+                "resolution": "Retrieve the correct group ID from Get Group List."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.read."
+              }
+            ]
           },
           "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
@@ -3703,7 +3703,7 @@
         ],
         "x-zenesis-title": "Rename Group",
         "summary": "Rename Group",
-        "description": "Updates the name and the description of an existing group in the specified workspace. Both values are replaced atomically.",
+        "description": "Updates the name and/or description of an existing group in the specified workspace. Both fields are replaced atomically — if groupDesc is omitted, the description is reset to an empty string.",
         "operationId": "renameGroup",
         "security": [
           {
@@ -3784,27 +3784,27 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7282",
                 "description": "The new group name is already used by another group in this workspace.",
-                "resolution": "Choose a name that is not already in use."
+                "resolution": "Choose a name not already in use."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
               },
               {
                 "name": "7338",
-                "description": "The specified group-id does not belong to this workspace.",
-                "resolution": "Retrieve the correct group identifier using the Get Group List API."
+                "description": "The specified <group-id> does not belong to this workspace.",
+                "resolution": "Verify the group ID belongs to the correct workspace using Get Group List."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.update."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.update."
               }
             ]
           },
@@ -3857,22 +3857,22 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
               },
               {
                 "name": "7338",
-                "description": "The specified group-id does not belong to this workspace.",
-                "resolution": "Retrieve the correct group identifier using the Get Group List API."
+                "description": "The specified <group-id> does not belong to this workspace.",
+                "resolution": "Verify the group ID using Get Group List."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.delete."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.delete."
               }
             ]
           },
@@ -3990,22 +3990,22 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
               },
               {
                 "name": "7338",
-                "description": "The specified group-id does not belong to this workspace.",
-                "resolution": "Retrieve the correct group identifier using the Get Group List API."
+                "description": "The specified <group-id> does not belong to this workspace.",
+                "resolution": "Verify the group ID using Get Group List."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.create."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.create."
               }
             ]
           },
@@ -4118,22 +4118,22 @@
               {
                 "name": "7103",
                 "description": "Workspace not found.",
-                "resolution": "Verify the workspace-id value in the request URI."
+                "resolution": "Verify <workspace-id>."
               },
               {
                 "name": "7301",
-                "description": "The calling user is not a Workspace Admin, Account Admin or Organization Admin of the workspace.",
-                "resolution": "Ensure that the caller has at least Workspace Admin access to the workspace."
+                "description": "User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace.",
+                "resolution": "Ensure the caller has at least Workspace Admin access."
               },
               {
                 "name": "7338",
-                "description": "The specified group-id does not belong to this workspace.",
-                "resolution": "Retrieve the correct group identifier using the Get Group List API."
+                "description": "The specified <group-id> does not belong to this workspace.",
+                "resolution": "Verify the group ID using Get Group List."
               },
               {
                 "name": "8535",
                 "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with the scope ZohoAnalytics.share.delete."
+                "resolution": "Provide a valid token with scope ZohoAnalytics.share.delete."
               }
             ]
           },

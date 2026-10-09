@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Custom Roles
-description: "Returns every custom role defined in the organization identified by the ZANALYTICS-ORGID header, along with the complete permission definition of each role."
+description: "Returns every custom role defined in the organization, with its full permission definition."
 resource: https://analyticsapi.zoho.com/restapi/v2/orgs/roles
 tags:
   - zoho-analytics
@@ -43,10 +43,10 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -60,7 +60,7 @@ This API takes no path parameters. The organization is identified by the `ZANALY
 
 From the OpenAPI specification:
 
-Returns every custom role defined in the organization identified by the ZANALYTICS-ORGID header, along with the complete permission definition of each role.
+Returns every custom role defined in the organization, with its full permission definition.
 
 This is the only way to read a role definition back - there is no get-by-ID variant. The accessType and permissions returned for a role are in exactly the shape accepted by the Update Custom Role API, so a role can be read, edited and posted back without any transformation.
 

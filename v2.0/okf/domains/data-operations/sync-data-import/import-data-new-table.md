@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Import Data into a New Table (Synchronous)
-description: Use the Bulk APIs to create a new table and import data into it synchronously.
+description: "Creates a new table in the workspace from the uploaded data and returns the new table's ID along with the import result."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/data"
 tags:
   - zoho-analytics
@@ -56,10 +56,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -68,10 +68,6 @@ status: stable
 **POST `/restapi/v2/workspaces/{workspace-id}/data`** - Import Data into a New Table (Synchronous) (Synchronous Data Import / Data Operations).
 
 Creates a new table in the workspace from the uploaded data and returns the new table's ID along with the import result.
-
-From the OpenAPI specification:
-
-Use the Bulk APIs to create a new table and import data into it synchronously.
 
 # Endpoint
 

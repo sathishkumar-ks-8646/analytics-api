@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Tags List
-description: "Returns every tag that exists in the workspace, with its identifier, name and colour code."
+description: Returns every tag that exists in the workspace.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/tags"
 tags:
   - zoho-analytics
@@ -43,10 +43,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -64,7 +64,7 @@ Returns every tag that exists in the workspace.
 
 From the OpenAPI specification:
 
-Returns every tag that exists in the workspace, with its identifier, name and colour code.
+Returns every tag that exists in the workspace.
 
 A tag is listed whether or not it is attached to any view. To find out which views a tag labels, use the Get Tagged Views API. Every user who can open the workspace can read the list, including shared users on custom roles.
 

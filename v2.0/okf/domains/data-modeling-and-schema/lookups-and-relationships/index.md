@@ -4,5 +4,5 @@
 
 # Concepts
 
-* [Add Lookup](add-lookup.md) - Creates a lookup relationship from the specified child column to a column in a reference table.
+* [Add Lookup](add-lookup.md) - Creates a lookup relationship from the specified child column to a column in a reference (parent) table.
 * [Remove Lookup](remove-lookup.md) - Removes the existing lookup relationship from the specified child column.

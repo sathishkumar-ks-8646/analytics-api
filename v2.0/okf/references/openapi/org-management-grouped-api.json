@@ -44,13 +44,6 @@
         "responses": {
           "200": {
             "description": "Successful response",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -161,9 +154,16 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -179,7 +179,7 @@
         ],
         "x-zenesis-title": "Get Resource Details",
         "summary": "Get Resource Details",
-        "description": "Returns the current resource allocation and usage statistics of the specified organisation. The response covers plan-governed metrics such as user seats, row limits, API units, and scheduled imports, and is useful for monitoring consumption against the plan limits.\n\nThe authenticated user must be an Account Admin or an Organization Admin of the organisation sent in the `ZANALYTICS-ORGID` header.",
+        "description": "Returns the current resource allocation and usage statistics for the specified organisation. This includes metrics such as user seats, row limits, API units, scheduled imports, and other plan-governed resources. Useful for monitoring usage against plan limits.\n\nThe authenticated user must be an Account Admin or an Organization Admin of the organisation sent in the `ZANALYTICS-ORGID` header.",
         "operationId": "getResourceDetails",
         "security": [
           {
@@ -204,23 +204,6 @@
         "responses": {
           "200": {
             "description": "Successful response",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Organisation not found.",
-                "resolution": "Verify the ZANALYTICS-ORGID header value. The organisation ID can be obtained using the Get Organizations API."
-              },
-              {
-                "name": "7301",
-                "description": "The user is not an Account Admin or an Organization Admin of the specified organisation.",
-                "resolution": "Only Account Admins and Organization Admins can view the resource details."
-              },
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.usermanagement.read scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -367,9 +350,26 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Organisation not found.",
+                "resolution": "Verify the ZANALYTICS-ORGID header value."
+              },
+              {
+                "name": "7301",
+                "description": "User is not an Account Admin or Organization Admin of the specified organisation.",
+                "resolution": "Only Account Admins and Organization Admins can view resource details."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -385,7 +385,7 @@
         ],
         "x-zenesis-title": "Get Subscription Details",
         "summary": "Get Subscription Details",
-        "description": "Returns the current subscription plan, the add-on details, the billing date, and the trial status of the specified organisation.\n\nThe authenticated user must be an Account Admin or an Organization Admin of the organisation sent in the `ZANALYTICS-ORGID` header.",
+        "description": "Returns the current subscription plan, add-on details, billing date, and trial status for the specified organisation.\n\nThe authenticated user must be an Account Admin or an Organization Admin of the organisation sent in the `ZANALYTICS-ORGID` header.",
         "operationId": "getSubscriptionDetails",
         "security": [
           {
@@ -410,23 +410,6 @@
         "responses": {
           "200": {
             "description": "Successful response",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Organisation not found.",
-                "resolution": "Verify the ZANALYTICS-ORGID header value. The organisation ID can be obtained using the Get Organizations API."
-              },
-              {
-                "name": "7301",
-                "description": "The user is not an Account Admin or an Organization Admin of the specified organisation.",
-                "resolution": "Only Account Admins and Organization Admins can view the subscription details."
-              },
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.usermanagement.read scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -484,9 +467,26 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Organisation not found.",
+                "resolution": "Verify the ZANALYTICS-ORGID header value."
+              },
+              {
+                "name": "7301",
+                "description": "User is not an Account Admin or Organization Admin of the specified organisation.",
+                "resolution": "Only Account Admins and Organization Admins can view subscription details."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.usermanagement.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -502,7 +502,7 @@
         ],
         "x-zenesis-title": "Get Meta Details From Name",
         "summary": "Get Meta Details From Name",
-        "description": "Resolves a workspace, and optionally a view within it, by name and returns the corresponding IDs. Use this API when the human-readable names of a workspace and a view are known but their IDs are needed to call other workspace-scoped or view-scoped APIs.\n\n- When only `workspaceName` is sent, the response holds the workspace ID, the workspace description, and the organisation ID.\n- When both `workspaceName` and `viewName` are sent, the response additionally holds the ID, description, and type of the view.",
+        "description": "Resolves a workspace (and optionally a view) by name to return its numeric IDs. This is useful when you know the human-readable names of a workspace and view but need their IDs to call other workspace-scoped or view-scoped APIs.\n\n- When only `workspaceName` is sent, the response holds the workspace ID, the workspace description, and the organisation ID.\n- When both `workspaceName` and `viewName` are sent, the response additionally holds the ID, description, and type of the view.",
         "operationId": "getMetaDetails",
         "security": [
           {
@@ -555,28 +555,6 @@
         "responses": {
           "200": {
             "description": "Successful response",
-            "x-zenesis-statuscodes": [
-              {
-                "name": "7103",
-                "description": "Organisation not found.",
-                "resolution": "Verify the ZANALYTICS-ORGID header value. The organisation ID can be obtained using the Get Organizations API."
-              },
-              {
-                "name": "7104",
-                "description": "Workspace or view not found for the provided name.",
-                "resolution": "Verify the exact spelling and case of workspaceName and viewName. The names are case sensitive."
-              },
-              {
-                "name": "7301",
-                "description": "The user does not have Read access on the workspace or the view.",
-                "resolution": "Ensure the workspace or the view is shared with the user, or that the user holds the Workspace Admin, Account Admin, or Organization Admin role."
-              },
-              {
-                "name": "8535",
-                "description": "The OAuth token is invalid or has expired.",
-                "resolution": "Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope."
-              }
-            ],
             "content": {
               "application/json": {
                 "schema": {
@@ -623,9 +601,31 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "Organisation not found.",
+                "resolution": "Verify the ZANALYTICS-ORGID header value."
+              },
+              {
+                "name": "7104",
+                "description": "Workspace or view not found by the provided name.",
+                "resolution": "Verify the exact spelling and case of workspaceName and viewName. Names are case-sensitive."
+              },
+              {
+                "name": "7301",
+                "description": "User does not have Read access on the workspace or view.",
+                "resolution": "Ensure the workspace or view is shared with the user, or the user has Workspace Admin / Account Admin / Organization Admin role."
+              },
+              {
+                "name": "8535",
+                "description": "Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {

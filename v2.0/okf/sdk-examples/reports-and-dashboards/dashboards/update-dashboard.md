@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
   - id: endpoint-doc
     resource: "/domains/reports-and-dashboards/dashboards/update-dashboard.md"
     title: Endpoint reference - Update Dashboard
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -57,7 +57,7 @@ Code samples for [Update Dashboard](../../../domains/reports-and-dashboards/dash
 ## cURL
 
 ```bash
-curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/35130000001055707/dashboards/35130000001055801" -X 'PUT' -H 'ZANALYTICS-ORGID: <org-id>' -H 'Authorization: Zoho-oauthtoken <access_token>' --data-urlencode 'CONFIG={"displayName":"Sales Overview - Updated","layout":{"1":{"type":"USERFILTERS","width":80,"height":3,"left":0,"top":0},"2":{"type":"HTML","width":80,"height":5,"left":0,"top":3,"content":"<b>Updated Title</b>"},"3":{"type":"VIEW","width":80,"height":20,"left":0,"top":8,"viewName":"Sales Chart","properties":{}}},"themes":{"layoutType":2,"type":"solid","solid":{"background":"#1A1B2E"},"card":{"background":"#3E3F4D","title":{"border":{"color":"#6F738E"}},"border":{"color":"#6F738E","width":2}}}}'
+curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/35130000001055707/dashboards/35130000001055801" -X 'PUT' -H 'ZANALYTICS-ORGID: <org-id>' -H 'Authorization: Zoho-oauthtoken <access_token>' --data-urlencode 'CONFIG={"layout":"{\"1\":{\"type\":\"USERFILTERS\",\"width\":80,\"height\":3,\"left\":0,\"top\":0},\"2\":{\"type\":\"HTML\",\"width\":80,\"height\":5,\"left\":0,\"top\":3,\"content\":\"<b>Updated Title</b>\"},\"3\":{\"type\":\"VIEW\",\"width\":80,\"height\":20,\"left\":0,\"top\":8,\"viewName\":\"Sales Chart\",\"properties\":{}}}","themes":{"layoutType":2,"type":"solid","solid":{"background":"#1A1B2E"},"card":{"background":"#3E3F4D","title":{"border":{"color":"#6F738E"}},"border":{"color":"#6F738E","width":2}}}}'
 ```
 
 ## C#
@@ -78,7 +78,7 @@ namespace ZohoAnalyticsTest
         {
             long dashboardId = 35130000001055801;
             string displayName = "Sales Overview - Updated";
-            // A supplied layout replaces the existing one in full - partial card sets are not supported
+            // A supplied layout replaces the existing one in full - partial card sets are not supported. The client library sends layout as the JSON-encoded string the API expects.
             Dictionary<string, object> filterCard = new Dictionary<string, object>{{"type","USERFILTERS"},{"width",80},{"height",3},{"left",0},{"top",0}};
             Dictionary<string, object> htmlCard = new Dictionary<string, object>{{"type","HTML"},{"width",80},{"height",5},{"left",0},{"top",3},{"content","<b>Updated Title</b>"}};
             Dictionary<string, object> viewCard = new Dictionary<string, object>{{"type","VIEW"},{"width",80},{"height",20},{"left",0},{"top",8},{"viewName","Sales Chart"},{"properties",new Dictionary<string, object>()}};
@@ -135,7 +135,7 @@ var (
 func UpdateDashboard(ac ZAnalytics.Client) {
     dashboardId := "35130000001055801"
     displayName := "Sales Overview - Updated"
-    // A supplied layout replaces the existing one in full - partial card sets are not supported
+    // A supplied layout replaces the existing one in full - partial card sets are not supported. The client library sends layout as the JSON-encoded string the API expects.
     layout := map[string]interface{}{
         "1": map[string]interface{}{"type": "USERFILTERS", "width": 80, "height": 3, "left": 0, "top": 0},
         "2": map[string]interface{}{"type": "HTML", "width": 80, "height": 5, "left": 0, "top": 3, "content": "<b>Updated Title</b>"},
@@ -189,7 +189,7 @@ public class Test {
     public void updateDashboard(AnalyticsClient ac) throws Exception {
         long dashboardId = 35130000001055801l;
         String displayName = "Sales Overview - Updated";
-        // A supplied layout replaces the existing one in full - partial card sets are not supported
+        // A supplied layout replaces the existing one in full - partial card sets are not supported. The client library sends layout as the JSON-encoded string the API expects.
         JSONObject filterCard = new JSONObject();
         filterCard.put("type", "USERFILTERS");
         filterCard.put("width", 80);
@@ -248,12 +248,12 @@ class Test {
     function updateDashboard() {
         $dashboard_id = "35130000001055801";
         $display_name = "Sales Overview - Updated";
-        // A supplied layout replaces the existing one in full - partial card sets are not supported
-        $layout = [
+        // A supplied layout replaces the existing one in full - partial card sets are not supported. layout travels as a JSON-encoded string.
+        $layout = json_encode([
             "1" => ["type" => "USERFILTERS", "width" => 80, "height" => 3, "left" => 0, "top" => 0],
             "2" => ["type" => "HTML", "width" => 80, "height" => 5, "left" => 0, "top" => 3, "content" => "<b>Updated Title</b>"],
             "3" => ["type" => "VIEW", "width" => 80, "height" => 20, "left" => 0, "top" => 8, "viewName" => "Sales Chart", "properties" => (object)[]]
-        ];
+        ]);
         $themes = [
             "layoutType" => 2,
             "type" => "solid",
@@ -278,6 +278,7 @@ $obj->updateDashboard();
 ## Python
 
 ```python
+import json
 from AnalyticsClient import AnalyticsClient
 
 class Config:
@@ -293,12 +294,12 @@ class sample:
     def update_dashboard(self, ac):
         dashboard_id = "35130000001055801"
         display_name = "Sales Overview - Updated"
-        # A supplied layout replaces the existing one in full - partial card sets are not supported
-        layout = {
+        # A supplied layout replaces the existing one in full - partial card sets are not supported. layout travels as a JSON-encoded string.
+        layout = json.dumps({
             "1": {"type": "USERFILTERS", "width": 80, "height": 3, "left": 0, "top": 0},
             "2": {"type": "HTML", "width": 80, "height": 5, "left": 0, "top": 3, "content": "<b>Updated Title</b>"},
             "3": {"type": "VIEW", "width": 80, "height": 20, "left": 0, "top": 8, "viewName": "Sales Chart", "properties": {}}
-        }
+        })
         themes = {
             "layoutType": 2,
             "type": "solid",
@@ -327,12 +328,12 @@ var workspaceId = '35130000001055707';
 
 var dashboardId = '35130000001055801';
 var displayName = 'Sales Overview - Updated';
-// A supplied layout replaces the existing one in full - partial card sets are not supported
-var layout = {
+// A supplied layout replaces the existing one in full - partial card sets are not supported. layout travels as a JSON-encoded string.
+var layout = JSON.stringify({
     '1': { type: 'USERFILTERS', width: 80, height: 3, left: 0, top: 0 },
     '2': { type: 'HTML', width: 80, height: 5, left: 0, top: 3, content: '<b>Updated Title</b>' },
     '3': { type: 'VIEW', width: 80, height: 20, left: 0, top: 8, viewName: 'Sales Chart', properties: {} }
-};
+});
 var themes = {
     layoutType: 2,
     type: 'solid',
@@ -350,6 +351,7 @@ dashboard.updateDashboard(displayName, layout, null, themes).then(() => { consol
 ## Ruby
 
 ```ruby
+require "json"
 require 'zoho_analytics_client'
 
 class Config
@@ -369,12 +371,12 @@ class Sample
   def update_dashboard
     dashboard_id = "35130000001055801"
     display_name = "Sales Overview - Updated"
-    # A supplied layout replaces the existing one in full - partial card sets are not supported
-    layout = {
+    # A supplied layout replaces the existing one in full - partial card sets are not supported. layout travels as a JSON-encoded string.
+    layout = JSON.generate({
       "1" => { "type" => "USERFILTERS", "width" => 80, "height" => 3, "left" => 0, "top" => 0 },
       "2" => { "type" => "HTML", "width" => 80, "height" => 5, "left" => 0, "top" => 3, "content" => "<b>Updated Title</b>" },
       "3" => { "type" => "VIEW", "width" => 80, "height" => 20, "left" => 0, "top" => 8, "viewName" => "Sales Chart", "properties" => {} }
-    }
+    })
     themes = {
       "layoutType" => 2,
       "type" => "solid",
@@ -448,8 +450,7 @@ themes.put("type", "solid");
 themes.put("solid", solidTheme);
 themes.put("card", cardTheme);
 config = Map();
-config.put("displayName", "Sales Overview - Updated");
-config.put("layout", layout);
+config.put("layout", layout.toString()); // layout travels as a JSON-encoded string
 config.put("themes", themes);
 parameters = "CONFIG=" + zoho.encryption.urlEncode(config.toString());
 response = invokeurl

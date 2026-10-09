@@ -62,6 +62,116 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7104",
+            "description": "METAOBJECTNOTPRESENT — A view in viewIds does not exist.",
+            "resolution": "Verify the IDs via Get View List."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, the user lacks Create Email Schedule permission, or lacks Export permission on a view in viewIds.",
+            "resolution": "Call from the standard API host with the required permissions."
+          },
+          {
+            "name": "7319",
+            "description": "OBJIDNOTBELONGSTODB — A view in viewIds belongs to a different workspace.",
+            "resolution": "Include only views from <workspace-id>."
+          },
+          {
+            "name": "7832",
+            "description": "INVALIDEXPORTTYPE — exportType is not one of the supported formats.",
+            "resolution": "Use CSV, XLS, PDF, HTML, or IMG."
+          },
+          {
+            "name": "8000",
+            "description": "DUPLICATESCHEDULE — A schedule with this scheduleName already exists in the workspace.",
+            "resolution": "Choose a different name."
+          },
+          {
+            "name": "8001",
+            "description": "MAILCOUNTPERSCHEDEXCEED — Too many recipients for a single schedule.",
+            "resolution": "Reduce the recipient list, or split it across schedules."
+          },
+          {
+            "name": "8009",
+            "description": "MAILMULTIVIEWMAXCOUNTEXCEEEDED — Too many views in one schedule.",
+            "resolution": "Reduce viewIds, or split across schedules."
+          },
+          {
+            "name": "8030",
+            "description": "EMAILEXPORTDISABLEDINORG — Email export is disabled for this organization.",
+            "resolution": "Ask the Organization Admin to enable export in Security Controls."
+          },
+          {
+            "name": "8031",
+            "description": "UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains.",
+            "resolution": "Use trusted-domain addresses, or ask the Organization Admin to add the domain."
+          },
+          {
+            "name": "8032",
+            "description": "EMAILINGVIEWDISABLED — Emailing this view is disabled.",
+            "resolution": "Check the view's and workspace's export settings."
+          },
+          {
+            "name": "8033",
+            "description": "MAILSCHSELECTATLEASTONEEMAILID — No recipient could be resolved from emailIds, groupIds, and cc.",
+            "resolution": "Supply at least one address or a non-empty group."
+          },
+          {
+            "name": "8034",
+            "description": "ONLYONEDASHBOARDISALLOWEDPERSCH — More than one view scheduled where the first is a dashboard.",
+            "resolution": "Schedule the dashboard on its own."
+          },
+          {
+            "name": "8035",
+            "description": "EXPORTFORMATSALLOWEDFORDASHBOARD — Dashboard scheduled with a format other than PDF/HTML.",
+            "resolution": "Use PDF or HTML."
+          },
+          {
+            "name": "8036",
+            "description": "EXPORTFORMATSALLOWEDFORCHART — IMG requested for a view that is not a chart.",
+            "resolution": "Use IMG only for chart views."
+          },
+          {
+            "name": "8037",
+            "description": "ONLYONEVIEWISALLOWEDFORXLS — XLS requested with more than one view.",
+            "resolution": "Send exactly one view, or choose another format."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — A scheduleDetails value is out of range (e.g. hour outside 0–23, minute not a multiple of 5, weekDays outside 1–7, months outside 1–12, skipFrequency beyond the limit for the chosen frequency).",
+            "resolution": "The error message names the attribute and its permitted range; correct the value."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A view carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules'].post",
+      "update": {
+        "description": "Creates a new recurring email schedule in the workspace and returns its ID."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules'].post",
       "update": {
         "x-zenesis-title": "Create Email Schedule"
@@ -115,11 +225,101 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain (where this API is disabled), or the user lacks Create Email Schedule permission on the workspace.",
+            "resolution": "Call from the standard API host as an Account Admin, Organization Admin, Workspace Admin, or a user with Create Email Schedule permission."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules'].get",
+      "update": {
+        "description": "Returns every email schedule defined in the workspace, with its name, run period, enabled state, creator, and the views it delivers. This is the discovery call for <schedule-id>, which the other five APIs need."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules'].get",
       "update": {
         "x-zenesis-title": "Get Email Schedules"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}'].post.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7106",
+            "description": "METAOBJECTNOTPRESENT — The schedule has no surviving views to send.",
+            "resolution": "Recreate the schedule against existing views."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace.",
+            "resolution": "Call from the standard API host with the required permission."
+          },
+          {
+            "name": "7812",
+            "description": "SCHEDULEDELETED — No schedule exists with the given <schedule-id>.",
+            "resolution": "Re-resolve the current ID via Get Email Schedules."
+          },
+          {
+            "name": "8002",
+            "description": "SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or the caller may not act on it.",
+            "resolution": "Verify the ID belongs to this workspace."
+          },
+          {
+            "name": "8005",
+            "description": "SCHNOTINWS — The schedule does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <schedule-id> are consistent."
+          },
+          {
+            "name": "8030",
+            "description": "EMAILEXPORTDISABLEDINORG — Email export is disabled for this organization.",
+            "resolution": "Ask the Organization Admin to enable export in Security Controls."
+          },
+          {
+            "name": "8032",
+            "description": "EMAILINGVIEWDISABLED — Emailing is disabled for a view in this schedule.",
+            "resolution": "Check the view's and workspace's export settings."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}'].post",
+      "update": {
+        "description": "Runs a schedule immediately — the \"send now\" action. This sends real email to every configured recipient, using the schedule's stored configuration."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}'].post",
@@ -171,6 +371,81 @@
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}'].put.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace.",
+            "resolution": "Call from the standard API host with the required permission."
+          },
+          {
+            "name": "7812",
+            "description": "SCHEDULEDELETED — No schedule exists with the given <schedule-id>. Commonly a stale ID after an earlier update regenerated it.",
+            "resolution": "Re-resolve the current ID via Get Email Schedules."
+          },
+          {
+            "name": "8000",
+            "description": "DUPLICATESCHEDULE — Another schedule in the workspace already uses the requested scheduleName.",
+            "resolution": "Choose a different name."
+          },
+          {
+            "name": "8001",
+            "description": "MAILCOUNTPERSCHEDEXCEED — Too many recipients after the update.",
+            "resolution": "Reduce the recipient list."
+          },
+          {
+            "name": "8002",
+            "description": "SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or a custom-role user attempted to edit a schedule they do not own.",
+            "resolution": "Verify the ID belongs to this workspace; otherwise have the schedule's creator or an admin perform the update."
+          },
+          {
+            "name": "8005",
+            "description": "SCHNOTINWS — The schedule does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <schedule-id> are consistent."
+          },
+          {
+            "name": "8031",
+            "description": "UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains.",
+            "resolution": "Use trusted-domain addresses."
+          },
+          {
+            "name": "8033",
+            "description": "MAILSCHSELECTATLEASTONEEMAILID — The update would leave the schedule with no recipients.",
+            "resolution": "Keep at least one address or non-empty group."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — A scheduleDetails value is out of range.",
+            "resolution": "The error message names the attribute and its permitted range."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A delivered view carries a restricted DATAWARNING system tag.",
+            "resolution": "Review the warning, then resend with \"validateSystemTags\": false."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.update."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}'].put",
+      "update": {
+        "description": "Updates an existing schedule's name, run period, recipients, or email content. Read Schedule ID Lifecycle first — this call can replace the schedule's ID."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}'].put",
       "update": {
         "x-zenesis-title": "Update Email Schedule"
@@ -194,6 +469,51 @@
         }
       },
       "x-migration": "HTML restatement of `description`. Retire it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace.",
+            "resolution": "Call from the standard API host with the required permission."
+          },
+          {
+            "name": "7812",
+            "description": "SCHEDULEDELETED — No schedule exists with the given <schedule-id>.",
+            "resolution": "Nothing to delete; re-check via Get Email Schedules."
+          },
+          {
+            "name": "8002",
+            "description": "SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or a custom-role user attempted to delete a schedule they do not own.",
+            "resolution": "Verify the ID belongs to this workspace; otherwise have the creator or an admin delete it."
+          },
+          {
+            "name": "8005",
+            "description": "SCHNOTINWS — The schedule does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <schedule-id> are consistent."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}'].delete",
+      "update": {
+        "description": "Permanently deletes an email schedule. The views it delivered are unaffected; only the schedule and its pending runs are removed."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}'].delete",
@@ -227,6 +547,66 @@
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status'].put.requestBody.content['application/x-www-form-urlencoded'].examples.deactivateSchedule",
       "update": {
         "summary": "Pauses the schedule without deleting its configuration."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status'].put.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+            "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace.",
+            "resolution": "Call from the standard API host with the required permission."
+          },
+          {
+            "name": "7812",
+            "description": "SCHEDULEDELETED — No schedule exists with the given <schedule-id>.",
+            "resolution": "Re-resolve the current ID via Get Email Schedules."
+          },
+          {
+            "name": "8002",
+            "description": "SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or the caller may not act on it.",
+            "resolution": "Verify the ID belongs to this workspace."
+          },
+          {
+            "name": "8003",
+            "description": "ALLSCHRUNERROR — The schedule could not be activated.",
+            "resolution": "Check that the schedule's views still exist and that the organization is within its schedule quota."
+          },
+          {
+            "name": "8004",
+            "description": "ALLSCHPAUSEERROR — The schedule could not be deactivated.",
+            "resolution": "Retry; if it persists, verify the schedule still exists."
+          },
+          {
+            "name": "8005",
+            "description": "SCHNOTINWS — The schedule does not belong to the specified workspace.",
+            "resolution": "Ensure <workspace-id> and <schedule-id> are consistent."
+          },
+          {
+            "name": "8119",
+            "description": "INVALIDVALUEFORATTRIBUTE — operation is neither activate nor deactivate.",
+            "resolution": "Send exactly activate or deactivate."
+          },
+          {
+            "name": "8535",
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.update."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status'].put",
+      "update": {
+        "description": "Activates or deactivates a schedule without deleting it. A deactivated schedule keeps its configuration and ID but stops running automatically."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },

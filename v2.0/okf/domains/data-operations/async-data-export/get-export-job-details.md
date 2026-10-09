@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Export Job Details
-description: Returns details of the specified asynchronous export job.
+description: "Reports the progress of an export job, and once it has finished, where to collect the file."
 resource: "https://analyticsapi.zoho.com/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -60,10 +60,6 @@ Reports the progress of an export job, and once it has finished, where to collec
 |-----------|------|-------------|
 | `<workspace-id>` | Long | ID of the workspace the job was created against. |
 | `<job-id>` | Long | The `data.jobId` returned by either creation API. |
-
-From the OpenAPI specification:
-
-Returns details of the specified asynchronous export job. The HTTP status reports the request, not the job - a failed job is returned as 200 with jobCode 1003. downloadUrl and expiryTime are present only when jobCode is 1004. Only the user who created the job may poll it.
 
 # Endpoint
 

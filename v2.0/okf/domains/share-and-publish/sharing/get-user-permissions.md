@@ -1,8 +1,8 @@
 ---
 type: API Endpoint
 title: Get My Permissions
-description: Returns the permissions that the requesting user holds on the specified view.
-resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions"
+description: Returns the effective permission set the calling user currently has on a specific view.
+resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions"
 tags:
   - zoho-analytics
   - rest-api-v2
@@ -13,7 +13,7 @@ tags:
 api:
   operation_id: getUserPermissions
   method: GET
-  path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions"
+  path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions"
   domain: share-and-publish
   group: sharing
   oauth_scopes:
@@ -30,7 +30,7 @@ api:
     - 7301
   openapi:
     file: "/references/openapi/share-publish-grouped-api.json"
-    pointer: "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1share~1mypermissions/get"
+    pointer: "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1share~1userpermissions/get"
     config_schema: null
     response_schema: GetUserPermissionsResponse
   sdk_examples: "/sdk-examples/share-and-publish/sharing/get-user-permissions.md"
@@ -39,16 +39,16 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
 # Summary
 
-**GET `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions`** - Get My Permissions (Sharing / Share & Publish).
+**GET `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions`** - Get My Permissions (Sharing / Share & Publish).
 
 Returns the effective permission set the **calling user** currently has on a specific view.
 
@@ -56,24 +56,20 @@ Returns the effective permission set the **calling user** currently has on a spe
 
 > **Deprecated alias:** `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/share/mypermissions` is the original path for this same API and continues to function, but is deprecated in favor of `/share/userpermissions`. New integrations should use `/share/userpermissions`.
 
-From the OpenAPI specification:
-
-Returns the permissions that the requesting user holds on the specified view. The permissions returned are the effective ones, whether they were granted directly to the user or inherited through a group.
-
 # Endpoint
 
 | Attribute | Value |
 |---|---|
 | Operation ID | `getUserPermissions` |
 | HTTP method | GET |
-| URL | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions` |
+| URL | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions` |
 | Base URL | `https://analyticsapi.zoho.com` (data-center specific, see [Data centers](../../../foundations/data-centers.md)) |
 | OAuth scope | [`ZohoAnalytics.share.read`](../../../foundations/oauth-scopes.md#zohoanalyticsshareread) |
 | ZANALYTICS-ORGID header | **Required** - Organisation ID of the workspace. |
 | Permission required | Any authenticated user with at least Read-Only access to <view-id> (i.e., any user the view has been shared with, or the view's owner/Workspace Admin). See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
-| OpenAPI | [`share-publish-grouped-api.json`](../../../references/openapi/share-publish-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1share~1mypermissions/get`; response schema `GetUserPermissionsResponse` |
+| OpenAPI | [`share-publish-grouped-api.json`](../../../references/openapi/share-publish-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1share~1userpermissions/get`; response schema `GetUserPermissionsResponse` |
 
 # Request
 

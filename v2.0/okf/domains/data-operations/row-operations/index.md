@@ -4,6 +4,6 @@
 
 # Concepts
 
-* [Add Row](add-row.md) - Adds a single row to the specified table.
-* [Delete Row](delete-rows.md) - Deletes rows from the specified table.
-* [Update Row](update-rows.md) - Updates rows in the specified table.
+* [Add Row](add-row.md) - Inserts a single row into a table.
+* [Delete Row](delete-rows.md) - Deletes the rows of a table that match a filter, or every row.
+* [Update Row](update-rows.md) - Updates the rows of a table that match a filter, or every row.

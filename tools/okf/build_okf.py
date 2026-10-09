@@ -158,7 +158,7 @@ ID_SOURCES = {
  'ZANALYTICS-ORGID': ('Organization ID', ['Get Org List', 'Get Meta Details From Name']),
  'ZANALYTICS-DEST-ORGID': ('Destination organization ID for cross-organization copies', ['Get Org List']),
  'workspace-id': ('Workspace ID', ['Get Meta Details From Name', 'Get All Workspace List', 'Get Owned Workspace List', 'Get Shared Workspace List', 'Create Workspace']),
- 'view-id': ('View ID (table, report, dashboard, query table, etc.)', ['Get Meta Details From Name', 'Get View List', 'Create Table', 'Create Query Table', 'Import Data into a New Table (Synchronous)', 'Create Analysis View', 'Create Dashboard']),
+ 'view-id': ('View ID (table, report, dashboard, query table, etc.)', ['Get Meta Details From Name', 'Get View List', 'Create Table', 'Create Query Table', 'Import Data into a New Table (Synchronous)', 'Create Report', 'Create Dashboard']),
  'column-id': ('Column ID within a table', ['Get Table Metadata', 'Add Column']),
  'folder-id': ('Folder ID within a workspace', ['Get Folder List', 'Create Folder']),
  'group-id': ('Workspace group ID', ['Get Group List', 'Create Group']),
@@ -174,7 +174,7 @@ ID_SOURCES = {
  'deployment-id': ('AutoML model deployment ID', ['Get Deployments For A Model', 'Create AutoML Analysis Deployment']),
  'role-id': ('Custom role ID', []),
  'dashboard-id': ('Dashboard ID (a view ID whose type is Dashboard)', ['Get All Dashboards', 'Get Owned Dashboards', 'Get Shared Dashboards', 'Create Dashboard', 'Get View List']),
- 'report-id': ('Report ID (a view ID of an analysis view)', ['Get View List', 'Create Analysis View']),
+ 'report-id': ('Report ID (a view ID of an analysis view)', ['Get View List', 'Create Report']),
 }
 
 # --------------------------------------------------------------------------------------------
@@ -475,6 +475,7 @@ def parse_error_rows(block):
 
 GROUPS = {}   # group slug -> record
 ENDPOINTS = []  # ordered endpoint records
+APPENDIX_FOUNDATION = {}  # slug of a skipped 'Common HTTP Headers' / 'OAuth Scope Summary' appendix -> foundation path
 for dfolder, dslug, dtitle, oasfile, groups in DOMAINS:
     for gfile, gslug, gtitle in groups:
         path = os.path.join(MD_DIR, dfolder, gfile + '.md')
@@ -506,7 +507,10 @@ for dfolder, dslug, dtitle, oasfile, groups in DOMAINS:
                     grp['heading_owner'].setdefault(slugify(h), ('endpoint', n))
                 grp['heading_owner'].setdefault(slugify(stitle), ('endpoint', n))
             else:
-                if stitle.lower() == 'index' or re.match(r'^Appendix [AB]\b', stitle):
+                if stitle.lower() == 'index':
+                    continue
+                if re.match(r'^Appendix [A-Z]\b', stitle) and re.search(r'Common HTTP Headers|OAuth Scope Summary', stitle, re.I):
+                    APPENDIX_FOUNDATION[slugify(stitle)] = '/foundations/oauth-scopes.md' if 'scope' in stitle.lower() else '/foundations/request-conventions.md'
                     continue
                 grp['concept_sections'].append((stitle, body))
                 grp['heading_owner'].setdefault(slugify(stitle), ('overview', None))
@@ -571,10 +575,10 @@ def resolve_anchor(gslug, anchor, current_ep=None):
     if m:
         ep = EP_BY_GROUP_N.get((gslug, int(m.group(1))))
         if ep: return ep_path(ep)
-    if anchor in ('appendix-a--common-http-headers', 'appendix-a-common-http-headers'):
-        return '/foundations/request-conventions.md'
-    if anchor in ('appendix-b--oauth-scope-summary', 'appendix-b-oauth-scope-summary'):
-        return '/foundations/oauth-scopes.md'
+    if anchor in APPENDIX_FOUNDATION:
+        return APPENDIX_FOUNDATION[anchor]
+    if anchor.replace('--', '-') in {k.replace('--', '-'): v for k, v in APPENDIX_FOUNDATION.items()}:
+        return {k.replace('--', '-'): v for k, v in APPENDIX_FOUNDATION.items()}[anchor.replace('--', '-')]
     owner = grp['heading_owner'].get(anchor)
     if owner:
         kind, n = owner
@@ -788,7 +792,7 @@ def render_endpoint(ep):
     throttle = None
     if op and op['throttles']:
         t = op['throttles'][0]
-        throttle = f"{t['threshold']} requests per user per {t['duration']} seconds; lockout {t['lock-period']} seconds on breach"
+        throttle = f"{t['threshold']} requests per user per {t['duration']} seconds" + (f"; lockout {t['lock-period']} seconds on breach" if t.get('lock-period') else '')
     desc = first_sentence(op['description'] if op else ep['intro'])
     permission = strip_md(ep['attrs'].get('Permission Required', ep['attrs'].get('PERMISSION REQUIRED', '')))
     if not permission.strip():
@@ -1232,7 +1236,7 @@ def render_rate_limits():
         op = e['op']
         if op and op['throttles']:
             t = op['throttles'][0]
-            rows.append((f"[{e['title']}]({ep_path(e)})", f"{t['threshold']} requests / user / {t['duration']} s", f"{t['lock-period'] // 60} minutes", strip_md(e['attrs'].get('Rate Limit', ''))))
+            rows.append((f"[{e['title']}]({ep_path(e)})", f"{t['threshold']} requests / user / {t['duration']} s", (f"{t['lock-period'] // 60} minutes" if t.get('lock-period') else '-'), strip_md(e['attrs'].get('Rate Limit', ''))))
         elif e['attrs'].get('Rate Limit'):
             rows.append((f"[{e['title']}]({ep_path(e)})", strip_md(e['attrs']['Rate Limit']), '-', ''))
     meta = gen_meta('Reference', 'Rate limits, throttling and quotas', 'Per-operation request throttles, concurrency guards, plan-governed quotas and API unit consumption for the Zoho Analytics REST API v2.',

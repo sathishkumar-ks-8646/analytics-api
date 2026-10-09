@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Batch Import Data into New Table
-description: Initiate an import job to create a new table and import data in batches into the created table.
+description: "Creates a new table and loads it from several uploads, all belonging to one import job."
 resource: "https://analyticsapi.zoho.com/restapi/v2/bulk/workspaces/{workspace-id}/data/batch"
 tags:
   - zoho-analytics
@@ -59,10 +59,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -74,7 +74,7 @@ Creates a new table and loads it from **several uploads**, all belonging to one 
 
 From the OpenAPI specification:
 
-Initiate an import job to create a new table and import data in batches into the created table.
+Creates a new table and loads it from several uploads, all belonging to one import job. Called once per batch.
 
  The Batch Import API allows you to upload large amounts of data in batches. A large data file is split into small batches, each batch not exceeding 100 MB, and imported using batch import. Alternatively, you can also use Zoho Analytics SDKs to simplify the batching process.
 

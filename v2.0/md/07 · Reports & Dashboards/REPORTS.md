@@ -1,807 +1,599 @@
-# Reports APIs – Documentation
+# Zoho Analytics V2 REST API — Reports
 
-This document describes the V2 **Reports (Analysis View)** REST APIs of Zoho Analytics.
-It follows the same conventions used in `TAG_API_DOC_INFO.md` — each API is documented
-with URL, method, behavior, OAuth scope, `CONFIG` schema, sample payload/response, and
-common error codes.
+A **report** (also called a *visual*, an *analysis view*, or simply a *view* in API responses and error
+messages — the four terms are interchangeable) is a saved visualisation built on top of a table. Zoho
+Analytics exposes three report families through this API:
 
-> Notes that apply to every API in this document:
-> - All requests are authenticated via OAuth (`Authorization: Zoho-oauthtoken <token>`).
-> - The `ZANALYTICS-ORGID` header is **mandatory**.
-> - `ZohoAnalytics_Server_URI` depends on the data center (`analyticsapi.zoho.com`, `.eu`, etc.).
-> - The `CONFIG` parameter (for POST/PUT) must be sent as a URL-encoded JSON string in the request body.
-> - `reportType` must be one of `chart`, `pivot`, or `summary`.
+| `reportType` | What it produces |
+|---|---|
+| `chart` | A chart — bar, line, pie, map, bubble, heat map, and so on. |
+| `pivot` | A pivot table with row, column and data shelves. |
+| `summary` | A summary view with grouping and aggregate columns. |
+
+A report is defined almost entirely by its **drop fields** — the `axisColumns` array, where each entry
+says *which column* goes on *which shelf* with *which operation*. Everything else (filters, user filters,
+window functions, formatting) hangs off that core.
+
+> **These APIs are blocked on white-label / custom domains.** All three endpoints are declared
+> `custom-domain-disable`. Call the standard REST host for your data centre
+> (`analyticsapi.zoho.com`, `analyticsapi.zoho.eu`, …).
+
+> **Update is a full replacement.** Whatever you send becomes the report. Omitting `filters` clears the
+> filters; omitting `description` clears the description. See
+> [Update is destructive](#update-is-destructive) before writing any update integration.
 
 ---
 
 ## Index
 
-| # | API NAME | METHOD | URL |
+| # | API Name | Method | URL |
 |---|----------|--------|-----|
-| 1 | Create Analysis View | POST | `/restapi/v2/workspaces/<workspace-id>/reports` |
-| 2 | Update Analysis View | PUT | `/restapi/v2/workspaces/<workspace-id>/reports/<view-id>` |
-| 3 | Get Report Metadata | GET | `/restapi/v2/workspaces/<workspace-id>/reports/<view-id>/metadata` |
+| 1 | [Create Report](#1-create-report) | POST | `/restapi/v2/workspaces/<workspace-id>/reports` |
+| 2 | [Read Report Metadata](#2-read-report-metadata) | GET | `/restapi/v2/workspaces/<workspace-id>/reports/<report-id>/metadata` |
+| 3 | [Update Report](#3-update-report) | PUT | `/restapi/v2/workspaces/<workspace-id>/reports/<report-id>` |
 
 ---
 
-## 1. Create Analysis View
+## Round-tripping a report
+
+[Read Report Metadata](#2-read-report-metadata) is an **inspection** endpoint. Its response is a summary
+of the stored definition, not a Create or Update payload. Feeding it back into Update is the most common
+and most damaging mistake against this API: the call succeeds, and the report quietly loses most of its
+configuration.
+
+**If you need read-modify-write, retain the CONFIG you submitted at create time and modify that.**
+
+### Written but never returned
+
+Every key below is accepted on write and is absent from the read response. A read-modify-write cycle
+destroys all of them.
+
+| Section | Keys lost |
+|---|---|
+| Top level | `folderId`, `settings` (all pivot layout and theme properties), `drillActionConfig`, `modifiedPaths` |
+| `axisColumns[]` | `displayName`, `sort`, `rangeSize`, `windowFunction`, `format`, `geoRole` |
+| `filters[]` | `wildcard` (all criteria and the expression), `rankingColumn`, `rankingColumnDateSubType`, `additionalDetails` |
+| `userFilters[]` | `compType`, `filterType`, `isallval`, `values`, `defaultFilterValues`, `exclude`, `behaviour` |
+
+Two consequences are worth calling out:
+
+- **User filters are reduced to three keys** — `tableName`, `columnName`, `operation`. Writing the read
+  response back rebuilds every user filter with default behaviour: sliders become select lists,
+  date-range pickers become single selects, restricted value lists become "all values", and
+  pre-selections and exclusions are dropped.
+- **A geo column cannot be round-tripped.** `operation: "geo"` is returned but `geoRole` is not, and
+  `geo` without `geoRole` is invalid — so the update fails outright.
+
+### Values that change across a round trip
+
+| Key | Behaviour |
+|---|---|
+| `axisColumns[].type` | Always returned **lowercase** (`xaxis`, `yaxis`, `coloraxis`, `textaxis`, `groupby`, `tooltip`, `latlng`) regardless of the casing you sent. All of those are accepted on write. The exception: a `tooltip` column may be returned as `group`, which the schema rejects with **8509**. |
+| `chartType` | Reverse-derived from storage, not stored verbatim. Where several names share one stored chart/sub-chart pair the returned name is one of them, not necessarily yours: `area` / `area without points` / `area without markers`; `line` / `line with points` / `line with markers`; `map area` / `map filled`; `web` / `web with fill`. For `stacked area without points` and `stacked area without markers` the key is **omitted entirely**. |
+| `axisColumns[].operation` | Also reverse-derived. Aliases collapse — `average`/`avg`, `absquarter`/`quarteryear`, `absmonth`/`monthyear`, `absweek`/`weekyear`, `actual`/`geo`, and `variance`/`dc`/`distinctcount` — and all thirteen date distinct-count operations (`distinctcount`, `ydc`, `mydc`, `wydc`, `qydc`, `ddc`, `dtdc`, `qdc`, `wdc`, `wddc`, `dmdc`, `hdc`, `mdc`) share one stored marker, so the returned one may compute a **different** distinct count from the one you created. An unrecognised stored operation is reported as `actual`. |
+| `filters[].operation` | Date filters created with `actual`, `range` or `daterange` share one stored value and may be returned as any of the three. |
+| `filters[].filterType` | Several input values share one stored sub-type and collapse on read: `{absquarter, quarteryear, quarter}`, `{absmonth, monthyear, month}`, `{absweek, weekyear, week}`, `{date, fulldate}`, `{range, daterange}`, `{year, common}`. An **absolute** `monthyear` filter can be reported as a **seasonal** `month` filter — re-submitting that changes what the report shows. |
+| `filters[].values` | Reconstructed by splitting the stored display criteria on commas. **Any filter value containing a comma is split into several values**, and surrounding whitespace is lost. |
+| `userFilters[].operation` | For **date** columns the read puts a `filterType`-shaped value into this field — `year`, `monthyear`, `fulldate`, `datetime`, `range`, and so on. These are **not** valid `operation` values on write (which takes `actual`, `seasonal`, `relative`, `range`, `daterange`), so re-submitting raises **8166**. For numeric columns, aliases collapse as above. |
+| `reportType` | May be returned as `widget` for widget-backed views, which Create and Update both reject with **8509**. |
+| `tableName` | Always returned on every axis column and filter, even where you omitted it. The returned value is valid on write. |
+| `columnName` | Returned in the column's stored display casing; matched case-insensitively on write. |
+
+### Keys that must be removed before an update
+
+| Key | Why |
+|---|---|
+| `baseTableName` | Returned by the read, rejected by Update with **8542**. |
+
+And `reportType` must be **added** if you are assembling an update payload from anything that omits it —
+it is mandatory on Update and must match the stored view type.
+
+> **Axis-merged reports cannot be read at all.** When `isAxisMerge` is `true` the metadata call currently
+> fails with an internal error while assembling `mergeAxisInfo`. Do not build a read-modify-write flow
+> that depends on reading a merged-axis report.
+
+---
+
+## 1. Create Report
+
+Builds a new chart, pivot or summary view on an existing table and returns its view ID.
 
 | Attribute | Value |
 |-----------|-------|
-| **API NAME** | Create Analysis View |
-| **URL** | `POST https://<ZohoAnalytics_Server_URI>/restapi/v2/workspaces/<workspace-id>/reports` |
-| **METHOD** | POST |
-| **DESCRIPTION** | Creates a new analysis view (chart, pivot table, or summary view) in the specified workspace, based on a referenced base table. The view is configured via the `CONFIG` JSON parameter specifying the report type, axis columns, filters, and visualization settings. |
-| **OAUTHSCOPE** | `ZohoAnalytics.modeling.create` |
-| **PERMISSION REQUIRED** | The authenticated user must be an **Account Admin** or **Organization Admin**, or a **Workspace Admin**, or a **Shared User**, or a **Group Member**, or any user with **Create Report** permission on the workspace. |
-
-### FIELDS FOR CONFIG JSON
-
-| Attribute | Data Type | Mandatory | Default | Allowed Values / Constraints | Description |
-|-----------|-----------|-----------|---------|------------------------------|-------------|
-| `baseTableName` | string | **Yes** | — | Max 100 characters | Display name of the base table on which the analysis view is created. |
-| `reportType` | string | **Yes** | — | `chart`, `pivot`, `summary` | The type of analysis view to create. |
-| `title` | string | No | `""` | Max 100 characters | Display name for the new view. If omitted, the view ID is used as the title. |
-| `description` | string | No | `""` | Max 250 characters | Optional description for the view. |
-| `folderId` | long | No | Root folder | Valid folder ID; pass `-1` for root | Folder in which to place the new view. |
-| `chartType` | string | No | `""` | Max 50 characters (alphanumeric, spaces) | Chart sub-type (e.g., `bar`, `line`, `pie`, `bubble`, `stacked bar`, `heat map`). Required for `chart` views. |
-| `axisColumns` | JSONArray | No | `[]` | Max serialized size: 1 MB. See **Axis Column Object** below. | Defines the axis/dimension/measure configuration for the view. |
-| `isAxisMerge` | boolean | No | `false` | `true` or `false` | When `true`, merges multiple y-axes onto a single scale. Requires `mergeAxisInfo`. |
-| `mergeAxisInfo` | JSONArray | No | `[]` | Max serialized size: 10 MB. Each item: `axisIndex` (int array of 1-based positions) + `labelName` (string). | Groupings for merged axes when `isAxisMerge` is `true`. |
-| `filters` | JSONArray | No | `[]` | Max serialized size: 1 MB. See **Filter Object** below. | Data filters applied to the view at render time. |
-| `userFilters` | JSONArray | No | `[]` | Max serialized size: 1 MB. See **User Filter Object** below. | Interactive filter widgets shown to the viewer inside the view. |
-| `settings` | JSONObject | No | `{}` | Max 10 KB. See **View Settings Object** below. | Layout and theme settings for the view. |
-| `modifiedPaths` | JSONObject | No | `{}` | Max 10 KB | Tracks which configuration paths were changed (used for incremental updates). |
-| `drillActionConfig` | JSONObject | No | `{}` | Max 100 KB. See **Drill Action Config Object** below. | Configures drill-through actions triggered by clicking data points. |
-
----
-
-#### Axis Column Object
-
-Each element in `axisColumns` is a JSON object describing one dimension or measure on the view.
-
-| Field | Data Type | Mandatory | Description | Allowed Values |
-|-------|-----------|-----------|-------------|----------------|
-| `type` | string | **Yes** | Axis role of this column. See **Axis Type Enum** below. | See enum below |
-| `columnName` | string | Conditional | Name of the column. Required if `columnId` is not provided. | Max 1000 characters |
-| `columnId` | long | Conditional | ID of the column (alternative to `columnName`). | Valid column ID |
-| `tableName` | string | No | Table the column belongs to. Useful in multi-table workspaces. | Max 100 characters |
-| `tableId` | long | No | ID of the table (alternative to `tableName`). | Valid table ID |
-| `displayName` | string | No | Custom label shown on the axis in the rendered chart. | Max 250 characters |
-| `operation` | string | No | Aggregation or date-grouping operation for the column. See **Operation Enum** below. | See enum below |
-| `geoRole` | string | Conditional | Geographic role — required when `operation` is `geo`. See **GeoRole Enum** below. | See enum below |
-| `rangeSize` | double | No | Bucket size for numeric range grouping (used with `range` operation). | Any positive double |
-| `sort` | string | No | Sort direction for this axis dimension. | `asc` — ascending, `desc` — descending |
-| `format` | JSONObject | No | Number/date display formatting. See **Column Format Object** below. | — |
-| `windowFunction` | JSONObject | No | Window/table-calculation applied to this measure. See **Window Function Object** below. | — |
-
-##### Axis Type Enum
-
-| Value | Applicable View Types | Description |
-|-------|-----------------------|-------------|
-| `xAxis` | chart | Horizontal axis (dimension or date) |
-| `yAxis` | chart | Vertical axis (measure) |
-| `colorAxis` | chart | Groups data into color segments |
-| `sizeAxis` | chart (bubble) | Encodes bubble size by measure |
-| `textAxis` | chart | Displays a text label on the chart |
-| `tooltip` | chart | Extra column shown in hover tooltip |
-| `row` | pivot | Row dimension grouping |
-| `column` | pivot | Column dimension grouping |
-| `data` | pivot | Measure/value cell in pivot |
-| `groupBy` | summary | Group-by dimension column |
-| `summarize` | summary | Aggregated measure column |
-| `custom` | any | Custom-purpose axis column |
-
-##### Operation Enum
-
-| Value | Description |
-|-------|-------------|
-| `actual` | Raw/actual value |
-| `sum` | Sum of values |
-| `avg` | Average of values |
-| `count` | Count of rows |
-| `dc` | Count of unique values |
-| `min` | Minimum value |
-| `max` | Maximum value |
-| `std` | Standard deviation |
-| `variance` | Statistical variance |
-| `percentile` | Percentile computation |
-| `dimension` | Numeric column treated as dimension |
-| `range` | Numeric range bucket grouping |
-| `geo` | Geographic mapping (use with `geoRole`) |
-| `year` | Group by year |
-| `quarter` | Group by quarter (Q1–Q4) |
-| `month` | Group by month |
-| `monthyear` | Group by month-year |
-| `absQuarter` | Absolute quarter (e.g., Q1 2024) |
-| `datetime` | Full date-time value |
-| `seasonal` | Seasonal period grouping |
-| `quarteryear` | Group by quarter-year |
-| `week` | Group by week |
-| `weekyear` | Group by week-year |
-| `weekday` | Group by weekday |
-| `fulldate` | Group by full date |
-| `day` | Group by day |
-| `hour` | Group by hour |
-
-##### GeoRole Enum
-
-| Value | Description |
-|-------|-------------|
-| `latitude` | Numeric latitude coordinate |
-| `longitude` | Numeric longitude coordinate |
-| `location` | Text-based location (city, region, country) |
-
-##### Samples — Axis Column Configurations
-
-**Sample 1: Bar chart — product dimension on x-axis, sales sum on y-axis**
-
-```json
-"axisColumns": [
-  {
-    "type": "xAxis",
-    "columnName": "Product",
-    "tableName": "Sales",
-    "operation": "actual"
-  },
-  {
-    "type": "yAxis",
-    "columnName": "Sales",
-    "tableName": "Sales",
-    "operation": "sum"
-  }
-]
-```
-
-**Sample 2: Pivot table — rows, column year, and data measures with window functions**
-
-```json
-"axisColumns": [
-  {
-    "type": "row",
-    "columnName": "Product",
-    "operation": "actual"
-  },
-  {
-    "type": "column",
-    "columnName": "Date",
-    "operation": "year"
-  },
-  {
-    "type": "data",
-    "columnName": "Sales",
-    "operation": "avg",
-    "windowFunction": { "type": "pctOfTotal" }
-  },
-  {
-    "type": "data",
-    "columnName": "Sales",
-    "operation": "dc",
-    "windowFunction": {
-      "type": "pctOfCol",
-      "baseField": "Product",
-      "baseFieldPosition": "row"
-    }
-  }
-]
-```
-
-**Sample 3: Scatter chart — color axis and tooltip for additional context**
-
-```json
-"axisColumns": [
-  {
-    "type": "xAxis",
-    "columnName": "Product",
-    "tableName": "Sales",
-    "operation": "actual"
-  },
-  {
-    "type": "yAxis",
-    "columnName": "Sales",
-    "tableName": "Sales",
-    "operation": "sum"
-  },
-  {
-    "type": "colorAxis",
-    "columnName": "Region",
-    "tableName": "Sales",
-    "operation": "actual"
-  },
-  {
-    "type": "tooltip",
-    "columnName": "Customer Name",
-    "tableName": "Sales",
-    "operation": "actual"
-  }
-]
-```
-
-**Sample 4: Geo map chart — latitude and longitude columns**
-
-```json
-"axisColumns": [
-  {
-    "type": "xAxis",
-    "columnName": "Latitude",
-    "tableName": "LatLong",
-    "operation": "geo",
-    "geoRole": "latitude"
-  },
-  {
-    "type": "yAxis",
-    "columnName": "Longitude",
-    "tableName": "LatLong",
-    "operation": "geo",
-    "geoRole": "longitude"
-  }
-]
-```
-
----
-
-#### Window Function Object
-
-Attached to a measure entry in `axisColumns` to apply a table calculation on top of the aggregated value.
-
-| Field | Data Type | Description | Allowed Values |
-|-------|-----------|-------------|----------------|
-| `type` | string | Window function type. | `runTotal` — running total, `pctOfTotal` — % of grand total, `pctOfCol` — % of column total, `pctdifffrom` — % diff from reference, `movingAvg` — moving average |
-| `baseField` | string | Reference column name for comparison functions. | Column name string |
-| `baseTable` | string | Reference table name. | Table name string |
-| `baseFieldPosition` | string | Axis position of the reference field. | `xAxis`, `yAxis`, `row`, `column` |
-| `baseFunction` | string | Date-grouping operation on the reference field. | Any value from **Operation Enum** |
-| `percentileVal` | int | Percentile target value (only for `percentile` operation). | `0`–`100` |
-| `movingCalculation` | JSONObject | Moving window definition: `calculation` (string), `previous` (int), `next` (int), `includeCurrent` (boolean), `includeNull` (boolean). | — |
-
-##### Samples — Window Function
-
-**Sample 1: Percentage of grand total**
-```json
-"windowFunction": {
-  "type": "pctOfTotal"
-}
-```
-
-**Sample 2: Percentage of column, referencing a pivot row dimension**
-```json
-"windowFunction": {
-  "type": "pctOfCol",
-  "baseField": "Product",
-  "baseFieldPosition": "row"
-}
-```
-
-**Sample 3: Running total anchored to date year on x-axis**
-```json
-"windowFunction": {
-  "type": "runTotal",
-  "baseField": "Date",
-  "baseTable": "Sales",
-  "baseFunction": "year",
-  "baseFieldPosition": "xAxis"
-}
-```
-
----
-
-#### Column Format Object
-
-Attached to an `axisColumns` entry to control how values are rendered.
-
-| Field | Data Type | Description | Allowed Values |
-|-------|-----------|-------------|----------------|
-| `type` | string | Format category. | `number`, `currency`, `percentage`, `date`, `text` |
-| `displayName` | string | Override label for this column. | Max 1000 characters |
-| `currencyFormat` | string | Currency symbol/code. | e.g., `$`, `€`, `USD` |
-| `alignment` | string | Cell text alignment. | `left`, `center`, `right` |
-| `thousandSeparator` | int | Enable thousand separator. | `0` — off, `1` — on |
-| `decimalPlaces` | int | Number of decimal places to display. | `0`–`9` |
-| `decimalSeparator` | int | Decimal separator character. | `0` — period (`.`), `1` — comma (`,`) |
-| `showSymbol` | boolean | Show the currency or percentage symbol. | `true` or `false` |
-| `showNegativeSign` | boolean | Show explicit minus sign for negatives. | `true` or `false` |
-| `numberingType` | int | Scale suffix for large numbers. | `0` — none, `1` — thousands (K), `2` — millions (M), `3` — billions (B) |
-| `unitsList` | string | Custom unit suffix appended to value. | e.g., `kg`, `hrs` |
-| `displayLabel` | string | Label override displayed in chart legend. | Max 1000 characters |
-| `dateFormat` | string | Date display format pattern. | e.g., `yyyy-MM-dd`, `dd MMM yyyy` |
-| `userLocale` | boolean | Apply the viewer's locale for formatting. | `true` or `false` |
-
-##### Samples — Column Format
-
-**Sample 1: Currency with two decimal places and thousand separator**
-```json
-"format": {
-  "type": "currency",
-  "currencyFormat": "$",
-  "decimalPlaces": 2,
-  "thousandSeparator": 1,
-  "showSymbol": true
-}
-```
-
-**Sample 2: Percentage value with no decimal places**
-```json
-"format": {
-  "type": "percentage",
-  "decimalPlaces": 0,
-  "showSymbol": true
-}
-```
-
-**Sample 3: Large number expressed in millions with custom unit**
-```json
-"format": {
-  "type": "number",
-  "numberingType": 2,
-  "thousandSeparator": 1,
-  "unitsList": "M"
-}
-```
-
----
-
-#### Filter Object
-
-Each element in `filters` restricts the data rendered in the view based on column values.
-
-| Field | Data Type | Description | Allowed Values |
-|-------|-----------|-------------|----------------|
-| `columnName` | string | Column to filter on. | Max 1000 characters |
-| `columnId` | long | ID of the column (alternative to `columnName`). | Valid column ID |
-| `tableName` | string | Table the column belongs to. | Max 1000 characters |
-| `tableId` | long | ID of the table. | Valid table ID |
-| `operation` | string | How the column value is computed for filtering. | Any value from **Operation Enum** |
-| `filterType` | string | Filter category. | `value` — exact match, `ranking` — top/bottom N, `year`, `quarter`, `month`, `week`, `weekday`, `fulldate`, `date`, `datetime`, `quarteryear`, `weekyear`, `common`, `range` |
-| `values` | JSONArray | Filter values or ranking spec (e.g., `"Top 5"`). | Array of strings |
-| `rankingColumn` | string | Column used to rank results (for `ranking` filterType). | Column name |
-| `rankingColumnDateSubType` | string | Date sub-grouping for ranking reference column. | Max 50 characters |
-| `exclude` | boolean | When `true`, the listed `values` are excluded instead of included. | `true` or `false` |
-| `wildcard` | JSONObject | Wildcard filter. Contains `criteria` (array, max 15 items each with `operation` + `value`) and `expression` (logical expression string). | — |
-| `additionalDetails` | JSONObject | Extra filter context. Contains `type`, `label`, `isFromDashboard` (boolean), `fromViewId` (long). | — |
-
-##### Samples — Filter Object
-
-**Sample 1: Year filter — include specific years**
-```json
-"filters": [
-  {
-    "columnName": "Date",
-    "tableName": "Sales",
-    "operation": "actual",
-    "filterType": "year",
-    "values": ["2023", "2024"],
-    "exclude": false
-  }
-]
-```
-
-**Sample 2: Ranking filter — top 5 products by average cost**
-```json
-"filters": [
-  {
-    "columnName": "Cost",
-    "tableName": "Sales",
-    "operation": "avg",
-    "filterType": "ranking",
-    "values": ["Top 5"],
-    "rankingColumn": "Product Category",
-    "exclude": false
-  }
-]
-```
-
-**Sample 3: Combined value filter and seasonal week filter**
-```json
-"filters": [
-  {
-    "columnName": "Region",
-    "tableName": "Sales",
-    "operation": "actual",
-    "filterType": "value",
-    "values": ["North", "East"],
-    "exclude": false
-  },
-  {
-    "columnName": "Date",
-    "tableName": "Sales",
-    "operation": "seasonal",
-    "filterType": "week",
-    "values": ["Week 2", "Week 3", "Week 4"],
-    "exclude": false
-  }
-]
-```
-
----
-
-#### User Filter Object
-
-Each element in `userFilters` defines an interactive filter widget displayed to the viewer inside the view.
-
-| Field | Data Type | Description | Allowed Values |
-|-------|-----------|-------------|----------------|
-| `tableName` | string | Table the filter column belongs to. | Max 1000 characters |
-| `columnName` | string | Column the filter operates on. | Max 1000 characters |
-| `operation` | string | Aggregation or grouping for the column. | Any value from **Operation Enum** |
-| `compType` | string | UI widget type shown to the viewer. See **compType Enum** below. | See enum below |
-| `filterType` | string | Data filter category applied by this widget. | Same values as **Filter Object** `filterType` |
-| `isallval` | boolean | When `true`, initially selects all values in the widget. | `true` or `false` |
-| `values` | JSONArray | Pre-selected/default values for the widget. | Array of strings |
-| `defaultFilterValues` | JSONArray | Default values used when the viewer clears the selection. | Array of strings |
-| `exclude` | boolean | When `true`, selected values are excluded. | `true` or `false` |
-| `behaviour` | string | Controls which values populate the filter list. | `ListAllValues` — all dataset values, `ListOnlyRelevantValues` — only values relevant to current filters, `ListRelevantValues` — context-aware values |
-
-##### compType Enum
-
-| Value | Description |
-|-------|-------------|
-| `singleSelect` | Single-value dropdown selector |
-| `multiSelect` | Multi-value checklist selector |
-| `slider` | Numeric range slider |
-| `dateRange` | Date range picker |
-
-##### Samples — User Filter Object
-
-**Sample 1: Single-select dropdown for a dimension, listing all values**
-```json
-"userFilters": [
-  {
-    "tableName": "Sales",
-    "columnName": "Region",
-    "operation": "actual",
-    "compType": "singleSelect",
-    "isallval": true,
-    "exclude": false
-  }
-]
-```
-
-**Sample 2: Multi-select filter with pre-selected product values**
-```json
-"userFilters": [
-  {
-    "tableName": "Sales",
-    "columnName": "Product",
-    "operation": "actual",
-    "compType": "multiSelect",
-    "filterType": "individualValues",
-    "isallval": false,
-    "values": ["Bread", "CD"],
-    "exclude": false
-  }
-]
-```
-
-**Sample 3: Date range picker with a default date window**
-```json
-"userFilters": [
-  {
-    "tableName": "Sales",
-    "columnName": "Date",
-    "operation": "dateRange",
-    "compType": "dateRange",
-    "filterType": "range",
-    "isallval": false,
-    "values": ["01 Jan 2020 to 31 Dec 2025"],
-    "defaultFilterValues": ["01 Jan 2024 to 31 Dec 2024"]
-  }
-]
-```
-
----
-
-#### View Settings Object
-
-Controls column layout widths and the visual theme for the view.
-
-##### Layout Sub-fields
-
-| Field | Data Type | Description | Allowed Values |
-|-------|-----------|-------------|----------------|
-| `defaultWidth` | int | Default column width in pixels for pivot/summary tables. | `1`–`1000` |
-
-##### Theme Sub-fields
-
-| Field | Data Type | Description | Allowed Values |
-|-------|-----------|-------------|----------------|
-| `themeType` | int | Preset theme style index. | `1`–`7` |
-| `themeColor` | string | Primary accent color (hex code). | e.g., `#4A90D9` |
-| `themeFontSize` | int | Base font size in points. | `5`–`24` |
-| `themeRowSpacing` | int | Row height/spacing level. | `1` — compact, `2` — normal, `3` — relaxed |
-| `compactIndent` | int | Row indentation depth in compact mode. | `0`–`3` |
-| `fontColor` | string | Override font color (hex code). | e.g., `#333333` |
-
-##### Samples — View Settings
-
-**Sample 1: Pivot with explicit column width, theme, and font settings**
-```json
-"settings": {
-  "layout": {
-    "defaultWidth": 143
-  },
-  "themes": {
-    "themeType": 4,
-    "themeFontSize": 14,
-    "themeRowSpacing": 2
-  }
-}
-```
-
-**Sample 2: Custom accent color and font color for dark-style presentation**
-```json
-"settings": {
-  "themes": {
-    "themeType": 3,
-    "themeColor": "#4A90D9",
-    "themeFontSize": 12,
-    "themeRowSpacing": 1,
-    "fontColor": "#FFFFFF"
-  }
-}
-```
-
-**Sample 3: Compact layout with indented rows and narrow default column width**
-```json
-"settings": {
-  "layout": {
-    "defaultWidth": 100
-  },
-  "themes": {
-    "themeType": 1,
-    "themeFontSize": 11,
-    "themeRowSpacing": 1,
-    "compactIndent": 2
-  }
-}
-```
-
----
-
-#### Drill Action Config Object
-
-Configures actions triggered when a user clicks a data point in the rendered view.
-
-| Field | Data Type | Description | Allowed Values |
-|-------|-----------|-------------|----------------|
-| `drillActionsConfig` | JSONArray | Array of drill action items (max 10 items). See sub-fields below. | — |
-
-##### Drill Action Item Sub-fields
-
-| Field | Data Type | Description | Allowed Values |
-|-------|-----------|-------------|----------------|
-| `id` | string | Unique action identifier. | Long integer or hyphenated long-int format |
-| `name` | string | Display name for the action. | Max 50 characters |
-| `urlString` | string | Target URL invoked when the action fires. | Valid URL; max 2000 characters |
-| `methodType` | string | HTTP method for the URL call. | `GET`, `POST`, `PUT`, `DELETE` |
-| `headers` | JSONArray | HTTP headers. Each entry: `key`, `value`, `type`. | Max serialized size: 5 KB |
-| `params` | JSONArray | URL query parameters. Each entry: `key`, `value`, `type`. | Max serialized size: 5 KB |
-| `formData` | JSONArray | Form body parameters. Each entry: `key`, `value`, `type`. | Max serialized size: 5 KB |
-| `body` | string | Raw request body string. | Max 50,000 characters |
-| `bodyType` | string | Body content format. | `raw`, `form`, `none` |
-
-##### Samples — Drill Action Config
-
-**Sample 1: Simple GET drill-through to an external page**
-```json
-"drillActionConfig": {
-  "drillActionsConfig": [
-    {
-      "id": "1001",
-      "name": "View Order Details",
-      "urlString": "https://crm.example.com/orders?id={{OrderID}}",
-      "methodType": "GET"
-    }
-  ]
-}
-```
-
-**Sample 2: POST action with a JSON body and custom header**
-```json
-"drillActionConfig": {
-  "drillActionsConfig": [
-    {
-      "id": "1002",
-      "name": "Trigger Approval",
-      "urlString": "https://api.example.com/approvals",
-      "methodType": "POST",
-      "headers": [
-        { "key": "Content-Type", "value": "application/json", "type": "static" }
-      ],
-      "body": "{\"orderId\": \"{{OrderID}}\"}",
-      "bodyType": "raw"
-    }
-  ]
-}
-```
-
-### Sample values for CONFIG parameter
-
-**Case 1: Create a bar chart with ranking filter**
+| **Method** | POST |
+| **URL** | `/restapi/v2/workspaces/<workspace-id>/reports` |
+| **OAuth Scope** | `ZohoAnalytics.modeling.create` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
+| **Content-Type** | `application/x-www-form-urlencoded` |
+| **Permission Required** | Workspace Admin / Organization Admin, or a shared or group user holding **Create Report** permission on the base table. |
+| **Custom domain** | Not permitted. |
+
+### CONFIG Parameter
+
+`CONFIG` is a JSON object sent as a form-encoded body parameter. Maximum encoded size 10,000,000
+characters.
+
+| Field | Type | Mandatory | Constraints | Description |
+|-------|------|-----------|-------------|-------------|
+| `baseTableName` | String | **Yes** | 1–100 characters | Display name of the table, query table or pipeline table the report is built on. |
+| `reportType` | String | **Yes** | `chart` \| `pivot` \| `summary` (lowercase) | The report family. |
+| `axisColumns` | JSONArray | **Yes** | Max 1000 entries | The drop-field configuration. See [`axisColumns`](#axiscolumns). |
+| `title` | String | No | Max 100 characters; unique within the workspace | Report name. Required in practice — omitting it creates an unnamed view and most callers will hit **7016** or **8051**. |
+| `description` | String | No | Max 250 characters | Free-text description. |
+| `folderId` | Long | No | Must exist in the workspace | Folder to create the report in. Omitted → the workspace's default folder. |
+| `chartType` | String | Conditional | Letters, digits and spaces only; max 50 | Required in practice when `reportType` is `chart`. Matched case-insensitively. Omitted or unrecognisable-as-empty → the server picks `BEST`. Ignored for pivot and summary. See [Appendix A](#appendix-a--chart-types). |
+| `isAxisMerge` | Boolean | No | `true` / `false` | Merge multiple Y axes onto one shared axis. |
+| `mergeAxisInfo` | **JSONArray** | Conditional | Max 10 entries | Required when merging. Each entry is `{"axisIndex":[<int 0-100>, …], "labelName":"<max 250 chars>"}`. If this array is non-empty, `isAxisMerge` **must** be `true`. |
+| `filters` | JSONArray | No | Max 1000 entries | Static filter criteria baked into the report. See [`filters`](#filters). |
+| `userFilters` | JSONArray | No | Max 1000 entries | Interactive filter widgets shown to viewers. See [`userFilters`](#userfilters). |
+| `settings` | JSONObject | No | **Pivot reports only** | Layout and theme settings. Supplying this for a chart or summary raises **8147**. See [`settings`](#settings-pivot-only). |
+| `drillActionConfig` | JSONObject | No | Max 10 actions | Custom drill-through actions. See [`drillActionConfig`](#drillactionconfig). |
+| `modifiedPaths` | JSONObject | No | — | Explicit join-path selection, used when two tables are reachable by more than one relationship path. Map of path key → array of view IDs. |
+
+### `axisColumns`
+
+Each entry places one column on one shelf.
+
+| Key | Type | Mandatory | Constraints | Description |
+|-----|------|-----------|-------------|-------------|
+| `type` | String | **Yes** | See [Appendix B](#appendix-b--axis-types) | Which shelf the column goes on. **Case-sensitivity matters** — see the appendix. |
+| `columnName` | String | **Yes** | Max 1000 | Column display name. Matched case-insensitively. |
+| `operation` | String | **Yes** | Letters only; see [Appendix C](#appendix-c--operations) | Aggregation or date-grouping applied to the column. |
+| `tableName` | String | No | Max 100 | Table the column belongs to. Required when the column comes from a joined (lookup) table; may be omitted for base-table columns. |
+| `columnId` | Long | No | — | Alternative to `columnName`. |
+| `tableId` | Long | No | — | Alternative to `tableName`. |
+| `displayName` | String | No | Max 250 | Override label for the column. |
+| `sort` | String | No | `asc` \| `desc` | Sort direction for this shelf entry. |
+| `rangeSize` | Double | No | JSON number | Bin width for `range` grouping on a numeric column. Must be a number, not a quoted string (**8162**) and not an array (**8516**). |
+| `geoRole` | String | Conditional | See [Geo columns](#geo-columns) | Required when `operation` is `geo`. |
+| `windowFunction` | JSONObject | No | See [Window functions](#window-functions) | Running / moving / difference calculation. |
+| `format` | JSONObject | No | See below | Number, currency and date formatting for this column. |
+
+**`format` sub-keys:** `displayName`, `type`, `currencyFormat`, `alignment`, `dateFormat`, `unitsList`,
+`displayLabel` (strings); `thousandSeparator`, `decimalPlaces`, `decimalSeparator`, `numberingType`
+(integers); `showSymbol`, `showNegativeSign`, `userLocale` (booleans).
+
+#### Window functions
+
+| Sub-key | Type | Description |
+|---------|------|-------------|
+| `type` | String | The calculation. **Chart reports:** `normal`, `runtotal`, `pctoftotal`, `difffrom`, `pctdifffrom`, `pctofprevval`, `hundredpctgrp`, `movingcalc` (alias `movingcalculation`). **Pivot reports:** `normal`, `pctofrow`, `pctofcol`, `pctofparrow`, `pctofparcol`, `pctoftotal`, `runtotal`, `difffrom`, `pctdifffrom`, `pctofprevval`. |
+| `baseField` | String | Reference column, required by `difffrom`, `pctdifffrom` and `movingcalc`. |
+| `baseTable` | String | Table owning `baseField`. |
+| `baseFieldPosition` | String | Shelf the reference field sits on, e.g. `xAxis`. |
+| `baseFunction` | String | Operation applied to `baseField`. |
+| `percentileVal` | Integer | 0–100; used with the `percentile` operation. |
+| `movingCalculation` | JSONObject | Required when `type` is `movingcalc`. `{"calculation":"average"\|"sum"\|"min"\|"max", "previous":<int>, "next":<int>, "includeCurrent":<bool>, "includeNull":<bool>}`. |
+
+> `pctoftotal` is not available on columns whose `operation` is `average`, `stddev`, `variance`, `dc` or
+> `distinctcount`.
+
+> Window functions apply to measure columns. They are not available on a date column unless its
+> operation is `count`, and not on numeric columns bucketed with `dimension` or `range`.
+
+#### Geo columns
+
+Set `operation` to `geo` and supply `geoRole`:
+
+| Column type | Valid `geoRole` values | Placement |
+|---|---|---|
+| Plain text / categorical | `continent`, `country`, `state`, `province`, `county`, `district`, `city`, `zipcode`, `airport` | **X axis only** (**8258** otherwise) |
+| Numeric | `latitude`, `longitude` | X or Y axis |
+
+Limits, each enforced with its own error:
+
+- At most **one** categorical geo column on the X axis (**8256**).
+- At most **one** numeric geo column per axis (**8256**).
+- A categorical geo on X and a numeric geo on Y cannot coexist (**8257**).
+- `latitude` / `longitude` on a text column, or a place role on a numeric column, raises **8254**.
+- `geoRole` on a column that cannot be geocoded raises **8255**.
+
+### `filters`
+
+Static criteria applied every time the report renders. Viewers cannot change them.
+
+| Key | Type | Mandatory | Description |
+|-----|------|-----------|-------------|
+| `columnName` | String | **Yes** | Column to filter on. |
+| `operation` | String | **Yes** | How the column is interpreted before the criteria is applied. See [Appendix D](#appendix-d--filter-operations-and-types). |
+| `filterType` | String | **Yes** | Shape of the criteria. See [Appendix D](#appendix-d--filter-operations-and-types). |
+| `values` | JSONArray | **Yes** | Criteria values, as strings. Format depends on `filterType` — see [Appendix E](#appendix-e--filter-value-formats). |
+| `exclude` | Boolean | **Yes** | `true` excludes the listed values, `false` includes them. Must be a JSON boolean. |
+| `tableName` | String | No | Table owning the column; needed for joined-table columns. |
+| `columnId` / `tableId` | Long | No | ID-based alternatives to the name keys. |
+| `rankingColumn` | String | No | Measure column that drives the rank, for `ranking` / `rankingpct`. |
+| `rankingColumnDateSubType` | String | No | Date sub-type of the ranking column. |
+| `wildcard` | JSONObject | Conditional | Required when `filterType` is `wildcard`. See below. |
+| `additionalDetails` | JSONObject | No | `{"type":"userFilter"\|"timeLineFilter"\|"drillThrough"\|"reportAsFilter", "label":"…", "isFromDashboard":<bool>, "fromViewId":<long>}`. |
+
+**`wildcard`:**
+
+| Sub-key | Type | Description |
+|---|---|---|
+| `criteria` | JSONArray | Up to 15 entries. Each is `{"operation": …, "value": "<max 5000 chars>"}` with `operation` one of `CONTAINS`, `DOES_NOT_CONTAIN`, `IS`, `IS_NOT`, `STARTS_WITH`, `DOES_NOT_START_WITH`, `ENDS_WITH`, `DOES_NOT_END_WITH`. |
+| `expression` | String | How the criteria combine, referenced by 1-based index. **The expression must be wrapped in parentheses**: `"(1 AND 2 OR 3)"`. Without the parentheses it is rejected with **8509**. Max 100 characters. |
+
+### `userFilters`
+
+Interactive filter widgets rendered alongside the report.
+
+| Key | Type | Mandatory | Description |
+|-----|------|-----------|-------------|
+| `columnName` | String | **Yes** | Column to expose. Matched case-insensitively. |
+| `operation` | String | Conditional | Mandatory for date and numeric columns; ignored for text columns, which are always `actual`. Dates: `actual`, `seasonal`, `relative`, `range`, `daterange`. Numerics: `sum`, `min`, `max`, `average`, `stddev`, `std`, `count`, `variance`, `dc`, `distinctcount`, `median`, `mode`, `measure`, `dimension`, `actual`, `aggregate`. |
+| `compType` | String | Conditional | Widget type: `singleSelect`, `multiSelect`, `slider`, `dateRange`. `slider` is measure-only; `singleSelect` / `multiSelect` are for dimensions and dates. A mismatch raises **8250**; a missing required `compType` raises **8253**. |
+| `filterType` | String | Conditional | Criteria shape. Required for measures and for date `actual` / `seasonal` operations. See [Appendix D](#appendix-d--filter-operations-and-types). |
+| `isallval` | Boolean | No | Whether the filter defaults to "all values". See the resolution rule below. |
+| `values` | JSONArray | Conditional | Selectable / preselected values. Required when `isallval` is `false`. |
+| `defaultFilterValues` | JSONArray | No | Values preselected on load. Must be a subset of `values`. |
+| `exclude` | Boolean | No | Defaults to `false`. Not allowed with the `daterange` operation. |
+| `behaviour` | String | No | `ListAllValues`, `ListRelevantValues`, `ListOnlyRelevantValues`. **Not applicable** to `daterange` or `relative` operations — supplying it there raises **8008**. |
+| `tableName` | String | No | Table owning the column. Resolved from the join graph when omitted. |
+
+> **`isallval` resolution.** If `isallval` is omitted, the server derives it from `values`: a non-empty
+> `values` array implies `isallval: false`, an absent or empty one implies `isallval: true`. When you send
+> `isallval: true` *and* a non-empty `values` array, `isallval` wins and the values are ignored.
+
+> **Numeric criteria must be exact.** Values are compared as stored, not rounded. If the stored value is
+> `0.89123`, the filter value must be `0.89123`; `0.9` will not match.
+
+### `settings` (pivot only)
 
 ```json
 {
+  "layout": { "defaultWidth": 120 },
+  "themes": {
+    "compactIndent": 1,
+    "themeType": 3,
+    "themeColor": "#2A6FDB",
+    "themeFontSize": 12,
+    "themeRowSpacing": 2,
+    "fontColor": "#1A1A1A"
+  }
+}
+```
+
+| Key | Range |
+|---|---|
+| `layout.defaultWidth` | 1–1000 |
+| `themes.compactIndent` | 0–3 |
+| `themes.themeType` | 1–7 |
+| `themes.themeFontSize` | 5–24 |
+| `themes.themeRowSpacing` | 1–3 |
+| `themes.themeColor`, `themes.fontColor` | `#RRGGBB` or `#RGB` |
+
+Supplying `settings` on a `chart` or `summary` report raises **8147**.
+
+### `drillActionConfig`
+
+Create only — this key is not accepted on Update.
+
+```json
+{
+  "drillActionsConfig": [
+    {
+      "id": "1",
+      "name": "Open in CRM",
+      "urlString": "https://crm.example.com/deal",
+      "methodType": "GET",
+      "params": [{ "key": "region", "value": "${Region}" }],
+      "headers": [],
+      "formData": [],
+      "body": "",
+      "bodyType": "none"
+    }
+  ]
+}
+```
+
+Up to 10 actions. `name` max 50 characters, `urlString` max 2000, `body` max 50,000.
+
+### Sample Requests
+
+**Case 1 — Bar chart, region on X and summed sales on Y**
+
+```http
+POST /restapi/v2/workspaces/466206000000071000/reports HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
+Content-Type: application/x-www-form-urlencoded
+
+CONFIG={
   "baseTableName": "Sales",
+  "title": "Sales by Region",
   "reportType": "chart",
   "chartType": "bar",
-  "title": "Top Products by Average Cost",
-  "description": "Bar chart filtered to top 5 products by average cost",
   "axisColumns": [
-    {
-      "type": "xAxis",
-      "columnName": "Product",
-      "tableName": "Sales",
-      "operation": "actual"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Sales",
-      "tableName": "Sales",
-      "operation": "sum"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Date",
-      "tableName": "Sales",
-      "operation": "count"
-    }
+    { "type": "xAxis", "columnName": "Region", "operation": "actual" },
+    { "type": "yAxis", "columnName": "Sales",  "operation": "sum", "sort": "desc" }
+  ]
+}
+```
+
+**Case 2 — Chart with a static filter and a user filter**
+
+```http
+POST /restapi/v2/workspaces/466206000000071000/reports HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
+Content-Type: application/x-www-form-urlencoded
+
+CONFIG={
+  "baseTableName": "Sales",
+  "title": "Sales Trend",
+  "description": "Monthly trend, excluding returns",
+  "folderId": 466206000000094005,
+  "reportType": "chart",
+  "chartType": "line",
+  "axisColumns": [
+    { "type": "xAxis", "columnName": "Order Date", "operation": "monthyear" },
+    { "type": "yAxis", "columnName": "Sales", "operation": "sum" }
   ],
   "filters": [
     {
-      "columnName": "Cost",
-      "tableName": "Sales",
-      "operation": "avg",
-      "filterType": "ranking",
-      "values": ["Top 5"],
-      "rankingColumn": "Product Category",
-      "exclude": false
-    }
-  ]
-}
-```
-
-**Case 2: Create a pivot table with multiple row/column axes and window functions**
-
-```json
-{
-  "baseTableName": "Sales",
-  "reportType": "pivot",
-  "title": "Sales Pivot — Region by Year",
-  "description": "Pivot showing sales and cost with percentage-of-total calculations",
-  "axisColumns": [
-    {
-      "type": "row",
-      "columnName": "Product",
-      "operation": "actual"
-    },
-    {
-      "type": "row",
-      "columnName": "Date",
-      "operation": "datetime"
-    },
-    {
-      "type": "column",
-      "columnName": "Date",
-      "operation": "year"
-    },
-    {
-      "type": "data",
-      "columnName": "Sales",
-      "operation": "avg",
-      "windowFunction": { "type": "pctOfTotal" }
-    },
-    {
-      "type": "data",
-      "columnName": "Cost",
-      "operation": "std"
-    },
-    {
-      "type": "data",
-      "columnName": "Sales",
-      "operation": "dc",
-      "windowFunction": {
-        "type": "pctOfCol",
-        "baseField": "Product",
-        "baseFieldPosition": "row"
-      }
-    }
-  ],
-  "settings": {
-    "layout": { "defaultWidth": 143 },
-    "themes": { "themeType": 4, "themeFontSize": 14, "themeRowSpacing": 2 }
-  }
-}
-```
-
-**Case 3: Create a summary view with multi-select user filter and axis merge**
-
-```json
-{
-  "baseTableName": "Sales",
-  "reportType": "chart",
-  "chartType": "combo",
-  "title": "Sales vs Cost — Merged Axes",
-  "description": "Combo chart with two y-axes merged and a multi-select product filter",
-  "axisColumns": [
-    {
-      "type": "xAxis",
-      "columnName": "Product",
-      "tableName": "Sales",
-      "operation": "actual",
-      "displayName": ""
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Sales",
-      "tableName": "Sales",
-      "operation": "min"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Cost",
-      "tableName": "Sales",
-      "operation": "sum"
-    }
-  ],
-  "isAxisMerge": true,
-  "mergeAxisInfo": [
-    {
-      "axisIndex": [2, 3],
-      "labelName": "Sales & Cost"
+      "columnName": "Status", "tableName": "Sales",
+      "operation": "actual", "filterType": "individualvalues",
+      "values": ["Returned"], "exclude": true
     }
   ],
   "userFilters": [
     {
-      "tableName": "Sales",
-      "columnName": "Product",
-      "operation": "actual",
-      "compType": "multiSelect",
-      "filterType": "individualValues",
+      "columnName": "Product Category", "tableName": "Sales",
+      "operation": "actual", "compType": "multiSelect",
+      "filterType": "individualvalues",
       "isallval": false,
-      "values": ["Bread", "CD"],
-      "exclude": false
+      "values": ["Furniture", "Grocery"],
+      "defaultFilterValues": ["Furniture"],
+      "behaviour": "ListAllValues"
     }
-  ],
-  "folderId": 466206000000091001
+  ]
 }
 ```
 
-### Sample Responses
+**Case 3 — Pivot with a theme**
 
-**Case 1 – Success (chart created)**
+```
+CONFIG={
+  "baseTableName": "Sales",
+  "title": "Sales Pivot",
+  "reportType": "pivot",
+  "axisColumns": [
+    { "type": "row",    "columnName": "Region",     "operation": "actual" },
+    { "type": "column", "columnName": "Order Date", "operation": "year"   },
+    { "type": "data",   "columnName": "Sales",      "operation": "sum"    }
+  ],
+  "settings": { "themes": { "themeType": 3, "themeColor": "#2A6FDB", "themeFontSize": 12 } }
+}
+```
 
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
+**Case 4 — Summary report**
 
+```
+CONFIG={
+  "baseTableName": "Sales",
+  "title": "Sales Summary",
+  "reportType": "summary",
+  "axisColumns": [
+    { "type": "groupBy",   "columnName": "Region", "operation": "actual" },
+    { "type": "summarize", "columnName": "Sales",  "operation": "sum"    },
+    { "type": "summarize", "columnName": "Profit", "operation": "average" }
+  ]
+}
+```
+
+**Case 5 — Running total with a window function**
+
+```
+CONFIG={
+  "baseTableName": "Sales",
+  "title": "Cumulative Sales",
+  "reportType": "chart",
+  "chartType": "line",
+  "axisColumns": [
+    { "type": "xAxis", "columnName": "Order Date", "operation": "monthyear" },
+    { "type": "yAxis", "columnName": "Sales", "operation": "sum",
+      "windowFunction": { "type": "runtotal" } }
+  ]
+}
+```
+
+**Case 6 — Map chart with geo roles**
+
+```
+CONFIG={
+  "baseTableName": "Sales",
+  "title": "Sales by Country",
+  "reportType": "chart",
+  "chartType": "map area",
+  "axisColumns": [
+    { "type": "xAxis", "columnName": "Country", "operation": "geo", "geoRole": "country" },
+    { "type": "yAxis", "columnName": "Sales",   "operation": "sum" }
+  ]
+}
+```
+
+**Case 7 — Wildcard filter**
+
+```
+CONFIG={
+  "baseTableName": "Sales",
+  "title": "Enterprise Accounts",
+  "reportType": "chart",
+  "chartType": "bar",
+  "axisColumns": [
+    { "type": "xAxis", "columnName": "Customer", "operation": "actual" },
+    { "type": "yAxis", "columnName": "Sales", "operation": "sum" }
+  ],
+  "filters": [
+    {
+      "columnName": "Customer", "operation": "actual", "filterType": "wildcard",
+      "exclude": false, "values": [],
+      "wildcard": {
+        "criteria": [
+          { "operation": "CONTAINS",    "value": "Corp" },
+          { "operation": "STARTS_WITH", "value": "Acme" }
+        ],
+        "expression": "(1 OR 2)"
+      }
+    }
+  ]
+}
+```
+
+### Sample Response
+
+**HTTP 200 OK**
+
+The `summary` string varies with `reportType`: `Create Chart View`, `Create Pivot View` or
+`Create Summary View`.
+
+```json
 {
   "status": "success",
-  "summary": "Chart view created successfully.",
+  "summary": "Create Chart View",
   "data": {
     "viewId": "466206000000105001"
   }
 }
 ```
 
-**Case 2 – Success (pivot created)**
+### Error Codes
 
-```json
-{
-  "status": "success",
-  "summary": "Pivot view created successfully.",
-  "data": {
-    "viewId": "466206000000106002"
-  }
-}
+| Error-Code | Reason | Solution |
+|-----------:|--------|----------|
+| 8504 | `baseTableName` is absent, or the `CONFIG` parameter itself is missing. | Send `CONFIG` with `baseTableName`. |
+| 7138 | `baseTableName` does not resolve to a table in this workspace. | Use the exact table display name. |
+| 7016 | `title` is empty or whitespace-only. | Supply a non-empty title. |
+| 7111 | A view with this `title` already exists in the workspace. | Choose a unique title. |
+| 8507 | `title` exceeds 100 characters, `description` exceeds 250, or an axis `displayName` exceeds 250. | Shorten the value. |
+| 8252 | `reportType` is absent or `null`. | Supply `chart`, `pivot` or `summary`. |
+| 8092 | `reportType` resolves to a view kind that cannot be saved standalone. | Use `chart`, `pivot` or `summary`. |
+| 8144 | `chartType` is not a recognised chart name. | See [Appendix A](#appendix-a--chart-types). |
+| 8147 | `settings` was supplied for a non-pivot report. | Remove `settings`, or change `reportType` to `pivot`. |
+| 7362 | `folderId` does not exist in the workspace. | Supply a valid folder ID or omit the key. |
+| 8051 | A required field is missing — `title`, `reportType`, `axisColumns`, or a mandatory key inside an axis/filter object. | Add the missing field. |
+| 8050 | A value is invalid — unknown `columnName`, an operation incompatible with the column, a `null` `axisColumns`. | Check column names and operations. |
+| 8052 | More than 1000 entries in `axisColumns`, `filters` or `userFilters`. | Reduce the array size. |
+| 8170 | An axis `type` is not valid for the chosen `reportType`. | See [Appendix B](#appendix-b--axis-types). |
+| 7701 | A chart report has no X-axis or no Y-axis column. | Add at least one of each. |
+| 7703 | A `colorAxis` column is present alongside more than one Y-axis column. | Drop the colour axis, or reduce to one Y axis. |
+| 7727 | More than 15 Y-axis columns on a chart. | Reduce to 15 or fewer. |
+| 8021 | The pivot or summary structure is invalid — no `data` column in a pivot, too many `data` or `groupBy` columns, or a column in a position its type cannot occupy. On **Update**, also raised when `reportType` does not match the stored view's type. | Review the axis configuration. |
+| 8166 | The `operation` is incompatible with the column's data type. | See [Appendix C](#appendix-c--operations). |
+| 8167 | The `filterType` is not valid for the column type + `operation` combination. | See [Appendix D](#appendix-d--filter-operations-and-types). |
+| 8168 | A `values` entry does not match the expected format for the `filterType`. | See [Appendix E](#appendix-e--filter-value-formats). |
+| 8191 | An invalid date value was supplied to a date filter. | Use the documented date formats. |
+| 8057 | The column named in `windowFunction.baseField` cannot be used as a base field here. | Choose a different reference column. |
+| 8059 | The `tableName` is not part of the workspace or is not joined to the base table. | Use a table reachable through the join graph. |
+| 8162 | `rangeSize` was supplied as a string, or on an operation that does not support ranges. | Send a JSON number, and only with `range` grouping. |
+| 8516 | `rangeSize` was supplied as an array. | Send a plain number. |
+| 8250 | `compType` is not applicable to the column category — e.g. `slider` on a dimension, `singleSelect` on a measure. | Match the widget to the column type. |
+| 8253 | A mandatory `userFilters` key is missing, typically `compType` or `filterType`. | Add the missing key. |
+| 8008 | `behaviour` was supplied on a `daterange` or `relative` user filter. | Remove `behaviour`. |
+| 8254 | A `geoRole` value is wrong for the column type. | `latitude`/`longitude` for numeric columns; place roles for text columns. |
+| 8255 | `geoRole` was supplied on a column that cannot be geocoded. | Remove `geoRole`, or use a geocodable column. |
+| 8256 | More than one geo operation on the same axis. | Keep one geo column per axis. |
+| 8257 | A numeric geo column coexists with a categorical geo column. | Use one or the other. |
+| 8258 | A categorical geo column was placed on an axis other than X. | Move it to `xAxis`. |
+| 8509 | An enumerated or pattern-constrained value does not match — `reportType: "Chart"` (must be lowercase), `type: "sizeAxis"` (must be `sizeaxis`), `sort: "descending"`, a wildcard `expression` without parentheses. | Use the exact accepted values. |
+| 8517 | A field has the wrong JSON data type — `exclude: "yes"`, `isAxisMerge: "maybe"`, `compType: 123`. | Use real JSON booleans and strings. |
+| 8534 | `CONFIG` is malformed, or a key has the wrong structural type — `axisColumns` as `{}`, `mergeAxisInfo` as an object, `values` as a bare string. | Arrays must be `[]`, objects `{}`. |
+| 8542 | An unknown key is present in `CONFIG`, or a `windowFunction` is mis-configured. | Remove the key; check `windowFunction.type` against [the list](#window-functions). |
+| 7005 | A `null` element inside `axisColumns` or `filters`. | Ensure every array element is a JSON object. |
+| 7301 | The caller lacks Create Report permission on the workspace. | Grant the permission. |
+| 8535 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.create`. |
+
+---
+
+## 2. Read Report Metadata
+
+Returns the stored definition of a chart, pivot or summary view.
+
+| Attribute | Value |
+|-----------|-------|
+| **Method** | GET |
+| **URL** | `/restapi/v2/workspaces/<workspace-id>/reports/<report-id>/metadata` |
+| **OAuth Scope** | `ZohoAnalytics.modeling.read` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
+| **Permission Required** | **Design Modify** on the report. A read-only shared user cannot call this endpoint. |
+| **Custom domain** | Not permitted. |
+
+> This API has no CONFIG parameter. All input is in the URL path.
+
+### Behaviour
+
+> **The response is not a round-trippable CONFIG.** It is a *summary* of the stored definition, and it
+> omits most of what Update accepts. In particular, `userFilters` entries come back with only
+> `tableName`, `columnName` and `operation` — the widget type, criteria shape, values, default
+> selections, exclusion flag and listing behaviour are all absent. Feeding this response straight back
+> into [Update Report](#3-update-report) will **rebuild every user filter with default behaviour** and
+> drop all per-column formatting, sorting and window functions. See
+> [Round-tripping a report](#round-tripping-a-report) for the full list of what is lost and what
+> changes value on the way out.
+
+What is and is not returned:
+
+| Section | Returned | Not returned |
+|---|---|---|
+| Top level | `title`, `description`, `reportType`, `chartType`¹, `baseTableName`, `isAxisMerge`, `mergeAxisInfo` | `folderId`, `settings`, `drillActionConfig`, `modifiedPaths` |
+| `axisColumns[]` | `type`, `columnName`, `tableName`, `operation` | `displayName`, `sort`, `rangeSize`, `windowFunction`, `format`, `geoRole` |
+| `filters[]` | `tableName`, `columnName`, `operation`, `filterType`, `values`, `exclude` | `wildcard`, `rankingColumn`, `rankingColumnDateSubType`, `additionalDetails` |
+| `userFilters[]` | `tableName`, `columnName`, `operation` | everything else |
+
+¹ `chartType` is present only when the stored chart and sub-chart types map back to a known name; it is
+omitted otherwise.
+
+Calling this endpoint on a table, query table, dashboard or any non-analysis view raises **8021**.
+
+### Sample Request
+
+```http
+GET /restapi/v2/workspaces/466206000000071000/reports/466206000000105001/metadata HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 ```
 
-**Case 3 – Success (summary created)**
+### Sample Response
+
+**HTTP 200 OK**
 
 ```json
 {
   "status": "success",
-  "summary": "Summary view created successfully.",
+  "summary": "Get analysis view metadata",
   "data": {
-    "viewId": "466206000000107003"
+    "reportConfig": {
+      "title": "Sales Trend",
+      "description": "Monthly trend, excluding returns",
+      "reportType": "chart",
+      "chartType": "line",
+      "baseTableName": "Sales",
+      "isAxisMerge": false,
+      "axisColumns": [
+        { "type": "xaxis", "columnName": "Order Date", "tableName": "Sales", "operation": "monthyear" },
+        { "type": "yaxis", "columnName": "Sales",      "tableName": "Sales", "operation": "sum" }
+      ],
+      "filters": [
+        {
+          "tableName": "Sales",
+          "columnName": "Status",
+          "operation": "actual",
+          "filterType": "individualvalues",
+          "values": ["Returned"],
+          "exclude": true
+        }
+      ],
+      "userFilters": [
+        {
+          "tableName": "Sales",
+          "columnName": "Product Category",
+          "operation": "actual"
+        }
+      ]
+    }
   }
 }
 ```
@@ -810,778 +602,333 @@ Content-Type: application/json;charset=UTF-8
 
 | Error-Code | Reason | Solution |
 |-----------:|--------|----------|
-| 7103 | Workspace not found. | Provide a valid `workspace-id` in the URL. |
-| 7104 | The specified base table does not exist in the workspace. | Ensure `baseTableName` matches an existing table in the workspace. |
-| 7111 | A view with the given title already exists in the workspace. | Choose a unique `title` for the new view. |
-| 7301 | User does not have permission to create a report. | Ensure the user is an **Account Admin**, **Organization Admin**, **Workspace Admin**, **Shared User**, **Group Member**, or has **Create Report** permission on the workspace. |
-| 8021 | Invalid view type specified. | Set `reportType` to one of `chart`, `pivot`, or `summary`. |
-| 8050 | Invalid value provided. | Check that all CONFIG field values are within the allowed ranges and types. |
-| 8075 | Invalid chart type parameter. | Provide a valid `chartType` value (e.g., `Bar`, `Line`, `Pie`). |
-| 8119 | Invalid value for attribute. | Verify all attribute values in `axisColumns`, `filters`, and `settings` conform to the allowed constraints. |
-| 8252 | Invalid report type. | Ensure `reportType` is `chart`, `pivot`, or `summary`. |
-| 8535 | Invalid OAuth token. | Provide a valid, non-expired OAuth token in the `Authorization` header. |
+| 7103 | Workspace not found. | Verify `<workspace-id>`. |
+| 7104 / 7106 | The report does not exist or has been deleted. | Verify `<report-id>`. |
+| 7319 | The report belongs to a different workspace. | Make the two path IDs consistent. |
+| 8021 | The target is not a chart, pivot or summary view. | Use a report ID, not a table or dashboard. |
+| 7301 | The caller lacks Design Modify permission on the report. | Grant edit access. |
+| 8535 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.read`. |
 
 ---
 
-## 2. Update Analysis View
+## 3. Update Report
+
+Rebuilds an existing report from a fresh CONFIG.
 
 | Attribute | Value |
 |-----------|-------|
-| **API NAME** | Update Analysis View |
-| **URL** | `PUT https://<ZohoAnalytics_Server_URI>/restapi/v2/workspaces/<workspace-id>/reports/<view-id>` |
-| **METHOD** | PUT |
-| **DESCRIPTION** | Resets and updates the configuration of an existing analysis view in the specified workspace. The full view configuration (axis columns, filters, chart type, title, and settings) is replaced with the values provided in the `CONFIG` parameter. |
-| **OAUTHSCOPE** | `ZohoAnalytics.modeling.update` |
-| **PERMISSION REQUIRED** | The authenticated user must be an **Account Admin** or **Organization Admin**, or the **View Owner**, or a **Shared User**, or a **Group Member**, or any user with **Design Modify** permission on the view. |
+| **Method** | PUT |
+| **URL** | `/restapi/v2/workspaces/<workspace-id>/reports/<report-id>` |
+| **OAuth Scope** | `ZohoAnalytics.modeling.update` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
+| **Content-Type** | `application/x-www-form-urlencoded` |
+| **Permission Required** | **Design Modify** on the report — the owner, a Workspace Admin, an Organization Admin, or a shared or group user granted edit rights. |
+| **Custom domain** | Not permitted. |
 
-### FIELDS FOR CONFIG JSON
+### Update is destructive
 
-> All sub-object schemas (Axis Column Object, Filter Object, User Filter Object, View Settings Object) are identical to those defined in **[Create Analysis View](#1-create-analysis-view)**. Refer to those sections for field details, enum values, and samples.
+The report is rebuilt from scratch on every call. There is no field-level patching.
 
-| Attribute | Data Type | Mandatory | Default | Allowed Values / Constraints | Description |
-|-----------|-----------|-----------|---------|------------------------------|-------------|
-| `objId` | long | No | — | Valid view ID | ID of the view to update. If omitted, the view ID from the URL path is used. |
-| `reportType` | string | **Yes** | — | `chart`, `pivot`, `summary` | Type of the analysis view. **Must match the existing view type** — cannot be changed via this API. |
-| `description` | string | No | `""` | Max 250 characters | Updated description. If omitted, the existing description is **cleared**. Always include the value from Get Report Metadata to preserve it. |
-| `chartType` | string | No | `""` | Max 50 characters (alphanumeric, spaces) | Chart sub-type (e.g., `bar`, `line`, `pie`). Required for `chart` views. |
-| `axisColumns` | JSONArray | No | `[]` | Max serialized size: 1 MB. See **Axis Column Object** in [Create Analysis View](#1-create-analysis-view). | Full replacement axis configuration for the view. |
-| `isAxisMerge` | boolean | No | `false` | `true` or `false` | When `true`, merges multiple y-axes. Requires `mergeAxisInfo`. |
-| `mergeAxisInfo` | JSONArray | No | `[]` | Max serialized size: 10 MB. Each item: `axisIndex` (int array) + `labelName` (string). | Axis merge groupings when `isAxisMerge` is `true`. |
-| `filters` | JSONArray | No | `[]` | Max serialized size: 1 MB. See **Filter Object** in [Create Analysis View](#1-create-analysis-view). | Replacement data filters for the view. |
-| `userFilters` | JSONArray | No | `[]` | Max serialized size: 1 MB. See **User Filter Object** in [Create Analysis View](#1-create-analysis-view). | Replacement interactive filter widgets for the view. |
-| `settings` | JSONObject | No | `{}` | Max 10 KB. See **View Settings Object** in [Create Analysis View](#1-create-analysis-view). | Replacement layout and theme settings. |
+| Omit this | And this happens |
+|---|---|
+| `filters` | All static filters are removed. |
+| `userFilters` | All user filters are removed. |
+| `description` | The description is **cleared** — `description` is written unconditionally, so an absent key stores `null`. |
+| `chartType` | The chart type falls back to the server's `BEST` selection. |
+| `axisColumns` | The call fails — `axisColumns` is mandatory. |
 
-> ⚠️ **Read-only fields in Update:** `title` (display name) and `folderId` cannot be changed via this API. `title` in the CONFIG is silently ignored — the existing display name is always preserved. If `folderId` is provided and differs from the view's current folder, the request **fails with an error**. Omit both fields from the Update CONFIG.
+Always [read the current definition](#2-read-report-metadata) first — while remembering that the read
+response is lossy. For anything beyond trivial edits, keep your own copy of the CONFIG you used at
+create time and modify that instead — see [Round-tripping a report](#round-tripping-a-report).
 
-### Sample values for CONFIG parameter
+### CONFIG Parameter
 
-**Case 1: Update chart type and axis columns**
+| Field | Mandatory | How it differs from Create |
+|-------|-----------|----------------------------|
+| `reportType` | **Yes** | Must match the stored view's type. A mismatch raises **8021**. |
+| `axisColumns` | **Yes** | Identical structure to Create. |
+| `title` | No | **Accepted but ignored.** The server overwrites it with the stored display name. A report cannot be renamed through this endpoint. |
+| `description` | No | Accepted. Omitting it clears the existing description. |
+| `chartType`, `isAxisMerge`, `mergeAxisInfo`, `filters`, `userFilters`, `settings` | No | Identical to Create. |
+| `folderId` | No | Accepted by the schema, but the report cannot be moved. Supplying it raises **8145**. Omit it. |
+| `baseTableName` | **Not accepted** | Rejected with **8542**. The base table cannot be changed. |
+| `drillActionConfig`, `modifiedPaths` | **Not accepted** | Rejected with **8542**. |
+| `objId` | No | Accepted by the schema but inert — the server always uses `<report-id>` from the URL. |
 
-```json
-{
+### Sample Requests
+
+**Case 1 — Change the chart type and re-sort**
+
+```http
+PUT /restapi/v2/workspaces/466206000000071000/reports/466206000000105001 HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
+Content-Type: application/x-www-form-urlencoded
+
+CONFIG={
   "reportType": "chart",
-  "chartType": "line",
-  "title": "Monthly Sales — Line Chart",
+  "chartType": "stacked bar",
+  "description": "Monthly trend, excluding returns",
   "axisColumns": [
-    {
-      "type": "xAxis",
-      "columnName": "Date",
-      "tableName": "Sales",
-      "operation": "monthyear"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Sales",
-      "tableName": "Sales",
-      "operation": "sum"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Cost",
-      "tableName": "Sales",
-      "operation": "sum"
-    }
+    { "type": "xAxis", "columnName": "Order Date", "operation": "monthyear" },
+    { "type": "yAxis", "columnName": "Sales", "operation": "sum", "sort": "asc" }
   ]
 }
 ```
 
-**Case 2: Move view to a different folder and apply a date filter**
+**Case 2 — Widen a filter, keeping everything else**
 
-```json
-{
-  "reportType": "pivot",
-  "folderId": 466206000000091005,
+Note that `userFilters` has to be re-sent in full even though it is unchanged; omitting it would delete it.
+
+```
+CONFIG={
+  "reportType": "chart",
+  "chartType": "line",
+  "description": "Monthly trend, excluding returns",
   "axisColumns": [
-    {
-      "type": "row",
-      "columnName": "Region",
-      "tableName": "Sales"
-    },
-    {
-      "type": "column",
-      "columnName": "Date",
-      "tableName": "Sales",
-      "operation": "year"
-    },
-    {
-      "type": "data",
-      "columnName": "Sales",
-      "tableName": "Sales",
-      "operation": "sum"
-    }
+    { "type": "xAxis", "columnName": "Order Date", "operation": "monthyear" },
+    { "type": "yAxis", "columnName": "Sales", "operation": "sum" }
   ],
   "filters": [
-    {
-      "columnName": "Date",
-      "tableName": "Sales",
-      "operation": "actual",
-      "filterType": "year",
-      "values": ["2024", "2025"],
-      "exclude": false
-    }
+    { "columnName": "Status", "operation": "actual", "filterType": "individualvalues",
+      "values": ["Returned", "Cancelled"], "exclude": true }
   ],
-  "settings": {
-    "layout": { "defaultWidth": 120 },
-    "themes": { "themeType": 2, "themeFontSize": 13, "themeRowSpacing": 2 }
-  }
+  "userFilters": [
+    { "columnName": "Product Category", "operation": "actual",
+      "compType": "multiSelect", "filterType": "individualvalues", "isallval": true }
+  ]
 }
 ```
 
-**Case 3: Enable axis merge across two y-axes with theme settings**
+**Case 3 — Strip all filters off a report**
 
-```json
-{
-  "reportType": "chart",
-  "chartType": "combo",
+```
+CONFIG={
+  "reportType": "pivot",
   "axisColumns": [
-    {
-      "type": "xAxis",
-      "columnName": "Product",
-      "tableName": "Sales",
-      "operation": "actual"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Sales",
-      "tableName": "Sales",
-      "operation": "sum"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Date",
-      "tableName": "Sales",
-      "operation": "count"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Cost",
-      "tableName": "Sales",
-      "operation": "count"
-    }
-  ],
-  "isAxisMerge": true,
-  "mergeAxisInfo": [
-    {
-      "axisIndex": [2, 5],
-      "labelName": "Sales & Cost Metrics"
-    }
-  ],
-  "settings": {
-    "themes": {
-      "themeType": 3,
-      "themeColor": "#4A90D9",
-      "themeFontSize": 12,
-      "themeRowSpacing": 1
-    }
-  }
+    { "type": "row",  "columnName": "Region", "operation": "actual" },
+    { "type": "data", "columnName": "Sales",  "operation": "sum"    }
+  ]
 }
 ```
 
-### Sample Responses
+### Sample Response
 
-**HTTP 204 No Content**
+**HTTP 204 No Content** — no response body is returned on success.
 
-This API returns **no response body** on success — only an HTTP `204 No Content` status. There is no JSON payload to parse on success; check only the HTTP status code.
-
-### Response Fields
-
-Not applicable — this API never returns a JSON body on success (HTTP 204 No Content). Only failure responses contain a JSON error payload.
-
-### Notes & Behaviour
-
-| Aspect | Detail |
-|--------|--------|
-| **Success response has no body** | Update Analysis View returns a bare HTTP `204 No Content` on success — no `status`/`summary` JSON to parse. |
+```
+HTTP/1.1 204 No Content
+```
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
-| 7103 | Workspace not found. | Provide a valid `workspace-id` in the URL. |
-| 7104 | The specified view does not exist. | Ensure the `view-id` in the URL corresponds to an existing analysis view. |
-| 7111 | A view with the given title already exists in the workspace. | Choose a unique `title` for the view. |
-| 7301 | User does not have permission to update this view. | Ensure the user is an **Account Admin**, **Organization Admin**, **View Owner**, **Shared User**, **Group Member**, or has **Design Modify** permission on the view. |
-| 8021 | Invalid view type specified. | Set `reportType` to one of `chart`, `pivot`, or `summary`. |
-| 8050 | Invalid value provided. | Check that all CONFIG field values are within the allowed ranges and types. |
-| 8075 | Invalid chart type parameter. | Provide a valid `chartType` value (e.g., `Bar`, `Line`, `Pie`). |
-| 8100 | Operation not supported for this analysis view widget. | Ensure the update operation is valid for the current view type. |
-| 8119 | Invalid value for attribute. | Verify all attribute values in `axisColumns`, `filters`, and `settings` conform to the allowed constraints. |
-| 8252 | Invalid report type. | Ensure `reportType` is `chart`, `pivot`, or `summary`. |
-| 8535 | Invalid OAuth token. | Provide a valid, non-expired OAuth token in the `Authorization` header. |
-
----
-
-## Appendix A – Common HTTP Headers
-
-Every API call documented here should include:
-
-| Header | Value | Description |
-|--------|-------|-------------|
-| `Authorization` | `Zoho-oauthtoken <oauth-token>` | OAuth token of the calling user. |
-| `ZANALYTICS-ORGID` | `<organization-id>` | Organization ID owning the workspace. **Mandatory.** Alternatively, a `workspaceKey` (in the format `orgid/workspacename`, e.g., `700000123456/Sales_Analytics`) may be used in place of the numeric workspace ID in the URL path. |
-| `Content-Type` | `application/x-www-form-urlencoded` | `CONFIG` JSON must be sent as a URL-encoded form parameter named `CONFIG`. |
-
-Example (Create Analysis View):
-
-```http
-POST /restapi/v2/workspaces/466206000000071000/reports HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 700000123456
-Content-Type: application/x-www-form-urlencoded
-
-CONFIG=%7B%22baseTableName%22%3A%22Sales_Data%22%2C%22reportType%22%3A%22chart%22%2C%22title%22%3A%22Monthly+Sales+Chart%22%7D
-```
-
-Example (Update Analysis View):
-
-```http
-PUT /restapi/v2/workspaces/466206000000071000/reports/466206000000105001 HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 700000123456
-Content-Type: application/x-www-form-urlencoded
-
-CONFIG=%7B%22reportType%22%3A%22chart%22%2C%22chartType%22%3A%22Line%22%7D
-```
-
----
-
-## 3. Get Report Metadata
-
-| Attribute | Value |
-|-----------|-------|
-| **API NAME** | Get Report Metadata |
-| **URL** | `GET https://<ZohoAnalytics_Server_URI>/restapi/v2/workspaces/<workspace-id>/reports/<view-id>/metadata` |
-| **METHOD** | GET |
-| **DESCRIPTION** | Retrieves the full configuration metadata of an existing analysis view (chart, pivot table, or summary view) in the specified workspace. The response includes the report type, chart type, axis column definitions, applied filters, and visualization settings as stored in the system. |
-| **OAUTHSCOPE** | `ZohoAnalytics.modeling.read` |
-| **PERMISSION REQUIRED** | The authenticated user must be an **Account Admin** or **Organization Admin**, or the **View Owner**, or any user with **Design Modify** permission on the view. |
-
-> This API has no `CONFIG` request parameter. All inputs are provided via URL path parameters.
-
-### Sample Requests
-
-**Case 1: Retrieve metadata for a bar chart view**
-
-```http
-GET /restapi/v2/workspaces/466206000000071000/reports/466206000000105001/metadata HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 700000123456
-```
-
-**Case 2: Retrieve metadata for a pivot or summary view**
-
-```http
-GET /restapi/v2/workspaces/466206000000071000/reports/466206000000106002/metadata HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 700000123456
-```
-
-### Sample Responses
-
-**Case 1: Simple bar chart — basic axis configuration**
-
-A chart view with a single x-axis (product dimension) and a single y-axis (aggregated sales). Demonstrates the minimum `reportConfig` structure returned for a standard vertical bar chart.
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-
-{
-  "status": "success",
-  "summary": "Get analysis view metadata",
-  "data": {
-    "reportConfig": {
-      "title": "Bar Chart Report",
-      "description": "Vertical bar chart",
-      "reportType": "chart",
-      "chartType": "bar",
-      "baseTableName": "Sales",
-      "isAxisMerge": false,
-      "axisColumns": [
-        {
-          "type": "xAxis",
-          "columnName": "Product",
-          "tableName": "Sales",
-          "operation": "actual"
-        },
-        {
-          "type": "yAxis",
-          "columnName": "Sales",
-          "tableName": "Sales",
-          "operation": "sum"
-        }
-      ]
-    }
-  }
-}
-```
-
-**Case 2: Bubble chart — multiple axis types (xAxis, yAxis, sizeAxis)**
-
-A bubble chart using three axis types. The `sizeAxis` entry controls the bubble size (average cost). Demonstrates how multi-axis charts are represented in `axisColumns`.
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-
-{
-  "status": "success",
-  "summary": "Get analysis view metadata",
-  "data": {
-    "reportConfig": {
-      "title": "Bubble Chart",
-      "description": "Bubble chart visualization",
-      "reportType": "chart",
-      "chartType": "bubble",
-      "baseTableName": "Sales",
-      "isAxisMerge": false,
-      "axisColumns": [
-        {
-          "type": "xAxis",
-          "columnName": "Product",
-          "tableName": "Sales",
-          "operation": "actual"
-        },
-        {
-          "type": "yAxis",
-          "columnName": "Sales",
-          "tableName": "Sales",
-          "operation": "sum"
-        },
-        {
-          "type": "sizeAxis",
-          "columnName": "Cost",
-          "tableName": "Sales",
-          "operation": "avg"
-        }
-      ]
-    }
-  }
-}
-```
-
-**Case 3: Stacked bar chart with color axis — three-dimensional grouping**
-
-A stacked bar chart that uses a `colorAxis` entry to split bars by a categorical dimension (Product), in addition to x-axis (year) and y-axis (sum of sales). Demonstrates how color-based grouping is stored in the axis column list.
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-
-{
-  "status": "success",
-  "summary": "Get analysis view metadata",
-  "data": {
-    "reportConfig": {
-      "title": "Stacked Bar Chart",
-      "description": "Stacked vertical bar chart",
-      "reportType": "chart",
-      "chartType": "stacked bar",
-      "baseTableName": "Sales",
-      "isAxisMerge": false,
-      "axisColumns": [
-        {
-          "type": "xAxis",
-          "columnName": "Date",
-          "tableName": "Sales",
-          "operation": "year"
-        },
-        {
-          "type": "yAxis",
-          "columnName": "Sales",
-          "tableName": "Sales",
-          "operation": "sum"
-        },
-        {
-          "type": "colorAxis",
-          "columnName": "Product",
-          "tableName": "Sales",
-          "operation": "actual"
-        }
-      ]
-    }
-  }
-}
-```
-
-**Case 4: Chart with date filter applied — `filters` array in response**
-
-A bar chart that has a date-range filter applied (years 2012 and 2013). Demonstrates how `filters` appear in the returned `reportConfig` when the view was saved with active data filters.
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-
-{
-  "status": "success",
-  "summary": "Get analysis view metadata",
-  "data": {
-    "reportConfig": {
-      "title": "Date Filter Chart",
-      "reportType": "chart",
-      "chartType": "bar",
-      "baseTableName": "Sales",
-      "isAxisMerge": false,
-      "axisColumns": [
-        {
-          "type": "xAxis",
-          "columnName": "Date",
-          "tableName": "Sales",
-          "operation": "year"
-        },
-        {
-          "type": "yAxis",
-          "columnName": "Sales",
-          "tableName": "Sales",
-          "operation": "sum"
-        }
-      ],
-      "filters": [
-        {
-          "tableName": "Sales",
-          "columnName": "Date",
-          "operation": "actual",
-          "filterType": "year",
-          "values": ["2012", "2013"],
-          "exclude": false
-        }
-      ]
-    }
-  }
-}
-```
-
-**Case 5: Combo chart with axis merge enabled — `isAxisMerge: true`**
-
-A combo chart where two y-axes (Sales and Cost) are merged onto a single axis. The `isAxisMerge` flag is `true` and both y-axis columns appear in `axisColumns`. Demonstrates the axis merge configuration as persisted.
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-
-{
-  "status": "success",
-  "summary": "Get analysis view metadata",
-  "data": {
-    "reportConfig": {
-      "title": "Chart With Axis Merge",
-      "description": "Chart with axis merge enabled",
-      "reportType": "chart",
-      "chartType": "combo",
-      "baseTableName": "Sales",
-      "isAxisMerge": true,
-      "axisColumns": [
-        {
-          "type": "xAxis",
-          "columnName": "Date",
-          "tableName": "Sales",
-          "operation": "year"
-        },
-        {
-          "type": "yAxis",
-          "columnName": "Sales",
-          "tableName": "Sales",
-          "operation": "sum"
-        },
-        {
-          "type": "yAxis",
-          "columnName": "Cost",
-          "tableName": "Sales",
-          "operation": "sum"
-        }
-      ]
-    }
-  }
-}
-```
-
-**Case 6: Chart with multiple wildcard filters — multiple `filters` entries**
-
-A bar chart saved with two wildcard filters on different columns (Product and Region). Demonstrates how multiple filter objects are returned in the `filters` array when wildcard filtering is applied.
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-
-{
-  "status": "success",
-  "summary": "Get analysis view metadata",
-  "data": {
-    "reportConfig": {
-      "title": "V2_Chart Multiple Wildcard Filters",
-      "description": "Chart with multiple wildcard filters on different columns",
-      "reportType": "chart",
-      "chartType": "bar",
-      "baseTableName": "Sales",
-      "isAxisMerge": false,
-      "axisColumns": [
-        {
-          "type": "xAxis",
-          "columnName": "Product",
-          "tableName": "Sales",
-          "operation": "actual"
-        },
-        {
-          "type": "yAxis",
-          "columnName": "Sales",
-          "tableName": "Sales",
-          "operation": "sum"
-        }
-      ],
-      "filters": [
-        {
-          "tableName": "Sales",
-          "columnName": "Product",
-          "operation": "actual",
-          "filterType": "wildcard",
-          "values": [],
-          "exclude": false
-        },
-        {
-          "tableName": "Sales",
-          "columnName": "Region",
-          "operation": "actual",
-          "filterType": "wildcard",
-          "values": [],
-          "exclude": false
-        }
-      ]
-    }
-  }
-}
-```
-
-**Case 7: Heat map chart — using colorAxis as the value measure**
-
-A heat map chart where the color axis encodes the aggregated sales value, and the x/y axes represent product and year dimensions respectively. Demonstrates an alternate use of `colorAxis` as the primary measure axis.
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json;charset=UTF-8
-
-{
-  "status": "success",
-  "summary": "Get analysis view metadata",
-  "data": {
-    "reportConfig": {
-      "title": "Heat Map Chart",
-      "description": "Heat map visualization",
-      "reportType": "chart",
-      "chartType": "heat map",
-      "baseTableName": "Sales",
-      "isAxisMerge": false,
-      "axisColumns": [
-        {
-          "type": "xAxis",
-          "columnName": "Product",
-          "tableName": "Sales",
-          "operation": "actual"
-        },
-        {
-          "type": "yAxis",
-          "columnName": "Date",
-          "tableName": "Sales",
-          "operation": "year"
-        },
-        {
-          "type": "colorAxis",
-          "columnName": "Sales",
-          "tableName": "Sales",
-          "operation": "sum"
-        }
-      ]
-    }
-  }
-}
-```
-
-### Response Field Reference
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `status` | string | `success` or `failure`. |
-| `summary` | string | Always `"Get analysis view metadata"` on success. |
-| `data.reportConfig` | JSONObject | The full configuration of the analysis view as stored. |
-| `data.reportConfig.title` | string | Display name of the view. |
-| `data.reportConfig.description` | string | Description of the view (omitted if empty). |
-| `data.reportConfig.reportType` | string | View type: `chart`, `pivot`, or `summary`. |
-| `data.reportConfig.chartType` | string | Chart sub-type (e.g., `bar`, `line`, `pie`, `bubble`, `stacked bar`, `heat map`). Present for `chart` views. |
-| `data.reportConfig.baseTableName` | string | The name of the base table the view is built on. |
-| `data.reportConfig.isAxisMerge` | boolean | `true` if multiple y-axes are merged onto a single axis. |
-| `data.reportConfig.axisColumns` | JSONArray | Array of axis column objects defining the view's dimensions and measures. |
-| `data.reportConfig.filters` | JSONArray | Array of data filter objects applied to the view. Omitted if no filters exist. |
-| `data.reportConfig.userFilters` | JSONArray | Array of user-interactive filter objects. Omitted if none exist. |
-| `data.reportConfig.settings` | JSONObject | Layout and theme settings. Omitted if no settings are configured. |
-
-### Error Codes
+Update runs the same validation as Create, so every code in the
+[Create Report error table](#error-codes) can be returned. Codes specific to Update or with different
+triggers:
 
 | Error-Code | Reason | Solution |
 |-----------:|--------|----------|
-| 7103 | Workspace not found. | Provide a valid `workspace-id` in the URL. |
-| 7104 | The specified view does not exist in the workspace. | Ensure the `view-id` in the URL corresponds to an existing analysis view. |
-| 7301 | User does not have permission to view this report's metadata. | Ensure the user is an **Account Admin**, **Organization Admin**, **View Owner**, or has **Design Modify** permission on the view. |
-| 8021 | Invalid view type for the requested operation. | Ensure the target view is an analysis view (chart, pivot, or summary). |
-| 8535 | Invalid OAuth token. | Provide a valid, non-expired OAuth token in the `Authorization` header. |
+| 7104 / 7106 | The report does not exist, has been deleted, or the caller cannot edit it. | Verify `<report-id>` and the caller's permission. |
+| 8021 | `reportType` does not match the stored view's type, or the target is not an analysis view at all. | Send the report's actual type. |
+| 8145 | `folderId` was supplied. | Remove `folderId` — reports cannot be moved through this endpoint. |
+| 8542 | `baseTableName`, `drillActionConfig`, `modifiedPaths` or any other key outside the Update schema is present. | Remove the key. |
+| 7301 | The caller lacks Design Modify permission on the report. | Grant edit access. |
+| 8535 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.update`. |
 
 ---
 
-## Appendix B – OAuth Scope Summary
+## Appendix A – Chart Types
 
-| API | HTTP Method | Scope |
-|-----|-------------|-------|
-| Create Analysis View | POST | `ZohoAnalytics.modeling.create` |
-| Update Analysis View | PUT | `ZohoAnalytics.modeling.update` |
-| Get Report Metadata | GET | `ZohoAnalytics.modeling.read` |
+`chartType` is matched case-insensitively. Only letters, digits and spaces are allowed — no hyphens or
+underscores.
 
----
+| Family | Accepted values |
+|---|---|
+| Area | `area`, `area with points`, `area without points`, `area with markers`, `area without markers`, `smooth area`, `smooth area with points`, `smooth area without points`, `smooth area with markers`, `smooth area without markers` |
+| Stacked area | `stacked area`, `stacked area with points`, `stacked smooth area`, `stacked smooth area with points`, `stacked smooth area without points`, `stacked smooth area with markers`, `stacked smooth area without markers` |
+| Bar | `bar`, `horizontal bar`, `stacked bar`, `horizontal stacked bar`, `butterfly` |
+| Line | `line`, `line with points`, `line without points`, `line with markers`, `line without markers`, `smooth line`, `smooth line with points`, `smooth line without points`, `smooth line with markers`, `smooth line without markers`, `step` |
+| Pie family | `pie`, `ring`, `semi pie`, `semi ring`, `funnel`, `pyramid` |
+| Bubble & scatter | `bubble`, `packed bubble`, `scatter` |
+| Combo | `combo`, `combo bar with smooth line` |
+| Map | `map area`, `map filled`, `map bubble`, `map pie`, `map pie bubble`, `map bubble pie`, `map scatter`, `geo heat map` |
+| Web | `web`, `web with fill`, `web without fill` |
+| Other | `heat map`, `table chart` |
 
-## Appendix C – Response Payload Notes
-
-| Field | Description |
-|-------|-------------|
-| `status` | `success` or `failure`. Present in JSON success responses for Create Analysis View and Get Report Metadata, and in JSON failure responses. Update Analysis View success returns no body. |
-| `summary` | Human-readable message describing the result of the operation. Present only in JSON success responses for Create Analysis View and Get Report Metadata. |
-| `data.viewId` | (Create only) The ID of the newly created analysis view. Use this ID in subsequent API calls (e.g., Update Analysis View, Get Report Metadata). |
-| `data.reportConfig` | (Get Report Metadata only) The full configuration object of the retrieved analysis view. |
-| `errorCode` | (Failure only) Numeric error code identifying the failure reason. |
-| `errorMessage` | (Failure only) Human-readable description of the error. |
-
-> **Note:** The `CONFIG` parameter has a maximum serialized size of **10 MB** for both Create and Update Analysis View APIs. Ensure that nested arrays (`axisColumns`, `mergeAxisInfo`, `filters`, `userFilters`) do not cause the total CONFIG payload to exceed this limit.
+Omitting `chartType` (or sending an empty string) makes the server choose a chart automatically rather
+than raising an error.
 
 ---
 
-## Appendix D – Working with Get, Create, and Update Together
+## Appendix B – Axis Types
 
-### Why Get Report Metadata Before Update
+The `type` value in an `axisColumns` entry must pass a pattern check *before* it is matched against the
+report type. The pattern accepts the exact spellings below and no others.
 
-The **Update Analysis View** API performs a **full configuration reset** — not a patch. The method is named `analysisViewResetAndUpdate` internally. When you PUT a CONFIG:
+| Accepted spellings | Valid for | Notes |
+|---|---|---|
+| `xaxis`, `xAxis`, `XAxis` | `chart` | Primary dimension axis. Required for charts (**7701**). |
+| `yaxis`, `yAxis`, `YAxis` | `chart` | Measure axis. Required for charts. Maximum 15 (**7727**). |
+| `textaxis`, `textAxis` | `chart` | Text/label axis. |
+| `coloraxis`, `colorAxis` | `chart` | Colour-encoding axis. Cannot coexist with multiple Y axes (**7703**). |
+| `sizeaxis` | `chart` | Size-encoding axis for bubble charts. **Lowercase only** — `sizeAxis` is rejected with **8509**. |
+| `latlng`, `latLng` | `chart` | Latitude/longitude pair for map charts. |
+| `tooltip`, `toolTip` | `chart` | Extra columns surfaced in the tooltip. |
+| `custom` | `chart` | Custom-visual field slot. |
+| `row` | `pivot` | Row grouping shelf. |
+| `column` | `pivot` | Column grouping shelf. |
+| `data` | `pivot` | Measure shelf. At least one is required. |
+| `groupby`, `groupBy` | `summary` | Dimension grouping shelf. |
+| `summarize` | `summary` | Aggregate shelf. |
 
-- Every axis column, filter, user filter, and settings entry is **completely replaced** with the new values.
-- **`description`** is replaced (or cleared if omitted).
-- Fields not provided (e.g., `axisColumns`) revert to their empty defaults.
-
-To avoid losing existing configuration, always **fetch first, modify, then update**.
-
----
-
-### Workflow 1 — Read-Modify-Write (Safe Update)
-
-Use Get Report Metadata to retrieve the full current state of the view, make targeted changes, then PUT the complete modified config.
-
-**Step 1: Fetch the current full config**
-
-```http
-GET /restapi/v2/workspaces/466206000000071000/reports/466206000000105001/metadata HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 700000123456
-```
-
-Response (`data.reportConfig`):
-
-```json
-{
-  "title": "Monthly Sales",
-  "description": "Rolling 12-month trend",
-  "reportType": "chart",
-  "chartType": "bar",
-  "baseTableName": "Sales",
-  "isAxisMerge": false,
-  "axisColumns": [
-    { "type": "xAxis", "columnName": "Month", "tableName": "Sales", "operation": "actual" },
-    { "type": "yAxis", "columnName": "Revenue", "tableName": "Sales", "operation": "sum" }
-  ],
-  "filters": [],
-  "userFilters": []
-}
-```
-
-**Step 2: Modify only what you need**
-
-For example, change the chart type from `bar` to `line` and add a colour axis:
-
-```json
-{
-  "reportType": "chart",
-  "description": "Rolling 12-month trend",
-  "chartType": "line",
-  "baseTableName": "Sales",
-  "isAxisMerge": false,
-  "axisColumns": [
-    { "type": "xAxis", "columnName": "Month", "tableName": "Sales", "operation": "actual" },
-    { "type": "yAxis", "columnName": "Revenue", "tableName": "Sales", "operation": "sum" },
-    { "type": "colorAxis", "columnName": "Region", "tableName": "Sales", "operation": "actual" }
-  ],
-  "filters": [],
-  "userFilters": []
-}
-```
-
-> Always carry the full `axisColumns` array — only the columns you send are stored. Any column removed here is permanently deleted from the view.
-
-**Step 3: PUT the complete modified config**
-
-```http
-PUT /restapi/v2/workspaces/466206000000071000/reports/466206000000105001 HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 700000123456
-Content-Type: application/x-www-form-urlencoded
-
-CONFIG={"reportType":"chart","description":"Rolling 12-month trend","chartType":"line","baseTableName":"Sales","isAxisMerge":false,"axisColumns":[{"type":"xAxis","columnName":"Month","tableName":"Sales","operation":"actual"},{"type":"yAxis","columnName":"Revenue","tableName":"Sales","operation":"sum"},{"type":"colorAxis","columnName":"Region","tableName":"Sales","operation":"actual"}],"filters":[],"userFilters":[]}
-```
+Using an axis type outside its report family raises **8170**.
 
 ---
 
-### Workflow 2 — Cloning a Report (Get → Create)
+## Appendix C – Operations
 
-The `reportConfig` returned by Get Report Metadata is structurally identical to the Create CONFIG. Use it as a template for a new view.
+The valid `operation` for an `axisColumns` entry depends on the column's data type **and** on where the
+column sits.
 
-**Step 1: Fetch full metadata of the source view**
+### Numeric columns on a chart
 
-```http
-GET /restapi/v2/workspaces/466206000000071000/reports/466206000000105001/metadata
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 700000123456
-```
+`sum`, `min`, `max`, `average`, `avg`, `stddev`, `median`, `mode`, `percentile`, `count`, `variance`,
+`dc`, `distinctcount`, `measure`, `dimension`, `range`, `actual`, `geo`.
 
-**Step 2: Prepare the Create CONFIG from the response**
+`dimension` and `range` convert the measure into a dimension; `range` is the one that honours
+`rangeSize`. Window functions are not available on either.
 
-Take `data.reportConfig` and:
-- **Change `title`** — required, must be unique in the workspace.
-- **Keep `baseTableName`** — required for Create.
-- Keep `reportType`, `chartType`, `axisColumns`, `filters`, `userFilters`, `settings`, `isAxisMerge`, `mergeAxisInfo` as-is.
-- **Omit `folderId`** from the response if you want the view in the default folder, or add it to place the clone in a specific folder.
+### Numeric columns in a pivot
 
-**Step 3: POST to Create**
+- On `data`: `sum`, `min`, `max`, `average`, `stddev`, `median`, `mode`, `percentile`, `count`,
+  `variance`, `dc`, `distinctcount`. **`avg` is not accepted here — use `average`.**
+- On `row` / `column`: only `dimension` and `range`. `actual` is not valid in these positions.
 
-```http
-POST /restapi/v2/workspaces/466206000000071000/reports HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-ZANALYTICS-ORGID: 700000123456
-Content-Type: application/x-www-form-urlencoded
+### Text, email, URL and multi-line columns
 
-CONFIG={"title":"Monthly Sales - Copy","reportType":"chart","chartType":"bar","baseTableName":"Sales","isAxisMerge":false,"axisColumns":[{"type":"xAxis","columnName":"Month","tableName":"Sales","operation":"actual"},{"type":"yAxis","columnName":"Revenue","tableName":"Sales","operation":"sum"}],"filters":[],"userFilters":[]}
-```
+`actual`, `count`, `dc`, `distinctcount`, `geo`. `actual` is the plain grouping operation.
+
+### Date columns on a chart
+
+- Grouping: `year`, `quarter`, `month`, `week`, `weekday`, `day`, `hour`
+- Absolute grouping: `quarteryear` (alias `absquarter`), `monthyear` (alias `absmonth`),
+  `weekyear` (alias `absweek`), `fulldate`, `datetime`
+- Aggregates: `count`, `distinctcount`, `maxdate`, `mindate`
+- Date distinct-count variants: `ydc`, `mydc`, `wydc`, `qydc`, `ddc`, `dtdc`, `qdc`, `wdc`, `wddc`,
+  `dmdc`, `hdc`, `mdc`
+
+### Date columns in a pivot
+
+- On `data`: `maxdate`, `mindate`, `count`, `distinctcount`, and the date distinct-count variants.
+- On `row` / `column`: the grouping operations listed above (no aggregates).
+
+> `std` is **not** a valid axis operation — the standard-deviation operation is `stddev`. (`std` *is*
+> accepted in the `filters` array, which uses a separate, more permissive map.)
+
+> `axisColumns[].operation` is pattern-checked as letters only. Any value containing a digit, hyphen or
+> underscore is rejected with **8509** before the maps above are consulted.
+
+An operation that is not in the map for the column's data type raises **8166**.
 
 ---
 
-### Special Cases and Caveats
+## Appendix D – Filter Operations and Types
 
-| Case | Behaviour | Recommendation |
-|------|-----------|----------------|
-| **`title` is read-only on Update** | Any `title` value in the Update CONFIG is silently ignored — the existing display name is always preserved. There is no V2 API field to rename a view via Update. | Include `title` from the GET response for documentation/clarity, knowing it has no effect. To rename, use a dedicated view rename operation. |
-| **`reportType` cannot be changed** | If the `reportType` in Update CONFIG does not match the existing view's type (chart/pivot/summary), the request fails with error `8021`. | Always carry `reportType` unchanged from the GET response when updating an existing view. |
-| **`folderId` on Update** | If `folderId` is provided and **differs** from the current folder, the request throws `FOLDERID_CANNOT_BE_UPDATED`. If the same value is provided, it is a harmless no-op. | Omit `folderId` from the Update CONFIG entirely. `folderId` is not returned in the GET response, so it will naturally be absent if you use the GET response as your base. |
-| **`description` is cleared if omitted** | `description` is read from the JSON input in both Create and Update paths. If absent from the Update CONFIG, the description is set to `null` (effectively cleared). | Always copy `description` from the GET response into your Update CONFIG to preserve it. |
-| **`baseTableName` is ignored on Update** | The base table is derived from the existing view's stored parent reference — not from the CONFIG. Including `baseTableName` from the GET response is harmless but has no effect. | You may include it for consistency, but know it does nothing on Update. |
-| **Axis type names are camelCase** | The GET response returns axis types in the same camelCase form the Create and Update CONFIG accept: `xAxis`, `yAxis`, `colorAxis`, `textAxis`, `sizeAxis`, `groupBy`, `summarize`. | Copy axis `type` values verbatim from the GET response when constructing Create or Update CONFIG to avoid mismatch errors. |
-| **Full axis reset** | On Update, the entire `axisColumns` array is replaced. Any axis column not in the new array is permanently removed from the view. | Fetch all current axis columns via GET, apply changes, and PUT the full updated array. |
-| **Filters and user filters** | Like axis columns, `filters` and `userFilters` are fully replaced. Omitting them from the Update CONFIG removes all filters. | Include the full arrays from the GET response unless intentionally clearing them. |
-| **`mergeAxisInfo` with `isAxisMerge`** | If `isAxisMerge` is `true`, `mergeAxisInfo` must also be provided. The GET response includes `mergeAxisInfo` when axis merge is active — use it as-is for Update. | When `isAxisMerge` is `false`, omit `mergeAxisInfo` entirely. |
-| **Cross-workspace clone** | When cloning, `columnName` and `tableName` in `axisColumns` must match columns that exist in the **target workspace's** base table. | Verify column availability in the target workspace before POST. |
+### Static filters (`filters`)
+
+| Column type | `operation` | `filterType` |
+|---|---|---|
+| Numeric | `measure`, `dimension`, `sum`, `min`, `max`, `average`, `stddev`, `std`, `count`, `variance`, `dc`, `distinctcount`, `median`, `mode`, `actual`, `aggregate` | `individualvalues`, `range`, `ranking`, `rankingpct` |
+| Text | `actual`, `count`, `dc`, `distinctcount`, `geo` | `individualvalues` (alias `individual`), `wildcard` |
+| Date — absolute | `actual`, `range`, `daterange` | `year`, `quarter`, `month`, `week`, `weekday`, `day`, `hour`, `quarteryear` (alias `absquarter`), `monthyear` (alias `absmonth`), `weekyear` (alias `absweek`), `date`, `fulldate`, `datetime`, `range`, `daterange`, `common` |
+| Date — seasonal | `seasonal` | `quarter`, `month`, `week`, `weekday`, `day`, `hour` |
+| Date — relative | `relative` | `common`, `year`, `quarter`, `month`, `week`, `day`, `hour` |
+
+Values are matched case-insensitively; `individualValues` and `individualvalues` both work.
+
+### User filters (`userFilters`)
+
+| Column type | `operation` | `compType` | `filterType` |
+|---|---|---|---|
+| Text | `actual` (implied; the key is ignored) | `singleSelect`, `multiSelect` | not required |
+| Numeric | `sum`, `min`, `max`, `average`, `stddev`, `std`, `count`, `variance`, `dc`, `distinctcount`, `median`, `mode`, `measure`, `dimension`, `actual`, `aggregate` | `slider`, `multiSelect` | **required** — `individualvalues`, `range`, `ranking`, `rankingpct` |
+| Date — absolute | `actual` | `singleSelect`, `multiSelect` | **required** — as the absolute list above |
+| Date — seasonal | `seasonal` | `singleSelect`, `multiSelect` | **required** — `quarter`, `month`, `week`, `weekday`, `day`, `hour` |
+| Date — relative | `relative` | `singleSelect`, `multiSelect` | `common` |
+| Date — range | `daterange` / `range` | `dateRange` | not required |
+
+`behaviour` (`ListAllValues`, `ListRelevantValues`, `ListOnlyRelevantValues`) applies to the select-style
+widgets only. Supplying it with `daterange` or `relative` raises **8008**. `exclude: true` is not allowed
+with `daterange`.
+
+---
+
+## Appendix E – Filter Value Formats
+
+| `filterType` | Example `values` |
+|---|---|
+| `individualvalues` (text) | `["East", "West"]` |
+| `individualvalues` (numeric) | `["100", "200"]` — exact stored values, no rounding |
+| `range` (numeric) | `["1000 and below"]`, `["200000 to 300000"]`, `["500000 and above"]` |
+| `ranking` | `["Top 2"]`, `["Bottom 10"]` |
+| `rankingpct` | `["Top 10"]` (interpreted as a percentage) |
+| `year` | `["2012", "2023"]` |
+| `quarteryear` | `["Q1 2020", "Q2 2023"]` |
+| `monthyear` | `["Aug 2012", "Jan 2013"]` — three-letter month abbreviations only |
+| `weekyear` | `["W03 2012", "W02 2023"]` |
+| `fulldate` / `date` | `["27 Jan, 2023", "20 Mar, 2023"]` |
+| `datetime` | `["27 Jan 2023 00:00:00"]` |
+| `daterange` / `range` (date) | `["from 10 Dec 2013 00:00:00"]`, `["10 Mar 2012 00:00:00 to 10 Dec 2012 00:00:00"]`, `["to 11 Mar 2013 00:00:00"]` |
+| `quarter` (seasonal) | `["Q1", "Q3"]` |
+| `month` (seasonal) | `["Jan", "Feb"]` |
+| `week` (seasonal) | `["Week 2", "Week 3"]` |
+| `weekday` (seasonal) | `["Sun", "Mon"]` |
+| `day` (seasonal) | `["01", "15", "31"]` |
+| `hour` (seasonal) | `["10", "13", "23"]` |
+| `common` (relative) | `["This Year"]`, `["Last Month"]`, `["Last 2 Years"]`, `["Last 13 years"]` — `Last N <unit>` and `Next N <unit>` are both accepted |
+| `wildcard` | `values` is unused; the criteria live in the `wildcard` object |
+
+A value that does not match the expected shape raises **8168** (or **8191** for malformed dates).
+
+---
+
+## Appendix F – Common HTTP Headers
+
+| Header | Value | Required | Notes |
+|--------|-------|----------|-------|
+| `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. |
+| `ZANALYTICS-ORGID` | Organization ID | **Mandatory** | Organization ID that owns the workspace. |
+| `Content-Type` | `application/x-www-form-urlencoded` | POST / PUT | `CONFIG` is a form-encoded body parameter on Create and Update. Read takes no parameters. |
+
+---
+
+## Appendix G – OAuth Scope Summary
+
+| API | Method | Scope |
+|-----|--------|-------|
+| Create Report | POST | `ZohoAnalytics.modeling.create` |
+| Read Report Metadata | GET | `ZohoAnalytics.modeling.read` |
+| Update Report | PUT | `ZohoAnalytics.modeling.update` |
+
+---
+
+## Appendix H – Operational Notes and Failure Cases
+
+| Scenario | Behaviour |
+|----------|-----------|
+| `reportType: "Chart"` (capitalised) | **8509**. The pattern accepts lowercase only. |
+| `type: "sizeAxis"` | **8509**. Only the all-lowercase `sizeaxis` is accepted, unlike the other axis names which accept camel case. |
+| Wildcard `expression: "1 AND 2"` | **8509**. The expression must be parenthesised: `"(1 AND 2)"`. |
+| `mergeAxisInfo` sent as an object | **8534**. It is an array of merge-group objects. |
+| `mergeAxisInfo` non-empty but `isAxisMerge` absent or `false` | Rejected — `isAxisMerge` must be `true` whenever merge groups are present. |
+| `settings` on a chart or summary | **8147**. Settings are pivot-only. |
+| `avg` as a pivot `data` operation | **8166**. Use `average`; the `avg` alias exists only for charts. |
+| `actual` on a numeric column in a pivot `row` | **8166**. Pivot row/column positions accept only `dimension` and `range` for numeric columns. |
+| Column name differs only by case from the stored name | Resolves correctly — column lookup is case-insensitive. |
+| `title` sent on Update | Silently ignored. Use a rename API instead. |
+| `description` omitted on Update | The existing description is cleared. |
+| `folderId` sent on Update | **8145**, even when it matches the report's current folder. |
+| Read metadata, then PUT it back unchanged | The report is rebuilt, but all user-filter configuration, column formatting, sorting and window functions are lost. Do not use the metadata response as an update payload. |
+| Report created on a table the caller cannot read | **7301** during column validation. |
+| More than 1000 entries in any of the three arrays | **8052**. |

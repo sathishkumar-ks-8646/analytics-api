@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Create AutoML Analysis Deployment
-description: Creates a deployment for an AutoML analysis model.
+description: "Binds a trained model to an input table and an output table so that predictions can be generated — on a recurring schedule, on demand, or both."
 resource: "https://analyticsapi.zoho.com/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments"
 tags:
   - zoho-analytics
@@ -48,10 +48,10 @@ sources:
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

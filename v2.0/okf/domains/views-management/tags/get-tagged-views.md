@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Tagged Views
-description: "Returns the views that carry a given tag, filtered to the views the calling user is entitled to see."
+description: Returns the views that carry a given tag.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views"
 tags:
   - zoho-analytics
@@ -45,10 +45,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -67,7 +67,7 @@ Returns the views that carry a given tag.
 
 From the OpenAPI specification:
 
-Returns the views that carry a given tag, filtered to the views the calling user is entitled to see.
+Returns the views that carry a given tag.
 
 The result can be paged with limit and offset. It is the inverse of the Get View Tags API - the same association table read from the tag side. A tag that exists but labels nothing returns an empty array, while a tag that does not exist fails with error 8184.
 

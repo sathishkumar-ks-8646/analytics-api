@@ -2,7 +2,7 @@
   "name": "zoho-analytics-rest-api-v2",
   "title": "Zoho Analytics REST API v2",
   "description": "Open Knowledge Format bundle covering every public Zoho Analytics REST API v2 endpoint, the conventions shared by all of them, and their error codes, scopes and permissions.",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "okf_version": "0.2",
   "api": {
     "name": "Zoho Analytics REST API",
@@ -15,7 +15,7 @@
     "domains": 10,
     "groups": 35,
     "endpoints": 182,
-    "error_codes": 306,
+    "error_codes": 352,
     "oauth_scopes": 31,
     "sdk_example_documents": 180,
     "workflow_playbooks": 8
@@ -39,6 +39,6 @@
   },
   "generated": {
     "by": "process:build_okf",
-    "at": "2026-10-09T09:09:11Z"
+    "at": "2026-10-09T13:05:37Z"
   }
 }

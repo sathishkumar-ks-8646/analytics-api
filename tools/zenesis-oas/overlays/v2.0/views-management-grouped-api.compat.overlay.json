@@ -68,12 +68,12 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is a valid, accessible workspace."
+            "resolution": "Verify <workspace-id> in the URL is a valid, accessible workspace."
           },
           {
             "name": "7104",
             "description": "Source view not found.",
-            "resolution": "Verify that the view-id exists within the specified workspace."
+            "resolution": "Verify <view-id> exists within the specified workspace."
           },
           {
             "name": "7111",
@@ -87,18 +87,18 @@
           },
           {
             "name": "7301",
-            "description": "The user does not have permission to duplicate this view.",
-            "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or holds Design and Modify permission on the workspace. For analysis views, the user must also hold save permission on the parent table."
+            "description": "User does not have permission to duplicate this view.",
+            "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or has Design & Modify permission on the workspace. For analysis views, the user must also have save permission on the parent table."
           },
           {
             "name": "7319",
             "description": "The source view does not belong to the specified workspace.",
-            "resolution": "Ensure that the workspace-id and the view-id are correct and consistent."
+            "resolution": "Ensure both <workspace-id> and <view-id> are correct and consistent."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.create scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
           }
         ]
       },
@@ -114,7 +114,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/saveas'].post",
       "update": {
-        "description": "Creates a copy of an existing view - a table or an analysis view - within the same workspace.\n\nThe new view is independent of the original once created; later changes to one do not affect the other. For a table, `copyWithData`, `copyWithLookup` and `copyHugeData` control how much of the source is reproduced. For an analysis view those three attributes are ignored and only the view definition is copied.\n\nThe ID of the newly created view is returned in the response and is used to reference the copy in subsequent APIs."
+        "description": "Creates a copy of an existing view (table or analysis view) within the same workspace. The new view is independent of the original after creation — changes to one do not affect the other.\n\nThe new view is independent of the original once created; later changes to one do not affect the other. For a table, `copyWithData`, `copyWithLookup` and `copyHugeData` control how much of the source is reproduced. For an analysis view those three attributes are ignored and only the view definition is copied.\n\nThe ID of the newly created view is returned in the response and is used to reference the copy in subsequent APIs."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -222,38 +222,38 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7103",
-            "description": "The source or the destination workspace was not found.",
-            "resolution": "Verify that the workspace-id in the URL and destWorkspaceId in the CONFIG are valid."
+            "description": "Source or destination workspace not found.",
+            "resolution": "Verify <workspace-id> (URL) and destWorkspaceId (CONFIG) are valid."
           },
           {
             "name": "7104",
             "description": "One or more view IDs in viewIds do not exist.",
-            "resolution": "Verify that every view ID in the array exists and is accessible."
+            "resolution": "Verify each view ID in the array exists and is accessible."
           },
           {
             "name": "7301",
-            "description": "The user does not have permission. Raised when the user is not an Account Admin or Organization Admin of the destination organization, when the caller is not a member of the organization named in ZANALYTICS-DEST-ORGID, or when createAsSystemTable is used outside an authorized internal service.",
-            "resolution": "Ensure the user is an Account Admin or Organization Admin of the destination organization and, when ZANALYTICS-DEST-ORGID is used, a member of that organization."
+            "description": "User does not have permission. Occurs when the user is not an Account Admin / Org Admin of the destination org, or when createAsSystemTable=true is used outside of an authorised internal service.",
+            "resolution": "Ensure the user is an Account Admin or Organization Admin of the destination organisation."
           },
           {
             "name": "7319",
-            "description": "One or more view IDs do not belong to the source workspace given in the URL.",
-            "resolution": "Ensure that every view ID in viewIds comes from the workspace given in the workspace-id path parameter."
+            "description": "One or more view IDs do not belong to the source workspace specified in the URL.",
+            "resolution": "Ensure all view IDs in viewIds are from the workspace specified in <workspace-id>."
+          },
+          {
+            "name": "15007",
+            "description": "Cross-organisation copy not authorised. Occurs when the destination org differs from the source workspace's org and the workspaceKey is missing or incorrect.",
+            "resolution": "Provide the correct workspaceKey of the source workspace for cross-org copy operations."
           },
           {
             "name": "8058",
-            "description": "The organization ID sent in ZANALYTICS-DEST-ORGID does not exist.",
-            "resolution": "Provide a valid, existing organization ID in the ZANALYTICS-DEST-ORGID header."
+            "description": "The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist.",
+            "resolution": "Provide a valid, existing organisation ID in ZANALYTICS-DEST-ORGID."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.create scope."
-          },
-          {
-            "name": "15007",
-            "description": "Cross-organization copy is not authorized. Raised when the resolved destination organization differs from the organization of the source workspace and workspaceKey is missing or incorrect.",
-            "resolution": "Provide the correct workspaceKey of the source workspace for a cross-organization copy."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
           }
         ]
       },
@@ -336,32 +336,32 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is valid."
+            "resolution": "Verify <workspace-id> in the URL is valid."
           },
           {
             "name": "7104",
-            "description": "The target table given as view-id, or the reference table given as referenceViewId, was not found.",
-            "resolution": "Verify that both view IDs exist in the workspace."
+            "description": "Target table (<view-id>) or reference table (referenceViewId) not found.",
+            "resolution": "Verify both view IDs exist in the workspace."
           },
           {
             "name": "7144",
             "description": "The specified folderId does not exist in this workspace.",
-            "resolution": "Provide a valid, existing folder ID from within the same workspace."
+            "resolution": "Provide a valid, existing folder ID within the same workspace."
           },
           {
             "name": "7301",
-            "description": "The user is not authorized to create views in this workspace.",
+            "description": "User is not authorised to create views in this workspace.",
             "resolution": "Ensure the user is an Account Admin, Organization Admin, or Workspace Admin."
           },
           {
             "name": "7319",
             "description": "One or both view IDs do not belong to the specified workspace.",
-            "resolution": "Ensure that the view-id in the URL and the referenceViewId in the CONFIG both belong to the workspace given in the URL."
+            "resolution": "Ensure both <view-id> (URL) and referenceViewId (CONFIG) belong to <workspace-id>."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.create scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
           }
         ]
       },
@@ -377,7 +377,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/similarviews'].post",
       "update": {
-        "description": "Replicates, for a target table, every analysis view - chart, pivot table, summary view and so on - that exists on a reference table in the same workspace. The column bindings in each copied view are remapped automatically to the corresponding columns of the target table.\n\nThe target table is the `view-id` in the URL and the reference table is `referenceViewId` in the CONFIG. This is useful when two tables share a compatible column structure and a whole set of reports needs to be reproduced from one on the other.\n\nAll generated views are placed into the single folder given as `folderId`."
+        "description": "Creates copies of all analysis views (charts, pivot tables, summaries, etc.) that exist on a reference table and replicates them for a target table within the same workspace. The column bindings in the copied views are automatically remapped to the corresponding columns of the target table.\n\nThe target table is the `view-id` in the URL and the reference table is `referenceViewId` in the CONFIG. This is useful when two tables share a compatible column structure and a whole set of reports needs to be reproduced from one on the other.\n\nAll generated views are placed into the single folder given as `folderId`."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -444,12 +444,12 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify <workspace-id> in the URL."
           },
           {
             "name": "7104",
             "description": "View not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace."
+            "resolution": "Verify <view-id> exists in the workspace."
           },
           {
             "name": "7111",
@@ -458,13 +458,13 @@
           },
           {
             "name": "7301",
-            "description": "The user does not have permission to rename this view.",
-            "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or the view owner."
+            "description": "User does not have permission to rename this view.",
+            "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or the View Owner."
           },
           {
             "name": "7319",
-            "description": "The view does not belong to the specified workspace.",
-            "resolution": "Verify that the workspace-id and the view-id are correct and consistent."
+            "description": "View does not belong to the specified workspace.",
+            "resolution": "Verify both <workspace-id> and <view-id> are correct and consistent."
           },
           {
             "name": "7413",
@@ -474,7 +474,7 @@
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.update scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.update."
           }
         ]
       },
@@ -490,7 +490,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}'].put",
       "update": {
-        "description": "Renames an existing view and, optionally, updates its description. It applies to every view type - tables, analysis views, dashboards, query tables and others.\n\nThe description is always overwritten. If `viewDesc` is not sent, the existing description is cleared to an empty string, so the current description has to be passed explicitly whenever it should be retained."
+        "description": "Renames an existing view and optionally updates its description. This applies to all view types — tables, analysis views, dashboards, query tables, and others.\n\nThe description is always overwritten. If `viewDesc` is not sent, the existing description is cleared to an empty string, so the current description has to be passed explicitly whenever it should be retained."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -543,27 +543,27 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify <workspace-id> in the URL."
           },
           {
             "name": "7104",
             "description": "View not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace."
+            "resolution": "Verify <view-id> exists in the workspace."
           },
           {
             "name": "7301",
-            "description": "The user does not have permission to delete this view. Raised when the user is neither a Workspace Admin, Account Admin, Organization Admin, nor the view owner.",
-            "resolution": "Ensure the user holds one of the required roles."
+            "description": "User does not have permission to delete this view. Occurs when the user is neither a Workspace Admin, Account Admin, Organization Admin, nor the View Owner.",
+            "resolution": "Ensure the user has the required role."
           },
           {
             "name": "7319",
-            "description": "The view does not belong to the specified workspace.",
-            "resolution": "Verify that the workspace-id and the view-id are correct and consistent."
+            "description": "View does not belong to the specified workspace.",
+            "resolution": "Verify both <workspace-id> and <view-id> are correct."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.delete scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
           }
         ]
       },
@@ -579,7 +579,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}'].delete",
       "update": {
-        "description": "Deletes a view from a workspace. The delete is a soft delete - the view is moved to the workspace Trash, from where it can be restored within the retention period. It applies to every view type.\n\nIf other views depend on the view being deleted - analysis views built on a table, charts embedded in a dashboard, or a query table referencing the table - the call fails unless `deleteDependentViews` is set to `true`, in which case those dependents are deleted alongside it."
+        "description": "Permanently deletes a view from a workspace. The view is moved to the workspace's Trash first (soft-delete), from where it can be restored within the retention period. This applies to all view types.\n\nIf other views depend on the view being deleted - analysis views built on a table, charts embedded in a dashboard, or a query table referencing the table - the call fails unless `deleteDependentViews` is set to `true`, in which case those dependents are deleted alongside it."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -688,22 +688,22 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7301",
-            "description": "The user does not have permission to list the views of this workspace.",
+            "description": "User does not have permission to list views in this workspace.",
             "resolution": "Ensure the user has at least Read permission on the workspace."
           },
           {
             "name": "8119",
-            "description": "Invalid value for sortedColumn, which must be 0 to 2, or for sortedOrder, which must be 0 to 1.",
-            "resolution": "Use only the documented integer values for the sort attributes."
+            "description": "Invalid value for sortedColumn (must be 0–2) or sortedOrder (must be 0–1).",
+            "resolution": "Use only the documented integer values for sort parameters."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.metadata.read scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
           }
         ]
       },
@@ -719,7 +719,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views'].get",
       "update": {
-        "description": "Returns the list of views accessible to the authenticated user within a workspace, together with the folder, creator and last-modifier metadata of each view.\n\nThe result can be narrowed by view type, by a keyword matched against the view name, and by the user who created or last modified the view, and it can be paged and sorted. The scope of the list depends on the caller: an admin receives every view in the workspace, while a shared user or group member receives only the views shared with them."
+        "description": "Returns a list of views accessible to the authenticated user within a specific workspace. Supports filtering by view type, name keyword, created/modified by user, and pagination with sorting.\n\nThe result can be narrowed by view type, by a keyword matched against the view name, and by the user who created or last modified the view, and it can be paged and sorted. The scope of the list depends on the caller: an admin receives every view in the workspace, while a shared user or group member receives only the views shared with them."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -842,17 +842,17 @@
           {
             "name": "7104",
             "description": "View not found.",
-            "resolution": "Verify that the view-id is valid and accessible."
+            "resolution": "Verify <view-id> is valid and accessible."
           },
           {
             "name": "7301",
-            "description": "The user does not have Read Only permission on the view.",
+            "description": "User does not have Read Only permission on the view.",
             "resolution": "Ensure the user has been granted at least Read Only access to the view."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.metadata.read scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
           }
         ]
       },
@@ -868,7 +868,7 @@
     {
       "target": "$.paths['/restapi/v2/views/{view-id}'].get",
       "update": {
-        "description": "Returns the metadata of a single view identified by its view ID. The view is resolved globally, so unlike the other APIs in this module no workspace ID is needed in the URL - the workspace is derived from the view itself.\n\nBy default only the base attributes are returned. Setting `withInvolvedMetaInfo` to `true` adds extended metadata whose shape depends on the view type: column definitions and a row count for tables and query tables, the tab structure for a tabbed dashboard, and the list of parent views for an analysis view or a regular dashboard. Some of those extended fields are restricted to Workspace Admins."
+        "description": "Returns detailed metadata for a single view identified by its view ID. Unlike the Get View List API, this API does not require a workspace ID in the URL — the view is resolved directly by its ID. Optionally returns extended metadata including column definitions and involved views.\n\nBy default only the base attributes are returned. Setting `withInvolvedMetaInfo` to `true` adds extended metadata whose shape depends on the view type: column definitions and a row count for tables and query tables, the tab structure for a tabbed dashboard, and the list of parent views for an analysis view or a regular dashboard. Some of those extended fields are restricted to Workspace Admins."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -977,22 +977,22 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7104",
             "description": "View not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace."
+            "resolution": "Verify <view-id> exists in the workspace."
           },
           {
             "name": "7301",
-            "description": "The user does not have Publish or Make Public permission on the workspace.",
+            "description": "User does not have Publish or Make Public permission on the workspace.",
             "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or has been granted Publish or Make Public permission."
           },
           {
             "name": "7319",
-            "description": "The view does not belong to the specified workspace.",
-            "resolution": "Verify that the workspace-id and the view-id are correct and consistent."
+            "description": "View does not belong to the specified workspace.",
+            "resolution": "Verify both <workspace-id> and <view-id> are consistent."
           },
           {
             "name": "8060",
@@ -1006,13 +1006,13 @@
           },
           {
             "name": "8062",
-            "description": "withCustomDomain is true but no custom domain is configured for this workspace.",
-            "resolution": "Configure a custom domain for the workspace first, or omit withCustomDomain to use the standard domain."
+            "description": "withCustomDomain=true but no custom domain is configured for this workspace.",
+            "resolution": "Configure a custom domain for the workspace first, or use the standard URL by omitting withCustomDomain."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.embed.read scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.embed.read."
           }
         ]
       },
@@ -1028,7 +1028,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish'].get",
       "update": {
-        "description": "Generates and returns the publicly accessible URL of a view. The URL opens directly in a browser without authentication, which allows the view to be shared outside Zoho Analytics.\n\nThe generated URL carries the visual customisations sent in the CONFIG - theme, title and description visibility, toolbar, legend position - and can also apply a data filter through `criteria`, so that whoever opens the link sees only the filtered subset.\n\nWhen the view has been made public with a private key, that key is embedded in the URL path and the link works only for someone who holds it."
+        "description": "Generates and returns the publicly accessible URL for a view. The URL can be opened directly in a browser without authentication, allowing the view to be shared externally. The URL reflects any visual customisations specified in CONFIG (theme, toolbar, legend position, etc.) and optionally applies a data filter via criteria.\n\nThe generated URL carries the visual customisations sent in the CONFIG - theme, title and description visibility, toolbar, legend position - and can also apply a data filter through `criteria`, so that whoever opens the link sees only the filtered subset.\n\nWhen the view has been made public with a private key, that key is embedded in the URL path and the link works only for someone who holds it."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1095,27 +1095,27 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7104",
             "description": "View not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace."
+            "resolution": "Verify <view-id> exists in the workspace."
           },
           {
             "name": "7301",
-            "description": "The user is not a Workspace Admin, Account Admin, or Organization Admin.",
-            "resolution": "Ensure the user holds a Workspace Admin or higher role in this workspace."
+            "description": "User is not a Workspace Admin, Account Admin, or Organization Admin.",
+            "resolution": "Ensure the user has Workspace Admin or higher role in this workspace."
           },
           {
             "name": "7319",
-            "description": "The view does not belong to the specified workspace.",
-            "resolution": "Verify that the workspace-id and the view-id are correct and consistent."
+            "description": "View does not belong to the specified workspace.",
+            "resolution": "Verify both <workspace-id> and <view-id> are consistent."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.metadata.read scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
           }
         ]
       },
@@ -1131,7 +1131,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents'].get",
       "update": {
-        "description": "Returns every active view that depends on the specified view. A dependent view is one that cannot exist without the source view - a chart built on a table, a pivot table built on a query table, or a query table built on another query table.\n\nThe whole transitive chain is resolved, so the result is the complete set of views that would break if the source view were deleted. That makes this API a useful check before calling Delete View."
+        "description": "Returns all active views that depend on the specified view. A dependent view is any view that cannot exist independently without the specified source view — for example, a chart built on a table, a pivot built on a query table, or a query table built on another query table. Useful before a Delete operation to understand the full impact.\n\nThe whole transitive chain is resolved, so the result is the complete set of views that would break if the source view were deleted. That makes this API a useful check before calling Delete View."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1198,7 +1198,7 @@
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.metadata.read scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
           }
         ]
       },
@@ -1214,7 +1214,7 @@
     {
       "target": "$.paths['/restapi/v2/recentviews'].get",
       "update": {
-        "description": "Returns the views most recently accessed by the authenticated user, ordered with the most recent first.\n\nThe API is user-scoped and spans workspaces: views from every workspace and organization the user can reach are returned together in one list, each carrying the workspace it belongs to. No workspace ID is needed in the URL, and the history returned is personal to the token used to make the call."
+        "description": "Returns a list of views recently accessed by the authenticated user across all workspaces the user has access to, sorted by access time (most recently accessed first). This is a user-scoped, cross-workspace API — no workspace ID is required in the URL.\n\nThe API is user-scoped and spans workspaces: views from every workspace and organization the user can reach are returned together in one list, each carrying the workspace it belongs to. No workspace ID is needed in the URL, and the history returned is personal to the token used to make the call."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1253,47 +1253,47 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7104",
-            "description": "View, or table, not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace."
+            "description": "View (table) not found.",
+            "resolution": "Verify <view-id> exists in the workspace."
           },
           {
             "name": "7107",
             "description": "Column not found in the specified table.",
-            "resolution": "Verify that the column-id belongs to the table identified by the view-id."
+            "resolution": "Verify <column-id> belongs to the table identified by <view-id>."
           },
           {
             "name": "7301",
-            "description": "The user does not have Create Report permission on the workspace.",
+            "description": "User does not have Create Report permission on the workspace.",
             "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or has been granted Create Report permission on this workspace."
           },
           {
             "name": "7319",
-            "description": "The view does not belong to the specified workspace.",
-            "resolution": "Verify that the workspace-id and the view-id are correct and consistent."
+            "description": "View does not belong to the specified workspace.",
+            "resolution": "Verify both <workspace-id> and <view-id> are consistent."
           },
           {
             "name": "7397",
             "description": "The view is not a Table, Query Table, or Pipeline Table.",
-            "resolution": "Auto analysis works on base table types only. Pass the ID of a valid table view."
+            "resolution": "Auto analysis only works on base table types. Pass a valid table view ID."
           },
           {
             "name": "8116",
-            "description": "The selected column type is not supported for auto analysis, such as an Auto-Number, Multi-Line Text, URL or Geometry column, or a hidden or system column.",
-            "resolution": "Choose an eligible column. The unsupported column characteristics are listed in the notes for this API."
+            "description": "The selected column type is not supported for auto analysis (e.g., Auto-Number, Multi-Line, URL, Geometry, or a system/hidden column).",
+            "resolution": "Choose an eligible column. Refer to the Column Eligibility section for the full list of unsupported column characteristics."
           },
           {
             "name": "14037",
             "description": "The column is disabled in its Query Table definition and cannot be used for analysis.",
-            "resolution": "Enable the column in the query table configuration, or choose a different column."
+            "resolution": "Enable the column in the Query Table configuration or choose a different column."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.create scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
           }
         ]
       },
@@ -1309,7 +1309,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/autoanalyse'].post",
       "update": {
-        "description": "Runs auto analysis on a single column of a table and creates a focused set of views for it - a category breakdown for a dimension column such as Region, or a trend over time for a date column such as Order Date.\n\nUnlike the full-table Auto Analyse View API, this operation keeps no record of having been run, so there is no re-run guard and no `analyseAgain` attribute. Each call produces a fresh set of views for the column and may be repeated freely, which makes it suited to exploring one column after a data or schema change.\n\nThe API works on Tables, Query Tables and Pipeline Tables only, and not every column type is eligible."
+        "description": "Triggers auto analysis for a single column of a table. The system generates targeted views specifically for the selected column — for example, a bar chart of sales by region if the column is \"Region\", or a trend chart over time if the column is a date. This is useful when you want focused visualisations for a specific column without regenerating the full set.\n\nUnlike the full-table Auto Analyse View API, this operation keeps no record of having been run, so there is no re-run guard and no `analyseAgain` attribute. Each call produces a fresh set of views for the column and may be repeated freely, which makes it suited to exploring one column after a data or schema change.\n\nThe API works on Tables, Query Tables and Pipeline Tables only, and not every column type is eligible."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1376,37 +1376,37 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7104",
-            "description": "View, or table, not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace."
+            "description": "View (table) not found.",
+            "resolution": "Verify <view-id> exists in the workspace."
           },
           {
             "name": "7301",
-            "description": "The user does not have Create Report permission on the workspace.",
+            "description": "User does not have Create Report permission on the workspace.",
             "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or has been granted Create Report permission on this workspace."
           },
           {
             "name": "7319",
-            "description": "The view does not belong to the specified workspace.",
-            "resolution": "Verify that the workspace-id and the view-id are correct and consistent."
+            "description": "View does not belong to the specified workspace.",
+            "resolution": "Verify both <workspace-id> and <view-id> are consistent."
           },
           {
             "name": "7397",
             "description": "The view is not a Table, Query Table, or Pipeline Table.",
-            "resolution": "Auto analysis works on base table types only. Pass the ID of a valid table view."
+            "resolution": "Auto analysis only works on base table types. Pass a valid table view ID."
           },
           {
             "name": "8116",
             "description": "Auto analysis has already been completed for this table and analyseAgain was not set to true.",
-            "resolution": "Send CONFIG with analyseAgain as true to re-run the analysis and replace the previously generated views."
+            "resolution": "Pass CONFIG={\"analyseAgain\":true} to re-run the analysis and replace previously generated views."
           },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.create scope."
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
           }
         ]
       },
@@ -1422,7 +1422,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/autoanalyse'].post",
       "update": {
-        "description": "Runs auto analysis on an entire table. Every column is scanned, the role of each is inferred - dimension or measure, geographic, temporal - and a curated set of views is created directly in the workspace.\n\nThe operation tracks its own completion state. Once a table has been analysed successfully it is marked internally as analysed, and a second call is rejected with error 8116 unless `analyseAgain` is set to `true`. That guard exists to stop auto-generated views being duplicated by an accidental repeat call; setting the flag signals deliberate intent, and the previous set of views is then replaced rather than added to.\n\nThe API works on Tables, Query Tables and Pipeline Tables only."
+        "description": "Triggers auto analysis on an entire table. The system scans all columns of the table, determines the best ways to visualise the data, and creates a set of views (charts, pivots, summaries) directly in the workspace. This is the full-table equivalent of asking \"what can you show me from this data?\"\n\nThe operation tracks its own completion state. Once a table has been analysed successfully it is marked internally as analysed, and a second call is rejected with error 8116 unless `analyseAgain` is set to `true`. That guard exists to stop auto-generated views being duplicated by an accidental repeat call; setting the flag signals deliberate intent, and the previous set of views is then replaced rather than added to.\n\nThe API works on Tables, Query Tables and Pipeline Tables only."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1447,27 +1447,27 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify the <workspace-id> in the URL is correct and accessible."
           },
           {
             "name": "7104",
             "description": "View not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace."
+            "resolution": "Verify the <view-id> exists in the specified workspace."
           },
           {
             "name": "7301",
-            "description": "The user does not have permission to modify the favorite status of this view.",
+            "description": "User does not have permission to mark this view as a favourite.",
             "resolution": "Ensure the user has at least Read Only permission on the view."
           },
           {
             "name": "7319",
             "description": "The specified view does not belong to the specified workspace.",
-            "resolution": "Ensure that the workspace-id and the view-id are consistent and correct."
+            "resolution": "Ensure both <workspace-id> and <view-id> are consistent and correct."
           },
           {
             "name": "8535",
             "description": "Invalid OAuth token.",
-            "resolution": "Provide a valid, non-expired token with the ZohoAnalytics.metadata.update scope."
+            "resolution": "Provide a valid, non-expired token with scope ZohoAnalytics.metadata.update."
           }
         ]
       },
@@ -1508,27 +1508,27 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify the <workspace-id> in the URL is correct and accessible."
           },
           {
             "name": "7104",
             "description": "View not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace."
+            "resolution": "Verify the <view-id> exists in the specified workspace."
           },
           {
             "name": "7301",
-            "description": "The user does not have permission to modify the favorite status of this view.",
+            "description": "User does not have permission to modify favourites for this view.",
             "resolution": "Ensure the user has at least Read Only permission on the view."
           },
           {
             "name": "7319",
             "description": "The specified view does not belong to the specified workspace.",
-            "resolution": "Ensure that the workspace-id and the view-id are consistent and correct."
+            "resolution": "Ensure both <workspace-id> and <view-id> are consistent and correct."
           },
           {
             "name": "8535",
             "description": "Invalid OAuth token.",
-            "resolution": "Provide a valid, non-expired token with the ZohoAnalytics.metadata.update scope."
+            "resolution": "Provide a valid, non-expired token with scope ZohoAnalytics.metadata.update."
           }
         ]
       },
@@ -1596,28 +1596,28 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7103",
-            "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "description": "METAOBJECTNOTPRESENT — The workspace does not exist.",
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7301",
-            "description": "The calling user has no access to the workspace.",
+            "description": "SECURITYNOTPERMITTED — The caller has no access to the workspace.",
             "resolution": "Ensure the workspace is shared with the calling user."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.metadata.read scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.metadata.read."
           }
         ]
       },
@@ -1633,7 +1633,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/tags'].get",
       "update": {
-        "description": "Returns every tag that exists in the workspace, with its identifier, name and colour code.\n\nA tag is listed whether or not it is attached to any view. To find out which views a tag labels, use the Get Tagged Views API. Every user who can open the workspace can read the list, including shared users on custom roles."
+        "description": "Returns every tag that exists in the workspace.\n\nA tag is listed whether or not it is attached to any view. To find out which views a tag labels, use the Get Tagged Views API. Every user who can open the workspace can read the list, including shared users on custom roles."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1713,58 +1713,58 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7103",
-            "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "description": "METAOBJECTNOTPRESENT — The workspace does not exist.",
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7301",
-            "description": "The calling user has no access to the workspace.",
+            "description": "SECURITYNOTPERMITTED — The caller cannot access the workspace.",
             "resolution": "Ensure the workspace is shared with the calling user."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8079",
-            "description": "name or colorCode is missing from CONFIG. The error message names the attribute.",
-            "resolution": "Send both name and colorCode - both are mandatory."
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — name or colorCode is missing.",
+            "resolution": "The message names the attribute; both are mandatory."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8174",
-            "description": "A tag with the given name already exists in this workspace. Tag names must be unique within a workspace.",
-            "resolution": "Choose a different name, or reuse the identifier of the existing tag."
+            "description": "DUPLICATETAGNAMEFOUND — A tag with this name already exists in the workspace.",
+            "resolution": "Choose a different name, or reuse the existing tag's ID."
           },
           {
             "name": "8179",
-            "description": "The calling user is not an Account Admin, Organization Admin or Workspace Admin of the workspace.",
-            "resolution": "Call the API as an administrator of the workspace."
+            "description": "DONTHAVEPERMISSIONTOCREATETAGS — The caller is not an Account Admin, Organization Admin, or Workspace Admin.",
+            "resolution": "Call as an administrator of the workspace."
           },
           {
             "name": "8504",
-            "description": "CONFIG was not sent.",
-            "resolution": "Send a CONFIG object."
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent.",
+            "resolution": "Send a CONFIG object containing name and colorCode."
           },
           {
             "name": "8507",
-            "description": "name exceeds 100 characters.",
-            "resolution": "Shorten the tag name."
+            "description": "MORETHANMAXLENGTH — name exceeds 100 characters.",
+            "resolution": "Shorten the name."
           },
           {
             "name": "8509",
-            "description": "colorCode is not a valid hex colour.",
-            "resolution": "Send the colour as #RRGGBB or #RGB."
+            "description": "PATTERNNOTMATCHED — colorCode is not a valid hex colour.",
+            "resolution": "Send #RRGGBB or #RGB."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.create scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.modeling.create."
           }
         ]
       },
@@ -1780,7 +1780,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/tags'].post",
       "update": {
-        "description": "Creates one tag in the workspace and returns its identifier.\n\nBoth name and colorCode are mandatory. A created tag labels nothing until it is attached to views with the Add Tag To Multiple Views or Add Multiple Tags To View API. The tag name must be unique within the workspace - the same name may exist in another workspace as an unrelated tag."
+        "description": "Creates one tag in the workspace.\n\nBoth name and colorCode are mandatory. A created tag labels nothing until it is attached to views with the Add Tag To Multiple Views or Add Multiple Tags To View API. The tag name must be unique within the workspace - the same name may exist in another workspace as an unrelated tag."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1846,68 +1846,68 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7103",
-            "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "description": "METAOBJECTNOTPRESENT — The workspace does not exist.",
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7301",
-            "description": "The calling user has no access to the workspace.",
+            "description": "SECURITYNOTPERMITTED — The caller cannot access the workspace.",
             "resolution": "Ensure the workspace is shared with the calling user."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8174",
-            "description": "A tag with the given name already exists in this workspace. Tag names must be unique within a workspace.",
-            "resolution": "Choose a different name, or reuse the identifier of the existing tag."
+            "description": "DUPLICATETAGNAMEFOUND — Another tag in the workspace already uses this name.",
+            "resolution": "Choose a different name."
           },
           {
             "name": "8179",
-            "description": "The calling user is not an Account Admin, Organization Admin or Workspace Admin of the workspace.",
-            "resolution": "Call the API as an administrator of the workspace."
+            "description": "DONTHAVEPERMISSIONTOCREATETAGS — The caller is not an Account Admin, Organization Admin, or Workspace Admin.",
+            "resolution": "Call as an administrator of the workspace."
           },
           {
             "name": "8182",
-            "description": "The CONFIG contained neither name nor colorCode, so there is nothing to update. Despite its wording, this is not a permission error.",
-            "resolution": "Send at least one of name or colorCode."
+            "description": "CANNOTUPDATETHETAG — The CONFIG contained neither name nor colorCode.",
+            "resolution": "Send at least one of the two."
           },
           {
             "name": "8185",
-            "description": "The operation matched no tag row.",
-            "resolution": "Verify the tag-id using the Get Tags List API."
+            "description": "CANNOTDELETEORUPDATETAG — The update matched no row.",
+            "resolution": "Verify <tag-id> with Get Tags List."
           },
           {
             "name": "8187",
-            "description": "The tag does not exist in this workspace.",
-            "resolution": "Verify the tag-id using the Get Tags List API."
+            "description": "TAGNOTPRESENTINDB — The tag does not exist in this workspace.",
+            "resolution": "Verify <tag-id> with Get Tags List."
           },
           {
             "name": "8504",
-            "description": "CONFIG was not sent.",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent.",
             "resolution": "Send a CONFIG object."
           },
           {
             "name": "8507",
-            "description": "name exceeds 100 characters.",
-            "resolution": "Shorten the tag name."
+            "description": "MORETHANMAXLENGTH — name exceeds 100 characters.",
+            "resolution": "Shorten the name."
           },
           {
             "name": "8509",
-            "description": "colorCode is not a valid hex colour.",
-            "resolution": "Send the colour as #RRGGBB or #RGB."
+            "description": "PATTERNNOTMATCHED — colorCode is not a valid hex colour.",
+            "resolution": "Send #RRGGBB or #RGB."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.update scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.modeling.update."
           }
         ]
       },
@@ -1923,7 +1923,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}'].put",
       "update": {
-        "description": "Renames a tag, recolours it, or does both in one call.\n\nThis is a genuine partial update - the attribute that is omitted keeps its stored value. Associations are never touched: every view tagged before the update is still tagged after it."
+        "description": "Renames a tag, recolours it, or both.\n\nThis is a genuine partial update - the attribute that is omitted keeps its stored value. Associations are never touched: every view tagged before the update is still tagged after it."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1947,43 +1947,43 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7103",
-            "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "description": "METAOBJECTNOTPRESENT — The workspace does not exist.",
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7301",
-            "description": "The calling user has no access to the workspace.",
+            "description": "SECURITYNOTPERMITTED — The caller cannot access the workspace.",
             "resolution": "Ensure the workspace is shared with the calling user."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8179",
-            "description": "The calling user is not an Account Admin, Organization Admin or Workspace Admin of the workspace.",
-            "resolution": "Call the API as an administrator of the workspace."
+            "description": "DONTHAVEPERMISSIONTOCREATETAGS — The caller is not an Account Admin, Organization Admin, or Workspace Admin.",
+            "resolution": "Call as an administrator of the workspace."
           },
           {
             "name": "8184",
-            "description": "The tag does not exist in this workspace.",
-            "resolution": "Verify the tag-id using the Get Tags List API."
+            "description": "VIEWORTAGNOTPRESENTINDBTOTAG — The tag does not exist in this workspace.",
+            "resolution": "Verify <tag-id> with Get Tags List."
           },
           {
             "name": "8185",
-            "description": "The operation matched no tag row.",
-            "resolution": "Verify the tag-id using the Get Tags List API."
+            "description": "CANNOTDELETEORUPDATETAG — The delete matched no row.",
+            "resolution": "Verify <tag-id> with Get Tags List."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.delete scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.modeling.delete."
           }
         ]
       },
@@ -1999,7 +1999,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}'].delete",
       "update": {
-        "description": "Deletes a tag together with every association it has.\n\nThe views that carried the tag are untouched - only the label disappears from them. There is no undo, and re-creating the same name afterwards produces a different tag with a new identifier and none of the old associations. To clear a tag's links while keeping the tag, use the Remove Tag From Multiple Views API with dissociateAll instead."
+        "description": "Deletes a tag and every association it has.\n\nThe views that carried the tag are untouched - only the label disappears from them. There is no undo, and re-creating the same name afterwards produces a different tag with a new identifier and none of the old associations. To clear a tag's links while keeping the tag, use the Remove Tag From Multiple Views API with dissociateAll instead."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -2079,38 +2079,38 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7103",
-            "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "description": "METAOBJECTNOTPRESENT — The workspace does not exist.",
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7301",
-            "description": "The calling user has no access to the workspace.",
+            "description": "SECURITYNOTPERMITTED — The caller has no access to the workspace.",
             "resolution": "Ensure the workspace is shared with the calling user."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8184",
-            "description": "The tag does not exist in this workspace.",
-            "resolution": "Verify the tag-id using the Get Tags List API."
+            "description": "VIEWORTAGNOTPRESENTINDBTOTAG — The tag does not exist in this workspace.",
+            "resolution": "Verify <tag-id> with Get Tags List."
           },
           {
             "name": "8507",
-            "description": "CONFIG exceeds 1,000 characters.",
-            "resolution": "Send only limit and offset in CONFIG."
+            "description": "MORETHANMAXLENGTH — CONFIG exceeds 1,000 characters.",
+            "resolution": "Send only limit and offset."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.metadata.read scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.metadata.read."
           }
         ]
       },
@@ -2126,7 +2126,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views'].get",
       "update": {
-        "description": "Returns the views that carry a given tag, filtered to the views the calling user is entitled to see.\n\nThe result can be paged with limit and offset. It is the inverse of the Get View Tags API - the same association table read from the tag side. A tag that exists but labels nothing returns an empty array, while a tag that does not exist fails with error 8184."
+        "description": "Returns the views that carry a given tag.\n\nThe result can be paged with limit and offset. It is the inverse of the Get View Tags API - the same association table read from the tag side. A tag that exists but labels nothing returns an empty array, while a tag that does not exist fails with error 8184."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -2178,63 +2178,63 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7103",
-            "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "description": "METAOBJECTNOTPRESENT — The workspace does not exist.",
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7301",
-            "description": "The calling user is not an Account Admin, Organization Admin or Workspace Admin of the workspace.",
-            "resolution": "Call the API as an administrator, or use the Add Multiple Tags To View API instead."
+            "description": "SECURITYNOTPERMITTED — The caller is not an Account Admin, Organization Admin, or Workspace Admin.",
+            "resolution": "Call as an administrator, or use Add Multiple Tags To View instead."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8079",
-            "description": "viewIds is missing from CONFIG.",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — viewIds is missing.",
             "resolution": "Send a viewIds array."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8180",
-            "description": "The calling user is a read-only user. Read-only users cannot change tag associations regardless of any other permission.",
-            "resolution": "Call the API as a user who is not read-only."
+            "description": "DONTHAVEPERMISSIONTOASSOCIATEANDUNASSOCIATETAGS — The caller is a read-only user.",
+            "resolution": "Associations cannot be changed by read-only users."
           },
           {
             "name": "8181",
-            "description": "One or more views would exceed the limit of 10 tags per view. The error message lists the offending views.",
+            "description": "TAGCOUNTEXCEEDS — One or more views would exceed 10 tags. The message lists them.",
             "resolution": "Remove tags from those views first, or drop them from the batch."
           },
           {
             "name": "8184",
-            "description": "The tag or one of the views does not exist in this workspace.",
-            "resolution": "Verify the tag-id using the Get Tags List API and the view IDs using the Get View List API."
+            "description": "VIEWORTAGNOTPRESENTINDBTOTAG — The tag or one of the views does not exist in this workspace.",
+            "resolution": "Verify both sets of IDs."
           },
           {
             "name": "8504",
-            "description": "CONFIG was not sent.",
-            "resolution": "Send a CONFIG object."
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or viewIds is missing.",
+            "resolution": "Send a CONFIG object containing viewIds."
           },
           {
             "name": "8507",
-            "description": "viewIds exceeds 50,000 characters when serialized.",
-            "resolution": "Split the batch into smaller requests."
-          },
-          {
-            "name": "8547",
-            "description": "viewIds is empty or has more than 1000 entries.",
-            "resolution": "Send between 1 and 1000 view IDs."
+            "description": "MORETHANMAXLENGTH — viewIds exceeds 50,000 characters.",
+            "resolution": "Split the batch."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.create scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.modeling.create."
+          },
+          {
+            "name": "8547",
+            "description": "ARRAYSIZEOUTOFRANGE — viewIds is empty or exceeds 1000 entries.",
+            "resolution": "Send between 1 and 1000 view IDs."
           }
         ]
       },
@@ -2250,7 +2250,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views'].post",
       "update": {
-        "description": "Attaches one tag to a batch of views in the workspace.\n\nThe batch is validated as a whole - workspace membership, tag existence and the ten-tag ceiling of every view - before anything is written, so one bad view means no view gets tagged. Pairs that already exist are skipped rather than rejected, which makes the call safe to retry. This is the tag-side counterpart of the Add Multiple Tags To View API and, unlike it, requires workspace administration."
+        "description": "Attaches one tag to a batch of views.\n\nThe batch is validated as a whole - workspace membership, tag existence and the ten-tag ceiling of every view - before anything is written, so one bad view means no view gets tagged. Pairs that already exist are skipped rather than rejected, which makes the call safe to retry. This is the tag-side counterpart of the Add Multiple Tags To View API and, unlike it, requires workspace administration."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -2316,58 +2316,58 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7103",
-            "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "description": "METAOBJECTNOTPRESENT — The workspace does not exist.",
+            "resolution": "Verify <workspace-id>."
           },
           {
             "name": "7301",
-            "description": "The calling user is not an Account Admin, Organization Admin or Workspace Admin of the workspace.",
-            "resolution": "Call the API as an administrator, or use the Remove Multiple Tags From View API instead."
+            "description": "SECURITYNOTPERMITTED — The caller is not an Account Admin, Organization Admin, or Workspace Admin.",
+            "resolution": "Call as an administrator, or use Remove Multiple Tags From View instead."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8180",
-            "description": "The calling user is a read-only user. Read-only users cannot change tag associations regardless of any other permission.",
-            "resolution": "Call the API as a user who is not read-only."
+            "description": "DONTHAVEPERMISSIONTOASSOCIATEANDUNASSOCIATETAGS — The caller is a read-only user.",
+            "resolution": "Associations cannot be changed by read-only users."
           },
           {
             "name": "8184",
-            "description": "The tag or one of the views does not exist in this workspace.",
-            "resolution": "Verify the tag-id using the Get Tags List API and the view IDs using the Get View List API."
+            "description": "VIEWORTAGNOTPRESENTINDBTOTAG — The tag or one of the views does not exist in this workspace.",
+            "resolution": "Verify both sets of IDs."
           },
           {
             "name": "8201",
-            "description": "viewIds is empty or absent and dissociateAll is not true.",
-            "resolution": "Send a non-empty viewIds array, or set dissociateAll to true."
+            "description": "INVALIDCONFIGURATIONREMOVEVIEWSLINKEDWITHTAG — viewIds is empty or absent and dissociateAll is not true.",
+            "resolution": "Send a non-empty viewIds, or set dissociateAll to true."
           },
           {
             "name": "8504",
-            "description": "CONFIG was not sent.",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent.",
             "resolution": "Send a CONFIG object."
           },
           {
             "name": "8507",
-            "description": "viewIds exceeds 50,000 characters when serialized.",
-            "resolution": "Split the batch into smaller requests."
-          },
-          {
-            "name": "8547",
-            "description": "viewIds has more than 1000 entries.",
-            "resolution": "Send at most 1000 view IDs, or use dissociateAll."
+            "description": "MORETHANMAXLENGTH — viewIds exceeds 50,000 characters.",
+            "resolution": "Split the batch."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.delete scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.modeling.delete."
+          },
+          {
+            "name": "8547",
+            "description": "ARRAYSIZEOUTOFRANGE — viewIds exceeds 1000 entries.",
+            "resolution": "Send at most 1000 view IDs, or use dissociateAll."
           }
         ]
       },
@@ -2383,7 +2383,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views'].delete",
       "update": {
-        "description": "Detaches one tag from a batch of views, or from every view in the workspace at once.\n\nOnly the associations are removed - the tag survives and can be re-attached, which is the difference from the Delete Tag API. Either name the views in viewIds, or set dissociateAll to true to strip the tag from every view in the workspace."
+        "description": "Detaches one tag from a batch of views, or from every view at once.\n\nOnly the associations are removed - the tag survives and can be re-attached, which is the difference from the Delete Tag API. Either name the views in viewIds, or set dissociateAll to true to strip the tag from every view in the workspace."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -2435,28 +2435,28 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7104",
-            "description": "View not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace using the Get View List API."
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id> with Get View List."
           },
           {
             "name": "7301",
-            "description": "The calling user lacks Read permission on the view, or the view does not belong to the workspace in the URL.",
-            "resolution": "Ensure the view is shared with the calling user and that workspace-id and view-id are consistent."
+            "description": "SECURITYNOTPERMITTED — The caller lacks Read permission on the view, or the view does not belong to <workspace-id>.",
+            "resolution": "Ensure the view is shared with the calling user."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.metadata.read scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.metadata.read."
           }
         ]
       },
@@ -2524,63 +2524,63 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7104",
-            "description": "View not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace using the Get View List API."
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id> with Get View List."
           },
           {
             "name": "7301",
-            "description": "The calling user lacks Edit Design permission on the view, or the view does not belong to the workspace in the URL.",
-            "resolution": "Call the API as an administrator, the view owner, or a user with Edit Design permission on the view."
+            "description": "SECURITYNOTPERMITTED — The caller lacks Edit Design permission on the view, or the view does not belong to <workspace-id>.",
+            "resolution": "Call as an administrator, the View Owner, or a user with Edit Design permission."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8079",
-            "description": "tagIds is missing from CONFIG.",
+            "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — tagIds is missing.",
             "resolution": "Send a tagIds array."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8180",
-            "description": "The calling user is a read-only user. Read-only users cannot change tag associations regardless of any other permission.",
-            "resolution": "Call the API as a user who is not read-only."
+            "description": "DONTHAVEPERMISSIONTOASSOCIATEANDUNASSOCIATETAGS — The caller is a read-only user.",
+            "resolution": "Associations cannot be changed by read-only users."
           },
           {
             "name": "8181",
-            "description": "One or more views would exceed the limit of 10 tags per view. The error message lists the offending views.",
-            "resolution": "Remove tags from those views first, or drop them from the batch."
+            "description": "TAGCOUNTEXCEEDS — The view would exceed 10 tags.",
+            "resolution": "Remove some tags first, or send fewer."
           },
           {
             "name": "8184",
-            "description": "One or more of the tags in tagIds does not exist in this workspace.",
-            "resolution": "Verify the identifiers using the Get Tags List API, and create missing tags with the Create Tag API."
+            "description": "VIEWORTAGNOTPRESENTINDBTOTAG — One of the tags does not exist in this workspace.",
+            "resolution": "Verify the IDs with Get Tags List. Create missing tags with Create Tag."
           },
           {
             "name": "8504",
-            "description": "CONFIG was not sent.",
-            "resolution": "Send a CONFIG object."
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent, or tagIds is missing.",
+            "resolution": "Send a CONFIG object containing tagIds."
           },
           {
             "name": "8507",
-            "description": "tagIds exceeds 50,000 characters when serialized.",
-            "resolution": "Split the batch into smaller requests."
-          },
-          {
-            "name": "8547",
-            "description": "tagIds is empty or has more than 1000 entries.",
-            "resolution": "Send between 1 and 1000 tag IDs."
+            "description": "MORETHANMAXLENGTH — tagIds exceeds 50,000 characters.",
+            "resolution": "Split the batch."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.create scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.modeling.create."
+          },
+          {
+            "name": "8547",
+            "description": "ARRAYSIZEOUTOFRANGE — tagIds is empty or exceeds 1000 entries.",
+            "resolution": "Send between 1 and 1000 tag IDs."
           }
         ]
       },
@@ -2596,7 +2596,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags'].post",
       "update": {
-        "description": "Attaches a batch of existing tags to one view.\n\nThis is the view-side counterpart of the Add Tag To Multiple Views API, and the one a non-administrator should use - the View Owner and any user with Edit Design permission on the view can call it. Every tag must already exist in the workspace; this API cannot create tags. Tags already on the view are skipped and do not count against the ten-tag ceiling."
+        "description": "Attaches a batch of tags to one view.\n\nThis is the view-side counterpart of the Add Tag To Multiple Views API, and the one a non-administrator should use - the View Owner and any user with Edit Design permission on the view can call it. Every tag must already exist in the workspace; this API cannot create tags. Tags already on the view are skipped and do not count against the ten-tag ceiling."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -2662,58 +2662,58 @@
         "x-zenesis-statuscodes": [
           {
             "name": "7104",
-            "description": "View not found.",
-            "resolution": "Verify that the view-id exists in the specified workspace using the Get View List API."
+            "description": "METAOBJECTNOTPRESENT — The view does not exist.",
+            "resolution": "Verify <view-id> with Get View List."
           },
           {
             "name": "7301",
-            "description": "The calling user lacks Edit Design permission on the view, or the view does not belong to the workspace in the URL.",
-            "resolution": "Call the API as an administrator, the view owner, or a user with Edit Design permission on the view."
+            "description": "SECURITYNOTPERMITTED — The caller lacks Edit Design permission on the view, or the view does not belong to <workspace-id>.",
+            "resolution": "Call as an administrator, the View Owner, or a user with Edit Design permission."
           },
           {
             "name": "7390",
-            "description": "The workspace does not belong to the organization in the ZANALYTICS-ORGID header.",
+            "description": "WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID.",
             "resolution": "Send the organization ID that owns the workspace."
           },
           {
             "name": "8083",
-            "description": "The ZANALYTICS-ORGID header is missing.",
-            "resolution": "Add the ZANALYTICS-ORGID header to the request."
+            "description": "ORGIDNOTPRESENTINTHEHEADER — The ZANALYTICS-ORGID header is missing.",
+            "resolution": "Add the header."
           },
           {
             "name": "8180",
-            "description": "The calling user is a read-only user. Read-only users cannot change tag associations regardless of any other permission.",
-            "resolution": "Call the API as a user who is not read-only."
+            "description": "DONTHAVEPERMISSIONTOASSOCIATEANDUNASSOCIATETAGS — The caller is a read-only user.",
+            "resolution": "Associations cannot be changed by read-only users."
           },
           {
             "name": "8184",
-            "description": "One or more of the tags in tagIds does not exist in this workspace.",
-            "resolution": "Verify the identifiers using the Get Tags List API, and create missing tags with the Create Tag API."
+            "description": "VIEWORTAGNOTPRESENTINDBTOTAG — One of the tags does not exist in this workspace.",
+            "resolution": "Verify the IDs with Get View Tags."
           },
           {
             "name": "8202",
-            "description": "tagIds is empty or absent and dissociateAll is not true.",
-            "resolution": "Send a non-empty tagIds array, or set dissociateAll to true."
+            "description": "INVALIDCONFIGURATIONREMOVETAGSFORVIEW — tagIds is empty or absent and dissociateAll is not true.",
+            "resolution": "Send a non-empty tagIds, or set dissociateAll to true."
           },
           {
             "name": "8504",
-            "description": "CONFIG was not sent.",
+            "description": "LESSTHANMINOCCURANCE — CONFIG was not sent.",
             "resolution": "Send a CONFIG object."
           },
           {
             "name": "8507",
-            "description": "tagIds exceeds 50,000 characters when serialized.",
-            "resolution": "Split the batch into smaller requests."
-          },
-          {
-            "name": "8547",
-            "description": "tagIds has more than 1000 entries.",
-            "resolution": "Send at most 1000 tag IDs, or use dissociateAll."
+            "description": "MORETHANMAXLENGTH — tagIds exceeds 50,000 characters.",
+            "resolution": "Split the batch."
           },
           {
             "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with the ZohoAnalytics.modeling.delete scope."
+            "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token carrying ZohoAnalytics.modeling.delete."
+          },
+          {
+            "name": "8547",
+            "description": "ARRAYSIZEOUTOFRANGE — tagIds exceeds 1000 entries.",
+            "resolution": "Send at most 1000 tag IDs, or use dissociateAll."
           }
         ]
       },
@@ -2729,7 +2729,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags'].delete",
       "update": {
-        "description": "Detaches a batch of tags from one view, or clears the view of every tag.\n\nThe tags survive and stay attached to every other view - only this view's links are removed. Setting dissociateAll to true is scoped to this single view, which makes it the safe way to reset a view's labels and to free slots against the ten-tag ceiling."
+        "description": "Detaches a batch of tags from one view, or clears the view entirely.\n\nThe tags survive and stay attached to every other view - only this view's links are removed. Setting dissociateAll to true is scoped to this single view, which makes it the safe way to reset a view's labels and to free slots against the ten-tag ceiling."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -2810,17 +2810,17 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify the <workspace-id> in the URL."
           },
           {
             "name": "7301",
-            "description": "The user does not have permission to list the trashed views of this workspace.",
+            "description": "User does not have permission to list trash views.",
             "resolution": "Ensure the user has at least Read permission on the workspace."
           },
           {
             "name": "8535",
             "description": "Invalid OAuth token.",
-            "resolution": "Provide a valid, non-expired token with the ZohoAnalytics.metadata.read scope."
+            "resolution": "Provide a valid, non-expired token with scope ZohoAnalytics.metadata.read."
           }
         ]
       },
@@ -2894,32 +2894,32 @@
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify the <workspace-id> in the URL."
           },
           {
             "name": "7301",
-            "description": "The user does not have permission to restore this view from the trash.",
+            "description": "User does not have permission to restore this view from trash.",
             "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or the original owner of the trashed view."
           },
           {
             "name": "7929",
-            "description": "The view has already been restored from the trash.",
-            "resolution": "The view is active again. No action is needed."
+            "description": "The view has already been restored from trash.",
+            "resolution": "The view is no longer in trash. No action needed."
           },
           {
             "name": "7941",
-            "description": "The view has parent dependencies that are also in the trash and must be restored together.",
-            "resolution": "Retry the request with withDependents set to true in the CONFIG."
+            "description": "The view has parent dependencies that are also in trash and must be restored together.",
+            "resolution": "Retry with \"withDependents\": true in the CONFIG. See Appendix D for details."
           },
           {
             "name": "7943",
             "description": "The requesting user does not have permission to restore this specific trashed view.",
-            "resolution": "Only the original owner of the view or an admin can restore it."
+            "resolution": "Only the view's original owner or an admin can restore it."
           },
           {
             "name": "8535",
             "description": "Invalid OAuth token.",
-            "resolution": "Provide a valid, non-expired token with the ZohoAnalytics.modeling.create scope."
+            "resolution": "Provide a valid, non-expired token with scope ZohoAnalytics.modeling.create."
           }
         ]
       },
@@ -2988,32 +2988,32 @@
           {
             "name": "7082",
             "description": "An unexpected error occurred during the permanent delete operation.",
-            "resolution": "Retry the request. If the error persists, contact support."
+            "resolution": "Retry the request. If it persists, contact support."
           },
           {
             "name": "7103",
             "description": "Workspace not found.",
-            "resolution": "Verify that the workspace-id in the URL is correct and accessible."
+            "resolution": "Verify the <workspace-id> in the URL."
           },
           {
             "name": "7301",
-            "description": "The user does not have permission to delete this view from the trash.",
-            "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or the original owner of the trashed view."
+            "description": "User does not have permission to delete this view from trash.",
+            "resolution": "Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or the original view owner."
           },
           {
             "name": "7929",
-            "description": "The view has already been restored from the trash and is no longer in the trash bin.",
-            "resolution": "The view is active again and cannot be deleted from the trash."
+            "description": "The view has already been restored from trash and is no longer in the trash bin.",
+            "resolution": "The view is active again — it cannot be deleted from trash."
           },
           {
             "name": "7942",
-            "description": "The view has child dependent views in the trash that must be deleted together.",
-            "resolution": "Retry the request with withDependents set to true in the CONFIG."
+            "description": "The view has child dependent views in trash that must be deleted together.",
+            "resolution": "Retry with \"withDependents\": true in the CONFIG. See Appendix D for details."
           },
           {
             "name": "8535",
             "description": "Invalid OAuth token.",
-            "resolution": "Provide a valid, non-expired token with the ZohoAnalytics.modeling.delete scope."
+            "resolution": "Provide a valid, non-expired token with scope ZohoAnalytics.modeling.delete."
           }
         ]
       },

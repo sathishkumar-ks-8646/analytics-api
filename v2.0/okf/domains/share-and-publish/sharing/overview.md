@@ -35,17 +35,17 @@ api:
       doc: "/domains/share-and-publish/sharing/remove-share.md"
     - operation_id: getUserPermissions
       method: GET
-      path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions"
+      path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions"
       doc: "/domains/share-and-publish/sharing/get-user-permissions.md"
 sources:
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -64,7 +64,7 @@ APIs for sharing workspaces and views with users, and retrieving share details a
 | [Update Shared Details](update-shared-details-for-view.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share` | `UpdateSharedDetailsForView` | `ZohoAnalytics.share.update` | 204 |
 | [Get Shared Details](get-shared-details-for-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share/shareddetails` | `getSharedDetailsForViews` | `ZohoAnalytics.share.read` | 200 |
 | [Remove Shared Views](remove-share.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/share` | `removeShare` | `ZohoAnalytics.share.delete` | 204 |
-| [Get My Permissions](get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/mypermissions` | `getUserPermissions` | `ZohoAnalytics.share.read` | 200 |
+| [Get My Permissions](get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions` | `getUserPermissions` | `ZohoAnalytics.share.read` | 200 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 
@@ -135,28 +135,28 @@ Each share grants a specific **permission set** (read, export, row-level write a
 | Code | HTTP | Meaning |
 |---|---|---|
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [7307](../../../foundations/error-codes.md#error-7307) | 400 | The sharer attempted to share a view to themselves. |
-| [7320](../../../foundations/error-codes.md#error-7320) | 400 | Same as above (alternate path). |
-| [7321](../../../foundations/error-codes.md#error-7321) | 400 | The view is already shared with this user. |
+| [7307](../../../foundations/error-codes.md#error-7307) | 400 | OWNERCANNOTSHAREHIMSELF — The sharer attempted to share a view to themselves. |
+| [7320](../../../foundations/error-codes.md#error-7320) | 400 | CANNOTSHARETOSELF — Same as above (alternate path). |
+| [7321](../../../foundations/error-codes.md#error-7321) | 400 | VIEWALREADYSHARED — The view is already shared with this user. |
 | [7322](../../../foundations/error-codes.md#error-7322) | 400 | VIEWALREADYSHARED (group form) — The view is already shared with this group. |
-| [7323](../../../foundations/error-codes.md#error-7323) | 400 | Attempted to share the view with its own owner. |
-| [7533](../../../foundations/error-codes.md#error-7533) | 400 | The view's type does not support group sharing. |
-| [7535](../../../foundations/error-codes.md#error-7535) | 400 | One or more emailIds do not belong to the organization. |
-| [7541](../../../foundations/error-codes.md#error-7541) | 400 | criteria supplied with more than one viewIds entry. |
-| [7542](../../../foundations/error-codes.md#error-7542) | 400 | criteria update is not permitted for this share type. |
-| [7543](../../../foundations/error-codes.md#error-7543) | 400 | criteria on a tabular view referenced a column outside its base table. |
-| [7545](../../../foundations/error-codes.md#error-7545) | 400 | A Read-Only/embedded user was granted share together with a write permission. |
-| [7549](../../../foundations/error-codes.md#error-7549) | 400 | Attempted to share directly to a user who only has a custom-role-based org-level permission. |
-| [8029](../../../foundations/error-codes.md#error-8029) | 400 | One or more emailIds entries is not a valid email address. |
-| [8031](../../../foundations/error-codes.md#error-8031) | 400 | A recipient address is outside the organization's trusted domains. |
-| [8032](../../../foundations/error-codes.md#error-8032) | 400 | The view is not currently shared with the specified user. |
-| [8074](../../../foundations/error-codes.md#error-8074) | 400 | permissions.read was sent as false. |
+| [7323](../../../foundations/error-codes.md#error-7323) | 400 | CANNOTSHAREDTOOBJOWNER — Attempted to share the view with its own owner. |
+| [7533](../../../foundations/error-codes.md#error-7533) | 400 | CANNOTSHAREOBJECTTOGROUP — The view's type does not support group sharing. |
+| [7535](../../../foundations/error-codes.md#error-7535) | 400 | CANNOTSHARETOMEMBERSNOTPARTOFORG — One or more emailIds do not belong to the organization. |
+| [7541](../../../foundations/error-codes.md#error-7541) | 400 | FILTERCRITERIANOTSUPPORTEDFORMULTIVIEWSHARE — criteria supplied with more than one viewIds entry. |
+| [7542](../../../foundations/error-codes.md#error-7542) | 400 | FILTERCRITERIANOTPERMITTEDFORSHAREDUSER — criteria update is not permitted for this share type. |
+| [7543](../../../foundations/error-codes.md#error-7543) | 400 | ONLYBASETABLECOLINTABULARFILTERCRITERIA — criteria on a tabular view referenced a column outside its base table. |
+| [7545](../../../foundations/error-codes.md#error-7545) | 400 | SHAREANDWRITEPERMISSIONSNOTALLOWEDFORROUSERS — A Read-Only/embedded user was granted share together with a write permission. |
+| [7549](../../../foundations/error-codes.md#error-7549) | 400 | CANNOTSHARETOCUSTOMROLEUSER — Attempted to share directly to a user who only has a custom-role-based org-level permission. |
+| [8029](../../../foundations/error-codes.md#error-8029) | 400 | SHAREINVALIDEMAILADDRESS — One or more emailIds entries is not a valid email address. |
+| [8031](../../../foundations/error-codes.md#error-8031) | 400 | UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains. |
+| [8032](../../../foundations/error-codes.md#error-8032) | 400 | VIEWNOTSHARED — The view is not currently shared with the specified user. |
+| [8074](../../../foundations/error-codes.md#error-8074) | 400 | READPERMSHOULDBETRUEFORSHARING — permissions.read was sent as false. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint. |
-| [8085](../../../foundations/error-codes.md#error-8085) | 400 | Sharing to an email outside the allowed domain(s) is disabled by org policy. |
-| [8086](../../../foundations/error-codes.md#error-8086) | 400 | Sharing to an email outside the allowed domain(s) is disabled by org policy. |
-| [8105](../../../foundations/error-codes.md#error-8105) | 400 | Both viewIds and removeAllViews: true were supplied together. |
-| [8150](../../../foundations/error-codes.md#error-8150) | 400 | The view is not currently shared with the specified group. |
-| [8241](../../../foundations/error-codes.md#error-8241) | 409 | The view carries a restricted DATAWARNING system tag. |
+| [8085](../../../foundations/error-codes.md#error-8085) | 400 | SHAREDTOEXTERNALDOMAINNOTALLOWED — Sharing to an email outside the allowed domain(s) is disabled by org policy. |
+| [8086](../../../foundations/error-codes.md#error-8086) | 400 | SHAREDTOEXTERNALDOMAINNOTALLOWED — Sharing to an email outside the allowed domain(s) is disabled by org policy. |
+| [8105](../../../foundations/error-codes.md#error-8105) | 400 | REMOVESHAREALLVIEWSPRESENT — Both viewIds and removeAllViews: true were supplied together. |
+| [8150](../../../foundations/error-codes.md#error-8150) | 400 | VIEWNOTSHAREDTOGROUP — The view is not currently shared with the specified group. |
+| [8241](../../../foundations/error-codes.md#error-8241) | 409 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. |
 
 # Related
 

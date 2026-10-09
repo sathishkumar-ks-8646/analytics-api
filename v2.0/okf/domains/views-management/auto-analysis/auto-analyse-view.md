@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Auto Analyse View
-description: Runs auto analysis on an entire table.
+description: Triggers auto analysis on an entire table.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/autoanalyse"
 tags:
   - zoho-analytics
@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -63,14 +63,6 @@ The operation tracks completion state — once auto analysis has been run succes
 
 > **Why `analyseAgain` is necessary here:**
 > After a successful run, the table is marked internally as "auto analysis completed." Calling this API again (e.g., after new data or new columns are added) without explicitly confirming intent will fail. Setting `analyseAgain=true` signals that you are intentionally re-running the analysis — all previously auto-generated views for this table are **replaced** by the new set. This guard prevents accidental duplication of views when the API is called multiple times.
-
-From the OpenAPI specification:
-
-Runs auto analysis on an entire table. Every column is scanned, the role of each is inferred - dimension or measure, geographic, temporal - and a curated set of views is created directly in the workspace.
-
-The operation tracks its own completion state. Once a table has been analysed successfully it is marked internally as analysed, and a second call is rejected with error 8116 unless `analyseAgain` is set to `true`. That guard exists to stop auto-generated views being duplicated by an accidental repeat call; setting the flag signals deliberate intent, and the previous set of views is then replaced rather than added to.
-
-The API works on Tables, Query Tables and Pipeline Tables only.
 
 # Endpoint
 

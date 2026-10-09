@@ -4,7 +4,7 @@
 
 # Concepts
 
-* [Create Export Job using SQL Query (Asynchronous)](create-export-job-sql-query.md) - Create an export job using an SQL SELECT statement to initiate data export asynchronously.
-* [Create Export Job using View ID (Asynchronous)](create-export-job-view-id.md) - Create an export job to initiate data export for the mentioned view asynchronously.
-* [Download Exported Data](download-exported-data.md) - Download the file produced by a completed asynchronous export job.
-* [Get Export Job Details](get-export-job-details.md) - Returns details of the specified asynchronous export job.
+* [Create Export Job using SQL Query (Asynchronous)](create-export-job-sql-query.md) - Creates an export job whose source is an ad-hoc SQL SELECT statement rather than a saved view.
+* [Create Export Job using View ID (Asynchronous)](create-export-job-view-id.md) - Creates an export job whose source is a saved view — including the view types the synchronous export refuses.
+* [Download Exported Data](download-exported-data.md) - Returns the exported file produced by a completed export job.
+* [Get Export Job Details](get-export-job-details.md) - Reports the progress of an export job, and once it has finished, where to collect the file.

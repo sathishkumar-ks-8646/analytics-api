@@ -4,5 +4,5 @@
 
 # Concepts
 
-* [Import Data into an Existing Table (Synchronous)](import-data-existing-table.md) - Use Bulk APIs to import data into an existing specified table synchronously.
-* [Import Data into a New Table (Synchronous)](import-data-new-table.md) - Use the Bulk APIs to create a new table and import data into it synchronously.
+* [Import Data into an Existing Table (Synchronous)](import-data-existing-table.md) - Loads the uploaded data into an existing table, appending, replacing, or merging according to importType.
+* [Import Data into a New Table (Synchronous)](import-data-new-table.md) - Creates a new table in the workspace from the uploaded data and returns the new table's ID along with the import result.

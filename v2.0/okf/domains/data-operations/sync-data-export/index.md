@@ -4,4 +4,4 @@
 
 # Concepts
 
-* [Export Data from a View](export-data-view.md) - Use Bulk APIs to export data from the specified view synchronously.
+* [Export Data from a View](export-data-view.md) - Exports the data of a view and returns the generated file in the response body.

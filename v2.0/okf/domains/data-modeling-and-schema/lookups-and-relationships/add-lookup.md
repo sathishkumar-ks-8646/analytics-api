@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Add Lookup
-description: Creates a lookup relationship from the specified child column to a column in a reference table.
+description: Creates a lookup relationship from the specified child column to a column in a reference (parent) table.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/lookup"
 tags:
   - zoho-analytics
@@ -48,10 +48,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -63,7 +63,7 @@ Creates a lookup relationship from the specified child column to a column in a r
 
 From the OpenAPI specification:
 
-Creates a lookup relationship from the specified child column to a column in a reference table. A lookup links two tables of a workspace through a shared column, in the same way that a foreign key constraint links two relational tables.
+Creates a lookup relationship from the specified child column to a column in a reference (parent) table. The child column in the URL is the "many" side of the relationship; the referenceColumnId in the reference table is the "one" (unique key) side.
 
 The child column identified by `column-id` in the request URL is the many side of the relationship, and `referenceColumnId` in the reference table is the one, or unique key, side. Once the relationship exists, multi-table reports, pivot tables and query tables can pull data from both tables without a manual join, and the relationship becomes visible in the Schema View of the workspace.
 

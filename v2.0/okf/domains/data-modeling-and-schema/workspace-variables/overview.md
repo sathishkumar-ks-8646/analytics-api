@@ -38,10 +38,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -123,33 +123,33 @@ Each variable can additionally carry **per-user (or per-portal-domain) overrides
 | Code | HTTP | Meaning |
 |---|---|---|
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [70320](../../../foundations/error-codes.md#error-70320) | 400 | The specified variable does not exist in this workspace. |
-| [70321](../../../foundations/error-codes.md#error-70321) | 400 | The variable is currently referred to elsewhere and cannot be deleted. |
-| [70322](../../../foundations/error-codes.md#error-70322) | 400 | One or more of the targeted variables are in use. |
-| [70323](../../../foundations/error-codes.md#error-70323) | 400 | A variable with this name already exists in the workspace. |
-| [70324](../../../foundations/error-codes.md#error-70324) | 400 | The variable name is empty. |
-| [70325](../../../foundations/error-codes.md#error-70325) | 400 | The name uses a reserved pattern, such as a system. prefix, a ${ prefix or a } suffix. |
-| [70326](../../../foundations/error-codes.md#error-70326) | 400 | The variable cannot be deleted by this user because of an ownership restriction. |
-| [70329](../../../foundations/error-codes.md#error-70329) | 400 | The specified variable does not exist in this workspace. |
-| [70335](../../../foundations/error-codes.md#error-70335) | 400 | The Range type was combined with the Text data type. |
-| [70336](../../../foundations/error-codes.md#error-70336) | 400 | No usable value entry could be derived from the request. |
-| [70337](../../../foundations/error-codes.md#error-70337) | 400 | The default value is not one of the values supplied for a List entry. |
-| [70338](../../../foundations/error-codes.md#error-70338) | 400 | A Range entry is missing a required attribute. |
-| [70339](../../../foundations/error-codes.md#error-70339) | 400 | A Range entry carries unexpected extra data. |
-| [70340](../../../foundations/error-codes.md#error-70340) | 400 | The default value falls outside the range. |
-| [70341](../../../foundations/error-codes.md#error-70341) | 400 | The same email address appears in more than one userSpecificData entry. |
-| [70342](../../../foundations/error-codes.md#error-70342) | 400 | Value data was supplied for an All Values variable. |
-| [70343](../../../foundations/error-codes.md#error-70343) | 400 | defaultData is missing for a List or a Range variable. |
-| [70348](../../../foundations/error-codes.md#error-70348) | 400 | A userSpecificData entry has an empty emailIds array. |
-| [70350](../../../foundations/error-codes.md#error-70350) | 400 | variableType is not one of the accepted values. |
-| [70351](../../../foundations/error-codes.md#error-70351) | 400 | variableDataType is not one of the six supported values. |
-| [70352](../../../foundations/error-codes.md#error-70352) | 400 | minValue is not less than maxValue. |
-| [70353](../../../foundations/error-codes.md#error-70353) | 400 | stepSize is larger than the span of the range. |
-| [70354](../../../foundations/error-codes.md#error-70354) | 400 | stepSize is zero. |
-| [70355](../../../foundations/error-codes.md#error-70355) | 400 | stepSize does not divide the span of the range evenly. |
-| [70356](../../../foundations/error-codes.md#error-70356) | 400 | The default value falls outside the range. |
-| [70357](../../../foundations/error-codes.md#error-70357) | 400 | The deletion is blocked because of unresolved references. |
-| [70358](../../../foundations/error-codes.md#error-70358) | 400 | The requested change of type or data type conflicts with an existing formula or report that refers to this variable. |
+| [70320](../../../foundations/error-codes.md#error-70320) | 400 | USERVARIABLEVARIABLENOTFOUND — <variable-id> does not exist in this workspace. |
+| [70321](../../../foundations/error-codes.md#error-70321) | 400 | USERVARIABLEVARIABLEINUSE — The variable is currently referenced elsewhere and cannot be deleted. |
+| [70322](../../../foundations/error-codes.md#error-70322) | 400 | USERVARIABLEVARIABLEINUSE (multi-variable form) — One or more of the requested variables are in use. |
+| [70323](../../../foundations/error-codes.md#error-70323) | 400 | DUPLICATEUSERVARIABLE — A variable with this name already exists in the workspace. |
+| [70324](../../../foundations/error-codes.md#error-70324) | 400 | BLANKVARIABLENAME — variableName is empty. |
+| [70325](../../../foundations/error-codes.md#error-70325) | 400 | INVALIDVARNAME — The name uses a reserved pattern (system. prefix, ${ prefix, or } suffix). |
+| [70326](../../../foundations/error-codes.md#error-70326) | 400 | CANTDELETEVARIABLE — The variable cannot be deleted by this user (ownership restriction). |
+| [70329](../../../foundations/error-codes.md#error-70329) | 400 | CANTDELETEVARIABLE (UNAUTHORIZEDVARACTION) — <variable-id> does not exist in this workspace. |
+| [70335](../../../foundations/error-codes.md#error-70335) | 400 | VARIABLERANGENOTALLOWEDONDT — Range type combined with Text data type. |
+| [70336](../../../foundations/error-codes.md#error-70336) | 400 | VARIABLEDATANOTPRESENT — No usable value entries could be derived from the request. |
+| [70337](../../../foundations/error-codes.md#error-70337) | 400 | VARIABLEDEFAULTVALUENOTPRESENTINLIST — The defaultValue is not one of the values supplied for a List-type entry. |
+| [70338](../../../foundations/error-codes.md#error-70338) | 400 | VARIABLERANGEINSUFFICIENTDATA / VARIABLERANGEEXCESSDATA — Range entry is missing a required field or has extra unexpected data. |
+| [70339](../../../foundations/error-codes.md#error-70339) | 400 | VARIABLERANGEINSUFFICIENTDATA / VARIABLERANGEEXCESSDATA — Range entry is missing a required field or has extra unexpected data. |
+| [70340](../../../foundations/error-codes.md#error-70340) | 400 | VARIABLERANGEDEFAULTVALUEOUTOFRANGE / VARIABLERANGEDEFBWMINMAXRANGE — The defaultValue falls outside [minValue, maxValue]. |
+| [70341](../../../foundations/error-codes.md#error-70341) | 400 | VARIABLEDUPLICATEMAILIDORGROUP — The same email address appears in more than one userSpecificData entry. |
+| [70342](../../../foundations/error-codes.md#error-70342) | 400 | VARIABLEALLVALUESNOVARIABLEDATA — userSpecificData/defaultData were supplied for an All Values-type variable. |
+| [70343](../../../foundations/error-codes.md#error-70343) | 400 | VARIABLENOVARIABLEDATAPRESENT — defaultData is missing for a List or Range-type variable. |
+| [70348](../../../foundations/error-codes.md#error-70348) | 400 | VARIABLEEMAILNOTPRESENT — A userSpecificData entry has an empty emailIds array. |
+| [70350](../../../foundations/error-codes.md#error-70350) | 400 | VARIABLEINVALIDVARTYPE — variableType is not one of 0, 1, or 3. |
+| [70351](../../../foundations/error-codes.md#error-70351) | 400 | VARIABLEINVALIDDATATYPE — variableDataType is not one of the six supported values. |
+| [70352](../../../foundations/error-codes.md#error-70352) | 400 | VARIABLERANGEMINLESSTHANMAX — minValue is not less than maxValue. |
+| [70353](../../../foundations/error-codes.md#error-70353) | 400 | VARIABLERANGEINCRLESSTHANRANGESIZE — stepSize is larger than the range span. |
+| [70354](../../../foundations/error-codes.md#error-70354) | 400 | VARIABLERANGEINCRZEROERR — stepSize is zero. |
+| [70355](../../../foundations/error-codes.md#error-70355) | 400 | VARIABLERANGEINCRDIVEQUALLYERR — stepSize does not evenly divide the range span. |
+| [70356](../../../foundations/error-codes.md#error-70356) | 400 | VARIABLERANGEDEFAULTVALUEOUTOFRANGE / VARIABLERANGEDEFBWMINMAXRANGE — The defaultValue falls outside [minValue, maxValue]. |
+| [70357](../../../foundations/error-codes.md#error-70357) | 400 | USERVARIABLEVARIABLECANNOTBEDELETED — Deletion blocked due to unresolved references. |
+| [70358](../../../foundations/error-codes.md#error-70358) | 400 | VARIABLECANNOTBEUPDATED — The requested type/data type change conflicts with existing formula/report references to this variable. |
 
 # Related
 

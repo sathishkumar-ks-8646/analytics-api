@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -178,33 +178,33 @@ Separately, [Get Publish Configurations](get-publish-configurations.md) and [Upd
 
 | Code | HTTP | Meaning |
 |---|---|---|
-| [6054](../../../foundations/error-codes.md#error-6054) | 400 | The current plan does not allow this publish operation. |
-| [6055](../../../foundations/error-codes.md#error-6055) | 400 | The current plan does not allow regenerating a private-link key. |
-| [6056](../../../foundations/error-codes.md#error-6056) | 400 | A shared user attempted a plan-restricted private-link creation. |
-| [6057](../../../foundations/error-codes.md#error-6057) | 400 | A shared user attempted a plan-restricted key regeneration. |
-| [6121](../../../foundations/error-codes.md#error-6121) | 400 | The organization has used all private links allowed by its plan. |
-| [6122](../../../foundations/error-codes.md#error-6122) | 400 | Same limit, reported to a non-super-admin caller. |
+| [6054](../../../foundations/error-codes.md#error-6054) | 400 | PUBLISHCNTVIOLATION — The current plan does not allow this publish operation. |
+| [6055](../../../foundations/error-codes.md#error-6055) | 400 | REGENERATEVIOLATION — The current plan does not allow regenerating a private-link key. |
+| [6056](../../../foundations/error-codes.md#error-6056) | 400 | SHAREDUSRPUBLISHCNTVIOLATION — A shared user attempted a plan-restricted private-link creation. |
+| [6057](../../../foundations/error-codes.md#error-6057) | 400 | SHAREDUSRREGENERATEVIOLATION — A shared user attempted a plan-restricted key regeneration. |
+| [6121](../../../foundations/error-codes.md#error-6121) | 400 | EXCEEDINGUSRPLNPRIVATELINKS — The organization has used all private links allowed by its plan. |
+| [6122](../../../foundations/error-codes.md#error-6122) | 400 | EXCEEDINGUSRPLNPRIVATELINKSDM — Same limit, reported to a non-super-admin caller. |
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7138](../../../foundations/error-codes.md#error-7138) | 400 | A tableName in vudColumns / drillColumns is not a table involved in this view. |
+| [7138](../../../foundations/error-codes.md#error-7138) | 400 | baseTableName does not resolve to a table in this workspace. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7500](../../../foundations/error-codes.md#error-7500) | 400 | publicPermLevel: "3" requested but the caller does not belong to the workspace admin's business organization. |
-| [7531](../../../foundations/error-codes.md#error-7531) | 400 | publicPermLevel 2 or 3 is not supported on the Free plan. |
-| [7565](../../../foundations/error-codes.md#error-7565) | 400 | The calling user's primary email address is not verified. |
-| [8032](../../../foundations/error-codes.md#error-8032) | 400 | The view is not currently shared with the specified user. |
-| [8054](../../../foundations/error-codes.md#error-8054) | 400 | criteria could not be parsed. |
+| [7500](../../../foundations/error-codes.md#error-7500) | 400 | UNAUTHORIZEDORGCANNOTMAKEPUBLIC — publicPermLevel: "3" requested but the caller does not belong to the workspace admin's business organization. |
+| [7531](../../../foundations/error-codes.md#error-7531) | 400 | PUBLICTOORGNOTSUPPORTEDINFREE — publicPermLevel 2 or 3 is not supported on the Free plan. |
+| [7565](../../../foundations/error-codes.md#error-7565) | 400 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. |
+| [8032](../../../foundations/error-codes.md#error-8032) | 400 | VIEWNOTSHARED — The view is not currently shared with the specified user. |
+| [8054](../../../foundations/error-codes.md#error-8054) | 400 | INVALIDFILTERCRITERIA — criteria could not be parsed. |
 | [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
-| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the organization's Account Admin. |
-| [8074](../../../foundations/error-codes.md#error-8074) | 400 | permissions.read was sent as false. |
+| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
+| [8074](../../../foundations/error-codes.md#error-8074) | 400 | READPERMSHOULDBETRUEFORSHARING — permissions.read was sent as false. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint. |
-| [8088](../../../foundations/error-codes.md#error-8088) | 400 | Export is disabled for the organization. |
-| [8115](../../../foundations/error-codes.md#error-8115) | 404 | The view has no private link. |
-| [8152](../../../foundations/error-codes.md#error-8152) | 400 | autoRefresh is a positive value below 120 seconds. |
-| [8154](../../../foundations/error-codes.md#error-8154) | 400 | A column in vudColumns / drillColumns (or in criteria) does not exist in the given table. |
-| [8241](../../../foundations/error-codes.md#error-8241) | 409 | The view carries a restricted DATAWARNING system tag. |
+| [8088](../../../foundations/error-codes.md#error-8088) | 400 | SECURITYCONTROLSFEATUREDISABLED — Export is disabled for the organization. |
+| [8115](../../../foundations/error-codes.md#error-8115) | 404 | VIEWNOTPUBLISHEDASPRIVATE — The view has no private link. |
+| [8152](../../../foundations/error-codes.md#error-8152) | 400 | INTERVALSHOULDBE120ORABOVE — autoRefresh is a positive value below 120 seconds. |
+| [8154](../../../foundations/error-codes.md#error-8154) | 400 | COLUMNNOTPRESENTINTABLE — A column in vudColumns / drillColumns (or in criteria) does not exist in the given table. |
+| [8241](../../../foundations/error-codes.md#error-8241) | 409 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [12052](../../../foundations/error-codes.md#error-12052) | 400 | The workspace is not enabled for access through the requested portal domain. |
+| [12052](../../../foundations/error-codes.md#error-12052) | 400 | WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain. |
 
 # Related
 

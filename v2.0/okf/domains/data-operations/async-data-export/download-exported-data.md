@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Download Exported Data
-description: Download the file produced by a completed asynchronous export job.
+description: Returns the exported file produced by a completed export job.
 resource: "https://analyticsapi.zoho.com/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}/data"
 tags:
   - zoho-analytics
@@ -52,10 +52,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -73,10 +73,6 @@ Returns the exported file produced by a completed export job.
 | `<job-id>` | Long | The `data.jobId` returned by either creation API. |
 
 This endpoint is exactly what `data.downloadUrl` from [Get Export Job Details](get-export-job-details.md) points at.
-
-From the OpenAPI specification:
-
-Download the file produced by a completed asynchronous export job. The job must have reached jobCode 1004; calling earlier fails with 8121 (queued) or 8122 (running), and 8123 if the job failed. Only the user who created the job may download it.
 
 # Endpoint
 

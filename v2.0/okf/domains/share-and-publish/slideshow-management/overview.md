@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -183,23 +183,23 @@ Each slideshow also carries an **access type** that decides whether a viewer mus
 
 | Code | HTTP | Meaning |
 |---|---|---|
-| [6054](../../../foundations/error-codes.md#error-6054) | 400 | The current plan does not allow this publish operation. |
-| [6056](../../../foundations/error-codes.md#error-6056) | 400 | A shared user attempted a plan-restricted private-link creation. |
-| [6063](../../../foundations/error-codes.md#error-6063) | 400 | The workspace owner's plan does not include the slideshow feature. |
+| [6054](../../../foundations/error-codes.md#error-6054) | 400 | PUBLISHCNTVIOLATION — The current plan does not allow this publish operation. |
+| [6056](../../../foundations/error-codes.md#error-6056) | 400 | SHAREDUSRPUBLISHCNTVIOLATION — A shared user attempted a plan-restricted private-link creation. |
+| [6063](../../../foundations/error-codes.md#error-6063) | 400 | SLIDESHOWNOTALLOWED — The workspace owner's plan does not include the slideshow feature. |
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7196](../../../foundations/error-codes.md#error-7196) | 404 | Another slideshow in this workspace already uses slideName. |
+| [7196](../../../foundations/error-codes.md#error-7196) | 404 | SLIDENAMEALREADYEXISTS — Another slideshow in this workspace already uses slideName. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7351](../../../foundations/error-codes.md#error-7351) | 400 | The slideshow does not exist, or belongs to a different workspace. |
-| [7396](../../../foundations/error-codes.md#error-7396) | 400 | The slideshow record exists but no slide details could be read for it. |
-| [7565](../../../foundations/error-codes.md#error-7565) | 400 | The calling user's primary email address is not verified. |
-| [8078](../../../foundations/error-codes.md#error-8078) | 400 | A mandatory attribute was sent with an empty value. The error message names the attribute. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A mandatory attribute is missing from the configuration. |
+| [7351](../../../foundations/error-codes.md#error-7351) | 400 | SLIDESHOWNOTBELONGSTODB — The slideshow does not exist, or belongs to a different workspace. |
+| [7396](../../../foundations/error-codes.md#error-7396) | 400 | SLIDENOTPRESENTINDB — The slideshow record exists but no slide details could be read for it. |
+| [7565](../../../foundations/error-codes.md#error-7565) | 400 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. |
+| [8078](../../../foundations/error-codes.md#error-8078) | 400 | EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent blank. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint. |
-| [8088](../../../foundations/error-codes.md#error-8088) | 400 | Export is disabled for the organization. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
-| [8241](../../../foundations/error-codes.md#error-8241) | 409 | The view carries a restricted DATAWARNING system tag. |
+| [8088](../../../foundations/error-codes.md#error-8088) | 400 | SECURITYCONTROLSFEATUREDISABLED — Export is disabled for the organization. |
+| [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
+| [8241](../../../foundations/error-codes.md#error-8241) | 409 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 
 # Related

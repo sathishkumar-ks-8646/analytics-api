@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -284,5 +284,5 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Reports & Dashboards](../overview.md) - the parent API domain.
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
-- Other endpoints in this group: [Get Owned Dashboards](get-owned-dashboards.md), [Get Shared Dashboards](get-shared-dashboards.md), [Create Dashboard](create-dashboard.md), [Get Dashboard Metadata](get-dashboard-metadata.md), [Update Dashboard](update-dashboard.md).
+- Other endpoints in this group: [Create Dashboard](create-dashboard.md), [Read Dashboard Metadata](get-dashboard-metadata.md), [Update Dashboard](update-dashboard.md), [Get Owned Dashboards](get-owned-dashboards.md), [Get Shared Dashboards](get-shared-dashboards.md).
 - [SDK examples](../../../sdk-examples/reports-and-dashboards/dashboards/get-dashboards.md).

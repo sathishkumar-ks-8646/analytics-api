@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Edit Query Table
-description: "Updates the SQL definition of an existing query table and, optionally, moves it to another folder."
+description: Updates the SQL definition and/or folder of an existing query table.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}"
 tags:
   - zoho-analytics
@@ -50,10 +50,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -65,7 +65,7 @@ Updates the SQL definition and/or folder of an existing query table. The query t
 
 From the OpenAPI specification:
 
-Updates the SQL definition of an existing query table and, optionally, moves it to another folder. The data of the query table is recomputed from the new SQL statement.
+Updates the SQL definition and/or folder of an existing query table. The query table's data is recomputed based on the new SQL statement.
 
 The new statement replaces the existing one entirely - there is no partial update of individual clauses. The display name and the description of a query table cannot be changed through this API.
 

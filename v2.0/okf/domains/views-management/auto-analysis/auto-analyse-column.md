@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Auto Analyse Column
-description: "Runs auto analysis on a single column of a table and creates a focused set of views for it - a category breakdown for a dimension column such as Region, or a trend over time for a date column such as Order Date."
+description: Triggers auto analysis for a single column of a table.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/autoanalyse"
 tags:
   - zoho-analytics
@@ -47,10 +47,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -64,14 +64,6 @@ Triggers auto analysis for a **single column** of a table. The system generates 
 > Unlike the full-table analysis, column-level analysis does not track whether it has been run before for a given column. Each call generates a new set of views for that column independently — there is no "already completed" guard at the column level. You can call this API multiple times on the same column (for example, after changing column data or for exploratory purposes) and it will always produce a fresh set of views. The `analyseAgain` concept does not apply because column analysis is designed to be repeatable without risk of unintended duplication of full-table views.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Runs auto analysis on a single column of a table and creates a focused set of views for it - a category breakdown for a dimension column such as Region, or a trend over time for a date column such as Order Date.
-
-Unlike the full-table Auto Analyse View API, this operation keeps no record of having been run, so there is no re-run guard and no `analyseAgain` attribute. Each call produces a fresh set of views for the column and may be repeated freely, which makes it suited to exploring one column after a data or schema change.
-
-The API works on Tables, Query Tables and Pipeline Tables only, and not every column type is eligible.
 
 # Endpoint
 

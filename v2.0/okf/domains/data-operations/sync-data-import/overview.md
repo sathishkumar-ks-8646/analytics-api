@@ -26,10 +26,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -206,27 +206,27 @@ The new-table import has no such checks — there is no existing table yet — b
 
 | Code | HTTP | Meaning |
 |---|---|---|
-| [7092](../../../foundations/error-codes.md#error-7092) | 400 | A DDL lock is active on the table. |
+| [7092](../../../foundations/error-codes.md#error-7092) | 400 | DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock in this workspace. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
 | [7107](../../../foundations/error-codes.md#error-7107) | 400 | The specified column does not exist in the table. |
-| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A view with the given viewName already exists in this workspace. |
-| [7164](../../../foundations/error-codes.md#error-7164) | 400 | The table is a snapshot table and its columns cannot be renamed. |
-| [7165](../../../foundations/error-codes.md#error-7165) | 400 | Snapshot table data cannot be modified. |
-| [7208](../../../foundations/error-codes.md#error-7208) | 400 | A row contains more fields than the header defines. |
-| [7232](../../../foundations/error-codes.md#error-7232) | 400 | A value could not be parsed and onError is ABORT. errorMessage carries the per-line detail. |
-| [7248](../../../foundations/error-codes.md#error-7248) | 400 | The payload could not be parsed as the declared fileType. |
+| [7111](../../../foundations/error-codes.md#error-7111) | 400 | METADBOBJECTNAMEDUPLICATED — An object with this tableName already exists. |
+| [7164](../../../foundations/error-codes.md#error-7164) | 400 | SYSTEMTABLEDATAMOD — System table data cannot be modified. |
+| [7165](../../../foundations/error-codes.md#error-7165) | 400 | SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified. |
+| [7208](../../../foundations/error-codes.md#error-7208) | 400 | IMPORTFILENUMBEROFFIELDSEXCEEDSSIZE — A row contains more fields than the header defines. |
+| [7232](../../../foundations/error-codes.md#error-7232) | 400 | IMPORTABORTED — A value could not be parsed and onError is ABORT. errorMessage carries the per-line detail. |
+| [7248](../../../foundations/error-codes.md#error-7248) | 400 | INVALIDFILECONTENT — The payload could not be parsed as the declared fileType. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7478](../../../foundations/error-codes.md#error-7478) | 400 | The number of columns exceeds the maximum allowed for a table. |
-| [7512](../../../foundations/error-codes.md#error-7512) | 400 | A date pattern could not be parsed. |
-| [8046](../../../foundations/error-codes.md#error-8046) | 400 | A name in selectedColumns is not present in the source data. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A mandatory attribute is missing from the configuration. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. |
-| [8139](../../../foundations/error-codes.md#error-8139) | 400 | The DATA parameter exceeds 10,000,000 characters. |
+| [7478](../../../foundations/error-codes.md#error-7478) | 400 | MORETHANMAXCOLUMN — The source has more columns than a table can hold. |
+| [7512](../../../foundations/error-codes.md#error-7512) | 400 | INVALIDDATEFORMAT — A date pattern could not be parsed. |
+| [8046](../../../foundations/error-codes.md#error-8046) | 400 | INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source data. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
+| [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
+| [8139](../../../foundations/error-codes.md#error-8139) | 400 | PASTEDDATALIMITEXCEEDED — The DATA parameter exceeds 10,000,000 characters. |
 | [8148](../../../foundations/error-codes.md#error-8148) | 400 | Separator configuration errors. |
-| [8149](../../../foundations/error-codes.md#error-8149) | 400 | A columnSeparators entry has fewer than two values. |
-| [8504](../../../foundations/error-codes.md#error-8504) | 400 | CONFIG was not sent. |
-| [8516](../../../foundations/error-codes.md#error-8516) | 400 | A CONFIG value has the wrong JSON type. |
+| [8149](../../../foundations/error-codes.md#error-8149) | 400 | DECIMALANDTHOUSANDCOLUMNSEPARATORLEGNTHVALIDATION — A columnSeparators entry has fewer than two values. |
+| [8504](../../../foundations/error-codes.md#error-8504) | 400 | LESSTHANMINOCCURANCE — CONFIG was not sent. |
+| [8516](../../../foundations/error-codes.md#error-8516) | 400 | UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 
 # Related

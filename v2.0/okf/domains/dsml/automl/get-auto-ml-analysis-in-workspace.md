@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get AutoML Analysis In Workspace
-description: Returns the list of AutoML analyses available in the specified workspace.
+description: Returns every AutoML analysis defined in one workspace.
 resource: "https://analyticsapi.zoho.com/restapi/v2/automl/workspaces/{workspace-id}/analysis"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -55,10 +55,6 @@ status: stable
 Returns every AutoML analysis defined in one workspace. Identical to [Get AutoML Analysis In Org](get-auto-ml-analysis-in-org.md) except that it is workspace-scoped and therefore omits the workspace fields.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Returns the list of AutoML analyses available in the specified workspace. Use the Get AutoML Analysis Details API with a returned analysis ID to fetch the models trained under it.
 
 # Endpoint
 

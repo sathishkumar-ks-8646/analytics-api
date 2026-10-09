@@ -24,7 +24,7 @@
         ],
         "x-zenesis-title": "Create AutoML Analysis",
         "summary": "Create AutoML Analysis",
-        "description": "Creates a new AutoML analysis within the workspace. An analysis is defined by the training table, the target column, the input features and the set of algorithms to be trained. The prediction type chosen determines which algorithms can be configured - regression, classification or clustering.",
+        "description": "Creates an analysis and immediately starts training one model per configured algorithm. Returns as soon as the training job is queued — it does not wait for training to finish.",
         "operationId": "createAutoMLAnalysis",
         "security": [
           {
@@ -205,9 +205,61 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7005",
+                "description": "COMMONINTERNALSERVERERROR — Surfaces when trainingTableId does not identify a real table.",
+                "resolution": "Verify the ID via Get View List."
+              },
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an owner of the workspace."
+              },
+              {
+                "name": "7319",
+                "description": "OBJIDNOTBELONGSTODB — The training table belongs to a different workspace.",
+                "resolution": "Use a table from <workspace-id>."
+              },
+              {
+                "name": "8078",
+                "description": "EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent empty.",
+                "resolution": "Supply a value."
+              },
+              {
+                "name": "8079",
+                "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing.",
+                "resolution": "The message names the attribute."
+              },
+              {
+                "name": "8119",
+                "description": "INVALIDVALUEFORATTRIBUTE — serverOption or predictionType is outside its allowed set.",
+                "resolution": "The message names the attribute and permitted values."
+              },
+              {
+                "name": "8504",
+                "description": "LESSTHANMINOCCURANCE — CONFIG is absent, or a required key is missing at the template level.",
+                "resolution": "Send a complete CONFIG object."
+              },
+              {
+                "name": "8547",
+                "description": "ARRAYSIZEOUTOFRANGE — features is empty or exceeds the allowed array size.",
+                "resolution": "Send between 3 and 20 feature names."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -221,7 +273,7 @@
         ],
         "x-zenesis-title": "Get AutoML Analysis In Workspace",
         "summary": "Get AutoML Analysis In Workspace",
-        "description": "Returns the list of AutoML analyses available in the specified workspace. Use the Get AutoML Analysis Details API with a returned analysis ID to fetch the models trained under it.",
+        "description": "Returns every AutoML analysis defined in one workspace. Identical to Get AutoML Analysis In Org except that it is workspace-scoped and therefore omits the workspace fields.",
         "operationId": "getAutoMLAnalysisInWorkspace",
         "security": [
           {
@@ -288,9 +340,26 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an Account Admin, Organization Admin, or the workspace's own admin."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -306,7 +375,7 @@
         ],
         "x-zenesis-title": "Run AutoML Analysis",
         "summary": "Run AutoML Analysis",
-        "description": "Executes an AutoML analysis deployment on demand. The predictions are generated using the model bound to the deployment, and the results are written to the output table that was configured when the deployment was created.",
+        "description": "Triggers a deployment immediately — the \"run now\" action. Scores the input table with the deployed model and writes the results to the output table according to the deployment's importType.",
         "operationId": "runAutoMLAnalysis",
         "security": [
           {
@@ -331,9 +400,26 @@
         ],
         "responses": {
           "204": {
-            "description": "AutoML analysis deployment executed successfully. No content is returned."
+            "description": "AutoML analysis deployment executed successfully. No content is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an owner of the workspace."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -349,7 +435,7 @@
         ],
         "x-zenesis-title": "Delete AutoML Analysis",
         "summary": "Delete AutoML Analysis",
-        "description": "Deletes the specified AutoML analysis from the workspace. The analysis ID can be obtained using the Get AutoML Analysis In Workspace API.",
+        "description": "Deletes an analysis and everything beneath it — all its models, and all deployments attached to those models.",
         "operationId": "deleteAutoMLAnalysis",
         "security": [
           {
@@ -371,9 +457,26 @@
         ],
         "responses": {
           "204": {
-            "description": "AutoML analysis deleted successfully. No content is returned."
+            "description": "AutoML analysis deleted successfully. No content is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an owner of the workspace."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -387,7 +490,7 @@
         ],
         "x-zenesis-title": "Get AutoML Analysis Details",
         "summary": "Get AutoML Analysis Details",
-        "description": "Retrieves the detailed information of a specific AutoML analysis, including the training table, the target column, the input features and every model trained under the analysis with its score and hyperparameters.",
+        "description": "Returns the full definition of one analysis together with every model trained under it — including each model's ID, score, training status, and hyperparameters. This is the pivotal read in the family: it is the only source of modelId.",
         "operationId": "getAutoMLAnalysisDetails",
         "security": [
           {
@@ -527,9 +630,26 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an owner of the workspace."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -545,7 +665,7 @@
         ],
         "x-zenesis-title": "Get AutoML Analysis In Org",
         "summary": "Get AutoML Analysis In Org",
-        "description": "Returns all the AutoML analyses available in the organization. Each entry also carries the workspace it belongs to, so the analysis can be looked up in detail using the Get AutoML Analysis Details API.",
+        "description": "Returns every AutoML analysis across all workspaces in the organization, each tagged with the workspace it belongs to. This is the organization-wide inventory call.",
         "operationId": "getAutoMLAnalysisInOrg",
         "security": [
           {
@@ -613,9 +733,21 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller is not an Account Admin / Organization Admin of the organization.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -631,7 +763,7 @@
         ],
         "x-zenesis-title": "Delete AutoML Analysis Model",
         "summary": "Delete AutoML Analysis Model",
-        "description": "Deletes a specific model from an AutoML analysis. The model ID can be obtained using the Get AutoML Analysis Details API.",
+        "description": "Deletes one model from an analysis, along with the deployment attached to it. The analysis and its other models are unaffected.",
         "operationId": "deleteAutoMLAnalysisModel",
         "security": [
           {
@@ -656,9 +788,26 @@
         ],
         "responses": {
           "204": {
-            "description": "AutoML analysis model deleted successfully. No content is returned."
+            "description": "AutoML analysis model deleted successfully. No content is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an owner of the workspace."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -674,7 +823,7 @@
         ],
         "x-zenesis-title": "Get Deployments For A Model",
         "summary": "Get Deployments For A Model",
-        "description": "Returns the deployment details configured for an AutoML analysis model, including the input and output tables, the schedule status and the time at which the deployment last ran.",
+        "description": "Returns the deployment configured for a model — its input and output tables, schedule outcome, and last run status.",
         "operationId": "getDeploymentsForModel",
         "security": [
           {
@@ -729,7 +878,7 @@
                           ],
                           "predictionColumn": "Sales_Pred",
                           "stack": "8 GB",
-                          "importType": "truncateadd"
+                          "importType": "TRUNCATEADD"
                         }
                       }
                     }
@@ -756,16 +905,33 @@
                           ],
                           "predictionColumn": "Sales_Pred",
                           "stack": "16 GB",
-                          "importType": "append"
+                          "importType": "APPEND"
                         }
                       }
                     }
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an owner of the workspace."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -779,7 +945,7 @@
         ],
         "x-zenesis-title": "Create AutoML Analysis Deployment",
         "summary": "Create AutoML Analysis Deployment",
-        "description": "Creates a deployment for an AutoML analysis model. A deployment binds a trained model to an input table and an output table, and defines the schedule on which predictions are generated and written back.",
+        "description": "Binds a trained model to an input table and an output table so that predictions can be generated — on a recurring schedule, on demand, or both. Returns the new deployment ID and the ID of the output table it created.",
         "operationId": "createAutoMLAnalysisDeployment",
         "security": [
           {
@@ -945,9 +1111,56 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an owner of the workspace."
+              },
+              {
+                "name": "7319",
+                "description": "OBJIDNOTBELONGSTODB — The input table belongs to a different workspace.",
+                "resolution": "Use a table from <workspace-id>."
+              },
+              {
+                "name": "8050",
+                "description": "INVALIDVALUE — timezone is not a recognised timezone name.",
+                "resolution": "Use a standard timezone identifier such as Asia/Kolkata."
+              },
+              {
+                "name": "8079",
+                "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A required attribute is missing; for weekly/monthly schedules this reports 'day'.",
+                "resolution": "The message names the attribute. See the schedule caveat above."
+              },
+              {
+                "name": "8119",
+                "description": "INVALIDVALUEFORATTRIBUTE — serverOption, hour, minute, or interval is outside its permitted set.",
+                "resolution": "The message names the attribute and the allowed values."
+              },
+              {
+                "name": "8504",
+                "description": "LESSTHANMINOCCURANCE — CONFIG is absent or a mandatory key is missing at the template level.",
+                "resolution": "Send a complete CONFIG object."
+              },
+              {
+                "name": "8544",
+                "description": "OUTOFRANGE — A schedule value is outside its declared range.",
+                "resolution": "Correct the value."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -963,7 +1176,7 @@
         ],
         "x-zenesis-title": "Delete AutoML Analysis Model Deployment",
         "summary": "Delete AutoML Analysis Model Deployment",
-        "description": "Deletes an AutoML analysis deployment. The deployment stops running on its schedule, and the output table it was writing to is retained. The deployment ID can be obtained using the Get Deployments For A Model API.",
+        "description": "Deletes a deployment. The model becomes deployable again; the analysis, the model, and the output table are unaffected.",
         "operationId": "deleteAutoMLAnalysisModelDeployment",
         "security": [
           {
@@ -988,9 +1201,26 @@
         ],
         "responses": {
           "204": {
-            "description": "AutoML analysis deployment deleted successfully. No content is returned."
+            "description": "AutoML analysis deployment deleted successfully. No content is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an owner of the workspace."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -1006,7 +1236,7 @@
         ],
         "x-zenesis-title": "AutoML What If Analysis",
         "summary": "AutoML What If Analysis",
-        "description": "Generates a prediction using a trained AutoML model. A hypothetical value is supplied for each feature that the model was trained on, and the model returns the value it predicts for the target column.",
+        "description": "Generates a single prediction for a hypothetical set of feature values — a live \"what if I changed these inputs?\" query against a trained model. Nothing is stored and no table is written.",
         "operationId": "autoMLWhatIfAnalysis",
         "security": [
           {
@@ -1123,9 +1353,41 @@
                   }
                 }
               }
-            }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "METAOBJECTNOTPRESENT — Workspace not found.",
+                "resolution": "Verify <workspace-id> and the ZANALYTICS-ORGID header."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace.",
+                "resolution": "Call from the standard API host as an owner of the workspace."
+              },
+              {
+                "name": "8078",
+                "description": "EMPTYJSONATTRIBUTEFOUND — features was sent as an empty object.",
+                "resolution": "Supply every training feature and its value."
+              },
+              {
+                "name": "8079",
+                "description": "ATTRIBUTENOTPRESENTINJSONCONFIGURATION — features is missing from CONFIG.",
+                "resolution": "Include the features object."
+              },
+              {
+                "name": "8504",
+                "description": "LESSTHANMINOCCURANCE — CONFIG is absent.",
+                "resolution": "Send a CONFIG object containing features."
+              },
+              {
+                "name": "8535",
+                "description": "INVALIDOAUTHTOKEN — Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
           },
-                    "4XX": {
+          "4XX": {
             "$ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
           },
           "500": {
@@ -2226,6 +2488,14 @@
               31,
               99
             ]
+          },
+          "day": {
+            "type": "integer",
+            "description": "For weekly, the day of the week, 1 = Sunday … 7 = Saturday. For monthly, the day of the month, 1–31, or 99 for the last day of the month. See the caveat below."
+          },
+          "skipFrequency": {
+            "type": "integer",
+            "description": "Number of periods to skip between runs. Defaults to 0 (every period)."
           }
         },
         "required": [
@@ -2451,6 +2721,10 @@
           },
           "models": {
             "$ref": "#/components/schemas/AutoMLModelList"
+          },
+          "description": {
+            "type": "string",
+            "description": "Free-text description supplied at creation."
           }
         }
       },

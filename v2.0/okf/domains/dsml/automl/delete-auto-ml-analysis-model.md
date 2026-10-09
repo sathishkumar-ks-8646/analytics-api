@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Delete AutoML Analysis Model
-description: Deletes a specific model from an AutoML analysis.
+description: "Deletes one model from an analysis, along with the deployment attached to it."
 resource: "https://analyticsapi.zoho.com/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}"
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -54,10 +54,6 @@ status: stable
 Deletes one model from an analysis, along with the deployment attached to it. The analysis and its other models are unaffected.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Deletes a specific model from an AutoML analysis. The model ID can be obtained using the Get AutoML Analysis Details API.
 
 # Endpoint
 

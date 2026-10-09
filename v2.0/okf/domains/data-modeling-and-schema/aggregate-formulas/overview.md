@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -144,16 +144,16 @@ Unlike a [custom formula column](../formula-columns/overview.md) (which computes
 | Code | HTTP | Meaning |
 |---|---|---|
 | [7107](../../../foundations/error-codes.md#error-7107) | 400 | The specified column does not exist in the table. |
-| [7112](../../../foundations/error-codes.md#error-7112) | 400 | The formula expression could not be parsed because of a syntax error. |
-| [7113](../../../foundations/error-codes.md#error-7113) | 400 | The expression refers to an unknown or unsupported function. |
-| [7115](../../../foundations/error-codes.md#error-7115) | 400 | The expression refers to a column that does not exist in the view. |
-| [7116](../../../foundations/error-codes.md#error-7116) | 400 | The formula is invalid. |
-| [7160](../../../foundations/error-codes.md#error-7160) | 400 | Formula columns are not allowed for this combination of user and view. |
-| [7173](../../../foundations/error-codes.md#error-7173) | 400 | The aggregate formula is used by one or more dependent views, dashboards or formulas and the deletion has been blocked. |
+| [7112](../../../foundations/error-codes.md#error-7112) | 400 | The formula expression could not be parsed (syntax error). |
+| [7113](../../../foundations/error-codes.md#error-7113) | 400 | The expression references an unknown/unsupported function. |
+| [7115](../../../foundations/error-codes.md#error-7115) | 400 | The expression references a column that does not exist, or the formula is otherwise invalid. |
+| [7116](../../../foundations/error-codes.md#error-7116) | 400 | The expression references a column that does not exist, or the formula is otherwise invalid. |
+| [7160](../../../foundations/error-codes.md#error-7160) | 400 | Formula columns are not allowed for this user/view combination. |
+| [7173](../../../foundations/error-codes.md#error-7173) | 400 | The aggregate formula is currently used by one or more dependent views/dashboards/formulas; deletion blocked. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [7428](../../../foundations/error-codes.md#error-7428) | 400 | The specified formula ID is not a valid aggregate formula on this view. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A mandatory attribute is missing from the configuration. |
+| [7428](../../../foundations/error-codes.md#error-7428) | 400 | The specified <formula-id> is not a valid aggregate formula on this view. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
 
 # Related
 

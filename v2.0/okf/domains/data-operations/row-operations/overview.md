@@ -30,10 +30,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -160,23 +160,23 @@ Notes that matter in practice:
 
 | Code | HTTP | Meaning |
 |---|---|---|
-| [7092](../../../foundations/error-codes.md#error-7092) | 400 | A DDL lock is active on the table. |
+| [7092](../../../foundations/error-codes.md#error-7092) | 400 | DDLLOCKSINCEIMPORTINPROGRESS — A batch import is holding a lock in this workspace. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7137](../../../foundations/error-codes.md#error-7137) | 400 | The target view is not a table. |
-| [7164](../../../foundations/error-codes.md#error-7164) | 400 | The table is a snapshot table and its columns cannot be renamed. |
-| [7165](../../../foundations/error-codes.md#error-7165) | 400 | Snapshot table data cannot be modified. |
+| [7137](../../../foundations/error-codes.md#error-7137) | 400 | NOTATABLE — The target view is not a table. |
+| [7164](../../../foundations/error-codes.md#error-7164) | 400 | SYSTEMTABLEDATAMOD — System table data cannot be modified. |
+| [7165](../../../foundations/error-codes.md#error-7165) | 400 | SNAPSHOTTABLEDATAMOD — Snapshot table data cannot be modified. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
-| [7330](../../../foundations/error-codes.md#error-7330) | 400 | A column named in criteria does not exist in the view. |
-| [7405](../../../foundations/error-codes.md#error-7405) | 400 | Row modification is not allowed for this table. |
-| [7512](../../../foundations/error-codes.md#error-7512) | 400 | A date pattern could not be parsed. |
-| [7515](../../../foundations/error-codes.md#error-7515) | 400 | A value for a lookup column does not exist in the parent table. |
-| [8016](../../../foundations/error-codes.md#error-8016) | 400 | None of the supplied column names matched a column in the table. |
-| [8062](../../../foundations/error-codes.md#error-8062) | 400 | withCustomDomain is true but no custom domain is configured for this workspace. |
-| [8130](../../../foundations/error-codes.md#error-8130) | 400 | Both criteria and updateAllRows were sent, or neither was. |
-| [8131](../../../foundations/error-codes.md#error-8131) | 400 | Both criteria and deleteAllRows were sent, or neither was. |
-| [8504](../../../foundations/error-codes.md#error-8504) | 400 | CONFIG was not sent. |
+| [7330](../../../foundations/error-codes.md#error-7330) | 400 | UNKNOWNCOLUMNINFILTERCRITERIA — A column named in criteria does not exist in the view. |
+| [7405](../../../foundations/error-codes.md#error-7405) | 400 | DMLNOTALLOWED — Row modification is not allowed for this table. |
+| [7512](../../../foundations/error-codes.md#error-7512) | 400 | INVALIDDATEFORMAT — A date pattern could not be parsed. |
+| [7515](../../../foundations/error-codes.md#error-7515) | 400 | UNKNOWNLOOKUPVALUE — A value for a lookup column does not exist in the parent table. |
+| [8016](../../../foundations/error-codes.md#error-8016) | 400 | APINOCOLUMNPRESENT — None of the supplied column names matched a column in the table. |
+| [8062](../../../foundations/error-codes.md#error-8062) | 400 | ADDROWREQUESTSTILLINPROGRESS — Another row-write request for this table is still being processed. |
+| [8130](../../../foundations/error-codes.md#error-8130) | 400 | INVALIDUPDATECRITERIACONFIGURATION — Both criteria and updateAllRows were sent, or neither was. |
+| [8131](../../../foundations/error-codes.md#error-8131) | 400 | INVALIDDELETECRITERIACONFIGURATION — Both criteria and deleteAllRows were sent, or neither was. |
+| [8504](../../../foundations/error-codes.md#error-8504) | 400 | LESSTHANMINOCCURANCE — CONFIG was not sent. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [101021](../../../foundations/error-codes.md#error-101021) | 400 | Row operations are not supported on a stream table. |
+| [101021](../../../foundations/error-codes.md#error-101021) | 400 | NOTASTREAMTABLE — Row operations are not supported on a stream table. |
 
 # Related
 

@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Run AutoML Analysis
-description: Executes an AutoML analysis deployment on demand.
+description: "Triggers a deployment immediately — the \"run now\" action."
 resource: "https://analyticsapi.zoho.com/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}/execute"
 tags:
   - zoho-analytics
@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -54,10 +54,6 @@ status: stable
 Triggers a deployment immediately — the "run now" action. Scores the input table with the deployed model and writes the results to the output table according to the deployment's `importType`.
 
 > This API has no CONFIG parameter. Note that the path segment is `/deployments/<deployment-id>/execute` — the **model ID does not appear**, unlike the deployment-creation path.
-
-From the OpenAPI specification:
-
-Executes an AutoML analysis deployment on demand. The predictions are generated using the model bound to the deployment, and the results are written to the output table that was configured when the deployment was created.
 
 # Endpoint
 

@@ -30,10 +30,10 @@ sources:
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -147,23 +147,23 @@ So a white-labelled deployment embeds views by calling the standard `analyticsap
 |---|---|---|
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7138](../../../foundations/error-codes.md#error-7138) | 400 | A tableName in vudColumns / drillColumns is not a table involved in this view. |
+| [7138](../../../foundations/error-codes.md#error-7138) | 400 | baseTableName does not resolve to a table in this workspace. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [8023](../../../foundations/error-codes.md#error-8023) | 403 | The organization/workspace is not enabled for Embedded Analytics. |
-| [8054](../../../foundations/error-codes.md#error-8054) | 400 | criteria could not be parsed. |
+| [8023](../../../foundations/error-codes.md#error-8023) | 403 | OEMOPERATIONNOTALLOWED — The organization/workspace is not enabled for Embedded Analytics. |
+| [8054](../../../foundations/error-codes.md#error-8054) | 400 | INVALIDFILTERCRITERIA — criteria could not be parsed. |
 | [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
-| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the organization's Account Admin. |
+| [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint. |
-| [8154](../../../foundations/error-codes.md#error-8154) | 400 | A column in vudColumns / drillColumns (or in criteria) does not exist in the given table. |
+| [8154](../../../foundations/error-codes.md#error-8154) | 400 | COLUMNNOTPRESENTINTABLE — A column in vudColumns / drillColumns (or in criteria) does not exist in the given table. |
 | [8175](../../../foundations/error-codes.md#error-8175) | 404 | No embed URL on this view matches the supplied rsConfig. |
 | [8176](../../../foundations/error-codes.md#error-8176) | 404 | deleteAllUrls was requested but the view has no embed URLs. |
-| [8177](../../../foundations/error-codes.md#error-8177) | 400 | validityPeriod exceeds the maximum of 86400 seconds (1 day). |
+| [8177](../../../foundations/error-codes.md#error-8177) | 400 | MAXALLOWEDVALUEEXCEEDED — validityPeriod exceeds the maximum of 86400 seconds (1 day). |
 | [8178](../../../foundations/error-codes.md#error-8178) | 400 | Both rsConfig and deleteAllUrls: true were sent, or neither was. |
-| [8241](../../../foundations/error-codes.md#error-8241) | 409 | The view carries a restricted DATAWARNING system tag. |
+| [8241](../../../foundations/error-codes.md#error-8241) | 409 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — The view carries a restricted DATAWARNING system tag. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [9102](../../../foundations/error-codes.md#error-9102) | 400 | language is not one of the supported language names. |
-| [12052](../../../foundations/error-codes.md#error-12052) | 400 | The workspace is not enabled for access through the requested portal domain. |
+| [9102](../../../foundations/error-codes.md#error-9102) | 400 | LANGUAGENOTSUPPORTED — language is not one of the supported language names. |
+| [12052](../../../foundations/error-codes.md#error-12052) | 400 | WORKSPACENOTENABLEDFORDOMAINACCESS — The workspace is not enabled for access through the requested portal domain. |
 
 # Related
 

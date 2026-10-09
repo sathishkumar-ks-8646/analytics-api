@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Delete Tag
-description: Deletes a tag together with every association it has.
+description: Deletes a tag and every association it has.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}"
 tags:
   - zoho-analytics
@@ -45,10 +45,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -67,7 +67,7 @@ Deletes a tag and every association it has.
 
 From the OpenAPI specification:
 
-Deletes a tag together with every association it has.
+Deletes a tag and every association it has.
 
 The views that carried the tag are untouched - only the label disappears from them. There is no undo, and re-creating the same name afterwards produces a different tag with a new identifier and none of the old associations. To clear a tag's links while keeping the tag, use the Remove Tag From Multiple Views API with dissociateAll instead.
 

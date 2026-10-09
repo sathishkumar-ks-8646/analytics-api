@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get AutoML Analysis Details
-description: "Retrieves the detailed information of a specific AutoML analysis, including the training table, the target column, the input features and every model trained under the analysis with its score and hyperparameters."
+description: "Returns the full definition of one analysis together with every model trained under it — including each model's ID, score, training status, and hyperparameters."
 resource: "https://analyticsapi.zoho.com/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -55,10 +55,6 @@ status: stable
 Returns the full definition of one analysis **together with every model trained under it** — including each model's ID, score, training status, and hyperparameters. This is the pivotal read in the family: it is the only source of `modelId`.
 
 > This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Retrieves the detailed information of a specific AutoML analysis, including the training table, the target column, the input features and every model trained under the analysis with its score and hyperparameters.
 
 # Endpoint
 

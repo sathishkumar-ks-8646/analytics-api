@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get View List
-description: "Returns the list of views accessible to the authenticated user within a workspace, together with the folder, creator and last-modifier metadata of each view."
+description: Returns a list of views accessible to the authenticated user within a specific workspace.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views"
 tags:
   - zoho-analytics
@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -57,7 +57,7 @@ Returns a list of views accessible to the authenticated user within a specific w
 
 From the OpenAPI specification:
 
-Returns the list of views accessible to the authenticated user within a workspace, together with the folder, creator and last-modifier metadata of each view.
+Returns a list of views accessible to the authenticated user within a specific workspace. Supports filtering by view type, name keyword, created/modified by user, and pagination with sorting.
 
 The result can be narrowed by view type, by a keyword matched against the view name, and by the user who created or last modified the view, and it can be paged and sorted. The scope of the list depends on the caller: an admin receives every view in the workspace, while a shared user or group member receives only the views shared with them.
 

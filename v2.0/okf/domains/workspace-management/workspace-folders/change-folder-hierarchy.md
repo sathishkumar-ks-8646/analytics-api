@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Change Folder Hierarchy
-description: "Changes the hierarchical position of a folder, either by promoting a sub-folder to the root level or by nesting an existing root level folder under another root level folder."
+description: "Changes the hierarchical position of a folder — either promoting a sub-folder to a top-level folder, or nesting an existing top-level folder under another top-level folder."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/move"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

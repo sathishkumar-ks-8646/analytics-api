@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
-title: Update Analysis View
-description: Resets and updates the configuration of an existing analysis view in the specified workspace.
+title: Update Report
+description: Rebuilds an existing report from a fresh CONFIG.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/reports/{view-id}"
 tags:
   - zoho-analytics
@@ -25,19 +25,52 @@ api:
   request_content_type: application/x-www-form-urlencoded
   success_status: 204
   response_content_types: []
-  permission_required: "The authenticated user must be an Account Admin or Organization Admin, or the View Owner, or a Shared User, or a Group Member, or any user with Design Modify permission on the view."
+  permission_required: "Design Modify on the report — the owner, a Workspace Admin, an Organization Admin, or a shared or group user granted edit rights."
   error_codes:
-    - 7103
+    - 7005
+    - 7016
     - 7104
+    - 7106
     - 7111
+    - 7138
     - 7301
+    - 7362
+    - 7701
+    - 7703
+    - 7727
+    - 8008
     - 8021
     - 8050
-    - 8075
-    - 8100
-    - 8119
+    - 8051
+    - 8052
+    - 8057
+    - 8059
+    - 8092
+    - 8144
+    - 8145
+    - 8147
+    - 8162
+    - 8166
+    - 8167
+    - 8168
+    - 8170
+    - 8191
+    - 8250
     - 8252
+    - 8253
+    - 8254
+    - 8255
+    - 8256
+    - 8257
+    - 8258
+    - 8504
+    - 8507
+    - 8509
+    - 8516
+    - 8517
+    - 8534
     - 8535
+    - 8542
   openapi:
     file: "/references/openapi/reports-dashboards-grouped-api.json"
     pointer: "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1reports~1{view-id}/put"
@@ -49,22 +82,24 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
 # Summary
 
-**PUT `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}`** - Update Analysis View (Reports (Analysis Views) / Reports & Dashboards).
+**PUT `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}`** - Update Report (Reports (Analysis Views) / Reports & Dashboards).
+
+Rebuilds an existing report from a fresh CONFIG.
 
 From the OpenAPI specification:
 
-Resets and updates the configuration of an existing analysis view in the specified workspace. The whole view configuration - axis columns, filters, user filters, chart type and settings - is replaced with the values provided in the CONFIG parameter, so anything that is omitted reverts to its empty default. Fetch the current configuration with Get Report Metadata, modify it, and send the complete object back.
+Rebuilds an existing report from a fresh CONFIG.
 
-The authenticated user must be an Account Admin or an Organization Admin, or the View Owner, or a Shared User, or a Group Member, or any user with Design Modify permission on the view.
+Permission required: Design Modify on the report — the owner, a Workspace Admin, an Organization Admin, or a shared or group user granted edit rights.
 
 # Endpoint
 
@@ -76,10 +111,12 @@ The authenticated user must be an Account Admin or an Organization Admin, or the
 | Base URL | `https://analyticsapi.zoho.com` (data-center specific, see [Data centers](../../../foundations/data-centers.md)) |
 | OAuth scope | [`ZohoAnalytics.modeling.update`](../../../foundations/oauth-scopes.md#zohoanalyticsmodelingupdate) |
 | ZANALYTICS-ORGID header | **Required** |
-| Permission required | The authenticated user must be an Account Admin or Organization Admin, or the View Owner, or a Shared User, or a Group Member, or any user with Design Modify permission on the view. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
+| Permission required | Design Modify on the report — the owner, a Workspace Admin, an Organization Admin, or a shared or group user granted edit rights. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - **mandatory** |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 204 with no body |
+| Content-Type | `application/x-www-form-urlencoded` |
+| Custom domain | Not permitted. |
 | OpenAPI | [`reports-dashboards-grouped-api.json`](../../../references/openapi/reports-dashboards-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1reports~1{view-id}/put`; CONFIG schema `UpdateReportConfig` |
 
 # Request
@@ -97,174 +134,41 @@ The authenticated user must be an Account Admin or an Organization Admin, or the
 | Parameter | Type | Description | Source |
 |---|---|---|---|
 | `{workspace-id}` | string | ID of the workspace that contains the analysis view. | [How to obtain](../../../foundations/identifiers.md#workspace-id) |
-| `{view-id}` | string | ID of the analysis view to update. | [How to obtain](../../../foundations/identifiers.md#view-id) |
+| `{view-id}` | string | ID of the report (view) to update. | [How to obtain](../../../foundations/identifiers.md#view-id) |
 
-## FIELDS FOR CONFIG JSON
+## CONFIG Parameter
 
-> All sub-object schemas (Axis Column Object, Filter Object, User Filter Object, View Settings Object) are identical to those defined in **[Create Analysis View](create-report.md)**. Refer to those sections for field details, enum values, and samples.
-
-| Attribute | Data Type | Mandatory | Default | Allowed Values / Constraints | Description |
-|-----------|-----------|-----------|---------|------------------------------|-------------|
-| `objId` | long | No | — | Valid view ID | ID of the view to update. If omitted, the view ID from the URL path is used. |
-| `reportType` | string | **Yes** | — | `chart`, `pivot`, `summary` | Type of the analysis view. **Must match the existing view type** — cannot be changed via this API. |
-| `description` | string | No | `""` | Max 250 characters | Updated description. If omitted, the existing description is **cleared**. Always include the value from Get Report Metadata to preserve it. |
-| `chartType` | string | No | `""` | Max 50 characters (alphanumeric, spaces) | Chart sub-type (e.g., `bar`, `line`, `pie`). Required for `chart` views. |
-| `axisColumns` | JSONArray | No | `[]` | Max serialized size: 1 MB. See **Axis Column Object** in [Create Analysis View](create-report.md). | Full replacement axis configuration for the view. |
-| `isAxisMerge` | boolean | No | `false` | `true` or `false` | When `true`, merges multiple y-axes. Requires `mergeAxisInfo`. |
-| `mergeAxisInfo` | JSONArray | No | `[]` | Max serialized size: 10 MB. Each item: `axisIndex` (int array) + `labelName` (string). | Axis merge groupings when `isAxisMerge` is `true`. |
-| `filters` | JSONArray | No | `[]` | Max serialized size: 1 MB. See **Filter Object** in [Create Analysis View](create-report.md). | Replacement data filters for the view. |
-| `userFilters` | JSONArray | No | `[]` | Max serialized size: 1 MB. See **User Filter Object** in [Create Analysis View](create-report.md). | Replacement interactive filter widgets for the view. |
-| `settings` | JSONObject | No | `{}` | Max 10 KB. See **View Settings Object** in [Create Analysis View](create-report.md). | Replacement layout and theme settings. |
-
-> ⚠️ **Read-only fields in Update:** `title` (display name) and `folderId` cannot be changed via this API. `title` in the CONFIG is silently ignored — the existing display name is always preserved. If `folderId` is provided and differs from the view's current folder, the request **fails with an error**. Omit both fields from the Update CONFIG.
-
-## Sample values for CONFIG parameter
-
-**Case 1: Update chart type and axis columns**
-
-```json
-{
-  "reportType": "chart",
-  "chartType": "line",
-  "title": "Monthly Sales — Line Chart",
-  "axisColumns": [
-    {
-      "type": "xAxis",
-      "columnName": "Date",
-      "tableName": "Sales",
-      "operation": "monthyear"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Sales",
-      "tableName": "Sales",
-      "operation": "sum"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Cost",
-      "tableName": "Sales",
-      "operation": "sum"
-    }
-  ]
-}
-```
-
-**Case 2: Move view to a different folder and apply a date filter**
-
-```json
-{
-  "reportType": "pivot",
-  "folderId": 466206000000091005,
-  "axisColumns": [
-    {
-      "type": "row",
-      "columnName": "Region",
-      "tableName": "Sales"
-    },
-    {
-      "type": "column",
-      "columnName": "Date",
-      "tableName": "Sales",
-      "operation": "year"
-    },
-    {
-      "type": "data",
-      "columnName": "Sales",
-      "tableName": "Sales",
-      "operation": "sum"
-    }
-  ],
-  "filters": [
-    {
-      "columnName": "Date",
-      "tableName": "Sales",
-      "operation": "actual",
-      "filterType": "year",
-      "values": ["2024", "2025"],
-      "exclude": false
-    }
-  ],
-  "settings": {
-    "layout": { "defaultWidth": 120 },
-    "themes": { "themeType": 2, "themeFontSize": 13, "themeRowSpacing": 2 }
-  }
-}
-```
-
-**Case 3: Enable axis merge across two y-axes with theme settings**
-
-```json
-{
-  "reportType": "chart",
-  "chartType": "combo",
-  "axisColumns": [
-    {
-      "type": "xAxis",
-      "columnName": "Product",
-      "tableName": "Sales",
-      "operation": "actual"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Sales",
-      "tableName": "Sales",
-      "operation": "sum"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Date",
-      "tableName": "Sales",
-      "operation": "count"
-    },
-    {
-      "type": "yAxis",
-      "columnName": "Cost",
-      "tableName": "Sales",
-      "operation": "count"
-    }
-  ],
-  "isAxisMerge": true,
-  "mergeAxisInfo": [
-    {
-      "axisIndex": [2, 5],
-      "labelName": "Sales & Cost Metrics"
-    }
-  ],
-  "settings": {
-    "themes": {
-      "themeType": 3,
-      "themeColor": "#4A90D9",
-      "themeFontSize": 12,
-      "themeRowSpacing": 1
-    }
-  }
-}
-```
+| Field | Mandatory | How it differs from Create |
+|-------|-----------|----------------------------|
+| `reportType` | **Yes** | Must match the stored view's type. A mismatch raises **8021**. |
+| `axisColumns` | **Yes** | Identical structure to Create. |
+| `title` | No | **Accepted but ignored.** The server overwrites it with the stored display name. A report cannot be renamed through this endpoint. |
+| `description` | No | Accepted. Omitting it clears the existing description. |
+| `chartType`, `isAxisMerge`, `mergeAxisInfo`, `filters`, `userFilters`, `settings` | No | Identical to Create. |
+| `folderId` | No | Accepted by the schema, but the report cannot be moved. Supplying it raises **8145**. Omit it. |
+| `baseTableName` | **Not accepted** | Rejected with **8542**. The base table cannot be changed. |
+| `drillActionConfig`, `modifiedPaths` | **Not accepted** | Rejected with **8542**. |
+| `objId` | No | Accepted by the schema but inert — the server always uses `<report-id>` from the URL. |
 
 ## Notes from the OpenAPI specification
 
-Update Analysis View performs a full configuration reset, not a patch.
-- Every axis column, filter, user filter and settings entry is replaced with the values sent in the CONFIG.
-- Fields that are not provided revert to their empty defaults - omitting **axisColumns**, **filters** or **userFilters** clears them.
-- **description** is cleared if it is omitted.
-- Always fetch the current state with Get Report Metadata, modify it, then send the complete configuration back.
+Update Report rebuilds the report from scratch on every call; there is no field-level patching.
+- Omitting **filters** or **userFilters** removes them all.
+- Omitting **description** clears it.
+- Omitting **chartType** falls back to the server's BEST selection.
+- **axisColumns** is mandatory.
 
-This is a workspace-scoped API. The **ZANALYTICS-ORGID** header carrying the organization ID that owns the workspace is mandatory. A workspaceKey in the format **orgid/workspacename** (for example, 700000123456/Sales_Analytics) may be used in place of the numeric workspace ID in the URL path.
+This is a workspace-scoped API. The **ZANALYTICS-ORGID** header carrying the organization ID that owns the workspace is mandatory.
+
+This API is not available on white-label / custom domains. Call the standard REST host for your data centre (**analyticsapi.zoho.com**, **analyticsapi.zoho.eu**, ...).
 
 The CONFIG parameter must be sent as a URL encoded JSON string in a form field named **CONFIG**, with the content type **application/x-www-form-urlencoded**.
 
-The following fields cannot be changed through Update Analysis View:
-- **title** - silently ignored; the existing display name is always preserved.
-- **folderId** - the request fails if the value differs from the view's current folder. Omit it entirely.
-- **reportType** - must match the existing view type. A mismatch fails with error code 8021.
-- **baseTableName** - derived from the view's stored parent reference. Sending it is harmless but has no effect.
+**chartType**, **isAxisMerge** and **mergeAxisInfo** apply only when **reportType** is chart. **mergeAxisInfo** is required when merging and **isAxisMerge** must be true whenever it is non-empty.
 
-**chartType**, **isAxisMerge** and **mergeAxisInfo** apply only when **reportType** is chart. **chartType** is required for chart views, and **mergeAxisInfo** must be supplied whenever **isAxisMerge** is true.
+The CONFIG parameter has a maximum encoded size of 10,000,000 characters. Each of **axisColumns**, **filters** and **userFilters** holds at most 1000 entries (8052).
 
-Axis type values are spelled the same way in every direction. The Create and Update CONFIG accept the camelCase forms (**xAxis**, **yAxis**, **colorAxis**, **sizeAxis**, **textAxis**, **groupBy**, **summarize**) and Get Report Metadata returns them in that same form. When building a Create or Update CONFIG from a Get Report Metadata response, copy the axis type values verbatim.
-
-The CONFIG parameter has a maximum serialized size of 10 MB. Ensure that the nested arrays - **axisColumns**, **mergeAxisInfo**, **filters** and **userFilters** - do not push the total CONFIG payload beyond this limit.
+The **reportConfig** returned by Read Report Metadata is a summary of the stored definition, not a Create or Update payload. It omits **folderId**, **settings**, **drillActionConfig**, **modifiedPaths**, every per-column **displayName**, **sort**, **rangeSize**, **windowFunction**, **format** and **geoRole**, the **wildcard**, **rankingColumn** and **additionalDetails** of filters, and every user-filter key except **tableName**, **columnName** and **operation**. Remove **baseTableName** and add **reportType** before using it as an update payload; for anything beyond trivial edits keep the CONFIG you submitted at create time and modify that.
 
 # Response
 
@@ -272,31 +176,99 @@ The CONFIG parameter has a maximum serialized size of 10 MB. Ensure that the nes
 
 HTTP `204 No Content`. The response has no body; treat the status code alone as success. Failures still return the JSON error envelope described in [Response envelope](../../../foundations/response-envelope.md).
 
-## Response Fields
-
-Not applicable — this API never returns a JSON body on success (HTTP 204 No Content). Only failure responses contain a JSON error payload.
-
 ## Notes from the OpenAPI specification
 
-This API returns no response body on success - only an HTTP 204 No Content status. There is no JSON payload to parse; check the HTTP status code alone. Only failure responses carry a JSON error payload.
+This API returns no response body on success - only HTTP 204 No Content. Only failure responses carry a JSON error payload.
 
 # Examples
 
+## Sample Requests
+
+**Case 1 — Change the chart type and re-sort**
+
+```http
+PUT /restapi/v2/workspaces/466206000000071000/reports/466206000000105001 HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
+Content-Type: application/x-www-form-urlencoded
+
+CONFIG={
+  "reportType": "chart",
+  "chartType": "stacked bar",
+  "description": "Monthly trend, excluding returns",
+  "axisColumns": [
+    { "type": "xAxis", "columnName": "Order Date", "operation": "monthyear" },
+    { "type": "yAxis", "columnName": "Sales", "operation": "sum", "sort": "asc" }
+  ]
+}
+```
+
+**Case 2 — Widen a filter, keeping everything else**
+
+Note that `userFilters` has to be re-sent in full even though it is unchanged; omitting it would delete it.
+
+```
+CONFIG={
+  "reportType": "chart",
+  "chartType": "line",
+  "description": "Monthly trend, excluding returns",
+  "axisColumns": [
+    { "type": "xAxis", "columnName": "Order Date", "operation": "monthyear" },
+    { "type": "yAxis", "columnName": "Sales", "operation": "sum" }
+  ],
+  "filters": [
+    { "columnName": "Status", "operation": "actual", "filterType": "individualvalues",
+      "values": ["Returned", "Cancelled"], "exclude": true }
+  ],
+  "userFilters": [
+    { "columnName": "Product Category", "operation": "actual",
+      "compType": "multiSelect", "filterType": "individualvalues", "isallval": true }
+  ]
+}
+```
+
+**Case 3 — Strip all filters off a report**
+
+```
+CONFIG={
+  "reportType": "pivot",
+  "axisColumns": [
+    { "type": "row",  "columnName": "Region", "operation": "actual" },
+    { "type": "data", "columnName": "Sales",  "operation": "sum"    }
+  ]
+}
+```
+
 ## Sample Responses
 
-**HTTP 204 No Content**
+**HTTP 204 No Content** — no response body is returned on success.
 
-This API returns **no response body** on success — only an HTTP `204 No Content` status. There is no JSON payload to parse on success; check only the HTTP status code.
+```
+HTTP/1.1 204 No Content
+```
 
 ## SDK Examples
 
-Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Update Analysis View](../../../sdk-examples/reports-and-dashboards/reports/update-report.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
+Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Update Report](../../../sdk-examples/reports-and-dashboards/reports/update-report.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Notes & Behaviour
 
-| Aspect | Detail |
-|--------|--------|
-| **Success response has no body** | Update Analysis View returns a bare HTTP `204 No Content` on success — no `status`/`summary` JSON to parse. |
+## Update is destructive
+
+The report is rebuilt from scratch on every call. There is no field-level patching.
+
+| Omit this | And this happens |
+|---|---|
+| `filters` | All static filters are removed. |
+| `userFilters` | All user filters are removed. |
+| `description` | The description is **cleared** — `description` is written unconditionally, so an absent key stores `null`. |
+| `chartType` | The chart type falls back to the server's `BEST` selection. |
+| `axisColumns` | The call fails — `axisColumns` is mandatory. |
+
+Always [read the current definition](get-report-metadata.md) first — while remembering that the read
+response is lossy. For anything beyond trivial edits, keep your own copy of the CONFIG you used at
+create time and modify that instead — see [Round-tripping a report](overview.md#round-tripping-a-report).
 
 # Error Codes
 
@@ -304,18 +276,50 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 
 | Code | HTTP | Reason | Solution |
 |---|---|---|---|
-| [7005](../../../foundations/error-codes.md#error-7005) | 500 | Unexpected error on the Zoho Analytics server while processing an otherwise valid request. Not caused by the request payload. | Retry after a short interval. If the error persists, contact Zoho Analytics support quoting the error code and the time of the request. |
-| [7103](../../../foundations/error-codes.md#error-7103) | 404 | Workspace not found. | Provide a valid `workspace-id` in the URL. |
-| [7104](../../../foundations/error-codes.md#error-7104) | 404 | The specified view does not exist. | Ensure the `view-id` in the URL corresponds to an existing analysis view. |
-| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A view with the given title already exists in the workspace. | Choose a unique `title` for the view. |
-| [7301](../../../foundations/error-codes.md#error-7301) | 403 | User does not have permission to update this view. | Ensure the user is an **Account Admin**, **Organization Admin**, **View Owner**, **Shared User**, **Group Member**, or has **Design Modify** permission on the view. |
-| [8021](../../../foundations/error-codes.md#error-8021) | 400 | Invalid view type specified. | Set `reportType` to one of `chart`, `pivot`, or `summary`. |
-| [8050](../../../foundations/error-codes.md#error-8050) | 400 | Invalid value provided. | Check that all CONFIG field values are within the allowed ranges and types. |
-| [8075](../../../foundations/error-codes.md#error-8075) | 400 | Invalid chart type parameter. | Provide a valid `chartType` value (e.g., `Bar`, `Line`, `Pie`). |
-| [8100](../../../foundations/error-codes.md#error-8100) | 400 | Operation not supported for this analysis view widget. | Ensure the update operation is valid for the current view type. |
-| [8119](../../../foundations/error-codes.md#error-8119) | 400 | Invalid value for attribute. | Verify all attribute values in `axisColumns`, `filters`, and `settings` conform to the allowed constraints. |
-| [8252](../../../foundations/error-codes.md#error-8252) | 400 | Invalid report type. | Ensure `reportType` is `chart`, `pivot`, or `summary`. |
-| [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid OAuth token. | Provide a valid, non-expired OAuth token in the `Authorization` header. |
+| [7005](../../../foundations/error-codes.md#error-7005) | 500 | A null element inside axisColumns or filters. | Ensure every array element is a JSON object. |
+| [7016](../../../foundations/error-codes.md#error-7016) | 400 | title is empty or whitespace-only. | Supply a non-empty title. |
+| [7104](../../../foundations/error-codes.md#error-7104) | 404 | The report does not exist, has been deleted, or the caller cannot edit it. | Verify `<report-id>` and the caller's permission. |
+| [7106](../../../foundations/error-codes.md#error-7106) | 404 | The report does not exist, has been deleted, or the caller cannot edit it. | Verify `<report-id>` and the caller's permission. |
+| [7111](../../../foundations/error-codes.md#error-7111) | 400 | A view with this title already exists in the workspace. | Choose a unique title. |
+| [7138](../../../foundations/error-codes.md#error-7138) | 400 | baseTableName does not resolve to a table in this workspace. | Use the exact table display name. |
+| [7301](../../../foundations/error-codes.md#error-7301) | 403 | The caller lacks Design Modify permission on the report. | Grant edit access. |
+| [7362](../../../foundations/error-codes.md#error-7362) | 400 | folderId does not exist in the workspace. | Supply a valid folder ID or omit the key. |
+| [7701](../../../foundations/error-codes.md#error-7701) | 400 | A chart report has no X-axis or no Y-axis column. | Add at least one of each. |
+| [7703](../../../foundations/error-codes.md#error-7703) | 400 | A colorAxis column is present alongside more than one Y-axis column. | Drop the colour axis, or reduce to one Y axis. |
+| [7727](../../../foundations/error-codes.md#error-7727) | 400 | More than 15 Y-axis columns on a chart. | Reduce to 15 or fewer. |
+| [8008](../../../foundations/error-codes.md#error-8008) | 400 | behaviour was supplied on a daterange or relative user filter. | Remove behaviour. |
+| [8021](../../../foundations/error-codes.md#error-8021) | 400 | `reportType` does not match the stored view's type, or the target is not an analysis view at all. | Send the report's actual type. |
+| [8050](../../../foundations/error-codes.md#error-8050) | 400 | A value is invalid — unknown columnName, an operation incompatible with the column, a null axisColumns. | Check column names and operations. |
+| [8051](../../../foundations/error-codes.md#error-8051) | 400 | A required field is missing — title, reportType, axisColumns, or a mandatory key inside an axis/filter object. | Add the missing field. |
+| [8052](../../../foundations/error-codes.md#error-8052) | 400 | More than 1000 entries in axisColumns, filters or userFilters. | Reduce the array size. |
+| [8057](../../../foundations/error-codes.md#error-8057) | 400 | The column named in windowFunction.baseField cannot be used as a base field here. | Choose a different reference column. |
+| [8059](../../../foundations/error-codes.md#error-8059) | 400 | The tableName is not part of the workspace or is not joined to the base table. | Use a table reachable through the join graph. |
+| [8092](../../../foundations/error-codes.md#error-8092) | 400 | reportType resolves to a view kind that cannot be saved standalone. | Use chart, pivot or summary. |
+| [8144](../../../foundations/error-codes.md#error-8144) | 400 | chartType is not a recognised chart name. | See Appendix A. |
+| [8145](../../../foundations/error-codes.md#error-8145) | 400 | `folderId` was supplied. | Remove `folderId` — reports cannot be moved through this endpoint. |
+| [8147](../../../foundations/error-codes.md#error-8147) | 400 | settings was supplied for a non-pivot report. | Remove settings, or change reportType to pivot. |
+| [8162](../../../foundations/error-codes.md#error-8162) | 400 | rangeSize was supplied as a string, or on an operation that does not support ranges. | Send a JSON number, and only with range grouping. |
+| [8166](../../../foundations/error-codes.md#error-8166) | 400 | The operation is incompatible with the column's data type. | See Appendix C. |
+| [8167](../../../foundations/error-codes.md#error-8167) | 400 | The filterType is not valid for the column type + operation combination. | See Appendix D. |
+| [8168](../../../foundations/error-codes.md#error-8168) | 400 | A values entry does not match the expected format for the filterType. | See Appendix E. |
+| [8170](../../../foundations/error-codes.md#error-8170) | 400 | An axis type is not valid for the chosen reportType. | See Appendix B. |
+| [8191](../../../foundations/error-codes.md#error-8191) | 400 | An invalid date value was supplied to a date filter. | Use the documented date formats. |
+| [8250](../../../foundations/error-codes.md#error-8250) | 400 | compType is not applicable to the column category — e.g. slider on a dimension, singleSelect on a measure. | Match the widget to the column type. |
+| [8252](../../../foundations/error-codes.md#error-8252) | 400 | reportType is absent or null. | Supply chart, pivot or summary. |
+| [8253](../../../foundations/error-codes.md#error-8253) | 400 | A mandatory userFilters key is missing, typically compType or filterType. | Add the missing key. |
+| [8254](../../../foundations/error-codes.md#error-8254) | 400 | A geoRole value is wrong for the column type. | latitude/longitude for numeric columns; place roles for text columns. |
+| [8255](../../../foundations/error-codes.md#error-8255) | 400 | geoRole was supplied on a column that cannot be geocoded. | Remove geoRole, or use a geocodable column. |
+| [8256](../../../foundations/error-codes.md#error-8256) | 400 | More than one geo operation on the same axis. | Keep one geo column per axis. |
+| [8257](../../../foundations/error-codes.md#error-8257) | 400 | A numeric geo column coexists with a categorical geo column. | Use one or the other. |
+| [8258](../../../foundations/error-codes.md#error-8258) | 400 | A categorical geo column was placed on an axis other than X. | Move it to xAxis. |
+| [8504](../../../foundations/error-codes.md#error-8504) | 400 | baseTableName is absent, or the CONFIG parameter itself is missing. | Send CONFIG with baseTableName. |
+| [8507](../../../foundations/error-codes.md#error-8507) | 400 | title exceeds 100 characters, description exceeds 250, or an axis displayName exceeds 250. | Shorten the value. |
+| [8509](../../../foundations/error-codes.md#error-8509) | 400 | An enumerated or pattern-constrained value does not match — reportType: "Chart" (must be lowercase), type: "sizeAxis" (must be sizeaxis), sort: "descending", a wildcard expression without parentheses. | Use the exact accepted values. |
+| [8516](../../../foundations/error-codes.md#error-8516) | 400 | rangeSize was supplied as an array. | Send a plain number. |
+| [8517](../../../foundations/error-codes.md#error-8517) | 400 | A field has the wrong JSON data type — exclude: "yes", isAxisMerge: "maybe", compType: 123. | Use real JSON booleans and strings. |
+| [8534](../../../foundations/error-codes.md#error-8534) | 400 | CONFIG is malformed, or a key has the wrong structural type — axisColumns as {}, mergeAxisInfo as an object, values as a bare string. | Arrays must be [], objects {}. |
+| [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.update`. |
+| [8542](../../../foundations/error-codes.md#error-8542) | 400 | `baseTableName`, `drillActionConfig`, `modifiedPaths` or any other key outside the Update schema is present. | Remove the key. |
 
 # Related
 
@@ -323,5 +327,5 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Reports & Dashboards](../overview.md) - the parent API domain.
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
-- Other endpoints in this group: [Create Analysis View](create-report.md), [Get Report Metadata](get-report-metadata.md).
+- Other endpoints in this group: [Create Report](create-report.md), [Read Report Metadata](get-report-metadata.md).
 - [SDK examples](../../../sdk-examples/reports-and-dashboards/reports/update-report.md).

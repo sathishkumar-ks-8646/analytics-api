@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Group List
-description: "Returns all the groups defined in the specified workspace, along with their descriptions and current member lists."
+description: "Returns all groups defined in the specified workspace, along with their descriptions and current member lists."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/groups"
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -60,7 +60,7 @@ When the Account Admin is a Client Portal Admin, each group entry includes a `do
 
 From the OpenAPI specification:
 
-Returns all the groups defined in the specified workspace, along with their descriptions and current member lists.
+Returns all groups defined in the specified workspace, along with their descriptions and current member lists.
 
 Groups are named collections of users within a workspace. A view shared with a group is accessible to every current and future member of that group, which makes groups the way to manage view-level sharing permissions in bulk.
 

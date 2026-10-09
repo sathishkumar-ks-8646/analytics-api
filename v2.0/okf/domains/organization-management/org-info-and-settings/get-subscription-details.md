@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Get Subscription Details
-description: "Returns the current subscription plan, the add-on details, the billing date, and the trial status of the specified organisation."
+description: "Returns the current subscription plan, add-on details, billing date, and trial status for the specified organisation."
 resource: https://analyticsapi.zoho.com/restapi/v2/subscription
 tags:
   - zoho-analytics
@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 

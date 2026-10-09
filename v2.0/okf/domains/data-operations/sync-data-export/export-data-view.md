@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Export Data from a View
-description: Use Bulk APIs to export data from the specified view synchronously.
+description: Exports the data of a view and returns the generated file in the response body.
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data"
 tags:
   - zoho-analytics
@@ -75,10 +75,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T08:29:02Z
+    last_modified: 2026-10-09T13:04:25Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T09:09:11Z
+  at: 2026-10-09T13:05:37Z
 status: stable
 ---
 
@@ -103,7 +103,7 @@ GET /restapi/v2/workspaces/466206000000071000/views/466206000000072000/data?CONF
 
 From the OpenAPI specification:
 
-Use Bulk APIs to export data from the specified view synchronously.
+Exports the data of a view and returns the generated file in the response body.
 
 Note: Export Data API is restricted for certain resources (given below). For these cases, use the Asynchronous Export APIs instead:
 
