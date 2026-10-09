@@ -49,7 +49,7 @@ MD_FOLDER_RE = re.compile(r'^(\d{2}) · (.+)$')
 # Anything else is reported: this repository holds the API documents and what is built from them.
 ROOT_ALLOWED = {
     'tools', '.git', '.github', 'manifest.json', 'README.md', 'CHANGELOG.md',
-    'LICENSE.md', 'CLAUDE.md', 'AGENTS.md', 'Makefile', '.gitignore', 'dist',
+    'LICENSE.md', 'CLAUDE.md', 'AGENTS.md', 'Makefile', '.gitignore',
 }
 # A version directory holds the authored sources (md, zenesis-oas, zenesis-oas-samples)
 # and the artefacts built from them (oas, okf, postman). Only the sources are checked here;

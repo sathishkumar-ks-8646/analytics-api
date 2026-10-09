@@ -16,8 +16,8 @@
       "zenesis-oas-samples": "SDK code snippets keyed by path and method, one file per domain."
     },
     "generated": {
-      "oas": "Vendor-neutral OpenAPI 3.1, built by tools/zenesis-oas (make to-analytics). oas/common/ is maintained by hand.",
-      "okf": "Open Knowledge Format v0.2 bundle, built by tools/okf/build_okf.py.",
+      "oas": "Vendor-neutral OpenAPI 3.1, built by tools/zenesis-oas (make to-analytics). oas/common/ is maintained by hand. Copied as is into the public repository.",
+      "okf": "Open Knowledge Format v0.2 bundle, built by tools/okf/build_okf.py. Its llms.txt links use publish.okf.raw_base so the directory can be copied into the public repository unchanged.",
       "postman": "Postman collection and environment, built by tools/postman/build_postman.py."
     }
   },
@@ -45,6 +45,19 @@
         "okf_endpoint_catalog_json": "v2.0/okf/references/endpoint-catalog.json",
         "postman_collection": "v2.0/postman/Zoho Analytics REST APIs.postman_collection.json",
         "postman_environment": "v2.0/postman/Zoho Analytics REST Variables.postman_environment.json"
+      },
+      "publish": {
+        "oas": {
+          "repository": "https://github.com/zoho/analytics-oas",
+          "path": "v2.0",
+          "how": "copy v2.0/oas/ as is; its $refs already use that repository's raw URL"
+        },
+        "okf": {
+          "repository": "https://github.com/zoho/analytics-okf",
+          "path": "v2.0",
+          "raw_base": "https://raw.githubusercontent.com/zoho/analytics-okf/main/v2.0",
+          "how": "copy v2.0/okf/ as is; llms.txt links are built against raw_base"
+        }
       }
     }
   ],

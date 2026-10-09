@@ -35,22 +35,18 @@ folder is for; every folder that a maintainer touches has a `README.md`.
 │   ├── okf/                          THIS TOOL
 │   │   ├── build_okf.py              generator: <VERSION> sources + handwritten -> <VERSION>/okf
 │   │   ├── validate_okf.py           OKF conformance + link + provenance checks
-│   │   ├── package_okf.py            every <VERSION>/okf -> dist/analytics-okf/ (standalone public repo layout, + tarball)
 │   │   ├── handwritten/<VERSION>/    SOURCES - hand-authored concepts copied into the bundle on every build (README inside)
 │   │   │   ├── overview.md                 -> bundle /overview.md
 │   │   │   ├── how-to-use-this-bundle.md   -> bundle /how-to-use-this-bundle.md
 │   │   │   ├── foundations/*.md            -> bundle /foundations/<same name>.md
 │   │   │   └── workflows/*.md              -> bundle /workflows/<same name>.md
-│   │   ├── publish/                  README, CHANGELOG, LICENSE templates for the standalone distribution
 │   │   └── agent-guide/              this guide (internal, never published)
 │   ├── postman/                      Postman generator (reads <VERSION>/okf and <VERSION>/oas)
 │   └── api-agent/                    the AI-agent workflow that drives every tool above from input markdown
-└── dist/                             git-ignored: packaged public repo and release tarballs
-    └── analytics-okf/                README.md, llms.txt, manifest.json, LICENSE.md, CHANGELOG.md, tools/validate.py, .github/, v2.0/
 ```
 
 The bundle directory is `<VERSION>/okf/`; the bundle's own name, as declared in its `manifest.json`, is
-`zoho-analytics-rest-api-v2`. The packager copies it to `<VERSION>/` of `dist/analytics-okf/`.
+`zoho-analytics-rest-api-v2`. Publishing is a copy of this directory into `<VERSION>/` of the public analytics-okf repository.
 
 ## Who writes what
 
@@ -66,7 +62,6 @@ The bundle directory is `<VERSION>/okf/`; the bundle's own name, as declared in 
 | `<VERSION>/okf/` | `build_okf.py` | **Never.** |
 | `<VERSION>/oas/` | `tools/zenesis-oas` (`make to-analytics`) | **Never** by hand, except `oas/common/`, which is placed by hand and never regenerated. |
 | `<VERSION>/postman/` | `tools/postman/build_postman.py` | **Never.** |
-| `dist/` | `package_okf.py` | Never by hand, except `git` operations inside `dist/analytics-okf/`. Git-ignored. |
 
 ## Two pairs that must stay in step
 
@@ -82,5 +77,4 @@ The bundle directory is `<VERSION>/okf/`; the bundle's own name, as declared in 
 ## Things that are deliberately *not* sources
 
 - `<VERSION>/okf/` (generated).
-- `dist/` (packaged copy of the generated bundle).
 - Anything outside this repository (older `PRD/` folders, zip archives). They are unrelated to this pipeline.

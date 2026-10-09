@@ -43,8 +43,8 @@ make -C tools/zenesis-oas check          # inventory + tests + verify, this is w
 **`ANALYTICS/common/` is maintained by hand.** Every published specification references
 `vN.N/oas/common/zoho-analytics-api-common.json` by the absolute URL of the zoho/analytics-oas
 repository, and that file is placed there deliberately rather than regenerated. `make to-analytics`
-therefore writes only the ten domain files into `ANALYTICS/`; the converted common file goes to
-`dist/oas/vN.N/common/` and `make common-diff` shows what it would change.
+therefore writes only the ten domain files into `ANALYTICS/`; `make common-diff` converts the
+Zenesis common file into a temporary directory and shows what the hand-placed copy would need.
 
 ## Requirements
 
@@ -154,8 +154,8 @@ Every command accepts `--rules FILE`; without it, `./rules.json` is used when
 present, else the built-in rules.
 
 The shared components file converts too - its Example Objects carry the same
-swapped fields - which is why `make to-analytics` also writes `dist/common/`,
-and `make to-zenesis` / `make compare` also look at `ANALYTICS/common/`. Note
+swapped fields - which is why `make common-diff` exists, and `make to-zenesis` /
+`make compare` also look at `ANALYTICS/common/`. Note
 the depth differs by repository: the source keeps it at
 `vN.N/zenesis-oas/common/`, the published copy at `vN.N/common/`.
 
@@ -259,7 +259,6 @@ warnings appear, so these block a release rather than scrolling past in a log.
       common/             the components those specs share              ZENESIS/common
     oas/                  the published, vendor-neutral copy            ANALYTICS
       common/             its copy of the shared components, by hand    ANALYTICS/common
-  dist/oas/vN.N/common/   converted common file, for `make common-diff` <- gitignored
   tools/zenesis-oas/      this tool
     Makefile              the targets above; REPO and VERSION resolve every path
     rules.json            how each vendor key is handled, and the two common-file URLs

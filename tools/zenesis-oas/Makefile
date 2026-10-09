@@ -17,9 +17,9 @@
 #
 # The shared components file is NOT written to ANALYTICS/common by
 # `to-analytics`. That file is maintained by hand in <repo>/VERSION/oas/common/
-# (it is what every published spec $refs by absolute URL). `make to-analytics`
-# converts the Zenesis common file into DIST/common/ so you can diff and copy
-# it deliberately: `make common-diff`.
+# (it is what every published spec $refs by absolute URL). `make common-diff`
+# converts the Zenesis common file into a temporary directory and shows what
+# the hand-maintained copy would need; nothing is written into the repository.
 
 THIS_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 REPO     ?= $(abspath $(THIS_DIR)/../..)
@@ -30,7 +30,6 @@ ANALYTICS      ?= $(REPO)/$(VERSION)/oas
 ZENESIS_COMMON  = $(ZENESIS)/common
 ANALYTICS_COMMON = $(ANALYTICS)/common
 
-DIST     ?= $(REPO)/dist/oas/$(VERSION)
 # to-zenesis writes over ZENESIS by default. Set OUT to write the merged
 # result to a directory of your own instead, leaving ZENESIS untouched.
 OUT      ?=
@@ -42,11 +41,11 @@ PY       ?= python3
 CLI       = cd $(THIS_DIR) && $(PY) -m zenesis_oas --rules $(RULES)
 
 .PHONY: help paths need-zenesis need-analytics inventory to-analytics convert \
-        common-diff to-zenesis compare overlays verify test check clean
+        common-diff to-zenesis compare overlays verify test check
 
 help:
 	@echo "Direction                              reads                  writes"
-	@echo "  make to-analytics                    ZENESIS                ANALYTICS (domain files) + $(DIST)/common/"
+	@echo "  make to-analytics                    ZENESIS                ANALYTICS (the ten domain files)"
 	@echo "  make to-zenesis                      ANALYTICS and ZENESIS  ZENESIS, in place"
 	@echo "  make to-zenesis OUT=dir              ANALYTICS and ZENESIS  dir/ (ZENESIS untouched)"
 	@echo "  make compare                         ZENESIS and ANALYTICS  nothing"
@@ -61,7 +60,6 @@ help:
 	@echo "  make verify          prove the conversion is lossless"
 	@echo "  make test            run the unit tests"
 	@echo "  make check           inventory + test + verify    <- what CI runs"
-	@echo "  make clean           remove $(DIST)/"
 	@echo
 	@$(MAKE) --no-print-directory paths
 
@@ -73,7 +71,6 @@ paths:
 	@echo "  ANALYTICS  $(ANALYTICS)"
 	@echo "             $(ANALYTICS_COMMON)   (hand-maintained; never overwritten)"
 	@echo "  OVERLAYS   $(OVERLAYS)"
-	@echo "  DIST       $(DIST)"
 	@echo
 	@echo "  Override:  make check VERSION=v3.0"
 
@@ -97,24 +94,24 @@ inventory: need-zenesis
 	@$(CLI) inventory $(ZENESIS)
 
 # ZENESIS -> clean OpenAPI, written straight into ANALYTICS (the ten domain
-# files). The shared components file is converted too, but into DIST/common/,
-# because ANALYTICS/common/ is maintained by hand: see `make common-diff`.
+# files). ANALYTICS/common/ is maintained by hand and is not touched: see
+# `make common-diff`.
 to-analytics: need-zenesis
-	@mkdir -p $(ANALYTICS) $(DIST)/common
+	@mkdir -p $(ANALYTICS)
 	@$(CLI) to-analytics $(ZENESIS) $(ANALYTICS)
-	@$(CLI) to-analytics $(ZENESIS_COMMON) $(DIST)/common --quiet
 	@echo
-	@echo "Domain files written to $(ANALYTICS)/."
-	@echo "Converted common file left in $(DIST)/common/ (ANALYTICS/common is hand-maintained): make common-diff"
+	@echo "Domain files written to $(ANALYTICS)/. ANALYTICS/common is hand-maintained: make common-diff"
 
 convert: to-analytics
 
 # Show what the converted common file would change in the hand-maintained copy.
+# The conversion goes to a temporary directory; nothing is written into the repository.
 common-diff: need-zenesis
-	@mkdir -p $(DIST)/common
-	@$(CLI) to-analytics $(ZENESIS_COMMON) $(DIST)/common --quiet
-	@diff -u $(ANALYTICS_COMMON)/zoho-analytics-api-common.json $(DIST)/common/zoho-analytics-api-common.json \
-	  && echo "ANALYTICS/common is in step with the converted Zenesis common file." || true
+	@tmp=$$(mktemp -d); \
+	 $(CLI) to-analytics $(ZENESIS_COMMON) $$tmp --quiet; \
+	 diff -u $(ANALYTICS_COMMON)/zoho-analytics-api-common.json $$tmp/zoho-analytics-api-common.json \
+	   && echo "ANALYTICS/common is in step with the converted Zenesis common file." || true; \
+	 rm -rf $$tmp
 
 # ANALYTICS -> ZENESIS. Reads the edits made to the published documents and
 # writes them into the source, in place. Review with `git diff $(ZENESIS)`.
@@ -147,6 +144,3 @@ test:
 check: inventory test verify
 	@echo
 	@echo "All checks passed for $(VERSION)."
-
-clean:
-	@rm -rf $(DIST)

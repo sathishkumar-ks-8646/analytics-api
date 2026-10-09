@@ -31,14 +31,14 @@ analytics-api/
 │   ├── zenesis-oas/               SOURCE   OpenAPI 3.1 + x-zenesis-* extensions, one file per domain
 │   │   └── common/zoho-analytics-api-common.json      OAuth scheme and scopes, shared error responses
 │   ├── zenesis-oas-samples/       SOURCE   SDK snippets per path + method in 9 languages
-│   ├── oas/                       BUILT    vendor-neutral OpenAPI 3.1 (what zoho/analytics-oas publishes); oas/common/ is placed by hand
-│   ├── okf/                       BUILT    Open Knowledge Format v0.2 bundle (what zoho/analytics-okf publishes)
+│   ├── oas/                       BUILT    vendor-neutral OpenAPI 3.1; copied as is to zoho/analytics-oas; oas/common/ is placed by hand
+│   ├── okf/                       BUILT    Open Knowledge Format v0.2 bundle; copied as is to zoho/analytics-okf
 │   └── postman/                   BUILT    Postman collection + environment
 │
 └── tools/
     ├── validate_api_docs.py       naming, completeness and integrity of the SOURCES of every version
     ├── zenesis-oas/               zenesis-oas <-> oas converter (Makefile, rules.json, overlays/vN.N/, tests)
-    ├── okf/                       OKF builder, validator, packager; handwritten/vN.N/ concepts; the maintainer agent-guide
+    ├── okf/                       OKF builder and validator; handwritten/vN.N/ concepts; the maintainer agent-guide
     ├── postman/                   Postman generator (+ curated API-reference links and templates)
     └── api-agent/                 AI-agent workflow: plan.py, scaffold.py, pipeline.py, AGENT.md
 ```
@@ -123,7 +123,7 @@ the exact markdown and OpenAPI shapes the parsers expect are in
   `common_ref` (this repository). `oas/common/` is referenced by
   `https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json`
   and is **placed by hand**, never regenerated; the converter writes the ten domain files only and
-  `make -C tools/zenesis-oas common-diff` shows what the hand-placed copy would need.
+  `make -C tools/zenesis-oas common-diff` shows what the hand-placed copy would need (nothing is written).
 - **Generated directories are never edited by hand**: `oas/` (except `oas/common/`), `okf/`, `postman/`.
 
 ## Publishing
@@ -131,7 +131,7 @@ the exact markdown and OpenAPI shapes the parsers expect are in
 | What | Where it goes | How |
 |---|---|---|
 | `vN.N/oas/` | [zoho/analytics-oas](https://github.com/zoho/analytics-oas) `vN.N/` | copy as is after `make -C tools/zenesis-oas compare` reports no differences |
-| `vN.N/okf/` | [zoho/analytics-okf](https://github.com/zoho/analytics-okf) `vN.N/` | `python3 tools/okf/package_okf.py --tarball` assembles `dist/analytics-okf/` in that repository's layout (root `llms.txt`, version index, CI); review, then push from there |
+| `vN.N/okf/` | [zoho/analytics-okf](https://github.com/zoho/analytics-okf) `vN.N/` | copy as is; `okf/llms.txt` links are already built against that repository's raw URL (`publish.okf.raw_base` in `manifest.json`). Root files of that repository (`llms.txt`, `manifest.json` version index, README, CHANGELOG) are maintained there |
 | `vN.N/postman/` | Postman workspace | import the collection and the environment |
 | `vN.N/md`, `zenesis-oas`, `zenesis-oas-samples` | the documentation site (Zenesis renderer) | read directly from this repository |
 

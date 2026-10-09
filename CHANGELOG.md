@@ -40,8 +40,9 @@ patch for corrections. The OKF bundle's own content version is in `vN.N/okf/mani
   maintained by hand. Curated input: `tools/postman/api-reference-links.json`.
 - `tools/api-agent/`: `AGENT.md` (the AI-agent procedure for applying any input markdown to every
   artefact), `plan.py`, `scaffold.py`, `pipeline.py`.
-- `tools/okf/package_okf.py` now assembles the versioned layout of the standalone `analytics-okf`
-  repository (root `llms.txt`, version index, one `vN.N/` per bundle).
+- Publishing is a copy: `v2.0/oas/` goes as is into zoho/analytics-oas and `v2.0/okf/` as is into
+  zoho/analytics-okf (`okf/llms.txt` is built against that repository's raw URL, `publish.okf.raw_base`
+  in the root `manifest.json`). The former OKF packager and its `dist/` output are gone.
 - A `**Permission Required**` row for the 24 endpoint sections that lacked one (Custom Roles, Tags,
   synchronous and asynchronous export, data sync and connectivity); the OKF permission matrix no
   longer has empty cells.

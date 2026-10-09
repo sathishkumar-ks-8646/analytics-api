@@ -27,8 +27,6 @@ inputs                                                    generator             
 <VERSION>/zenesis-oas-samples/*.json                    │                                         ▼
 <VERSION>/manifest.json  (domains, groups, okf slugs)   │                               tools/okf/validate_okf.py <VERSION>/okf
 tools/okf/handwritten/<VERSION>/**/*.md                ─┘                               (must print errors=0 broken_links=0)
-                                                                                                  │
-                                                                      tools/okf/package_okf.py  ──►  dist/analytics-okf/  (standalone public repo layout, git-ignored)
 ```
 
 ## Where to start, by task
@@ -46,7 +44,7 @@ tools/okf/handwritten/<VERSION>/**/*.md                ─┘                   
 | Add a workflow playbook | [04-change-playbooks.md](04-change-playbooks.md#g-add-a-workflow-playbook) | `tools/okf/handwritten/<VERSION>/workflows/` |
 | Deprecate or remove an endpoint | [04-change-playbooks.md](04-change-playbooks.md#e-deprecate-or-remove-an-endpoint) | `<VERSION>/md`, `<VERSION>/zenesis-oas` (`deprecated: true`) |
 | Know which builder table to touch | [05-builder-internals.md](05-builder-internals.md) | `tools/okf/build_okf.py` |
-| Release: version, changelog, publish | [06-rules-and-release-checklist.md](06-rules-and-release-checklist.md) | `tools/okf/package_okf.py --version`, `dist/` |
+| Release: version, changelog, publish | [06-rules-and-release-checklist.md](06-rules-and-release-checklist.md) | `OKF_BUNDLE_VERSION`, copy `<VERSION>/okf/` |
 
 ## The standard loop
 
@@ -56,8 +54,9 @@ python3 tools/validate_api_docs.py --strict        # the sources themselves: nam
 python3 tools/okf/build_okf.py --version v2.0      # regenerates v2.0/okf/ ; prints endpoints=… groups=… errors=… sdk=…
 python3 tools/okf/validate_okf.py v2.0/okf         # must end with errors=0 warnings=0 broken_links=0
 git diff --stat v2.0/okf                           # review what the rebuild changed
-python3 tools/okf/package_okf.py --tarball         # only when publishing to the standalone analytics-okf repository
 ```
+
+Publishing is a copy: `v2.0/okf/` goes as is into `v2.0/` of the public analytics-okf repository.
 
 Both scripts need only Python 3.8+ and the standard library. The build takes a few seconds.
 

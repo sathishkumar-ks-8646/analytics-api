@@ -60,9 +60,13 @@ with open(os.path.join(ROOT, 'manifest.json'), encoding='utf-8') as _f:
 with open(VERSION_MANIFEST, encoding='utf-8') as _f:
     MANIFEST = json.load(_f)
 API_VERSION = MANIFEST.get('api_version', 'v2')
-# Raw-file base of the bundle, for llms.txt. The repository manifest names the raw base
-# of this repository; the bundle sits at <raw_base>/<VERSION>/okf.
-OKF_RAW_BASE = os.environ.get('OKF_RAW_BASE') or (REPO_MANIFEST.get('raw_base', '').rstrip('/') + '/' + VERSION + '/okf')
+# Raw-file base used for the absolute links in llms.txt. The bundle is copied unchanged into the
+# public repository, so the links point there: `publish.okf.raw_base` of this version's entry in
+# <repo>/manifest.json (override with OKF_RAW_BASE); else this repository's own raw base.
+_entry = next((v for v in REPO_MANIFEST.get('versions', []) if v.get('version') == VERSION), {})
+OKF_RAW_BASE = (os.environ.get('OKF_RAW_BASE')
+                or (_entry.get('publish') or {}).get('okf', {}).get('raw_base')
+                or (REPO_MANIFEST.get('raw_base', '').rstrip('/') + '/' + VERSION + '/okf'))
 
 BUILDER   = 'claude-fable-5.1/okf-builder-1.0'
 NOW       = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
