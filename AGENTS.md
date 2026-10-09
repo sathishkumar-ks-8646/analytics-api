@@ -15,8 +15,9 @@ The rules that matter most:
 1. An API fact lives in three source files - the group document in `md/`, the operation in
    `zenesis-oas/`, the snippets in `zenesis-oas-samples/` - change all three together.
 2. Never edit `oas/` (other than `oas/common/`, which a human places), `okf/` or `postman/`; rebuild them.
-3. Never change `https://raw.githubusercontent.com/zoho/analytics-oas/...` `$ref` URLs or
-   `oas/common/zoho-analytics-api-common.json`.
+3. Every `$ref` to the shared components file uses the published URL
+   `https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json`
+   (`common_ref` in the version manifest). Never change it, and never edit `oas/common/zoho-analytics-api-common.json`.
 4. The markdown heading `## N. Title` and the operation's `x-zenesis-title` are the join key; they
    must match exactly.
 5. Only the `x-zenesis-*` keys listed in `tools/zenesis-oas/rules.json` may appear in a specification.

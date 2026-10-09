@@ -34,10 +34,10 @@ exist and which is `latest`. Never mix versions: a change belongs to exactly one
    one and not the others produces artefacts that contradict each other.
 2. **Never edit generated directories by hand** (`oas/` except `oas/common/`, `okf/`, `postman/`).
    They are deleted and rebuilt. Change the source and rebuild.
-3. **Never touch `<VERSION>/oas/common/zoho-analytics-api-common.json`** and never change the
-   `https://raw.githubusercontent.com/zoho/analytics-oas/...` URLs that the published specifications
-   `$ref`. The maintainer places that file by hand. The Zenesis side `$ref`s the URL in
-   `common_ref` of `<VERSION>/manifest.json`; the converter swaps the two.
+3. **Never touch `<VERSION>/oas/common/zoho-analytics-api-common.json`** - the maintainer places that
+   file by hand - and never change the common-file `$ref` URL. Every specification, Zenesis and
+   published, uses the one published URL in `common_ref` of `<VERSION>/manifest.json`
+   (`https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json`).
 4. **Titles are the join key.** The markdown heading `## N. Title` must equal the operation's
    `x-zenesis-title` (else `summary`) character for character, or the OKF build emits `WARN` and the
    endpoint document has no schema. If the input uses a different title, pick one and apply it to both,

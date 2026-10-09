@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T13:04:25Z
+    last_modified: 2026-10-09T14:14:03Z
   - id: endpoint-doc
     resource: "/domains/workspace-management/workspace-preferences/add-default-workspace.md"
     title: Endpoint reference - Add Default Workspace
 generated:
   by: process:build_okf
-  at: 2026-10-09T13:05:37Z
+  at: 2026-10-09T14:14:46Z
 status: stable
 ---
 

@@ -170,7 +170,7 @@ Not a rule either. Every spec references the shared components file by
 absolute URL, and that URL differs between the source and the published copy:
 
 ```
-source     https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json
+source     https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json
 published  https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json
 ```
 

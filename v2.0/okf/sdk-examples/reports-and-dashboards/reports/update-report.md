@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T13:04:25Z
+    last_modified: 2026-10-09T14:14:03Z
   - id: endpoint-doc
     resource: "/domains/reports-and-dashboards/reports/update-report.md"
     title: Endpoint reference - Update Report
 generated:
   by: process:build_okf
-  at: 2026-10-09T13:05:37Z
+  at: 2026-10-09T14:14:46Z
 status: stable
 ---
 

@@ -59,21 +59,17 @@ holds what every specification of this version shares and lives beside them:
 | Client error response | `#/components/responses/CommonErrorResponse` | Referenced by every operation as `4XX` |
 | Server error response | `#/components/responses/UnexpectedErrorResponse` | Referenced by every operation as `500` |
 
-The Zenesis specifications reference it by the absolute URL in `manifest.json` → `common_ref`:
-
-```
-https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json
-```
-
-The published specifications in `oas/` reference the copy in `oas/common/` by its zoho/analytics-oas URL:
+Every specification - the Zenesis source in `zenesis-oas/` and the published copy in `oas/` - references
+the shared components file by the same absolute URL, its published location (`manifest.json` → `common_ref`):
 
 ```
 https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json
 ```
 
-The converter swaps one URL for the other and writes only the ten domain files; **`oas/common/` is
-placed by hand** (`make -C tools/zenesis-oas common-diff` shows what the converted Zenesis common file
-would change in it). The validator rejects any remote `$ref` in `zenesis-oas/` that points elsewhere.
+`zenesis-oas/common/` is the authored copy of that file; `oas/common/` is the published copy, **placed
+by hand** (`make -C tools/zenesis-oas common-diff` shows what the converted Zenesis common file would
+change in it). The converter writes only the ten domain files. The validator rejects any remote `$ref`
+in `zenesis-oas/` that points elsewhere.
 
 ## Making a change
 

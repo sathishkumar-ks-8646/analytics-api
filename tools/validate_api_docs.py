@@ -250,12 +250,16 @@ def load_version_manifest(version):
               % (version.name, manifest.get('status'), version.entry.get('status')))
 
     ref = manifest.get('common_ref')
-    tail = '/%s/zenesis-oas/%s/%s' % (version.name, COMMON_SUBDIR, COMMON_NAME)
+    # The specifications reference the shared components file at its published location
+    # (zoho/analytics-oas, `vN.N/common/`); a source-tree location (`vN.N/zenesis-oas/common/`)
+    # is also accepted. Either way the version segment must match this directory.
+    tails = ('/%s/%s/%s' % (version.name, COMMON_SUBDIR, COMMON_NAME),
+             '/%s/zenesis-oas/%s/%s' % (version.name, COMMON_SUBDIR, COMMON_NAME))
     if (not isinstance(ref, str) or not ref.startswith('https://')
-            or not ref.endswith(tail)):
-        error('%s/manifest.json: "common_ref" must be the https URL ending in '
-              '%s; every remote $ref in the specs targets it'
-              % (version.name, tail))
+            or not ref.endswith(tails)):
+        error('%s/manifest.json: "common_ref" must be the https URL of %s for this version '
+              '(ending in %s); every remote $ref in the specs targets it'
+              % (version.name, COMMON_NAME, ' or '.join(tails)))
     else:
         version.common_ref = ref
 

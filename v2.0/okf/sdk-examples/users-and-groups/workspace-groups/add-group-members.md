@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T13:04:25Z
+    last_modified: 2026-10-09T14:14:03Z
   - id: endpoint-doc
     resource: "/domains/users-and-groups/workspace-groups/add-group-members.md"
     title: Endpoint reference - Add Group Members
 generated:
   by: process:build_okf
-  at: 2026-10-09T13:05:37Z
+  at: 2026-10-09T14:14:46Z
 status: stable
 ---
 

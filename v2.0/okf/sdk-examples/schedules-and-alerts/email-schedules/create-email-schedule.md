@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T13:04:25Z
+    last_modified: 2026-10-09T14:14:03Z
   - id: endpoint-doc
     resource: "/domains/schedules-and-alerts/email-schedules/create-email-schedule.md"
     title: Endpoint reference - Create Email Schedule
 generated:
   by: process:build_okf
-  at: 2026-10-09T13:05:37Z
+  at: 2026-10-09T14:14:46Z
 status: stable
 ---
 

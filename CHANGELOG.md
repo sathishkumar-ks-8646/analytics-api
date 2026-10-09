@@ -36,6 +36,11 @@ outside the repository (`../analytics-api-audit/`).
   import, Get Shared Details, Create AutoML Analysis).
 - Get My Permissions is `/share/userpermissions`; `/share/mypermissions` is the deprecated alias.
 - OKF bundle 1.5.0, Postman collection and `v2.0/oas/` regenerated from the above.
+- **One common-file URL.** Every `$ref` to the shared components file, in the Zenesis source as well
+  as the published specifications, now uses the published location
+  `https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json`
+  (`common_ref` in `v2.0/manifest.json`; `rules.json` names it on both sides, so the converter's
+  `$ref` swap is a no-op). The source validator accepts that URL for `common_ref`.
 
 ## 3.0.0 - 2026-10-09
 

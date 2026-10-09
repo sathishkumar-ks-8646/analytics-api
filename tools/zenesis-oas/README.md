@@ -78,12 +78,11 @@ is not a format conversion. It is a *separation*, and it does these jobs:
    `components/schemas`, so anything that renders a schema on its own shows no
    sample value. The converter copies each operation's first example down the
    `$ref` chain into the schemas it describes.
-6. **Repoints the shared components.** Every spec references the common file
-   by absolute URL, and the two repositories keep it at different depths -
-   `vN.N/zenesis-oas/common/` in the source, `vN.N/common/` in the published
-   copy, which has no `zenesis-oas/` level. `common_ref` in `rules.json` names
-   both URLs and the converter swaps them, so nobody edits 361 URLs by hand
-   after each run.
+6. **Keeps the shared components reachable.** Every spec references the common file by one
+   absolute URL - its published location under zoho/analytics-oas - on both sides, so today the
+   `$ref` swap is a no-op. `common_ref` in `rules.json` still names a `source` and a `published`
+   URL: should the two repositories ever serve the file from different paths again, setting them
+   apart re-enables the swap with no code change.
 
 The whole point is that nothing is lost quietly. Content that would vanish
 gets either rewritten into a standard field or reported as a warning.
@@ -104,7 +103,7 @@ location - with four translations on the way:
 | --- | --- |
 | `enum` / `x-enumDescriptions` changed | `enum`, and `x-zenesis-enums-desc` rebuilt positionally from the map |
 | Example Object `summary` / `description` edited | the two fields swapped back for the renderer |
-| a `$ref` to the published common file | the same `$ref` to the source common file |
+| a `$ref` to the published common file | the same `$ref` to the source common file (identical today) |
 | an operation `description` edited **above** the folded Notes / Error codes / Rate limit | the source `description` |
 
 What cannot come back is reported and left alone: an edit *inside* the folded
@@ -195,9 +194,9 @@ make -C tools/zenesis-oas check to-analytics VERSION=v3.0   # v3.0/zenesis-oas -
 make -C tools/zenesis-oas compare            VERSION=v3.0
 ```
 
-`common_ref` in `rules.json` names the `v2.0` common file on both sides. For
-another version, point `--rules` at a copy with the `vN.N` URLs - or make the
-Makefile derive them, once there is a second version to derive for.
+`common_ref` in `rules.json` names the `v2.0` common file (the same published URL on both
+sides). For another version, point `--rules` at a copy with the `vN.N` URL - or make the Makefile
+derive it, once there is a second version to derive for.
 
 ## Configuring behaviour
 
@@ -208,7 +207,7 @@ Makefile derive them, once there is a second version to derive for.
   "vendor_prefix": "x-zenesis-",
   "unknown_key_policy": "warn",
   "common_ref": {
-    "source":    "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json",
+    "source":    "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json",
     "published": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json"
   },
   "options": {
@@ -232,7 +231,8 @@ Actions: `drop`, `keep`, `enum_descriptions`, `fold_sections`,
 `unswap_examples` (fix the swapped example fields), `emit_enum_varnames`
 (`x-enum-varnames` for integer enums) and `propagate_examples` (seed component
 schemas from their first call site). All three default to on. Omit
-`common_ref` to leave `$ref`s untouched.
+`common_ref` to leave `$ref`s untouched (with identical `source` and `published` URLs, as today,
+nothing is rewritten either).
 
 ## Warnings are the product
 
@@ -261,7 +261,7 @@ warnings appear, so these block a release rather than scrolling past in a log.
       common/             its copy of the shared components, by hand    ANALYTICS/common
   tools/zenesis-oas/      this tool
     Makefile              the targets above; REPO and VERSION resolve every path
-    rules.json            how each vendor key is handled, and the two common-file URLs
+    rules.json            how each vendor key is handled, and the common-file URL(s)
     overlays/vN.N/        generated Overlay 1.0.0, committed so vendor drift shows in review
     zenesis_oas/          the package
     tests/                standard-library test suite

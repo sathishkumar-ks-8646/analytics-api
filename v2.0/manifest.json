@@ -5,7 +5,7 @@
   "description": "Inventory of this API version: every domain folder, its specification slug, the (markdown file, OpenAPI tag) pairs inside it, the slugs and titles the OKF bundle and the Postman collection use for them, and common_ref - the URL the specifications use for the shared components file.",
   "status": "current",
   "api_reference": "https://www.zoho.com/analytics/api/v2/",
-  "common_ref": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/refs/heads/main/v2.0/zenesis-oas/common/zoho-analytics-api-common.json",
+  "common_ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json",
   "domains": [
     {
       "folder": "01 · Organization Management",

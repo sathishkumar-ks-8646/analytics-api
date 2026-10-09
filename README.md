@@ -119,11 +119,12 @@ the exact markdown and OpenAPI shapes the parsers expect are in
   key fails validation before it can be dropped silently downstream.
 - **Error responses** are `4XX` and `500`, each a `$ref` to the shared responses in the version's
   common file; never `default`.
-- **The two common files.** `zenesis-oas/common/` is referenced by the URL in the version manifest's
-  `common_ref` (this repository). `oas/common/` is referenced by
+- **One common-file URL.** Every specification, Zenesis and published alike, `$ref`s the shared
+  components file at its published location,
   `https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json`
-  and is **placed by hand**, never regenerated; the converter writes the ten domain files only and
-  `make -C tools/zenesis-oas common-diff` shows what the hand-placed copy would need (nothing is written).
+  (`common_ref` in the version manifest). `zenesis-oas/common/` is the authored copy of that file;
+  `oas/common/` is the **hand-placed** published copy, never regenerated. The converter writes the ten
+  domain files only; `make -C tools/zenesis-oas common-diff` shows what the hand-placed copy would need.
 - **Generated directories are never edited by hand**: `oas/` (except `oas/common/`), `okf/`, `postman/`.
 
 ## Publishing
