@@ -1,0 +1,44 @@
+{
+  "name": "zoho-analytics-rest-api-v2",
+  "title": "Zoho Analytics REST API v2",
+  "description": "Open Knowledge Format bundle covering every public Zoho Analytics REST API v2 endpoint, the conventions shared by all of them, and their error codes, scopes and permissions.",
+  "version": "1.4.0",
+  "okf_version": "0.2",
+  "api": {
+    "name": "Zoho Analytics REST API",
+    "version": "v2",
+    "base_url": "https://analyticsapi.zoho.com",
+    "path_prefix": "/restapi/v2",
+    "auth": "OAuth 2.0 bearer token in the Authorization header, scheme \"Zoho-oauthtoken\""
+  },
+  "counts": {
+    "domains": 10,
+    "groups": 35,
+    "endpoints": 182,
+    "error_codes": 306,
+    "oauth_scopes": 31,
+    "sdk_example_documents": 180,
+    "workflow_playbooks": 8
+  },
+  "entry_points": {
+    "index": "/index.md",
+    "overview": "/overview.md",
+    "usage_guide": "/how-to-use-this-bundle.md",
+    "endpoint_catalog_markdown": "/endpoint-catalog.md",
+    "endpoint_catalog_json": "/references/endpoint-catalog.json",
+    "foundations": "/foundations/index.md",
+    "domains": "/domains/index.md",
+    "workflows": "/workflows/index.md",
+    "sdk_examples": "/sdk-examples/index.md",
+    "openapi": "/references/openapi/",
+    "error_catalog": "/foundations/error-codes.md"
+  },
+  "trust": {
+    "tier": "unverified",
+    "note": "Content is derived from the Zoho Analytics API reference documents and OpenAPI specifications. No concept carries a verified entry yet."
+  },
+  "generated": {
+    "by": "process:build_okf",
+    "at": "2026-10-09T08:50:41Z"
+  }
+}

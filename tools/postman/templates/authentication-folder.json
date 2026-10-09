@@ -1,0 +1,194 @@
+{
+  "name": "🔐 Authentication",
+  "item": [
+    {
+      "name": "Generate Tokens",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.responseCode.code === 200)",
+              "{",
+              "    var response = JSON.parse(pm.responseBody);",
+              "",
+              "    pm.environment.set(\"refresh-token\", response.refresh_token);",
+              "    pm.environment.set(\"access-token\", response.access_token);",
+              "    pm.environment.set(\"expiry-time\", Date.now() + parseInt(response.expires_in));",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "client_id",
+              "value": "{{client-id}}",
+              "type": "text"
+            },
+            {
+              "key": "client_secret",
+              "value": "{{client-secret}}",
+              "type": "text"
+            },
+            {
+              "key": "redirect_uri",
+              "value": "{{redirect-uri}}",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "code",
+              "value": "<grant_token>",
+              "type": "text"
+            },
+            {
+              "key": "grant_type",
+              "value": "authorization_code",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://{{accounts-domain}}/oauth/v2/token",
+          "protocol": "https",
+          "host": [
+            "{{accounts-domain}}"
+          ],
+          "path": [
+            "oauth",
+            "v2",
+            "token"
+          ]
+        },
+        "description": "Exchanges a one-time **grant token** (authorization code) for an `access_token` and a\nlong-lived `refresh_token`.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST https://{{accounts-domain}}/oauth/v2/token` |\n| **Grant type** | `authorization_code` |\n| **Returns** | `access_token`, `refresh_token`, `expires_in`, `api_domain` |\n\nPaste your grant token into the **code** field. `redirect_uri` is disabled by default — enable\nit for a Server-based Application, leave it off for a Self Client.\n\n> The test script stores `access-token`, `refresh-token` and `expiry-time` in the active\n> environment, so no manual copying is needed.\n\n📘 [Generating tokens ↗](https://www.zoho.com/analytics/api/v2/authentication/generating-token.html)"
+      },
+      "response": []
+    },
+    {
+      "name": "Refresh Access Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200)",
+              "{",
+              "    var response = pm.response.json();",
+              " ",
+              "    pm.environment.set(\"access-token\", response.access_token);",
+              "    pm.environment.set(\"expiry-time\", Date.now() + parseInt(response.expires_in));",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "client_id",
+              "value": "{{client-id}}",
+              "type": "text"
+            },
+            {
+              "key": "client_secret",
+              "value": "{{client-secret}}",
+              "type": "text"
+            },
+            {
+              "key": "refresh_token",
+              "value": "{{refresh-token}}",
+              "type": "text"
+            },
+            {
+              "key": "grant_type",
+              "value": "refresh_token",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://{{accounts-domain}}/oauth/v2/token",
+          "protocol": "https",
+          "host": [
+            "{{accounts-domain}}"
+          ],
+          "path": [
+            "oauth",
+            "v2",
+            "token"
+          ]
+        },
+        "description": "Mints a fresh `access_token` from the stored refresh token. Access tokens expire after\n**one hour** (`expires_in: 3600`); the refresh token itself does not change.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST https://{{accounts-domain}}/oauth/v2/token` |\n| **Grant type** | `refresh_token` |\n| **Returns** | `access_token`, `expires_in` |\n\n> A user may hold at most **20 refresh tokens** per client — creating a 21st silently deletes\n> the oldest.\n\n📘 [Refreshing the access token ↗](https://www.zoho.com/analytics/api/v2/authentication/refresh-token.html)"
+      },
+      "response": []
+    },
+    {
+      "name": "Revoke Refresh Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.responseCode.code === 200)",
+              "{",
+              "    pm.environment.set(\"refresh-token\", \"\");",
+              "    pm.environment.set(\"access-token\", \"\");",
+              "    pm.environment.set(\"expiry-time\", \"\");",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "token",
+              "value": "{{refresh-token}}",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://{{accounts-domain}}/oauth/v2/token/revoke",
+          "protocol": "https",
+          "host": [
+            "{{accounts-domain}}"
+          ],
+          "path": [
+            "oauth",
+            "v2",
+            "token",
+            "revoke"
+          ]
+        },
+        "description": "Permanently invalidates a refresh token. Any access token already issued from it stops\nworking once it expires.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST https://{{accounts-domain}}/oauth/v2/token/revoke` |\n| **Body** | `token=<refresh_token>` |\n\n> Use this when a user disconnects your integration, or when a token may have leaked.\n\n📘 [Revoking a refresh token ↗](https://www.zoho.com/analytics/api/v2/authentication/revoke-token.html)"
+      },
+      "response": []
+    }
+  ],
+  "description": "# 🔐 Authentication\n\nEvery Zoho Analytics REST API v2 call is authenticated with an **OAuth 2.0 access token**.\nRun the three requests in this folder once, and the rest of the collection works — the test\nscripts write `access-token`, `refresh-token` and `expiry-time` into your active environment\nautomatically.\n\n> The collection sends `Authorization: Bearer {{access-token}}` at collection level.\n> Zoho also documents the equivalent `Authorization: Zoho-oauthtoken <token>` scheme; either\n> is accepted.\n\n### Setup, once\n\n| Step | What to do |\n| ---: | :--- |\n| 1 | Register a client in the [Zoho API Console](https://api-console.zoho.com) — *Server-based Application* for web apps, *Self Client* for server-to-server. |\n| 2 | Put `client-id`, `client-secret` and `redirect-uri` into your Postman environment. |\n| 3 | Set `accounts-domain` and `analytics-domain` to **your data centre** (see the collection overview). |\n| 4 | Generate a grant token (authorization code) and paste it into **Generate Tokens › code**. |\n\n### Requests in this section\n\n| # | Request | Purpose |\n| ---: | :--- | :--- |\n| 1 | **Generate Tokens** | Exchanges a grant token for an access token + refresh token. |\n| 2 | **Refresh Access Token** | Mints a new access token from the refresh token. Access tokens live **1 hour**. |\n| 3 | **Revoke Refresh Token** | Invalidates the refresh token and ends the session. |\n\n### Scopes\n\nRequest the union of the scopes used by the endpoints you call — each request in this\ncollection lists its scope. `ZohoAnalytics.<family>.all` covers read/create/update/delete for\none family; `ZohoAnalytics.fullaccess.all` covers everything. Prefer the narrowest set.\n\n> ⚠️ **Tokens are region bound.** A token issued by `accounts.zoho.eu` is rejected by\n> `analyticsapi.zoho.com` with error `8535`.\n\n📘 [Authentication guide ↗](https://www.zoho.com/analytics/api/v2/authentication.html)",
+  "auth": {
+    "type": "noauth"
+  }
+}

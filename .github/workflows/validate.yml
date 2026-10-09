@@ -1,0 +1,74 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  sources:
+    name: Source documents (md, zenesis-oas, samples)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Naming, completeness and integrity of every version
+        run: python3 tools/validate_api_docs.py --strict
+      - name: Every JSON document parses
+        run: |
+          shopt -s failglob
+          for f in manifest.json v*/manifest.json v*/zenesis-oas/*.json v*/zenesis-oas/common/*.json v*/zenesis-oas-samples/*.json v*/oas/*.json v*/oas/common/*.json v*/postman/*.json; do
+            python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$f"
+          done
+
+  openapi:
+    name: OpenAPI (zenesis-oas -> oas)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [v2.0]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Vendor keys have rules, unit tests, lossless round trip
+        run: make -C tools/zenesis-oas check VERSION=${{ matrix.version }}
+      - name: Published OpenAPI is in step with the Zenesis source
+        run: make -C tools/zenesis-oas compare VERSION=${{ matrix.version }}
+
+  okf:
+    name: OKF bundle
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [v2.0]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Bundle conforms to OKF v0.2 and every link resolves
+        run: python3 tools/okf/validate_okf.py ${{ matrix.version }}/okf
+      - name: Committed bundle is what the sources produce
+        run: |
+          python3 tools/okf/build_okf.py --version ${{ matrix.version }}
+          # generated.at timestamps and source mtimes change on every build; everything else must not
+          git diff --stat -I'^  at: ' -I'last_modified: ' -I'^\* \*\*Creation\*\*' -I'^## 20' --exit-code -- ${{ matrix.version }}/okf
+
+  postman:
+    name: Postman collection
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [v2.0]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Committed collection is what the sources produce
+        run: python3 tools/postman/build_postman.py --version ${{ matrix.version }} --check

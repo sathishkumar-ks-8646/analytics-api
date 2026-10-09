@@ -1,0 +1,52 @@
+{
+  "repository": "analytics-api",
+  "title": "Zoho Analytics REST API - documents, specifications and developer tools",
+  "description": "Version index. One entry per API version; each entry points at the directory that holds everything for that version - the authored source documents (md, zenesis-oas, zenesis-oas-samples) and the artefacts built from them (oas, okf, postman) - and at its manifest, which lists the domains and API groups inside it.",
+  "raw_base": "https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-api/main/",
+  "latest": "v2.0",
+  "status_vocabulary": {
+    "draft": "Being authored. Consumers should not build from it yet.",
+    "current": "The version the public documentation describes. Exactly one version is current.",
+    "deprecated": "Still correct, but superseded by a newer version named in `superseded_by`."
+  },
+  "layout": {
+    "sources": {
+      "md": "Narrative reference. One folder per domain, one Markdown file per API group.",
+      "zenesis-oas": "OpenAPI 3.1 with x-zenesis-* extensions, one file per domain, plus common/zoho-analytics-api-common.json.",
+      "zenesis-oas-samples": "SDK code snippets keyed by path and method, one file per domain."
+    },
+    "generated": {
+      "oas": "Vendor-neutral OpenAPI 3.1, built by tools/zenesis-oas (make to-analytics). oas/common/ is maintained by hand.",
+      "okf": "Open Knowledge Format v0.2 bundle, built by tools/okf/build_okf.py.",
+      "postman": "Postman collection and environment, built by tools/postman/build_postman.py."
+    }
+  },
+  "versions": [
+    {
+      "version": "v2.0",
+      "api_version": "v2",
+      "status": "current",
+      "path": "v2.0",
+      "manifest": "v2.0/manifest.json",
+      "superseded_by": null,
+      "api_reference": "https://www.zoho.com/analytics/api/v2/",
+      "sources": {
+        "md": "v2.0/md",
+        "zenesis_oas": "v2.0/zenesis-oas",
+        "zenesis_oas_common": "v2.0/zenesis-oas/common/zoho-analytics-api-common.json",
+        "zenesis_oas_samples": "v2.0/zenesis-oas-samples"
+      },
+      "generated": {
+        "oas": "v2.0/oas",
+        "oas_common": "v2.0/oas/common/zoho-analytics-api-common.json",
+        "okf": "v2.0/okf",
+        "okf_manifest": "v2.0/okf/manifest.json",
+        "okf_entry": "v2.0/okf/llms.txt",
+        "okf_endpoint_catalog_json": "v2.0/okf/references/endpoint-catalog.json",
+        "postman_collection": "v2.0/postman/Zoho Analytics REST APIs.postman_collection.json",
+        "postman_environment": "v2.0/postman/Zoho Analytics REST Variables.postman_environment.json"
+      }
+    }
+  ],
+  "note": "A new API version is added as a new entry with its own top-level directory, copied from the layout of the current one. Existing entries and paths never change; `latest` moves to the new version and the superseded entry becomes `deprecated`."
+}

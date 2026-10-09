@@ -1,0 +1,2940 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Zoho Analytics API",
+    "version": "v2",
+    "description": "API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, and folder management."
+  },
+  "servers": [
+    {
+      "url": "https://analyticsapi.zoho.com"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Workspace Operations",
+      "description": "APIs that manage the lifecycle and the metadata of workspaces, covering the creation, copying, renaming, deletion and inspection of a workspace. They also provide the workspace access key used for cross-organization operations, list the workspaces accessible to a user, and export the structure of a workspace as a reusable template."
+    },
+    {
+      "name": "Workspace Preferences",
+      "description": "APIs that manage the workspace preferences of a user, covering the default workspace that opens on login and the favourite workspaces starred for quick access. Both the preferences are stored per user and per organization, and have no effect on the preferences of any other user."
+    },
+    {
+      "name": "Domain & White Label",
+      "description": "APIs that control whether a workspace is reachable through the White Label or Client Portal domain of the organization. A workspace is disabled for domain access when it is created and has to be enabled explicitly before the portal users can access it."
+    },
+    {
+      "name": "Workspace Folders",
+      "description": "APIs that manage the folders of a workspace, covering the creation, renaming, deletion, nesting and reordering of folders, the movement of views between folders, and the selection of the default folder. Folders provide a hierarchical organization layer within a workspace and support exactly one level of nesting."
+    }
+  ],
+  "paths": {
+    "/restapi/v2/workspaces": {
+      "get": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Get All Workspace List",
+        "description": "Returns all the workspaces accessible to the requesting user, covering both the workspaces they own or administer and the workspaces shared with them. The response separates the two into the `ownedWorkspaces` and the `sharedWorkspaces` arrays.\n\nThis API is scoped to the user and not to the organization. It returns only the workspaces that the requesting user has some level of access to. Account Admins see all the workspaces of their organization in the owned list.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope. |",
+        "operationId": "getAllWorkspaces",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id-optional"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workspace list returned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllWorkspacesResponse"
+                },
+                "examples": {
+                  "ownedOnly": {
+                    "description": "An Account Admin who owns all the workspaces of the organization and has none shared from other organizations.",
+                    "summary": "Owned only",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get all workspaces",
+                      "data": {
+                        "ownedWorkspaces": [
+                          {
+                            "workspaceId": "466206000000071000",
+                            "workspaceName": "Sales Analytics",
+                            "workspaceDesc": "Sales reporting workspace",
+                            "orgId": "700000123456",
+                            "createdTime": "1619175390377",
+                            "createdBy": "admin@acme.com",
+                            "isDefault": false
+                          },
+                          {
+                            "workspaceId": "466206000000080000",
+                            "workspaceName": "HR Analytics",
+                            "workspaceDesc": "",
+                            "orgId": "700000123456",
+                            "createdTime": "1622097563854",
+                            "createdBy": "admin@acme.com",
+                            "isDefault": false
+                          }
+                        ],
+                        "sharedWorkspaces": []
+                      }
+                    }
+                  },
+                  "ownedAndShared": {
+                    "description": "A user who owns a workspace in their own organization and has a workspace from another organization shared with them.",
+                    "summary": "Owned and shared",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get all workspaces",
+                      "data": {
+                        "ownedWorkspaces": [
+                          {
+                            "workspaceId": "138022000000002015",
+                            "workspaceName": "My Personal Workspace",
+                            "workspaceDesc": "",
+                            "orgId": "700000999888",
+                            "createdTime": "1606987644675",
+                            "createdBy": "shareduser@example.com",
+                            "isDefault": false
+                          }
+                        ],
+                        "sharedWorkspaces": [
+                          {
+                            "workspaceId": "466206000000071000",
+                            "workspaceName": "Sales Analytics",
+                            "workspaceDesc": "Sales reporting workspace",
+                            "orgId": "700000123456",
+                            "createdTime": "1619175390377",
+                            "createdBy": "admin@acme.com",
+                            "isDefault": false
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Create Workspace",
+        "description": "Creates a new empty workspace in the specified organization. The workspace is created with no tables, views or users, and the content has to be added using the subsequent APIs. The requesting user should be an Account Admin or an Organization Admin of the target organization.\n\n**Notes**\n\n> Note:\n>\n> - The **workspaceName** should be unique within the organization. Creating a workspace with a name that is already in use fails with error code 7111.\n> - The **workspaceName** can hold a maximum of 50 characters and the **workspaceDesc** can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.\n> - When **workspaceDesc** is omitted, the description is stored as an empty string. It can be updated later using the Rename Workspace API.\n> - The response data holds only the **workspaceId**. Use the Get Workspace Info or the Get All Workspace List API to retrieve the complete workspace record.\n> - The workspace secret key is not generated at creation time. Use the Get Workspace Secret Key API when the key is needed for a cross-organization copy.\n> - The number of workspaces that can be created depends on the subscription plan of the organization. Reaching the limit fails with error code 7951.\n> - Organization Admins are allowed to create workspaces within their organization.\n> - The workspace is created with no tables or views. The content has to be added using the subsequent APIs.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | The user is not an Account Admin or an Organization Admin of the target organization. | Ensure that the requesting user has Account Admin or Organization Admin privileges in the target organization. |\n| 7951 | The organization has reached its workspace creation limit based on the current subscription plan. | Upgrade the subscription plan or delete the unused workspaces before creating a new workspace. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.modeling.create scope. |",
+        "operationId": "createWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.create"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/CreateWorkspaceConfig"
+                  }
+                },
+                "required": [
+                  "CONFIG"
+                ]
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "nameOnly": {
+                  "description": "Creates a workspace with a name alone. The description is stored as an empty string.",
+                  "summary": "Name only",
+                  "value": {
+                    "CONFIG": {
+                      "workspaceName": "Sales Analytics"
+                    }
+                  }
+                },
+                "withDescription": {
+                  "description": "Creates a workspace with both a name and a description.",
+                  "summary": "With description",
+                  "value": {
+                    "CONFIG": {
+                      "workspaceName": "HR Analytics",
+                      "workspaceDesc": "Workspace for HR team dashboards and headcount reports"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workspace created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWorkspaceResponse"
+                },
+                "examples": {
+                  "workspaceCreated": {
+                    "description": "The ID of the newly created workspace is returned in the data object.",
+                    "summary": "Workspace created",
+                    "value": {
+                      "status": "success",
+                      "summary": "Create workspace",
+                      "data": {
+                        "workspaceId": "466206000000295001"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/owned": {
+      "get": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Get Owned Workspace List",
+        "description": "Returns all the workspaces present in the organization of the requesting user, irrespective of how they are shared. This is an admin scoped API and can be invoked only by the Account Admin of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | The user is not the Account Admin. Organization Admins and Workspace Admins cannot invoke this API. | Invoke this API using the credentials of the Account Admin of the organization. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope. |",
+        "operationId": "getOwnedWorkspaces",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id-optional"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workspace list returned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOwnedWorkspacesResponse"
+                },
+                "examples": {
+                  "multipleWorkspaces": {
+                    "description": "The organization holds more than one workspace.",
+                    "summary": "Multiple workspaces",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get owned workspaces",
+                      "data": {
+                        "workspaces": [
+                          {
+                            "workspaceId": "466206000000071000",
+                            "workspaceName": "Sales Analytics",
+                            "workspaceDesc": "Sales reporting workspace",
+                            "orgId": "700000123456",
+                            "createdTime": "1619175390377",
+                            "createdBy": "admin@acme.com",
+                            "isDefault": false
+                          },
+                          {
+                            "workspaceId": "466206000000080000",
+                            "workspaceName": "HR Analytics",
+                            "workspaceDesc": "",
+                            "orgId": "700000123456",
+                            "createdTime": "1622097563854",
+                            "createdBy": "admin@acme.com",
+                            "isDefault": false
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "noWorkspaces": {
+                    "description": "The organization holds no workspace and an empty array is returned.",
+                    "summary": "No workspaces",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get owned workspaces",
+                      "data": {
+                        "workspaces": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/shared": {
+      "get": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Get Shared Workspace List",
+        "description": "Returns all the workspaces that have been shared with the requesting user from other organizations. The workspaces present in the organization of the requesting user are not included. Use the Get All Workspace List API to retrieve the owned and the shared workspaces together.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope. |",
+        "operationId": "getSharedWorkspaces",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id-optional"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workspace list returned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSharedWorkspacesResponse"
+                },
+                "examples": {
+                  "sharedFromOtherOrg": {
+                    "description": "A workspace from another organization is shared with the requesting user.",
+                    "summary": "Shared workspaces",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get shared workspaces",
+                      "data": {
+                        "workspaces": [
+                          {
+                            "workspaceId": "466206000000071000",
+                            "workspaceName": "Sales Analytics",
+                            "workspaceDesc": "Sales reporting workspace",
+                            "orgId": "700000123456",
+                            "createdTime": "1619175390377",
+                            "createdBy": "admin@acme.com",
+                            "isDefault": false
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "noSharedWorkspaces": {
+                    "description": "No workspace is shared with the requesting user and an empty array is returned.",
+                    "summary": "No shared workspaces",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get shared workspaces",
+                      "data": {
+                        "workspaces": []
+                      }
+                    }
+                  },
+                  "clientPortalWorkspace": {
+                    "description": "A Client Portal or white label user retrieving the workspace of their portal.",
+                    "summary": "Client Portal user",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get shared workspaces",
+                      "data": {
+                        "workspaces": [
+                          {
+                            "workspaceId": "38190000004180410",
+                            "workspaceName": "Client Analytics Portal",
+                            "workspaceDesc": "",
+                            "orgId": "57058019",
+                            "createdTime": "1697525603846",
+                            "createdBy": "admin@brandco.com",
+                            "isDefault": false
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}": {
+      "get": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Get Workspace Info",
+        "description": "Returns the metadata of the specified workspace. The requesting user should have at least some level of access to the workspace, either as a Workspace Admin, a shared user, a group member, or a user with at least Read permission on a view within the workspace.\n\nThe optional `withUserRoleInfo` key enriches the response with the role details of the requesting user within the workspace.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7301 | The user does not have any access to the specified workspace. The user should be a Workspace Admin or should have at least one view of this workspace shared with them. | Verify that the user has been added to the workspace or has a view of the workspace shared with them. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope. |",
+        "operationId": "getWorkspaceDetails",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id-optional"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "name": "CONFIG",
+            "in": "query",
+            "required": false,
+            "description": "JSONObject that controls the details returned for the workspace. As this is a GET request, the value must be stringified and URL encoded before it is sent.",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "$ref": "#/components/schemas/GetWorkspaceInfoConfig"
+            },
+            "examples": {
+              "basicInfo": {
+                "description": "Retrieves the workspace metadata without the role details of the requesting user.",
+                "summary": "Basic info",
+                "value": {
+                  "withUserRoleInfo": false
+                }
+              },
+              "withRoleInfo": {
+                "description": "Retrieves the workspace metadata along with the userRoleInfo object of the requesting user.",
+                "summary": "With role info",
+                "value": {
+                  "withUserRoleInfo": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workspace details returned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkspaceDetailsResponse"
+                },
+                "examples": {
+                  "basicInfo": {
+                    "description": "The workspace metadata alone is returned, as withUserRoleInfo is not set.",
+                    "summary": "Basic info",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace details",
+                      "data": {
+                        "workspaces": {
+                          "workspaceId": "466206000000071000",
+                          "workspaceName": "Sales Analytics",
+                          "workspaceDesc": "Sales reporting workspace for all regions",
+                          "createdTime": "1619175390377",
+                          "createdBy": "admin@acme.com",
+                          "orgId": "700000123456"
+                        }
+                      }
+                    }
+                  },
+                  "accountAdminRole": {
+                    "description": "The requesting user is an Account Admin, so roleId is 0 and isCustomRoleUser is false.",
+                    "summary": "Account Admin role",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace details",
+                      "data": {
+                        "workspaces": {
+                          "workspaceId": "466206000000071000",
+                          "workspaceName": "Sales Analytics",
+                          "workspaceDesc": "Sales reporting workspace for all regions",
+                          "createdTime": "1619175390377",
+                          "createdBy": "admin@acme.com",
+                          "orgId": "700000123456",
+                          "userRoleInfo": {
+                            "isCustomRoleUser": false,
+                            "roleId": 0,
+                            "roleName": "Account Admin"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "customRoleUser": {
+                    "description": "The requesting user holds a custom role, so isCustomRoleUser is true and roleId holds the custom role ID.",
+                    "summary": "Custom role",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace details",
+                      "data": {
+                        "workspaces": {
+                          "workspaceId": "466206000000071000",
+                          "workspaceName": "Sales Analytics",
+                          "workspaceDesc": "Sales reporting workspace for all regions",
+                          "createdTime": "1619175390377",
+                          "createdBy": "admin@acme.com",
+                          "orgId": "700000123456",
+                          "userRoleInfo": {
+                            "isCustomRoleUser": true,
+                            "roleId": 466206000000090001,
+                            "roleName": "AnalystRole"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Copy Workspace",
+        "description": "Creates a copy of an existing workspace, either within the same organization or in a different organization. The copy can optionally include all the table data and can retain the import source connections of the source workspace.\n\nWhen the destination organization differs from the organization that owns the source workspace, the secret key of the source workspace has to be provided as `workspaceKey` to authorize the copy. The key can be obtained using the Get Workspace Secret Key API. The requesting user should be an Account Admin or an Organization Admin of the destination organization.\n\n> **Rate limit:** Only one copy operation is allowed to run at a time per organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Source workspace not found. | Verify the workspace-id of the source workspace given in the request URL. |\n| 7301 | The user is not an Account Admin or an Organization Admin of the destination organization. | Ensure that the requesting user is an admin of the destination organization and not of the source organization alone. |\n| 7951 | The destination organization has reached its workspace limit. | Upgrade the subscription plan of the destination organization or remove the unused workspaces. |\n| 8024 | A cross-organization copy was attempted without a valid workspaceKey, or the key provided does not match the secret key of the source workspace. | Obtain the correct workspaceKey of the source workspace using the Get Workspace Secret Key API and retry. Omit workspaceKey for copies within the same organization. |\n| 8058 | The organization ID provided in the ZANALYTICS-DEST-ORGID header does not exist. | Provide a valid, existing organization ID in the ZANALYTICS-DEST-ORGID header. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.modeling.create scope. |",
+        "operationId": "copyWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.create"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/dest-org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/CopyWorkspaceConfig"
+                  }
+                },
+                "required": [
+                  "CONFIG"
+                ]
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "sameOrgStructureOnly": {
+                  "description": "Copies the workspace within the same organization without the table data. The workspaceKey is not required.",
+                  "summary": "Structure only",
+                  "value": {
+                    "CONFIG": {
+                      "newWorkspaceName": "Sales Analytics - Copy",
+                      "newWorkspaceDesc": "Backup copy of Sales Analytics"
+                    }
+                  }
+                },
+                "sameOrgWithData": {
+                  "description": "Copies the workspace within the same organization along with all the table data.",
+                  "summary": "With data",
+                  "value": {
+                    "CONFIG": {
+                      "newWorkspaceName": "Sales Analytics - Full Backup",
+                      "copyWithData": true
+                    }
+                  }
+                },
+                "crossOrgAccountAdmin": {
+                  "description": "Copies the workspace into another organization as an Account Admin. ZANALYTICS-ORGID holds the destination organization ID and the workspaceKey of the source workspace authorizes the copy.",
+                  "summary": "Cross-org copy",
+                  "value": {
+                    "CONFIG": {
+                      "newWorkspaceName": "Sales Analytics (Migrated)",
+                      "workspaceKey": "02aee9b66f299843c961d3712fe09684",
+                      "copyWithData": true,
+                      "copyWithImportSource": true
+                    }
+                  }
+                },
+                "crossOrgDestHeader": {
+                  "description": "Copies the workspace into another organization as an Organization Admin. ZANALYTICS-ORGID holds the source organization ID and ZANALYTICS-DEST-ORGID holds the destination organization ID.",
+                  "summary": "Org Admin copy",
+                  "value": {
+                    "CONFIG": {
+                      "newWorkspaceName": "Sales Analytics (Org B Copy)",
+                      "workspaceKey": "02aee9b66f299843c961d3712fe09684"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workspace copied successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CopyWorkspaceResponse"
+                },
+                "examples": {
+                  "workspaceCopied": {
+                    "description": "The ID of the newly created copy is returned in the data object.",
+                    "summary": "Workspace copied",
+                    "value": {
+                      "status": "success",
+                      "summary": "Copy workspace",
+                      "data": {
+                        "workspaceId": "466206000000296001"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Rename Workspace",
+        "description": "Updates the name and the description of an existing workspace. Both the values are replaced atomically. When `workspaceDesc` is omitted, the existing description is reset to an empty string and the previous value is not preserved. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.\n\n**Notes**\n\n> Note:\n>\n> - Rename Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - When **workspaceDesc** is omitted, the existing description of the workspace is permanently reset to an empty string. Always pass the current description, read using the Get Workspace Info API, when only the name has to be changed.\n> - Renaming the workspace to its existing name succeeds without an error.\n> - The **workspaceName** should be unique within the organization. Renaming to a name that is already in use fails with error code 7111.\n> - The **workspaceName** can hold a maximum of 50 characters and the **workspaceDesc** can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.\n> - The name and the description are replaced atomically. Both values in the request overwrite the stored values.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7111 | The workspace name is already used by another workspace in the organization. | Choose a workspace name that is not already in use within the organization. |\n| 7301 | The user is not an Account Admin or an Organization Admin. | Ensure that the requesting user has Account Admin or Organization Admin privileges in the organization. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.modeling.update scope. |",
+        "operationId": "renameWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/RenameWorkspaceConfig"
+                  }
+                },
+                "required": [
+                  "CONFIG"
+                ]
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "renameOnly": {
+                  "description": "Changes the workspace name alone. As workspaceDesc is omitted, the existing description is cleared.",
+                  "summary": "Rename only",
+                  "value": {
+                    "CONFIG": {
+                      "workspaceName": "Global Sales Analytics"
+                    }
+                  }
+                },
+                "renameAndDescribe": {
+                  "description": "Changes the workspace name and sets a new description in the same request.",
+                  "summary": "Rename and describe",
+                  "value": {
+                    "CONFIG": {
+                      "workspaceName": "Global Sales Analytics",
+                      "workspaceDesc": "Consolidated sales reporting for all regions"
+                    }
+                  }
+                },
+                "descriptionOnly": {
+                  "description": "Updates the description alone by passing the existing workspace name unchanged.",
+                  "summary": "Description only",
+                  "value": {
+                    "CONFIG": {
+                      "workspaceName": "Sales Analytics",
+                      "workspaceDesc": "Updated: Q3 2025 consolidated sales reporting"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Workspace updated successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Delete Workspace",
+        "description": "Permanently deletes the specified workspace along with all its contents, including the tables, views, dashboards, formulas, import configurations and sharing settings. This operation is irreversible. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.\n\n**Notes**\n\n> Note:\n>\n> - Delete Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - The deletion is permanent. There is no trash or recycle mechanism for workspaces, and the workspace along with all its views, data, import configurations and sharing settings cannot be recovered.\n> - All the sharing configurations of the workspace are removed. Users who had access to the views in this workspace lose that access at the moment of deletion.\n> - The workspace level admin role of the Workspace Admins is removed. Their organization membership and their access to the other workspaces are not affected.\n> - Any scheduled or in-progress data import job in the workspace is cancelled.\n> - This API accepts an optional CONFIG parameter. No CONFIG key is required for the standard use of this API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7301 | The user is not an Account Admin or an Organization Admin. | Ensure that the requesting user has Account Admin or Organization Admin privileges in the organization. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.modeling.delete scope. |",
+        "operationId": "deleteWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.delete"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Workspace deleted successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/secretkey": {
+      "get": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Get Workspace Secret Key",
+        "description": "Returns the secret key of the specified workspace. This key is passed as the `workspaceKey` parameter while performing a cross-organization Copy Workspace operation, and it authorizes the copying of the workspace into a different organization.\n\nThe key can optionally be regenerated, which permanently invalidates the previous key. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.\n\n**Notes**\n\n> Note:\n>\n> - Setting **regenerateKey** to false, which is the default, is safe to invoke repeatedly. The existing key is returned each time, and a key is generated on the first call when none exists.\n> - Setting **regenerateKey** to true invalidates the previous key immediately. A cross-organization copy attempted with the old key after regeneration fails with error code 8024. A copy operation that had already started before the regeneration is not affected, as the key is validated only at the start of the copy.\n> - The workspace secret key is returned only by this API. It is not present in the response of the Get Workspace Info, the Get All Workspace List or any other API.\n> - Only the Account Admins and the Organization Admins of the organization that owns the workspace can retrieve the key.\n> - As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7301 | The user is not an Account Admin or an Organization Admin. | Ensure that the requesting user has Account Admin or Organization Admin privileges in the organization. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope. |",
+        "operationId": "getWorkspaceSecretKey",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "name": "CONFIG",
+            "in": "query",
+            "required": false,
+            "description": "JSONObject that controls whether the workspace secret key has to be regenerated. As this is a GET request, the value must be stringified and URL encoded before it is sent.",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "$ref": "#/components/schemas/GetWorkspaceSecretKeyConfig"
+            },
+            "examples": {
+              "existingKey": {
+                "description": "Retrieves the existing secret key of the workspace without modifying it.",
+                "summary": "Existing key",
+                "value": {
+                  "regenerateKey": false
+                }
+              },
+              "regenerateKey": {
+                "description": "Generates a new secret key, stores it against the workspace and returns it. The previous key is invalidated.",
+                "summary": "Regenerate key",
+                "value": {
+                  "regenerateKey": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Secret key returned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkspaceSecretKeyResponse"
+                },
+                "examples": {
+                  "secretKeyReturned": {
+                    "description": "The current secret key of the workspace is returned in the data object.",
+                    "summary": "Secret key",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace secretkey",
+                      "data": {
+                        "workspaceKey": "02aee9b66f299843c961d3712fe09684"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/template/data": {
+      "get": {
+        "tags": [
+          "Workspace Operations"
+        ],
+        "summary": "Export as Template",
+        "description": "Exports the selected views of the specified workspace as a reusable template file in the `.atpt` (Zoho Analytics Template) format. The response is a binary file attachment and not a JSON payload, and it can be imported into another workspace to recreate the selected views along with their structural dependencies.\n\nThe template holds the schema definitions of the selected tables and views, the formula and lookup columns, the calculated fields and the view design configurations. The data rows of the source tables are not exported.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7104 | One or more of the specified view IDs do not exist. | Verify that all the values in viewIds are valid using the Get View List API. |\n| 7301 | The user is not a Workspace Admin, an Account Admin or an Organization Admin. | Ensure that the requesting user has at least Workspace Admin access to the workspace. |\n| 7319 | One or more of the specified view IDs do not belong to the specified workspace. | Ensure that all the values in viewIds belong to the workspace identified by the workspace-id in the request URL. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.read scope. |",
+        "operationId": "exportAsTemplate",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "name": "CONFIG",
+            "in": "query",
+            "required": true,
+            "description": "JSONObject that holds the IDs of the views to be exported and the name of the template file. As this is a GET request, the value must be stringified and URL encoded before it is sent.",
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "$ref": "#/components/schemas/ExportTemplateConfig"
+            },
+            "examples": {
+              "selectedViews": {
+                "description": "Exports two specific views as a template using the system generated file name.",
+                "summary": "Selected views",
+                "value": {
+                  "viewIds": [
+                    466206000000085001,
+                    466206000000085003
+                  ]
+                }
+              },
+              "customFileName": {
+                "description": "Exports three views as a template and names the exported file explicitly.",
+                "summary": "Custom file name",
+                "value": {
+                  "viewIds": [
+                    466206000000085001,
+                    466206000000085003,
+                    466206000000085005
+                  ],
+                  "fileName": "SalesAnalytics_Q3_Template"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Binary .atpt template file returned as an attachment.",
+            "headers": {
+              "Content-Disposition": {
+                "description": "Holds the name of the exported template file, for example attachment; filename=\"SalesAnalytics_Q3_Template.atpt\".",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "The exported template as a binary .atpt file."
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/default": {
+      "post": {
+        "tags": [
+          "Workspace Preferences"
+        ],
+        "summary": "Add Default Workspace",
+        "description": "Marks the specified workspace as the default workspace of the requesting user. The default workspace is the workspace that opens automatically when the user logs in to Zoho Analytics.\n\nA user can hold only one default workspace at a time. When a different workspace is already set as the default, it is replaced silently. Invoking this API on a workspace that is already the default succeeds without error.\n\n**Notes**\n\n> Note:\n>\n> - Add Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - A user can hold only one default workspace at a time. When the user already holds a different workspace as the default, the previous default is replaced silently and no error is raised.\n> - This API is idempotent. Invoking it on a workspace that is already the default workspace of the user succeeds without error and makes no change.\n> - The requesting user should have at least one view of the workspace shared with them. A user with no access to any view of the workspace cannot mark it as the default workspace and the request fails with error code 7301.\n> - The default preference continues to be stored even when the user loses access to the workspace later. However, the workspace is not presented as accessible until the access is restored.\n> - After this API is invoked, the workspace is returned with isDefault as true in the response of the Get All Workspace List and the Get Shared Workspace List APIs. Use those APIs to verify the change.\n> - The preferences are stored per user and per organization. Marking a workspace as the default for one user has no effect on the preferences of any other user.\n> - Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7301 | The user has no access to the specified workspace. No view of this workspace has been shared with them and they are not a Workspace Admin. | Ensure that the user is a member of the workspace or has at least one view of the workspace shared with them before marking it as the default workspace. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope. |",
+        "operationId": "addDefaultWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Workspace marked as the default workspace successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workspace Preferences"
+        ],
+        "summary": "Remove Default Workspace",
+        "description": "Removes the default workspace designation from the specified workspace for the requesting user. After this operation, the user holds no default workspace until a new one is set.\n\nUnlike the Add Default Workspace API, this API is not idempotent. When the specified workspace is not the current default workspace of the user, the request fails with error code 7415. Verify the current default using the Get All Workspace List API, which returns `isDefault` as true for the current default, before invoking this API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7301 | The user has no access to the specified workspace. | Ensure that the user is a member of the workspace or has at least one view of the workspace shared with them. |\n| 7415 | The specified workspace is not the current default workspace of the requesting user. This API does not succeed silently for a workspace that is not the default. | Use the Get All Workspace List API to identify the workspace that holds isDefault as true, and invoke this API with that workspace ID. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope. |",
+        "operationId": "removeDefaultWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Default workspace designation removed successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/favorite": {
+      "post": {
+        "tags": [
+          "Workspace Preferences"
+        ],
+        "summary": "Add Favourite Workspace",
+        "description": "Adds the specified workspace to the list of favourite workspaces of the requesting user. Favourite workspaces are surfaced at the top of the workspace listings for quick navigation.\n\nA user can mark any number of workspaces as favourite, as there is no exclusivity constraint. When the workspace is already present in the favourites, the request succeeds silently without error.\n\n**Notes**\n\n> Note:\n>\n> - Add Favourite Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is idempotent. When the workspace is already present in the favourites of the user, the request succeeds without error and no duplicate entry is created.\n> - There is no limit on the number of workspaces a user can mark as favourite. Unlike the default workspace, the favourite preference carries no exclusivity constraint.\n> - The requesting user should have at least one view of the workspace shared with them. Access is checked at the workspace level and no permission beyond basic read access is required. A user with no access fails with error code 7301.\n> - The favourite preference is not exposed as a distinct field in the response of the standard workspace list APIs.\n> - The preferences are stored per user and per organization. Adding a workspace to the favourites of one user has no effect on the preferences of any other user.\n> - Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7301 | The user has no access to the specified workspace. | Ensure that the user is a member of the workspace or has at least one view of the workspace shared with them. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope. |",
+        "operationId": "addFavoriteWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Workspace added to the favourites successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workspace Preferences"
+        ],
+        "summary": "Remove Favourite Workspace",
+        "description": "Removes the specified workspace from the list of favourite workspaces of the requesting user.\n\nThis API is idempotent. When the workspace is not present in the favourites of the user, the request succeeds silently without error. This differs from the Remove Default Workspace API, which fails with error code 7415 in the equivalent situation.\n\n**Notes**\n\n> Note:\n>\n> - Remove Favourite Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is idempotent. When the workspace is not present in the favourites of the user, the request succeeds silently without error.\n> - This behaviour differs from the Remove Default Workspace API, which fails with error code 7415 when the workspace is not the current default. This is the key behavioural difference between the two remove operations.\n> - The requesting user should have at least one view of the workspace shared with them, failing which the request fails with error code 7301.\n> - The preferences are stored per user and per organization. Removing a workspace from the favourites of one user has no effect on the preferences of any other user.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7301 | The user has no access to the specified workspace. | Ensure that the user is a member of the workspace or has at least one view of the workspace shared with them. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope. |",
+        "operationId": "removeFavoriteWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Workspace removed from the favourites successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/wlaccess": {
+      "post": {
+        "tags": [
+          "Domain & White Label"
+        ],
+        "summary": "Enable Workspace for Domain Access",
+        "description": "Enables the specified workspace for access through the White Label or Client Portal domain of the organization. Once enabled, the workspace becomes visible and accessible to the users who log in through the configured custom domain URL, and the views shared with the portal users appear under that domain.\n\nThe portal domain is resolved automatically from the White Label configuration of the Account Admin of the workspace, so no domain name parameter is required. Invoking this API on a workspace that is already enabled for domain access fails with error code 12049.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7301 | The requesting user is not an Account Admin or an Organization Admin of the organization that owns the workspace, or the Account Admin of the workspace does not have a White Label or Client Portal domain configured. | Ensure that the requesting user is an admin of the organization and that the organization holds an active White Label domain setup. |\n| 12049 | The workspace is already enabled for White Label domain access. Enabling an already enabled workspace is not idempotent. | Verify the current domain access state before invoking this API. Use the Disable Workspace for Domain Access API first when the workspace has to be enabled again, such as after a domain reconfiguration. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope. |",
+        "operationId": "enableDomainWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Workspace enabled for domain access successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Domain & White Label"
+        ],
+        "summary": "Disable Workspace for Domain Access",
+        "description": "Removes the specified workspace from the White Label or Client Portal domain of the organization. Once disabled, the workspace is no longer accessible to the users who log in through the custom portal domain URL, and the users who had access through the portal lose it immediately.\n\nDisabling gates only the access through the portal domain. It does not remove any view level sharing or user membership, and the workspace remains fully accessible through the standard Zoho Analytics URL for the non-portal users. Invoking this API on a workspace that is not currently enabled for domain access fails with error code 12050.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify the workspace-id given in the request URL. |\n| 7301 | The requesting user is not an Account Admin or an Organization Admin of the organization that owns the workspace, or the Account Admin of the workspace does not have a White Label or Client Portal domain configured. | Ensure that the requesting user is an admin of the organization and that the organization holds an active White Label domain setup. |\n| 12050 | The workspace is not currently enabled for White Label domain access. Disabling an already disabled workspace is not idempotent. | Verify the current domain access state before invoking this API. Invoke this API only on a workspace that was enabled using the Enable Workspace for Domain Access API. |\n| 8535 | The OAuth token is invalid or has expired. | Provide a valid OAuth token generated with the ZohoAnalytics.metadata.update scope. |",
+        "operationId": "disableDomainWorkspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Workspace disabled for domain access successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/folders": {
+      "get": {
+        "tags": [
+          "Workspace Folders"
+        ],
+        "summary": "Get Folder List",
+        "description": "Returns all the folders present in the specified workspace, along with their names, descriptions, display order, default status and parent folder references.\n\nWorkspace Admins receive every folder of the workspace. Shared users and group members receive a filtered list holding only the folders that contain at least one view they have access to.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | The user does not have permission to perform this operation. | Ensure that the user is a Workspace Admin of the workspace, or has at least Read access to one or more views in the workspace. |",
+        "operationId": "getFolders",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder list returned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFoldersResponse"
+                },
+                "examples": {
+                  "nestedFolders": {
+                    "description": "A Workspace Admin retrieving a workspace that holds the default folder along with two root level folders and their sub-folders.",
+                    "summary": "Nested folders",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get folders",
+                      "data": {
+                        "folders": [
+                          {
+                            "folderId": "7617000000508002",
+                            "folderName": "Tables & Reports",
+                            "folderDesc": "Default Folder",
+                            "folderIndex": -1,
+                            "isDefault": true,
+                            "parentFolderId": "-1"
+                          },
+                          {
+                            "folderId": "7617000071955001",
+                            "folderName": "Parent folder 1",
+                            "folderDesc": "",
+                            "folderIndex": 0,
+                            "isDefault": false,
+                            "parentFolderId": "-1"
+                          },
+                          {
+                            "folderId": "7617000071955003",
+                            "folderName": "Sub folder 1",
+                            "folderDesc": "",
+                            "folderIndex": 2,
+                            "isDefault": false,
+                            "parentFolderId": "7617000071955001"
+                          },
+                          {
+                            "folderId": "7617000071955002",
+                            "folderName": "Parent folder 2",
+                            "folderDesc": "",
+                            "folderIndex": 1,
+                            "isDefault": false,
+                            "parentFolderId": "-1"
+                          },
+                          {
+                            "folderId": "7617000071955004",
+                            "folderName": "Sub folder 2",
+                            "folderDesc": "",
+                            "folderIndex": 2,
+                            "isDefault": false,
+                            "parentFolderId": "7617000071955002"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "filteredForSharedUser": {
+                    "description": "A shared user retrieving the same workspace. Only the folders holding a view accessible to them are returned, along with the parent of the accessible sub-folder.",
+                    "summary": "Filtered list",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get folders",
+                      "data": {
+                        "folders": [
+                          {
+                            "folderId": "137687000000471834",
+                            "folderName": "Tables & Reports",
+                            "folderDesc": "Default Folder",
+                            "folderIndex": -1,
+                            "isDefault": true,
+                            "parentFolderId": "-1"
+                          },
+                          {
+                            "folderId": "137687000097308304",
+                            "folderName": "Parent folder 1",
+                            "folderDesc": "",
+                            "folderIndex": 0,
+                            "isDefault": false,
+                            "parentFolderId": "-1"
+                          },
+                          {
+                            "folderId": "137687000097308305",
+                            "folderName": "Sub folder 1",
+                            "folderDesc": "",
+                            "folderIndex": 2,
+                            "isDefault": false,
+                            "parentFolderId": "137687000097308304"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "defaultFolderOnly": {
+                    "description": "A workspace that holds no folder other than the default folder created along with it.",
+                    "summary": "Default folder only",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get folders",
+                      "data": {
+                        "folders": [
+                          {
+                            "folderId": "13193000000302867",
+                            "folderName": "Tables & Reports",
+                            "folderDesc": "",
+                            "folderIndex": -1,
+                            "isDefault": true,
+                            "parentFolderId": "-1"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Workspace Folders"
+        ],
+        "summary": "Create Folder",
+        "description": "Creates a new folder in the specified workspace. The folder can optionally be created as a sub-folder of an existing root level folder, and can be set as the default folder of the workspace at the time of creation.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7140 | A folder with the same name already exists in the workspace. | Provide a folder name that is not already in use within the workspace. |\n| 7144 | The specified parentFolderId does not exist. | Verify the parentFolderId value using the Get Folder List API. |\n| 7301 | The user does not have permission to perform this operation. | Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace. |\n| 7414 | The folder name cannot be empty. | Provide a non-empty value for folderName. |\n| 7496 | The maximum sub-folder nesting depth has been exceeded. | Only one level of nesting is supported. A sub-folder cannot hold children of its own, so the parentFolderId should refer to a root level folder. |",
+        "operationId": "createFolder",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.create"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/CreateFolderConfig"
+                  }
+                },
+                "required": [
+                  "CONFIG"
+                ]
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "rootFolder": {
+                  "description": "Creates a folder at the root level of the workspace, as parentFolderId is not sent.",
+                  "summary": "Root folder",
+                  "value": {
+                    "CONFIG": {
+                      "folderName": "Sales Analysis",
+                      "folderDesc": "All sales-related reports and dashboards"
+                    }
+                  }
+                },
+                "subFolder": {
+                  "description": "Creates a folder nested under an existing root level folder.",
+                  "summary": "Sub-folder",
+                  "value": {
+                    "CONFIG": {
+                      "folderName": "Q1 Reports",
+                      "folderDesc": "Q1 breakdown",
+                      "parentFolderId": 7617000071955001
+                    }
+                  }
+                },
+                "defaultFolder": {
+                  "description": "Creates a root level folder and sets it as the default folder of the workspace in the same request.",
+                  "summary": "Default folder",
+                  "value": {
+                    "CONFIG": {
+                      "folderName": "Main Workspace",
+                      "makeDefaultFolder": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Folder created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateFolderResponse"
+                },
+                "examples": {
+                  "folderCreated": {
+                    "description": "The ID of the newly created folder is returned in the data object.",
+                    "summary": "Folder created",
+                    "value": {
+                      "status": "success",
+                      "summary": "Folder has been created successfully.",
+                      "data": {
+                        "folderId": "7617000071955010"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}": {
+      "put": {
+        "tags": [
+          "Workspace Folders"
+        ],
+        "summary": "Rename Folder",
+        "description": "Updates the name and the description of an existing folder. When `folderDesc` is omitted, the existing description is reset to an empty string and the previous value is not preserved.\n\n**Notes**\n\n> Note:\n>\n> - Rename Folder returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - When folderDesc is omitted, the existing description of the folder is permanently reset to an empty string. This is intentional behaviour and not a defect. Always read the current folderDesc using the Get Folder List API and pass it back when only the name has to be changed.\n> - Renaming the folder to its existing name succeeds without an error.\n> - The folderName should be unique within the workspace. Renaming to a name that is already in use fails with error code 7140, and an empty name fails with error code 7414.\n> - The folderName can hold a maximum of 200 characters and the folderDesc can hold a maximum of 250 characters.\n> - The folder-id in the request URL should be obtained using the Get Folder List API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7140 | A folder with the same name already exists in the workspace. | Provide a folder name that is not already in use within the workspace. |\n| 7144 | The specified folder does not exist. | Verify the folder ID using the Get Folder List API. |\n| 7301 | The user does not have permission to perform this operation. | Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace. |\n| 7414 | The folder name cannot be empty. | Provide a non-empty value for folderName. |",
+        "operationId": "renameFolder",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/folder-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/RenameFolderConfig"
+                  }
+                },
+                "required": [
+                  "CONFIG"
+                ]
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "preserveDescription": {
+                  "description": "Changes the folder name while passing back the existing description, read using the Get Folder List API, so that it is not cleared.",
+                  "summary": "Preserve description",
+                  "value": {
+                    "CONFIG": {
+                      "folderName": "Annual Sales Analysis",
+                      "folderDesc": "All sales-related reports and dashboards"
+                    }
+                  }
+                },
+                "updateDescription": {
+                  "description": "Changes the folder name and sets a new description in the same request.",
+                  "summary": "Update description",
+                  "value": {
+                    "CONFIG": {
+                      "folderName": "FY2025 Sales",
+                      "folderDesc": "Fiscal year 2025 sales reports"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Folder updated successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Workspace Folders"
+        ],
+        "summary": "Delete Folder",
+        "description": "Deletes the specified folder from the workspace. By default the views present inside the folder are retained and moved to the root level of the workspace, and only the folder container is removed. The views can optionally be deleted along with the folder.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder does not exist. | Verify the folder ID using the Get Folder List API. |\n| 7277 | The folder holds tables that have dependent child views, so the deletion is blocked. | Set deleteDependentViews to true to delete the folder along with all the dependent views, or delete the dependent views manually before retrying. |\n| 7301 | The user does not have permission to perform this operation. | Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace. |",
+        "operationId": "deleteFolder",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.delete"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/folder-id"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/DeleteFolderConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "retainViews": {
+                  "description": "Deletes the folder container alone. The views present inside it are moved to the root level of the workspace.",
+                  "summary": "Retain views",
+                  "value": {
+                    "CONFIG": {}
+                  }
+                },
+                "deleteViews": {
+                  "description": "Deletes the folder along with all the views present inside it, including the tables and their dependent reports and dashboards.",
+                  "summary": "Delete views",
+                  "value": {
+                    "CONFIG": {
+                      "deleteDependentViews": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Folder deleted successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/default": {
+      "put": {
+        "tags": [
+          "Workspace Folders"
+        ],
+        "summary": "Make Default Folder",
+        "description": "Sets the specified folder as the default folder of the workspace. The default folder is where a new view is placed when no folder is selected explicitly. The folder that was the default until then loses that status, as a workspace holds exactly one default folder at any point in time.\n\nThis API is idempotent. Invoking it on a folder that is already the default folder succeeds without error.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder does not exist. | Verify the folder ID using the Get Folder List API. |\n| 7301 | The user does not have permission to perform this operation. | Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace. |",
+        "operationId": "makeDefaultFolder",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/folder-id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Default folder set successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/move": {
+      "put": {
+        "tags": [
+          "Workspace Folders"
+        ],
+        "summary": "Change Folder Hierarchy",
+        "description": "Changes the hierarchical position of a folder, either by promoting a sub-folder to the root level or by nesting an existing root level folder under another root level folder. Exactly one level of nesting is supported, so the folder given in `parentFolderId` should itself be at the root level.\n\n**Notes**\n\n> Note:\n>\n> - Change Folder Hierarchy returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - When hierarchy is set to 0, the parentFolderId should not be sent. The parent link of the folder is removed and it becomes a root level folder.\n> - When hierarchy is set to 1, the parentFolderId is mandatory. Omitting it results in an error.\n> - The parentFolderId should refer to a root level folder, that is, a folder whose own parentFolderId is -1. A folder cannot be nested inside an existing sub-folder, as exactly one level of nesting is supported.\n> - Only the values 0 and 1 are accepted for hierarchy. Any other value fails with error code 8119 before any change is made.\n> - Both the folder-id in the request URL and the parentFolderId should be obtained using the Get Folder List API. Verify that the parentFolderId target is a root level folder before invoking this API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder or the specified parent folder does not exist. | Verify the folder IDs using the Get Folder List API. |\n| 7301 | The user does not have permission to perform this operation. | Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace. |\n| 8119 | The value provided for hierarchy is invalid. Only 0 and 1 are accepted. | Pass 0 to promote a sub-folder to the root level, or 1 to nest a folder under a parent folder. |",
+        "operationId": "changeFolderHierarchy",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/folder-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/ChangeFolderHierarchyConfig"
+                  }
+                },
+                "required": [
+                  "CONFIG"
+                ]
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "promoteToRoot": {
+                  "description": "Promotes the specified sub-folder to become a root level folder. The parentFolderId is not sent.",
+                  "summary": "Promote folder",
+                  "value": {
+                    "CONFIG": {
+                      "hierarchy": 0
+                    }
+                  }
+                },
+                "nestUnderParent": {
+                  "description": "Nests the specified root level folder under another root level folder given in parentFolderId.",
+                  "summary": "Nest folder",
+                  "value": {
+                    "CONFIG": {
+                      "hierarchy": 1,
+                      "parentFolderId": 7617000071955001
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Folder hierarchy changed successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/reorder": {
+      "put": {
+        "tags": [
+          "Workspace Folders"
+        ],
+        "summary": "Change Folder Position",
+        "description": "Reorders a folder by placing it immediately above another folder at the same hierarchy level. Both the folder being reordered and the reference folder should be at the root level, or should be sub-folders of the same parent.\n\n**Notes**\n\n> Note:\n>\n> - Change Folder Position returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - The folder identified by the folder-id in the request URL is placed immediately above the folder given in referenceFolderId in the sorted list.\n> - Both the folders should be at the same hierarchy level, that is, both at the root level or both sub-folders of the same parent. Reordering across levels is not supported and produces unexpected results.\n> - The folderIndex values of the affected folders are recalculated after this operation. Use the Get Folder List API to confirm the new ordering.\n> - Both the folder-id in the request URL and the referenceFolderId should be obtained using the Get Folder List API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder or the specified reference folder does not exist. | Verify the folder IDs using the Get Folder List API. |\n| 7301 | The user does not have permission to perform this operation. | Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace. |",
+        "operationId": "changeFolderPosition",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/folder-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/ChangeFolderPositionConfig"
+                  }
+                },
+                "required": [
+                  "CONFIG"
+                ]
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "reorderRootFolder": {
+                  "description": "Places the specified root level folder immediately above another root level folder.",
+                  "summary": "Reorder folder",
+                  "value": {
+                    "CONFIG": {
+                      "referenceFolderId": 7617000071955001
+                    }
+                  }
+                },
+                "reorderSubFolder": {
+                  "description": "Places the specified sub-folder immediately above another sub-folder of the same parent.",
+                  "summary": "Reorder sub-folder",
+                  "value": {
+                    "CONFIG": {
+                      "referenceFolderId": 7617000071955003
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Folder position changed successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/views/movetofolder": {
+      "put": {
+        "tags": [
+          "Workspace Folders"
+        ],
+        "summary": "Move Views To Folder",
+        "description": "Moves one or more views, covering tables, reports and dashboards, into the specified destination folder of the workspace. All the views should belong to the same workspace, and a maximum of 1000 view IDs can be moved in a single request.\n\nThe operation is transactional. A single view ID that does not belong to the workspace fails the entire request before any view is moved.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified destination folder does not exist. | Verify the folderId value using the Get Folder List API. |\n| 7301 | The user does not have permission to perform this operation. | Ensure that the user is a Workspace Admin of the workspace or has the Create Folder permission on the workspace. |\n| 7319 | One or more of the specified view IDs do not belong to the specified workspace. | Ensure that all the values in viewIds belong to the workspace identified by the workspace-id in the request URL. |",
+        "operationId": "moveViewsToFolder",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/MoveViewsToFolderConfig"
+                  }
+                },
+                "required": [
+                  "CONFIG"
+                ]
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "singleView": {
+                  "description": "Moves one view into the destination folder.",
+                  "summary": "Single view",
+                  "value": {
+                    "CONFIG": {
+                      "folderId": 7617000071955001,
+                      "viewIds": [
+                        7617000000510001
+                      ]
+                    }
+                  }
+                },
+                "bulkViews": {
+                  "description": "Moves several views into the destination folder in one request.",
+                  "summary": "Bulk move",
+                  "value": {
+                    "CONFIG": {
+                      "folderId": 7617000071955001,
+                      "viewIds": [
+                        7617000000510001,
+                        7617000000510002,
+                        7617000000510003
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Views moved successfully. No response body is returned."
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "org-id": {
+        "name": "ZANALYTICS-ORGID",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The ID of the organization in which the operation has to be performed. It can be obtained using the Get Organizations API."
+      },
+      "workspace-id": {
+        "name": "workspace-id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The ID of the workspace. It can be obtained using any of the workspace list APIs."
+      },
+      "folder-id": {
+        "name": "folder-id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The ID of the folder. It can be obtained using the Get Folder List API."
+      },
+      "org-id-optional": {
+        "name": "ZANALYTICS-ORGID",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The ID of the organization. This header is not required for this API, as the scope of the request is resolved from the requesting user. It can be obtained using the Get Organizations API."
+      },
+      "dest-org-id": {
+        "name": "ZANALYTICS-DEST-ORGID",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The ID of the destination organization into which the workspace has to be copied. It is used by Organization Admins who have admin access in more than one organization. When this header is present, the system validates that the requesting user is a member of the specified organization and uses it as the target of the copy. When it is absent, the destination organization defaults to the organization resolved from the ZANALYTICS-ORGID header."
+      }
+    },
+    "securitySchemes": {
+      "iam-oauth2-schema": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://accounts.zoho.com/oauth/v2/auth",
+            "tokenUrl": "https://accounts.zoho.com/oauth/v2/token",
+            "refreshUrl": "https://accounts.zoho.com/oauth/v2/token",
+            "scopes": {
+              "ZohoAnalytics.metadata.read": "Read metadata resource from Zoho Analytics.",
+              "ZohoAnalytics.metadata.update": "Update metadata resource in Zoho Analytics.",
+              "ZohoAnalytics.metadata.all": "Full access to metadata in Zoho Analytics.",
+              "ZohoAnalytics.modeling.create": "Create modeling objects in Zoho Analytics.",
+              "ZohoAnalytics.modeling.update": "Update modeling objects in Zoho Analytics.",
+              "ZohoAnalytics.modeling.delete": "Delete modeling objects in Zoho Analytics.",
+              "ZohoAnalytics.modeling.all": "Full access to modeling objects in Zoho Analytics.",
+              "ZohoAnalytics.fullaccess.all": "Full access to all Zoho Analytics features."
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "CreateWorkspaceConfig": {
+        "type": "object",
+        "title": "CreateWorkspaceConfig",
+        "description": "JSONObject that holds the details of the workspace to be created.",
+        "properties": {
+          "workspaceName": {
+            "type": "string",
+            "description": "The name for the new workspace. It should be unique within the organization and can hold a maximum of 50 characters.",
+            "maxLength": 50
+          },
+          "workspaceDesc": {
+            "type": "string",
+            "description": "The description of the workspace. It can hold a maximum of 250 characters.",
+            "default": "",
+            "maxLength": 250
+          }
+        },
+        "required": [
+          "workspaceName"
+        ],
+        "examples": [
+          {
+            "workspaceName": "Sales Analytics"
+          }
+        ]
+      },
+      "CreateWorkspaceResponse": {
+        "type": "object",
+        "title": "CreateWorkspaceResponse",
+        "description": "JSONObject returned on successfully creating the workspace.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the request."
+          },
+          "summary": {
+            "type": "string",
+            "description": "A short summary of the operation performed. It holds the value Create workspace."
+          },
+          "data": {
+            "type": "object",
+            "description": "JSONObject that holds the ID of the newly created workspace.",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "description": "The unique ID of the newly created workspace. Use this value as the workspace-id in all the subsequent workspace specific API calls."
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Create workspace",
+            "data": {
+              "workspaceId": "466206000000295001"
+            }
+          }
+        ]
+      },
+      "CopyWorkspaceConfig": {
+        "type": "object",
+        "title": "CopyWorkspaceConfig",
+        "description": "JSONObject that holds the details of the workspace copy to be created.",
+        "properties": {
+          "newWorkspaceName": {
+            "type": "string",
+            "description": "The name for the copied workspace. It should be unique within the destination organization and can hold a maximum of 50 characters.",
+            "maxLength": 50
+          },
+          "newWorkspaceDesc": {
+            "type": "string",
+            "description": "The description for the copied workspace. It can hold a maximum of 250 characters. The description of the source workspace is not carried over automatically.",
+            "default": "",
+            "maxLength": 250
+          },
+          "workspaceKey": {
+            "type": "string",
+            "description": "The secret key of the source workspace, obtained using the Get Workspace Secret Key API. It is mandatory when the destination organization differs from the organization that owns the source workspace, and is not validated for copies within the same organization."
+          },
+          "copyWithData": {
+            "type": "boolean",
+            "description": "Controls whether the data rows in the tables have to be copied along with the workspace structure.\n\n- **true** - Copies the complete workspace, including all the table data.\n- **false** - Copies only the workspace structure, such as the table schema, views, formulas and dashboards.",
+            "default": false,
+            "enum": [
+              true,
+              false
+            ]
+          },
+          "copyWithImportSource": {
+            "type": "boolean",
+            "description": "Controls whether the import source connections have to be retained in the copied workspace.\n\n- **true** - Retains the import source configurations, such as the cloud storage connections and the database connectors.\n- **false** - Copies the tables without any import source. The data has to be re-imported into the copied workspace.",
+            "default": false,
+            "enum": [
+              true,
+              false
+            ]
+          }
+        },
+        "required": [
+          "newWorkspaceName"
+        ],
+        "examples": [
+          {
+            "newWorkspaceName": "Sales Analytics - Copy",
+            "newWorkspaceDesc": "Backup copy of Sales Analytics"
+          }
+        ]
+      },
+      "CopyWorkspaceResponse": {
+        "type": "object",
+        "title": "CopyWorkspaceResponse",
+        "description": "JSONObject returned on successfully copying the workspace.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the request."
+          },
+          "summary": {
+            "type": "string",
+            "description": "A short summary of the operation performed. It holds the value Copy workspace."
+          },
+          "data": {
+            "type": "object",
+            "description": "JSONObject that holds the ID of the newly created copy.",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "description": "The unique ID of the workspace copy that was created. Use this value as the workspace-id in the subsequent API calls."
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Copy workspace",
+            "data": {
+              "workspaceId": "466206000000296001"
+            }
+          }
+        ]
+      },
+      "RenameWorkspaceConfig": {
+        "type": "object",
+        "title": "RenameWorkspaceConfig",
+        "description": "JSONObject that holds the new name and description of the workspace.",
+        "properties": {
+          "workspaceName": {
+            "type": "string",
+            "description": "The new name for the workspace. It should be unique within the organization and can hold a maximum of 50 characters.",
+            "maxLength": 50
+          },
+          "workspaceDesc": {
+            "type": "string",
+            "description": "The new description for the workspace. It can hold a maximum of 250 characters. When this key is omitted, the existing description is reset to an empty string.",
+            "default": "",
+            "maxLength": 250
+          }
+        },
+        "required": [
+          "workspaceName"
+        ],
+        "examples": [
+          {
+            "workspaceName": "Global Sales Analytics"
+          }
+        ]
+      },
+      "ExportTemplateConfig": {
+        "type": "object",
+        "title": "ExportTemplateConfig",
+        "description": "JSONObject that holds the details of the template to be exported.",
+        "properties": {
+          "viewIds": {
+            "$ref": "#/components/schemas/TemplateViewIds"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "The name for the exported template file, given without the file extension. When this key is omitted, the file name is generated from the workspace name."
+          }
+        },
+        "required": [
+          "viewIds"
+        ],
+        "examples": [
+          {
+            "viewIds": [
+              466206000000085001,
+              466206000000085003
+            ]
+          }
+        ]
+      },
+      "TemplateViewIds": {
+        "type": "array",
+        "title": "TemplateViewIds",
+        "description": "JSONArray that holds the IDs of the views to be included in the template. It should hold a minimum of one view ID and a maximum of 1000 view IDs.",
+        "items": {
+          "type": "integer",
+          "format": "int64",
+          "description": "ID of a view to be exported. It should belong to the workspace specified in the request URL."
+        },
+        "minItems": 1,
+        "maxItems": 1000,
+        "examples": [
+          [
+            466206000000085001,
+            466206000000085003
+          ]
+        ]
+      },
+      "GetAllWorkspacesResponse": {
+        "type": "object",
+        "title": "GetAllWorkspacesResponse",
+        "description": "JSONObject that holds the workspaces owned by and shared with the requesting user.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the request."
+          },
+          "summary": {
+            "type": "string",
+            "description": "A short summary of the operation performed. It holds the value Get all workspaces."
+          },
+          "data": {
+            "type": "object",
+            "description": "JSONObject that holds the owned and the shared workspace lists.",
+            "properties": {
+              "ownedWorkspaces": {
+                "$ref": "#/components/schemas/WorkspaceList"
+              },
+              "sharedWorkspaces": {
+                "$ref": "#/components/schemas/WorkspaceList"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Get all workspaces",
+            "data": {
+              "ownedWorkspaces": [
+                {
+                  "workspaceId": "466206000000071000",
+                  "workspaceName": "Sales Analytics",
+                  "workspaceDesc": "Sales reporting workspace",
+                  "orgId": "700000123456",
+                  "createdTime": "1619175390377",
+                  "createdBy": "admin@acme.com",
+                  "isDefault": false
+                },
+                {
+                  "workspaceId": "466206000000080000",
+                  "workspaceName": "HR Analytics",
+                  "workspaceDesc": "",
+                  "orgId": "700000123456",
+                  "createdTime": "1622097563854",
+                  "createdBy": "admin@acme.com",
+                  "isDefault": false
+                }
+              ],
+              "sharedWorkspaces": []
+            }
+          }
+        ]
+      },
+      "GetOwnedWorkspacesResponse": {
+        "type": "object",
+        "title": "GetOwnedWorkspacesResponse",
+        "description": "JSONObject that holds all the workspaces present in the organization of the requesting Account Admin.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the request."
+          },
+          "summary": {
+            "type": "string",
+            "description": "A short summary of the operation performed. It holds the value Get owned workspaces."
+          },
+          "data": {
+            "type": "object",
+            "description": "JSONObject that holds the owned workspace list.",
+            "properties": {
+              "workspaces": {
+                "$ref": "#/components/schemas/WorkspaceList"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Get owned workspaces",
+            "data": {
+              "workspaces": [
+                {
+                  "workspaceId": "466206000000071000",
+                  "workspaceName": "Sales Analytics",
+                  "workspaceDesc": "Sales reporting workspace",
+                  "orgId": "700000123456",
+                  "createdTime": "1619175390377",
+                  "createdBy": "admin@acme.com",
+                  "isDefault": false
+                },
+                {
+                  "workspaceId": "466206000000080000",
+                  "workspaceName": "HR Analytics",
+                  "workspaceDesc": "",
+                  "orgId": "700000123456",
+                  "createdTime": "1622097563854",
+                  "createdBy": "admin@acme.com",
+                  "isDefault": false
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "GetSharedWorkspacesResponse": {
+        "type": "object",
+        "title": "GetSharedWorkspacesResponse",
+        "description": "JSONObject that holds the workspaces shared with the requesting user from other organizations.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the request."
+          },
+          "summary": {
+            "type": "string",
+            "description": "A short summary of the operation performed. It holds the value Get shared workspaces."
+          },
+          "data": {
+            "type": "object",
+            "description": "JSONObject that holds the shared workspace list.",
+            "properties": {
+              "workspaces": {
+                "$ref": "#/components/schemas/WorkspaceList"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Get shared workspaces",
+            "data": {
+              "workspaces": [
+                {
+                  "workspaceId": "466206000000071000",
+                  "workspaceName": "Sales Analytics",
+                  "workspaceDesc": "Sales reporting workspace",
+                  "orgId": "700000123456",
+                  "createdTime": "1619175390377",
+                  "createdBy": "admin@acme.com",
+                  "isDefault": false
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "WorkspaceList": {
+        "type": "array",
+        "title": "WorkspaceList",
+        "description": "JSONArray that holds the workspace records. It holds an empty array when no workspace matches the request.",
+        "items": {
+          "$ref": "#/components/schemas/WorkspaceSummary"
+        },
+        "examples": [
+          [
+            {
+              "workspaceId": "466206000000071000",
+              "workspaceName": "Sales Analytics",
+              "workspaceDesc": "Sales reporting workspace",
+              "orgId": "700000123456",
+              "createdTime": "1619175390377",
+              "createdBy": "admin@acme.com",
+              "isDefault": false
+            }
+          ]
+        ]
+      },
+      "WorkspaceSummary": {
+        "type": "object",
+        "title": "WorkspaceSummary",
+        "description": "JSONObject that holds the summary details of a workspace.",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "description": "The unique ID of the workspace."
+          },
+          "workspaceName": {
+            "type": "string",
+            "description": "The display name of the workspace."
+          },
+          "workspaceDesc": {
+            "type": "string",
+            "description": "The description of the workspace. It holds an empty string when the description is not set."
+          },
+          "orgId": {
+            "type": "string",
+            "description": "The ID of the organization that owns the workspace."
+          },
+          "createdTime": {
+            "type": "string",
+            "description": "The time at which the workspace was created, given as a Unix timestamp in milliseconds."
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "The email address of the user who created the workspace."
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "Indicates whether the workspace is the default workspace of the organization.",
+            "enum": [
+              true,
+              false
+            ]
+          }
+        },
+        "examples": [
+          {
+            "workspaceId": "466206000000071000",
+            "workspaceName": "Sales Analytics",
+            "workspaceDesc": "Sales reporting workspace",
+            "orgId": "700000123456",
+            "createdTime": "1619175390377",
+            "createdBy": "admin@acme.com",
+            "isDefault": false
+          }
+        ]
+      },
+      "GetWorkspaceSecretKeyConfig": {
+        "type": "object",
+        "title": "GetWorkspaceSecretKeyConfig",
+        "description": "JSONObject that controls whether the workspace secret key has to be regenerated.",
+        "properties": {
+          "regenerateKey": {
+            "type": "boolean",
+            "description": "Controls whether a new secret key has to be generated for the workspace.\n\n- **true** - Generates a new secret key, stores it as the workspace secret key and returns it. The previous key is permanently invalidated.\n- **false** - Returns the existing secret key without modifying it.",
+            "default": false,
+            "enum": [
+              true,
+              false
+            ]
+          }
+        },
+        "examples": [
+          {
+            "regenerateKey": false
+          }
+        ]
+      },
+      "GetWorkspaceSecretKeyResponse": {
+        "type": "object",
+        "title": "GetWorkspaceSecretKeyResponse",
+        "description": "JSONObject that holds the secret key of the specified workspace.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the request."
+          },
+          "summary": {
+            "type": "string",
+            "description": "A short summary of the operation performed. It holds the value Get workspace secretkey."
+          },
+          "data": {
+            "type": "object",
+            "description": "JSONObject that holds the workspace secret key.",
+            "properties": {
+              "workspaceKey": {
+                "type": "string",
+                "description": "The current secret key of the workspace, given as a hexadecimal string. Pass this value as the workspaceKey in the Copy Workspace CONFIG while copying the workspace to a different organization."
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Get workspace secretkey",
+            "data": {
+              "workspaceKey": "02aee9b66f299843c961d3712fe09684"
+            }
+          }
+        ]
+      },
+      "GetWorkspaceInfoConfig": {
+        "type": "object",
+        "title": "GetWorkspaceInfoConfig",
+        "description": "JSONObject that controls the details returned for the workspace.",
+        "properties": {
+          "withUserRoleInfo": {
+            "type": "boolean",
+            "description": "Controls whether the role details of the requesting user have to be included in the response.\n\n- **true** - Includes the userRoleInfo object, which holds the role name, the role ID and the custom role indicator of the requesting user.\n- **false** - Returns the workspace metadata alone.",
+            "default": false,
+            "enum": [
+              true,
+              false
+            ]
+          }
+        },
+        "examples": [
+          {
+            "withUserRoleInfo": false
+          }
+        ]
+      },
+      "GetWorkspaceDetailsResponse": {
+        "type": "object",
+        "title": "GetWorkspaceDetailsResponse",
+        "description": "JSONObject that holds the metadata of the specified workspace.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the request."
+          },
+          "summary": {
+            "type": "string",
+            "description": "A short summary of the operation performed. It holds the value Get workspace details."
+          },
+          "data": {
+            "type": "object",
+            "description": "JSONObject that holds the workspace metadata.",
+            "properties": {
+              "workspaces": {
+                "$ref": "#/components/schemas/WorkspaceInfo"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Get workspace details",
+            "data": {
+              "workspaces": {
+                "workspaceId": "466206000000071000",
+                "workspaceName": "Sales Analytics",
+                "workspaceDesc": "Sales reporting workspace for all regions",
+                "createdTime": "1619175390377",
+                "createdBy": "admin@acme.com",
+                "orgId": "700000123456"
+              }
+            }
+          }
+        ]
+      },
+      "WorkspaceInfo": {
+        "type": "object",
+        "title": "WorkspaceInfo",
+        "description": "JSONObject that holds the metadata of a single workspace.",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "description": "The unique ID of the workspace."
+          },
+          "workspaceName": {
+            "type": "string",
+            "description": "The display name of the workspace."
+          },
+          "workspaceDesc": {
+            "type": "string",
+            "description": "The description of the workspace. It holds an empty string when the description is not set."
+          },
+          "createdTime": {
+            "type": "string",
+            "description": "The time at which the workspace was created, given as a Unix timestamp in milliseconds."
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "The email address of the user who created the workspace."
+          },
+          "orgId": {
+            "type": "string",
+            "description": "The ID of the organization that owns the workspace."
+          },
+          "userRoleInfo": {
+            "$ref": "#/components/schemas/WorkspaceUserRoleInfo"
+          }
+        },
+        "examples": [
+          {
+            "workspaceId": "466206000000071000",
+            "workspaceName": "Sales Analytics",
+            "workspaceDesc": "Sales reporting workspace for all regions",
+            "createdTime": "1619175390377",
+            "createdBy": "admin@acme.com",
+            "orgId": "700000123456"
+          }
+        ]
+      },
+      "WorkspaceUserRoleInfo": {
+        "type": "object",
+        "title": "WorkspaceUserRoleInfo",
+        "description": "JSONObject that holds the role details of the requesting user within the workspace. It is returned only when withUserRoleInfo is set to true.",
+        "properties": {
+          "isCustomRoleUser": {
+            "type": "boolean",
+            "description": "Indicates whether the requesting user is assigned a custom role in the workspace.",
+            "enum": [
+              true,
+              false
+            ]
+          },
+          "roleId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The numeric ID of the role held by the requesting user. It is 0 for the standard organization roles such as Account Admin and Organization Admin, and holds the custom role ID for custom role users."
+          },
+          "roleName": {
+            "type": "string",
+            "description": "The display name of the role held by the requesting user, such as Account Admin, Organization Admin, Workspace Admin, User, Viewer, or the name of a custom role."
+          }
+        },
+        "examples": [
+          {
+            "isCustomRoleUser": false,
+            "roleId": 0,
+            "roleName": "Account Admin"
+          }
+        ]
+      },
+      "GetFoldersResponse": {
+        "type": "object",
+        "title": "GetFoldersResponse",
+        "description": "JSONObject that holds the folders present in the specified workspace.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the request."
+          },
+          "summary": {
+            "type": "string",
+            "description": "A short summary of the operation performed. It holds the value Get folders."
+          },
+          "data": {
+            "type": "object",
+            "description": "JSONObject that holds the folder list.",
+            "properties": {
+              "folders": {
+                "$ref": "#/components/schemas/FolderList"
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Get folders",
+            "data": {
+              "folders": [
+                {
+                  "folderId": "7617000000508002",
+                  "folderName": "Tables & Reports",
+                  "folderDesc": "Default Folder",
+                  "folderIndex": -1,
+                  "isDefault": true,
+                  "parentFolderId": "-1"
+                },
+                {
+                  "folderId": "7617000071955001",
+                  "folderName": "Parent folder 1",
+                  "folderDesc": "",
+                  "folderIndex": 0,
+                  "isDefault": false,
+                  "parentFolderId": "-1"
+                },
+                {
+                  "folderId": "7617000071955003",
+                  "folderName": "Sub folder 1",
+                  "folderDesc": "",
+                  "folderIndex": 2,
+                  "isDefault": false,
+                  "parentFolderId": "7617000071955001"
+                },
+                {
+                  "folderId": "7617000071955002",
+                  "folderName": "Parent folder 2",
+                  "folderDesc": "",
+                  "folderIndex": 1,
+                  "isDefault": false,
+                  "parentFolderId": "-1"
+                },
+                {
+                  "folderId": "7617000071955004",
+                  "folderName": "Sub folder 2",
+                  "folderDesc": "",
+                  "folderIndex": 2,
+                  "isDefault": false,
+                  "parentFolderId": "7617000071955002"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "FolderList": {
+        "type": "array",
+        "title": "FolderList",
+        "description": "JSONArray that holds the folders present in the workspace. It holds an empty array when the requesting user has access to no view in the workspace.",
+        "items": {
+          "$ref": "#/components/schemas/FolderDetails"
+        },
+        "examples": [
+          [
+            {
+              "folderId": "7617000000508002",
+              "folderName": "Tables & Reports",
+              "folderDesc": "Default Folder",
+              "folderIndex": -1,
+              "isDefault": true,
+              "parentFolderId": "-1"
+            }
+          ]
+        ]
+      },
+      "FolderDetails": {
+        "type": "object",
+        "title": "FolderDetails",
+        "description": "JSONObject that holds the details of a folder present in the workspace.",
+        "properties": {
+          "folderId": {
+            "type": "string",
+            "description": "The unique ID of the folder."
+          },
+          "folderName": {
+            "type": "string",
+            "description": "The display name of the folder."
+          },
+          "folderDesc": {
+            "type": "string",
+            "description": "The description of the folder. It holds an empty string when the description is not set."
+          },
+          "folderIndex": {
+            "type": "integer",
+            "description": "The sort position of the folder within its hierarchy level. The default folder always holds -1, and the remaining folders are sorted in the ascending order of this value."
+          },
+          "isDefault": {
+            "type": "boolean",
+            "description": "Indicates whether the folder is the current default folder of the workspace. Exactly one folder of a workspace holds true at any point in time.",
+            "enum": [
+              true,
+              false
+            ]
+          },
+          "parentFolderId": {
+            "type": "string",
+            "description": "The ID of the parent folder, returned as a string. It holds -1 when the folder is at the root level and has no parent."
+          }
+        },
+        "examples": [
+          {
+            "folderId": "7617000000508002",
+            "folderName": "Tables & Reports",
+            "folderDesc": "Default Folder",
+            "folderIndex": -1,
+            "isDefault": true,
+            "parentFolderId": "-1"
+          }
+        ]
+      },
+      "CreateFolderConfig": {
+        "type": "object",
+        "title": "CreateFolderConfig",
+        "description": "JSONObject that holds the details of the folder to be created.",
+        "properties": {
+          "folderName": {
+            "type": "string",
+            "description": "The name for the new folder. It should be unique within the workspace and can hold a maximum of 200 characters.",
+            "maxLength": 200
+          },
+          "folderDesc": {
+            "type": "string",
+            "description": "The description of the folder. It can hold a maximum of 250 characters.",
+            "default": "",
+            "maxLength": 250
+          },
+          "parentFolderId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The ID of an existing root level folder under which this folder has to be created. Pass -1 or omit this key to create the folder at the root level.",
+            "default": -1
+          },
+          "makeDefaultFolder": {
+            "type": "boolean",
+            "description": "Controls whether the newly created folder has to be set as the default folder of the workspace.\n\n- **true** - Sets the new folder as the default folder. The folder that was the default until then loses that status.\n- **false** - Creates the folder without changing the current default folder.",
+            "default": false,
+            "enum": [
+              true,
+              false
+            ]
+          }
+        },
+        "required": [
+          "folderName"
+        ],
+        "examples": [
+          {
+            "folderName": "Sales Analysis",
+            "folderDesc": "All sales-related reports and dashboards"
+          }
+        ]
+      },
+      "CreateFolderResponse": {
+        "type": "object",
+        "title": "CreateFolderResponse",
+        "description": "JSONObject returned on successfully creating the folder.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "The status of the request."
+          },
+          "summary": {
+            "type": "string",
+            "description": "A short summary of the operation performed. It holds the value Folder has been created successfully.."
+          },
+          "data": {
+            "type": "object",
+            "description": "JSONObject that holds the ID of the newly created folder.",
+            "properties": {
+              "folderId": {
+                "type": "string",
+                "description": "The unique ID of the newly created folder. Use the Get Folder List API to retrieve the complete folder record."
+              }
+            }
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Folder has been created successfully.",
+            "data": {
+              "folderId": "7617000071955010"
+            }
+          }
+        ]
+      },
+      "RenameFolderConfig": {
+        "type": "object",
+        "title": "RenameFolderConfig",
+        "description": "JSONObject that holds the new name and description of the folder.",
+        "properties": {
+          "folderName": {
+            "type": "string",
+            "description": "The new name for the folder. It should be unique within the workspace and can hold a maximum of 200 characters.",
+            "maxLength": 200
+          },
+          "folderDesc": {
+            "type": "string",
+            "description": "The new description for the folder. It can hold a maximum of 250 characters. When this key is omitted, the existing description is reset to an empty string.",
+            "default": "",
+            "maxLength": 250
+          }
+        },
+        "required": [
+          "folderName"
+        ],
+        "examples": [
+          {
+            "folderName": "Annual Sales Analysis",
+            "folderDesc": "All sales-related reports and dashboards"
+          }
+        ]
+      },
+      "DeleteFolderConfig": {
+        "type": "object",
+        "title": "DeleteFolderConfig",
+        "description": "JSONObject that controls whether the views present inside the folder have to be deleted along with the folder.",
+        "properties": {
+          "deleteDependentViews": {
+            "type": "boolean",
+            "description": "Controls the handling of the views present inside the folder.\n\n- **true** - Permanently deletes all the views present inside the folder, including the tables and their dependent reports and dashboards.\n- **false** - Deletes the folder alone and retains the views by moving them to the root level of the workspace. The request fails with error code 7277 when the folder holds a table that has dependent views.",
+            "default": false,
+            "enum": [
+              true,
+              false
+            ]
+          }
+        },
+        "examples": [
+          {}
+        ]
+      },
+      "ChangeFolderHierarchyConfig": {
+        "type": "object",
+        "title": "ChangeFolderHierarchyConfig",
+        "description": "JSONObject that holds the details of the hierarchy change to be applied to the folder.",
+        "properties": {
+          "hierarchy": {
+            "type": "integer",
+            "description": "Controls the direction of the hierarchy change.\n\n- **0** - Promotes the specified sub-folder to become a root level folder. The `parentFolderId` key should not be sent.\n- **1** - Nests the specified root level folder under the folder given in `parentFolderId`. The `parentFolderId` key is mandatory.",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "parentFolderId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The ID of the root level folder that has to become the parent. It is mandatory when hierarchy is set to 1, and should not be sent when hierarchy is set to 0."
+          }
+        },
+        "required": [
+          "hierarchy"
+        ],
+        "examples": [
+          {
+            "hierarchy": 0
+          }
+        ]
+      },
+      "ChangeFolderPositionConfig": {
+        "type": "object",
+        "title": "ChangeFolderPositionConfig",
+        "description": "JSONObject that holds the position anchor for the folder to be reordered.",
+        "properties": {
+          "referenceFolderId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The ID of the folder immediately above which the specified folder has to be placed. It should be at the same hierarchy level as the folder being reordered."
+          }
+        },
+        "required": [
+          "referenceFolderId"
+        ],
+        "examples": [
+          {
+            "referenceFolderId": 7617000071955001
+          }
+        ]
+      },
+      "MoveViewsToFolderConfig": {
+        "type": "object",
+        "title": "MoveViewsToFolderConfig",
+        "description": "JSONObject that holds the destination folder and the views to be moved into it.",
+        "properties": {
+          "folderId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The ID of the destination folder. It can be a root level folder or a sub-folder."
+          },
+          "viewIds": {
+            "$ref": "#/components/schemas/MoveViewIds"
+          }
+        },
+        "required": [
+          "folderId",
+          "viewIds"
+        ],
+        "examples": [
+          {
+            "folderId": 7617000071955001,
+            "viewIds": [
+              7617000000510001
+            ]
+          }
+        ]
+      },
+      "MoveViewIds": {
+        "type": "array",
+        "title": "MoveViewIds",
+        "description": "JSONArray that holds the IDs of the views to be moved into the destination folder. It can hold a maximum of 1000 view IDs.",
+        "items": {
+          "type": "integer",
+          "format": "int64",
+          "description": "ID of a view to be moved. It should belong to the workspace specified in the request URL."
+        },
+        "minItems": 1,
+        "maxItems": 1000,
+        "examples": [
+          [
+            7617000000510001,
+            7617000000510002,
+            7617000000510003
+          ]
+        ]
+      }
+    }
+  }
+}

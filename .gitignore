@@ -1,0 +1,13 @@
+# Build scratch (converted common file for review, packaged public distributions, tarballs)
+dist/
+*.tar.gz
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
