@@ -44,7 +44,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -58,7 +58,7 @@ Removes the specified workspace from the organisation's White Label / Client Por
 
 Calling this API on a workspace that is not currently enabled for domain access fails with error **12050**.
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 # Endpoint
 

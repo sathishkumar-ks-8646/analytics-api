@@ -79,12 +79,12 @@ Every AutoML API needs IDs produced by an earlier one. This is the end-to-end or
 
 | ID | Produced by | Consumed by |
 |----|-------------|-------------|
-| `workspaceId` | [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) | All ten workspace-scoped APIs |
-| `trainingTableId`, `inputTableId` | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) | [Create AutoML Analysis](#5-create-automl-analysis), [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) |
+| `workspaceId` | [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) | All ten workspace-scoped APIs |
+| `trainingTableId`, `inputTableId` | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) | [Create AutoML Analysis](#5-create-automl-analysis), [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) |
 | `analysisId` | [Create AutoML Analysis](#5-create-automl-analysis) response, or [Get AutoML Analysis In Org](#1-get-automl-analysis-in-org) / [Get AutoML Analysis In Workspace](#2-get-automl-analysis-in-workspace) | Every API with `<analysis-id>` in its path |
 | `modelId` | **[Get AutoML Analysis Details](#3-get-automl-analysis-details) only** (`models[].id`) | Every API with `<model-id>` in its path |
 | `deploymentId` | [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) response, or [Get Deployments For A Model](#4-get-deployments-for-a-model) | Every API with `<deployment-id>` in its path |
-| `outputTableId` | [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) response | Read the predictions with the [Row / Export APIs](ROW_API_DOC_INFO.md) |
+| `outputTableId` | [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) response | Read the predictions with the [Row / Export APIs](../05%20%C2%B7%20Data%20Operations/ROW_OPERATIONS.md) |
 
 > **`modelId` has exactly one source.** Models are never returned by the two list APIs — [Get AutoML Analysis Details](#3-get-automl-analysis-details) is the only API that exposes `models[].id`. Any workflow that deploys a model, deletes a model, or runs a What-If must call Get AutoML Analysis Details first.
 
@@ -109,7 +109,7 @@ Every AutoML API needs IDs produced by an earlier one. This is the end-to-end or
 | A **model** ([Delete AutoML Analysis Model](#7-delete-automl-analysis-model)) | The deployment attached to that model, if any. The analysis and its other models survive. |
 | A **deployment** ([Delete AutoML Analysis Model Deployment](#10-delete-automl-analysis-model-deployment)) | Only the deployment. The model becomes deployable again (`isDeployed` returns to `false`). |
 
-> Deleting an analysis or a deployment does **not** delete the output table that a deployment created. Prediction data already written to the output table remains in the workspace and must be removed separately with [Delete View](VIEW_OPERATIONS_API_DOC_INFO.md#5-delete-view).
+> Deleting an analysis or a deployment does **not** delete the output table that a deployment created. Prediction data already written to the output table remains in the workspace and must be removed separately with [Delete View](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#5-delete-view).
 
 ---
 
@@ -141,7 +141,7 @@ Before any business logic runs, the write APIs check two things:
 
 ## White Label / Client Portal Behaviour
 
-All eleven APIs are blocked in Client Portal / White Label request contexts — the same posture as the [Embed URL](EMBEDURL_API_DOC_INFO.md#white-label--client-portal-behaviour) and [Email Schedule](EMAIL_SCHEDULES_API_DOC_INFO.md#white-label--client-portal-behaviour) families.
+All eleven APIs are blocked in Client Portal / White Label request contexts — the same posture as the [Embed URL](../08%20%C2%B7%20Share%20%26%20Publish/EMBED_URL.md#white-label--client-portal-behaviour) and [Email Schedule](../09%20%C2%B7%20Schedules%20%26%20Alerts/EMAIL_SCHEDULES.md#white-label--client-portal-behaviour) families.
 
 | Scenario | Result |
 |----------|--------|
@@ -164,7 +164,7 @@ Returns every AutoML analysis across **all workspaces** in the organization, eac
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID whose analyses are listed. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organization. A Workspace Admin is **not** sufficient. |
 
-> This API has no CONFIG parameter and no workspace in its path.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. The path has no workspace segment.
 
 ### Sample Requests
 
@@ -297,7 +297,7 @@ Returns every AutoML analysis defined in one workspace. Identical to [Get AutoML
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -402,7 +402,7 @@ ZANALYTICS-ORGID: 700000654321
 | **Unfiltered and unpaged** | No search, sort, or paging parameters. |
 | **Empty array, not an error** | A workspace with no analyses returns HTTP 200 with `"analysis": []`. |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
-| **Dependency chain** | [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → Get AutoML Analysis In Workspace → `id` → [Get AutoML Analysis Details](#3-get-automl-analysis-details). |
+| **Dependency chain** | [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → Get AutoML Analysis In Workspace → `id` → [Get AutoML Analysis Details](#3-get-automl-analysis-details). |
 
 ### Error Codes
 
@@ -426,7 +426,7 @@ Returns the full definition of one analysis **together with every model trained 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -616,9 +616,9 @@ ZANALYTICS-ORGID: 700000654321
 |------|--------|----------|
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
 | 7301 | `SECURITY_NOT_PERMITTED` — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |
+| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 | 21000009 | `ANALYSIS_NOT_BELONGS_TO_DB` — The analysis does not belong to the workspace in the URL, or does not exist. | Verify `<analysis-id>` against [Get AutoML Analysis In Workspace](#2-get-automl-analysis-in-workspace). |
 | 21000014 | `AUTOML_NOT_ENABLED` / `AUTOML_PRICING_EXCEED` — AutoML is disabled for the organization, or its limit is exhausted. | See [Feature Enablement and Plan Limits](#feature-enablement-and-plan-limits). |
-| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 ---
 
@@ -634,7 +634,7 @@ Returns the deployment configured for a model — its input and output tables, s
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -742,7 +742,7 @@ ZANALYTICS-ORGID: 700000654321
 | `deployments.inputTable` | String | Name of the table whose rows are scored. |
 | `deployments.inputTableId` | String | ID of that input table, as a string. |
 | `deployments.outputTable` | String | Name of the table the predictions are written to. |
-| `deployments.outputTableId` | String | ID of the output table. Use it with the [Row / Export APIs](ROW_API_DOC_INFO.md) to read the predictions. |
+| `deployments.outputTableId` | String | ID of the output table. Use it with the [Row / Export APIs](../05%20%C2%B7%20Data%20Operations/ROW_OPERATIONS.md) to read the predictions. |
 | `deployments.status` | String | Status of the **most recent run** of the deployment, e.g. `"In progress"`, `"Completed"`. **Distinct from the top-level `status`.** |
 | `deployments.lastDeploymentTime` | String | When the deployment last ran, in `dd MMM yyyy HH:mm:ss` format. |
 | `deployments.outputColumns` | JSONArray of String | Columns copied from the input table into the output table alongside the prediction. |
@@ -759,7 +759,7 @@ ZANALYTICS-ORGID: 700000654321
 | **Plural key, singular value** | `data.deployments` is a JSONObject, not a JSONArray, because the one-deployment-per-model rule makes a list unnecessary. Do not iterate it. |
 | **Two different `status` fields** | `deployments.status` is the outcome of the last scoring run; the top-level `status` is the HTTP call result. |
 | **The run-status polling endpoint** | [Run AutoML Analysis](#9-run-automl-analysis) returns 204 immediately without a job handle. This API is the only way to observe whether that run finished. |
-| **`outputTableId` is the handoff to the data APIs** | The predictions themselves are ordinary table rows — read them with the [Row / Export APIs](ROW_API_DOC_INFO.md) using this ID. |
+| **`outputTableId` is the handoff to the data APIs** | The predictions themselves are ordinary table rows — read them with the [Row / Export APIs](../05%20%C2%B7%20Data%20Operations/ROW_OPERATIONS.md) using this ID. |
 | **Case asymmetry on `importType`** | Lower case here, upper case on the request. |
 | **Schedule is not echoed** | The `scheduleDetails` sent at creation cannot be read back through any API. |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
@@ -771,10 +771,10 @@ ZANALYTICS-ORGID: 700000654321
 |------|--------|----------|
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
 | 7301 | `SECURITY_NOT_PERMITTED` — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |
+| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 | 21000009 | `ANALYSIS_NOT_BELONGS_TO_DB` — The analysis is not in this workspace. | Verify `<analysis-id>`. |
 | 21000010 | `MODEL_NOT_BELONGS_TO_ANALYSIS` — The model is not part of this analysis. | Verify `<model-id>` via [Get AutoML Analysis Details](#3-get-automl-analysis-details). |
 | 21000014 | `AUTOML_NOT_ENABLED` / `AUTOML_PRICING_EXCEED` — AutoML is disabled or over limit. | See [Feature Enablement and Plan Limits](#feature-enablement-and-plan-limits). |
-| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 ---
 
@@ -1029,13 +1029,13 @@ CONFIG={
 | **Training table must be in the workspace** | A table from another workspace fails with `7319`, and a non-existent ID surfaces as `7005`. |
 | **No `criteria`** | The training set is the whole table. To train on a subset, build a filtered query table or view first and use that as `trainingTableId`. |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `trainingTableId` → Create AutoML Analysis → `data.id` → [Get AutoML Analysis Details](#3-get-automl-analysis-details). |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `trainingTableId` → Create AutoML Analysis → `data.id` → [Get AutoML Analysis Details](#3-get-automl-analysis-details). |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7005 | `COMMON_INTERNAL_SERVER_ERROR` — Surfaces when `trainingTableId` does not identify a real table. | Verify the ID via [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7005 | `COMMON_INTERNAL_SERVER_ERROR` — Surfaces when `trainingTableId` does not identify a real table. | Verify the ID via [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
 | 7301 | `SECURITY_NOT_PERMITTED` — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |
 | 7319 | `OBJID_NOT_BELONGS_TO_DB` — The training table belongs to a different workspace. | Use a table from `<workspace-id>`. |
@@ -1043,6 +1043,7 @@ CONFIG={
 | 8079 | `ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION` — A mandatory attribute is missing. | The message names the attribute. |
 | 8119 | `INVALID_VALUE_FOR_ATTRIBUTE` — `serverOption` or `predictionType` is outside its allowed set. | The message names the attribute and permitted values. |
 | 8504 | `LESS_THAN_MIN_OCCURANCE` — CONFIG is absent, or a required key is missing at the template level. | Send a complete CONFIG object. |
+| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
 | 8547 | `ARRAY_SIZE_OUT_OF_RANGE` — `features` is empty or exceeds the allowed array size. | Send between 3 and 20 feature names. |
 | 21000003 | `ANALYSISNAME_DUPLICATED` — An analysis with this `name` already exists in the workspace. | Choose a different name. |
 | 21000014 | `AUTOML_NOT_ENABLED` / `AUTOML_PRICING_EXCEED` — AutoML is disabled or over limit. | See [Feature Enablement and Plan Limits](#feature-enablement-and-plan-limits). |
@@ -1055,13 +1056,12 @@ CONFIG={
 | 21000025 | `MAXENTROPY_MIN_ALGO_ERROR` — `maxEntropy` was combined with other algorithms. | Send `maxEntropy` on its own. |
 | 21000026 | `FEATURES_MIN_ERROR` — Fewer than 3 features supplied. | Send at least 3. |
 | 21000027 | `FEATURES_MAX_ERROR` — More than 20 features supplied. | Send at most 20. |
-| 21000028 | `FEATURE_MISSING_IN_TABLE_ERROR` — A feature name does not exist in the training table. | Verify names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 21000028 | `FEATURE_MISSING_IN_TABLE_ERROR` — A feature name does not exist in the training table. | Verify names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 21000029 | `INVALID_DATATYPE_FOR_FEATURE` — A feature's data type is not usable by the chosen algorithm. | Choose a different column or algorithm. |
 | 21000030 | `TARGETCOL_MISSING_IN_TABLE_ERROR` — `targetColumn` does not exist in the training table. | Verify the column name. |
 | 21000031–21000035 | `INVALID_DATATYPE_HYPERPARAM_ERROR`, `HYPERPARAM_BTWN_ERROR`, `HYPERPARAM_MINVAL_ERROR`, `HYPERPARAM_MAXVAL_ERROR`, `HYPERPARAM_DROPLIST_ERROR` — A hyperparameter value is the wrong type, out of range, or not in its allowed list. | Correct the value named in the message. |
 | 21000047 | `FEATURE_DUPLICATION_ERROR` — `features` contains duplicates. | Remove the duplicates. |
 | 21000048 | `TARGETCOL_IN_FEATURELIST_ERROR` — `targetColumn` also appears in `features`. | Remove it from `features`. |
-| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
 
 ---
 
@@ -1077,7 +1077,7 @@ Deletes an analysis **and everything beneath it** — all its models, and all de
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -1145,7 +1145,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 |--------|--------|
 | **Success response has no body** | Delete AutoML Analysis returns a bare HTTP `204 No Content` — no `status`/`summary` JSON, and no report of how many models or deployments were removed. |
 | **Cascades over the whole subtree** | Every model under the analysis, and every deployment under those models, is deleted in the same call. There is no partial or "detach only" mode. |
-| **Output tables survive** | Tables that deployments created, and the prediction rows already written into them, remain in the workspace. Remove them separately with [Delete View](VIEW_OPERATIONS_API_DOC_INFO.md#5-delete-view) if they are no longer needed. |
+| **Output tables survive** | Tables that deployments created, and the prediction rows already written into them, remain in the workspace. Remove them separately with [Delete View](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#5-delete-view) if they are no longer needed. |
 | **Training table is untouched** | The source table used for training is a normal workspace table and is never affected. |
 | **No trash, no restore** | A deleted analysis cannot be recovered. Recreating it produces new analysis, model, and deployment IDs, and training starts from scratch. |
 | **Not idempotent** | Deleting the same analysis twice fails with `21000009`, because the ID no longer resolves within the workspace. |
@@ -1159,9 +1159,9 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 |------|--------|----------|
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
 | 7301 | `SECURITY_NOT_PERMITTED` — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |
+| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.delete`. |
 | 21000009 | `ANALYSIS_NOT_BELONGS_TO_DB` — The analysis is not in this workspace, or was already deleted. | Verify `<analysis-id>` via [Get AutoML Analysis In Workspace](#2-get-automl-analysis-in-workspace). |
 | 21000014 | `AUTOML_NOT_ENABLED` / `AUTOML_PRICING_EXCEED` — AutoML is disabled or over limit. | See [Feature Enablement and Plan Limits](#feature-enablement-and-plan-limits). |
-| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.delete`. |
 
 ---
 
@@ -1177,7 +1177,7 @@ Deletes one model from an analysis, along with the deployment attached to it. Th
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -1245,10 +1245,10 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 |------|--------|----------|
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
 | 7301 | `SECURITY_NOT_PERMITTED` — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |
+| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.delete`. |
 | 21000009 | `ANALYSIS_NOT_BELONGS_TO_DB` — The analysis is not in this workspace. | Verify `<analysis-id>`. |
 | 21000010 | `MODEL_NOT_BELONGS_TO_ANALYSIS` — The model is not part of this analysis, or was already deleted. | Verify `<model-id>` via [Get AutoML Analysis Details](#3-get-automl-analysis-details). |
 | 21000014 | `AUTOML_NOT_ENABLED` / `AUTOML_PRICING_EXCEED` — AutoML is disabled or over limit. | See [Feature Enablement and Plan Limits](#feature-enablement-and-plan-limits). |
-| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.delete`. |
 
 ---
 
@@ -1462,7 +1462,7 @@ CONFIG={
 | `data` | JSONObject | Response payload wrapper. |
 | `data.deployments` | JSONObject | Details of the deployment just created. A single object, not an array. |
 | `deployments.deploymentId` | String | ID of the new deployment, as a string. Use as `<deployment-id>` in [Run AutoML Analysis](#9-run-automl-analysis) and [Delete AutoML Analysis Model Deployment](#10-delete-automl-analysis-model-deployment). |
-| `deployments.outputTableId` | String | ID of the output table, as a string — newly created if `outputTable` did not already exist. Read the predictions from it with the [Row / Export APIs](ROW_API_DOC_INFO.md). |
+| `deployments.outputTableId` | String | ID of the output table, as a string — newly created if `outputTable` did not already exist. Read the predictions from it with the [Row / Export APIs](../05%20%C2%B7%20Data%20Operations/ROW_OPERATIONS.md). |
 
 > Only these two IDs are returned. The full deployment definition can be read back with [Get Deployments For A Model](#4-get-deployments-for-a-model).
 
@@ -1479,7 +1479,7 @@ CONFIG={
 | **Weekly and monthly schedules are currently unusable** | See the caveat under [`scheduleDetails` Fields](#scheduledetails-fields). |
 | **No `criteria`** | The whole input table is scored. To score a subset, point `inputTableId` at a filtered query table or view. |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
-| **Dependency chain** | [Get AutoML Analysis Details](#3-get-automl-analysis-details) → `modelId` (with `trainingStatus: "Completed"`, `isDeployed: false`) + [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `inputTableId` → Create Deployment → `deploymentId` → [Run AutoML Analysis](#9-run-automl-analysis). |
+| **Dependency chain** | [Get AutoML Analysis Details](#3-get-automl-analysis-details) → `modelId` (with `trainingStatus: "Completed"`, `isDeployed: false`) + [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `inputTableId` → Create Deployment → `deploymentId` → [Run AutoML Analysis](#9-run-automl-analysis). |
 
 ### Error Codes
 
@@ -1492,6 +1492,7 @@ CONFIG={
 | 8079 | `ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION` — A required attribute is missing; for weekly/monthly schedules this reports `'day'`. | The message names the attribute. See the schedule caveat above. |
 | 8119 | `INVALID_VALUE_FOR_ATTRIBUTE` — `serverOption`, `hour`, `minute`, or `interval` is outside its permitted set. | The message names the attribute and the allowed values. |
 | 8504 | `LESS_THAN_MIN_OCCURANCE` — CONFIG is absent or a mandatory key is missing at the template level. | Send a complete CONFIG object. |
+| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
 | 8544 | `OUT_OF_RANGE` — A schedule value is outside its declared range. | Correct the value. |
 | 21000001 | `FEATURES_NOTAVAILABLEINTABLE_ERROR` — The input table lacks one or more of the model's feature columns. | Use an input table with the same feature columns as the training table. |
 | 21000009 | `ANALYSIS_NOT_BELONGS_TO_DB` — The analysis is not in this workspace. | Verify `<analysis-id>`. |
@@ -1508,7 +1509,6 @@ CONFIG={
 | 21000051 | `MODEL_ALREADY_DEPLOYED` — The model already has a deployment. | Delete the existing deployment first, or deploy a different model. |
 | 21000052 | `MODEL_INPROGRESS_FOR_DEPLOYMENT` — The model is still training. | Wait until `trainingStatus` is `"Completed"`. |
 | 21000053 | `MODEL_FAILED_FOR_DEPLOYMENT` — The model's training failed. | Deploy a different model, or recreate the analysis. |
-| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
 
 ---
 
@@ -1524,7 +1524,7 @@ Triggers a deployment immediately — the "run now" action. Scores the input tab
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
 
-> This API has no CONFIG parameter. Note that the path segment is `/deployments/<deployment-id>/execute` — the **model ID does not appear**, unlike the deployment-creation path.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. Note that the path segment is `/deployments/<deployment-id>/execute` — the **model ID does not appear**, unlike the deployment-creation path.
 
 ### Sample Requests
 
@@ -1605,7 +1605,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **It writes real data** | The output table is modified according to the deployment's `importType` — `TRUNCATEADD` will delete its existing rows. There is no dry-run mode. |
 | **Works with or without a schedule** | A deployment created with `calendarFrequency: "none"` runs only through this API; a scheduled deployment can additionally be forced to run at any time. |
 | **Does not shift the recurring schedule** | A manual run is a one-off; the next scheduled occurrence is unaffected. |
-| **Read results from the output table** | The predictions are ordinary rows — fetch them with the [Row / Export APIs](ROW_API_DOC_INFO.md) using `outputTableId`. |
+| **Read results from the output table** | The predictions are ordinary rows — fetch them with the [Row / Export APIs](../05%20%C2%B7%20Data%20Operations/ROW_OPERATIONS.md) using `outputTableId`. |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
 | **Dependency chain** | [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) or [Get Deployments For A Model](#4-get-deployments-for-a-model) → `deploymentId` → Run AutoML Analysis → poll [Get Deployments For A Model](#4-get-deployments-for-a-model) → read `outputTableId` with the data APIs. |
 
@@ -1615,11 +1615,11 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 |------|--------|----------|
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
 | 7301 | `SECURITY_NOT_PERMITTED` — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |
+| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
 | 21000006 | `DEPLOYMENT_FAILURE` — The scoring job could not be started or failed during execution. | Check that the input table still has the model's feature columns, then retry. |
 | 21000009 | `ANALYSIS_NOT_BELONGS_TO_DB` — The analysis is not in this workspace. | Verify `<analysis-id>`. |
 | 21000012 | `DEPLOYMENT_NOT_BELONGS_TO_ANALYSIS` — The deployment is not part of this analysis, or does not exist. | Verify `<deployment-id>` via [Get Deployments For A Model](#4-get-deployments-for-a-model). |
 | 21000014 | `AUTOML_NOT_ENABLED` / `AUTOML_PRICING_EXCEED` — AutoML is disabled or over limit. | See [Feature Enablement and Plan Limits](#feature-enablement-and-plan-limits). |
-| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
 
 ---
 
@@ -1635,7 +1635,7 @@ Deletes a deployment. The model becomes deployable again; the analysis, the mode
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
 
-> This API has no CONFIG parameter. As with [Run AutoML Analysis](#9-run-automl-analysis), the path addresses the deployment under the **analysis**, not under the model.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. As with [Run AutoML Analysis](#9-run-automl-analysis), the path addresses the deployment under the **analysis**, not under the model.
 
 ### Sample Requests
 
@@ -1703,10 +1703,10 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 |------|--------|----------|
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
 | 7301 | `SECURITY_NOT_PERMITTED` — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |
+| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.delete`. |
 | 21000009 | `ANALYSIS_NOT_BELONGS_TO_DB` — The analysis is not in this workspace. | Verify `<analysis-id>`. |
 | 21000012 | `DEPLOYMENT_NOT_BELONGS_TO_ANALYSIS` — The deployment is not part of this analysis, or was already deleted. | Verify `<deployment-id>` via [Get Deployments For A Model](#4-get-deployments-for-a-model). |
 | 21000014 | `AUTOML_NOT_ENABLED` / `AUTOML_PRICING_EXCEED` — AutoML is disabled or over limit. | See [Feature Enablement and Plan Limits](#feature-enablement-and-plan-limits). |
-| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.delete`. |
 
 ---
 
@@ -1876,6 +1876,7 @@ CONFIG={
 | 8078 | `EMPTY_JSON_ATTRIBUTE_FOUND` — `features` was sent as an empty object. | Supply every training feature and its value. |
 | 8079 | `ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION` — `features` is missing from CONFIG. | Include the `features` object. |
 | 8504 | `LESS_THAN_MIN_OCCURANCE` — CONFIG is absent. | Send a CONFIG object containing `features`. |
+| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
 | 21000006 | `DEPLOYMENT_FAILURE` — Scoring failed, typically because a feature value does not match its column's data type. | Send values matching each feature column's type. |
 | 21000009 | `ANALYSIS_NOT_BELONGS_TO_DB` — The analysis is not in this workspace. | Verify `<analysis-id>`. |
 | 21000010 | `MODEL_NOT_BELONGS_TO_ANALYSIS` — The model is not part of this analysis. | Verify `<model-id>` via [Get AutoML Analysis Details](#3-get-automl-analysis-details). |
@@ -1883,7 +1884,6 @@ CONFIG={
 | 21000043 | `MODEL_TRAINING_INPROGRESS` — The model is still training. | Wait until `trainingStatus` reads `"Completed"`. |
 | 21000050 | `FEATURE_MISSING_IN_WHATIF` — One or more training features are absent from `features`. | Supply every feature listed in `analysis.features`. |
 | 21000054 | `WHATIF_NOT_SUPPORTED` — The model's algorithm does not support What-If analysis. | Use a model trained with a supporting algorithm. |
-| 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
 
 ---
 
@@ -1896,7 +1896,7 @@ CONFIG={
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required only for the three APIs that send a CONFIG body: [Create AutoML Analysis](#5-create-automl-analysis), [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment), and [AutoML What If Analysis](#11-automl-what-if-analysis). The other eight send no payload. |
 | `Host` | `analyticsapi.zoho.com` (or the DC equivalent) | **Mandatory** | Must be the **standard** Zoho Analytics API host. A request whose host is a Client Portal / White Label custom domain is rejected with `7301` for all eleven APIs — see [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization. The AutoML APIs have no cross-org or portal-domain targeting mechanism.
+> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization. The AutoML APIs have no cross-org or portal-domain targeting mechanism.
 
 Example:
 
@@ -1948,7 +1948,7 @@ CONFIG={"name":"PricePredictionAnalysis","trainingTableId":137687000000061002,"p
 - **Still not a source of `modelId`.** This is the most common misstep in the family: neither list API exposes models, so a deploy or What-If workflow must always pass through [Get AutoML Analysis Details](#3-get-automl-analysis-details).
 - **Unfiltered and unpaged**, like every listing API here. Filter client-side.
 - **Case asymmetry on `predictionType`.** Title case on read, upper case on write — never round-trip the value without normalising.
-- **Dependency chain:** [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → Get AutoML Analysis In Workspace → `id` → [Get AutoML Analysis Details](#3-get-automl-analysis-details).
+- **Dependency chain:** [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → Get AutoML Analysis In Workspace → `id` → [Get AutoML Analysis Details](#3-get-automl-analysis-details).
 
 ### Get AutoML Analysis Details
 
@@ -1963,7 +1963,7 @@ CONFIG={"name":"PricePredictionAnalysis","trainingTableId":137687000000061002,"p
 
 - **A JSONObject behind a plural key.** `data.deployments` is a single object because a model may hold only one deployment. Code that iterates it will break.
 - **The only way to observe a run.** [Run AutoML Analysis](#9-run-automl-analysis) returns 204 with no job handle, so `deployments.status` here is the sole progress signal for a scoring job.
-- **`outputTableId` is the bridge to the data APIs.** Predictions are ordinary table rows; this ID is what you feed to the [Row / Export APIs](ROW_API_DOC_INFO.md) to actually consume them.
+- **`outputTableId` is the bridge to the data APIs.** Predictions are ordinary table rows; this ID is what you feed to the [Row / Export APIs](../05%20%C2%B7%20Data%20Operations/ROW_OPERATIONS.md) to actually consume them.
 - **The schedule is write-only.** `scheduleDetails` and `matchingColumns` are never echoed by any API, so an integration that wants to reproduce or clone a deployment must retain its own copy of what it sent.
 - **Case asymmetry on `importType`.** Lower case on read, upper case on write.
 - **Dependency chain:** [Get AutoML Analysis Details](#3-get-automl-analysis-details) → `modelId` → Get Deployments For A Model → `deploymentId` → [Run AutoML Analysis](#9-run-automl-analysis) / [Delete AutoML Analysis Model Deployment](#10-delete-automl-analysis-model-deployment).
@@ -1976,13 +1976,13 @@ CONFIG={"name":"PricePredictionAnalysis","trainingTableId":137687000000061002,"p
 - **`maxEntropy` is a special case in two directions.** It must be the only algorithm in the request, and it inverts the feature rule by requiring exactly one feature where every other algorithm requires at least three.
 - **`targetColumn` must not appear in `features`.** The server rejects it (`21000048`) precisely because it would leak the answer into the model.
 - **Clustering takes no target column at all** — it is unsupervised, and the attribute is simply not read.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `trainingTableId` → Create AutoML Analysis → `data.id` → [Get AutoML Analysis Details](#3-get-automl-analysis-details) to poll training.
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `trainingTableId` → Create AutoML Analysis → `data.id` → [Get AutoML Analysis Details](#3-get-automl-analysis-details) to poll training.
 
 ### Delete AutoML Analysis
 
 - **204 No Content, no body.** Verified against the implementation.
 - **The widest blast radius in the family.** One call removes the analysis, every model under it, and every deployment under those models — including their schedules. There is no partial mode and no confirmation step.
-- **Output tables and their data survive.** The prediction tables that deployments created remain in the workspace, orphaned. Clean them up separately with [Delete View](VIEW_OPERATIONS_API_DOC_INFO.md#5-delete-view) if they are no longer wanted.
+- **Output tables and their data survive.** The prediction tables that deployments created remain in the workspace, orphaned. Clean them up separately with [Delete View](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#5-delete-view) if they are no longer wanted.
 - **No trash, no restore.** Recreating the analysis produces entirely new IDs at all three levels and retrains from scratch.
 - **Frees AutoML capacity**, so a create previously blocked by `21000014` `AUTOML_PRICING_EXCEED` may succeed afterwards.
 - **Dependency chain:** [Get AutoML Analysis In Workspace](#2-get-automl-analysis-in-workspace) → `analysisId` → Delete AutoML Analysis.
@@ -2004,7 +2004,7 @@ CONFIG={"name":"PricePredictionAnalysis","trainingTableId":137687000000061002,"p
 - **`matchingColumns` must be a subset of `outputColumns`.** A merge key that is not written to the destination fails with `21000042`.
 - **Creating is not running.** With `calendarFrequency: "none"` nothing happens until [Run AutoML Analysis](#9-run-automl-analysis) is called.
 - **Weekly and monthly schedules do not currently work.** The server reads a `day` attribute that the published request template does not declare, while the declared `weekDay` / `monthDay` / `hourInterval` keys are never read. Use `none`, `daily`, or `hourly` and see the caveat under [`scheduleDetails` Fields](#scheduledetails-fields).
-- **Dependency chain:** [Get AutoML Analysis Details](#3-get-automl-analysis-details) → `modelId` + [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `inputTableId` → Create Deployment → `deploymentId` + `outputTableId`.
+- **Dependency chain:** [Get AutoML Analysis Details](#3-get-automl-analysis-details) → `modelId` + [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `inputTableId` → Create Deployment → `deploymentId` + `outputTableId`.
 
 ### Run AutoML Analysis
 

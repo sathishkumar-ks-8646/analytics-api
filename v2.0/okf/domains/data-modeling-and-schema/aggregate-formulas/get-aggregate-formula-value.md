@@ -43,7 +43,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -53,7 +53,7 @@ status: stable
 
 Computes and returns the current live value of the specified aggregate formula by executing its expression against the underlying data at request time.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

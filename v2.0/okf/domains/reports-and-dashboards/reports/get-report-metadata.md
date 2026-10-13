@@ -45,10 +45,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-13T08:58:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -58,7 +58,7 @@ status: stable
 
 Returns the stored definition of a chart, pivot or summary view.
 
-> This API has no CONFIG parameter. All input is in the URL path.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 From the OpenAPI specification:
 
@@ -113,6 +113,24 @@ This API is not available on white-label / custom domains. Call the standard RES
 ## Success Response
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Get analysis view metadata"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.reportConfig` | JSONObject | The report's stored definition, shaped like the create CONFIG but **not directly reusable** — see [Round-tripping a report](overview.md#round-tripping-a-report). |
+| `reportConfig.title` | String | Report name. |
+| `reportConfig.description` | String | Free-text description; empty string when none was set. |
+| `reportConfig.reportType` | String | `chart`, `pivot` or `summary`. |
+| `reportConfig.chartType` | String | Chart family (e.g. `line`). Present for `chart` reports. |
+| `reportConfig.baseTableName` | String | Display name of the table the report is built on. |
+| `reportConfig.isAxisMerge` | Boolean | Whether multiple Y axes are merged onto one scale. |
+| `reportConfig.axisColumns` | JSONArray | The drop-field configuration. Same entry shape as the request — see [`axisColumns`](create-report.md#axiscolumns). |
+| `reportConfig.filters` | JSONArray | Static filters. See [`filters`](create-report.md#filters). Present only when the report has them. |
+| `reportConfig.userFilters` | JSONArray | User filters. See [`userFilters`](create-report.md#userfilters). Present only when the report has them. |
 
 ## Notes from the OpenAPI specification
 

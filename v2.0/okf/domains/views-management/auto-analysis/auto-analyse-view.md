@@ -49,7 +49,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -122,6 +122,16 @@ The CONFIG parameter is optional. When provided, it is a JSON object sent as a f
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
 
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Auto Generate Reports"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.status` | String | Human-readable outcome message, e.g. `"Reports generated successfully"`. This is a **display string, not a status enum** — do not branch on its exact wording; use the HTTP status code and the top-level `status` field instead. |
+| | | **The IDs of the generated reports are not returned.** List the workspace's views afterwards to discover them. |
+
 # Examples
 
 ## Sample Requests
@@ -191,6 +201,20 @@ CONFIG={"analyseAgain":true}
 ## SDK Examples
 
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Auto Analyse View](../../../sdk-examples/views-management/auto-analysis/auto-analyse-view.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
+
+# Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **Tables only** | Accepts **Tables, Query Tables and Pipeline Tables** only. A chart, pivot, dashboard or any other derived view fails with **7397**. |
+| **Completion state is tracked** | A table is marked "analysed" after a successful run. A second call without `analyseAgain=true` fails with **8116** and leaves the existing auto-generated views untouched. |
+| **`analyseAgain` on a never-analysed table is harmless** | The guard check treats it as a no-op and the run proceeds as a first-time analysis. |
+| **Re-run after data or schema changes** | New rows change the data distribution and new columns are invisible to views generated earlier. Re-run with `analyseAgain=true` to regenerate against the current table. |
+| **Synchronous, and slow on wide tables** | Every view is created before the response returns. For very large tables prefer [Auto Analyse Column](auto-analyse-column.md) on the columns you care about. |
+| **Empty results are not an error** | A table whose columns are all ineligible can return HTTP 200 having generated few or no views. |
+| **Generated view IDs are not returned** | The response carries only a display message. List the workspace's views afterwards to discover what was created. |
+| **Full comparison with the column API** | See [Auto Analyse View vs Auto Analyse Column — Scope Comparison](overview.md#auto-analyse-view-vs-auto-analyse-column--scope-comparison) and [Edge Cases and Failure Scenarios](overview.md#edge-cases-and-failure-scenarios). |
+| **Dependency chain** | Workspace list → `<workspace-id>` → table `<view-id>` → Auto Analyse View. |
 
 # Error Codes
 

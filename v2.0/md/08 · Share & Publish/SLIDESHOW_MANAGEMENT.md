@@ -22,7 +22,7 @@ Each slideshow also carries an **access type** that decides whether a viewer mus
 > - All six APIs are available in **Client Portal / White Label** contexts.
 > - The three mutating APIs (Create Slide Show, Update Slide Show, Delete Slide Show) additionally require the calling user's **primary email to be verified** — otherwise error `7565`.
 > - Slideshows are a **plan-gated feature**. Every API in this family — including the read-only ones — runs the plan check first and fails with `6063` on plans where slideshows are unavailable.
-> - **No API in this family accepts a `criteria` attribute.** Row-level filtering is not part of the slideshow contract; a slideshow presents each view exactly as that view is defined. Filter the underlying views (or use [Update Publish Configurations](PUBLISH_API_DOC_INFO.md#7-update-publish-configurations) for a published view) instead.
+> - **No API in this family accepts a `criteria` attribute.** Row-level filtering is not part of the slideshow contract; a slideshow presents each view exactly as that view is defined. Filter the underlying views (or use [Update Publish Configurations](PUBLISH.md#7-update-publish-configurations) for a published view) instead.
 
 ---
 
@@ -39,7 +39,7 @@ Each slideshow also carries an **access type** that decides whether a viewer mus
 
 > **Note on naming:** The public API portal presents the same six operations under slightly different display names — Get Slideshows, Get Slideshow URL, Get Slideshow Details, Create Slideshow, Update Slideshow, and Delete Slideshow respectively. The underlying paths, scopes, and payloads are identical.
 >
-> **Related APIs not in this document:** the per-view publish channels (public URL, private URL, publish configuration) are documented in [PUBLISH_API_DOC_INFO.md](PUBLISH_API_DOC_INFO.md); view-level sharing is in [SHARING_API_DOC_INFO.md](SHARING_API_DOC_INFO.md).
+> **Related APIs not in this document:** the per-view publish channels (public URL, private URL, publish configuration) are documented in [Publish](PUBLISH.md); view-level sharing is in [Sharing](SHARING.md).
 
 ---
 
@@ -184,7 +184,7 @@ ZANALYTICS-ORGID: 700000654321
 | **`accessType` is numeric here** | In the V2 API `accessType` is the integer `0`/`1`. The older (non-V2) client APIs return the strings `"withLogin"`/`"withoutLogin"` for the same concept — do not mix the two shapes. |
 | **Plan gate applies even to reading** | The slideshow plan entitlement is checked before the list is built, so this read-only API can itself fail with `6063` on a plan where slideshows are unavailable. |
 | **No email-verification requirement** | Unlike the three mutating APIs, this read-only API does not require the caller's primary email to be verified. |
-| **Dependency chain** | [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → `<workspace-id>` → Get Slide List → `<slide-id>` for [Get Slide Info](#3-get-slide-info) / [Get Slide URL](#2-get-slide-url) / [Update Slide Show](#5-update-slide-show) / [Delete Slide Show](#6-delete-slide-show). |
+| **Dependency chain** | [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → `<workspace-id>` → Get Slide List → `<slide-id>` for [Get Slide Info](#3-get-slide-info) / [Get Slide URL](#2-get-slide-url) / [Update Slide Show](#5-update-slide-show) / [Delete Slide Show](#6-delete-slide-show). |
 
 ### Error Codes
 
@@ -370,7 +370,7 @@ ZANALYTICS-ORGID: 700000654321
 
 | Aspect | Detail |
 |--------|--------|
-| **Nothing is persisted** | The rendering options are query-string decoration on the returned URL only. Calling this API does not change the slideshow, and two callers can hold two differently configured URLs for the same `slideId` simultaneously. Contrast with [Update Publish Configurations](PUBLISH_API_DOC_INFO.md#7-update-publish-configurations), which does store per-view presentation settings. |
+| **Nothing is persisted** | The rendering options are query-string decoration on the returned URL only. Calling this API does not change the slideshow, and two callers can hold two differently configured URLs for the same `slideId` simultaneously. Contrast with [Update Publish Configurations](PUBLISH.md#7-update-publish-configurations), which does store per-view presentation settings. |
 | **The full query string is always emitted** | Even a bare call with no CONFIG returns all seven parameters with their defaults, so the URL shape is stable and parseable. |
 | **`autoplay` defaults to `true`** | A call with no CONFIG produces `AUTOPLAY=true&INTERVAL=25`. Send `"autoplay": false` explicitly for a manually advanced presentation. |
 | **`slideInterval` is validated, not clamped** | Values below 10 or above 300 raise `8119` `INVALID_VALUE_FOR_ATTRIBUTE` rather than being rounded into range. The error message names the offending value and the permitted `10-300` range. |
@@ -523,7 +523,7 @@ ZANALYTICS-ORGID: 700000654321
 | `slideInfo.slideKey` | String | The 32-character lowercase hexadecimal secret embedded in the presentation URL. **Treat as a credential** — combined with `slideId` it reconstructs the viewing URL, which needs no sign-in when `accessType` is `1`. Changes whenever [Update Slide Show](#5-update-slide-show) is called with `regenerateSlideKey: true`. |
 | `slideInfo.slideName` | String | Display name of the slideshow. Unique within the workspace. |
 | `slideInfo.accessType` | Number | Whether a viewer must sign in: `0` = access with login, `1` = access without login. See [`accessType` Values](#accesstype-values). |
-| `slideInfo.viewIds` | JSONArray of String | IDs of the views in the slideshow, **in presentation order**. Each ID is a string. Resolve names/types via [Get View Details](VIEW_OPERATIONS_API_DOC_INFO.md#7-get-view-details). |
+| `slideInfo.viewIds` | JSONArray of String | IDs of the views in the slideshow, **in presentation order**. Each ID is a string. Resolve names/types via [Get View Details](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#7-get-view-details). |
 
 ### Notes & Behaviour
 
@@ -531,11 +531,11 @@ ZANALYTICS-ORGID: 700000654321
 |--------|--------|
 | **The only API that returns `slideKey`** | [Get Slide List](#1-get-slide-list) deliberately omits it. If you need to construct a presentation URL yourself, this is where the key comes from — though [Get Slide URL](#2-get-slide-url) is the supported way to build the URL. |
 | **`viewIds` order is the presentation order** | The array is not sorted by ID or name; it is the sequence in which the views are shown. Preserving order matters when round-tripping through [Update Slide Show](#5-update-slide-show), which replaces the whole list. |
-| **View names are not resolved** | Only IDs are returned. Pair with [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) if you need to display names. |
+| **View names are not resolved** | Only IDs are returned. Pair with [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) if you need to display names. |
 | **Does not re-check per-view access** | The permission check is at workspace level (owner, or Create Slideshow permission). This API does not verify that the caller can read each view in `viewIds`, so a slideshow may list views the caller cannot open individually. |
 | **Error precedence: `7351` before `7396`** | A wrong or non-existent `<slide-id>` is caught first by the workspace-membership check and reported as `7351`. `7396` surfaces only in the rarer case where the slideshow record exists but its slide details cannot be read. |
 | **No email-verification requirement** | Unlike the three mutating APIs, this read-only API does not require the caller's primary email to be verified. |
-| **Dependency chain** | [Get Slide List](#1-get-slide-list) → `<slide-id>` → Get Slide Info → (optional) [Get View Details](VIEW_OPERATIONS_API_DOC_INFO.md#7-get-view-details) for each `viewIds` entry. |
+| **Dependency chain** | [Get Slide List](#1-get-slide-list) → `<slide-id>` → Get Slide Info → (optional) [Get View Details](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#7-get-view-details) for each `viewIds` entry. |
 
 ### Error Codes
 
@@ -708,7 +708,7 @@ CONFIG={
 | **The returned URL uses defaults only** | There is no way to pass rendering options to this API — `slideURL` options belong to [Get Slide URL](#2-get-slide-url). The URL returned here is a convenience, not a configured artefact. |
 | **Portal domain is automatic in a portal context** | When called through a Client Portal / White Label domain, the returned `slideUrl` is already on that domain; no CONFIG flag is involved. |
 | **No `criteria` support** | Slideshows present each view as defined; there is no row-filter attribute on this API. |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `viewIds` → Create Slide Show → `slideId` → [Get Slide URL](#2-get-slide-url) / [Get Slide Info](#3-get-slide-info). |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `viewIds` → Create Slide Show → `slideId` → [Get Slide URL](#2-get-slide-url) / [Get Slide Info](#3-get-slide-info). |
 
 ### Error Codes
 
@@ -718,7 +718,7 @@ CONFIG={
 | 6056 | `SHAREDUSR_PUBLISHCNT_VIOLATION` — A shared user requested `accessType: 1` on a plan that restricts it. | Ask the workspace owner to create the slideshow, use `accessType: 0`, or upgrade the plan. |
 | 6063 | `SLIDESHOW_NOT_ALLOWED` — The workspace owner's plan does not include the slideshow feature. | Upgrade the plan to one that supports slideshows. |
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
-| 7104 | `META_OBJECT_NOT_PRESENT` — A view in `viewIds` does not exist. | Verify the IDs via [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — A view in `viewIds` does not exist. | Verify the IDs via [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | 7196 | `SLIDENAME_ALREADY_EXISTS` — Another slideshow in this workspace already uses `slideName`. | Choose a different name, or update the existing slideshow via [Update Slide Show](#5-update-slide-show). |
 | 7301 | `SECURITY_NOT_PERMITTED` — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace. |
 | 7319 | `OBJID_NOT_BELONGS_TO_DB` — A view in `viewIds` belongs to a different workspace. | Include only views from `<workspace-id>`. |
@@ -870,7 +870,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Aspect | Detail |
 |--------|--------|
 | **Success response has no body** | Update Slide Show returns a bare HTTP `204 No Content` — no `status`/`summary` JSON to parse, and no updated `slideUrl`. Fetch the new URL from [Get Slide URL](#2-get-slide-url) after rotating the key. |
-| **True partial update** | Only keys present in CONFIG are applied; omitted attributes keep their values. This is the opposite of [Update Publish Configurations](PUBLISH_API_DOC_INFO.md#7-update-publish-configurations), which rebuilds its whole configuration on every call. |
+| **True partial update** | Only keys present in CONFIG are applied; omitted attributes keep their values. This is the opposite of [Update Publish Configurations](PUBLISH.md#7-update-publish-configurations), which rebuilds its whole configuration on every call. |
 | **`viewIds` replaces, never appends** | Sending two IDs on a slideshow that had five leaves it with exactly those two, in that order. To add or reorder, read the current list from [Get Slide Info](#3-get-slide-info), modify it, and resend it in full. |
 | **Applied in a fixed order** | The server processes `slideName`, then `accessType`, then `viewIds`, then `regenerateSlideKey`. Each step can fail independently — a request that renames and replaces views may therefore have renamed successfully before failing on a bad view ID. Verify with [Get Slide Info](#3-get-slide-info) after a partial failure. |
 | **Re-sending the current name is safe** | The uniqueness check excludes the slideshow being updated, so an idempotent "write the whole object back" pattern does not trip `7196`. |
@@ -888,7 +888,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | 6056 | `SHAREDUSR_PUBLISHCNT_VIOLATION` — A shared user requested a plan-restricted `accessType: 1` or key rotation. | Ask the workspace owner to perform the update, or upgrade the plan. |
 | 6063 | `SLIDESHOW_NOT_ALLOWED` — The workspace owner's plan does not include the slideshow feature. | Upgrade the plan to one that supports slideshows. |
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
-| 7104 | `META_OBJECT_NOT_PRESENT` — A view in `viewIds` does not exist. | Verify the IDs via [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — A view in `viewIds` does not exist. | Verify the IDs via [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | 7196 | `SLIDENAME_ALREADY_EXISTS` — Another slideshow in this workspace already uses the requested `slideName`. | Choose a different name. |
 | 7301 | `SECURITY_NOT_PERMITTED` — The user is neither a workspace owner nor a custom-role user with Create Slideshow permission. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Create Slideshow permission on the workspace. |
 | 7319 | `OBJID_NOT_BELONGS_TO_DB` — A view in `viewIds` belongs to a different workspace. | Include only views from `<workspace-id>`. |
@@ -982,7 +982,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **Success response has no body** | Delete Slide Show returns a bare HTTP `204 No Content` — no `status`/`summary` JSON to parse. |
 | **Views are not affected** | Deleting a slideshow removes only the grouping and its key. The underlying reports, dashboards, and tables remain exactly as they were, with their own sharing and publish state intact. |
 | **Not idempotent** | A second delete of the same `<slide-id>` fails with `7351` `SLIDESHOW_NOT_BELONGS_TO_DB`, because the slideshow can no longer be found in the workspace. Guard repeats with a [Get Slide List](#1-get-slide-list) check rather than relying on a silent success. |
-| **Revokes the URL immediately** | Any presentation URL for this slideshow stops working as soon as the delete completes. There is no trash or restore path for slideshows — unlike views, which go through the [Trash APIs](TRASH_API_DOC_INFO.md). |
+| **Revokes the URL immediately** | Any presentation URL for this slideshow stops working as soon as the delete completes. There is no trash or restore path for slideshows — unlike views, which go through the [Trash APIs](../06%20%C2%B7%20Views%20Management/TRASH_MANAGEMENT.md). |
 | **Single slideshow per call** | The V2 API deletes one `<slide-id>` at a time; there is no bulk-delete payload. Loop over [Get Slide List](#1-get-slide-list) to clear several. |
 | **Plan gate still applies** | The slideshow plan entitlement is checked before the delete, so the call can fail with `6063` on a plan where slideshows are unavailable even though the operation is destructive rather than creative. |
 | **Dependency chain** | [Get Slide List](#1-get-slide-list) (confirm the slideshow exists) → Delete Slide Show. |
@@ -1005,10 +1005,10 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Header | Value | Required | Description |
 |--------|-------|----------|-------------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. Must carry the `ZohoAnalytics.embed.*` scope matching the operation (see [Appendix B](#appendix-b--oauth-scope-summary)). |
-| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the slideshow. Obtainable from the [Get Organizations](ORG_INFO_API_DOC_INFO.md) response or from listing API responses as the `orgId` field. |
+| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the slideshow. Obtainable from the [Get Organizations](../01%20%C2%B7%20Organization%20Management/ORG_INFO_AND_SETTINGS.md) response or from listing API responses as the `orgId` field. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required only for the two APIs that send a CONFIG body: [Create Slide Show](#4-create-slide-show) and [Update Slide Show](#5-update-slide-show). [Get Slide URL](#2-get-slide-url) takes its optional CONFIG as a URL-encoded query parameter instead; the other three APIs send no payload at all. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization. Client Portal / White Label handling in the slideshow APIs is either automatic (when the request arrives through the portal domain) or expressed through the `withCustomDomain` flag on [Get Slide URL](#2-get-slide-url) — the two mechanisms are unrelated and must never be substituted for one another.
+> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization. Client Portal / White Label handling in the slideshow APIs is either automatic (when the request arrives through the portal domain) or expressed through the `withCustomDomain` flag on [Get Slide URL](#2-get-slide-url) — the two mechanisms are unrelated and must never be substituted for one another.
 
 Example:
 
@@ -1035,7 +1035,7 @@ CONFIG={"slideName":"Sales Overview","viewIds":["137687000006991601"]}
 | Update Slide Show | PUT | `ZohoAnalytics.embed.update` |
 | Delete Slide Show | DELETE | `ZohoAnalytics.embed.delete` |
 
-> Unlike the [Publish APIs](PUBLISH_API_DOC_INFO.md#appendix-b--oauth-scope-summary), the slideshow family maps cleanly onto the four CRUD scopes — the three read APIs share `embed.read`, and create/update/delete each use their matching scope. An integration that manages slideshows end to end needs all four.
+> Unlike the [Publish APIs](PUBLISH.md#appendix-b--oauth-scope-summary), the slideshow family maps cleanly onto the four CRUD scopes — the three read APIs share `embed.read`, and create/update/delete each use their matching scope. An integration that manages slideshows end to end needs all four.
 
 ---
 
@@ -1048,12 +1048,12 @@ CONFIG={"slideName":"Sales Overview","viewIds":["137687000006991601"]}
 - **Withholds the secret deliberately.** `slideKey` is excluded so a broad listing cannot leak presentation URLs. That makes this the safe API to expose to a listing UI; [Get Slide Info](#3-get-slide-info) is the one that needs tighter access control.
 - **`accessType` shape differs from the legacy client APIs.** V2 returns the integers `0`/`1`; the older non-V2 APIs return the strings `"withLogin"`/`"withoutLogin"` for the same field. Do not write code that accepts either without normalising.
 - **A read that can fail on plan.** Because the slideshow entitlement check runs before the list is built, `6063` is a realistic failure mode even for this read-only call — handle it rather than assuming reads always succeed.
-- **Dependency chain:** [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → Get Slide List → `<slide-id>` for every other API here.
+- **Dependency chain:** [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → Get Slide List → `<slide-id>` for every other API here.
 
 ### Get Slide URL
 
 - **The only stateless API in the family.** It reads the slideshow and returns a decorated URL; nothing is written. Two consumers can hold two differently configured URLs for the same slideshow at the same time, which makes it safe to call per-consumer rather than per-slideshow.
-- **Rendering options live here, not on the slideshow.** There is no stored presentation configuration for a slideshow (contrast [Update Publish Configurations](PUBLISH_API_DOC_INFO.md#7-update-publish-configurations) for a published view). If a caller needs consistent options, it must send the same CONFIG every time.
+- **Rendering options live here, not on the slideshow.** There is no stored presentation configuration for a slideshow (contrast [Update Publish Configurations](PUBLISH.md#7-update-publish-configurations) for a published view). If a caller needs consistent options, it must send the same CONFIG every time.
 - **`autoplay` defaults to `true`.** A bare call returns an auto-advancing URL at 25-second intervals. This is easy to get wrong when porting from documentation that lists the default as `false` — send the flag explicitly if it matters.
 - **`slideInterval` is the one hard-validated field.** Outside `10-300` it raises `8119` rather than clamping, and the error message names both the value and the range.
 - **`withCustomDomain` can be ignored without telling you.** Non-Organization-Admin callers, or workspaces with no portal domain, get a normal-domain URL and HTTP 200. Inspect the host in `slideUrl` to know which form you received.
@@ -1067,7 +1067,7 @@ CONFIG={"slideName":"Sales Overview","viewIds":["137687000006991601"]}
 - **`viewIds` order carries meaning.** It is presentation order, not sort order. Round-tripping it through an unordered collection will silently reshuffle the slideshow.
 - **Workspace-level permission only.** The call does not verify that the caller can read each view listed in `viewIds`, so the response can name views the caller cannot open individually.
 - **Error precedence matters when debugging.** `7351` (wrong workspace / no such slideshow) is raised before the slide-details lookup, so `7396` indicates a genuinely inconsistent record rather than a bad ID.
-- **Dependency chain:** [Get Slide List](#1-get-slide-list) → Get Slide Info → [Get View Details](VIEW_OPERATIONS_API_DOC_INFO.md#7-get-view-details) per `viewIds` entry.
+- **Dependency chain:** [Get Slide List](#1-get-slide-list) → Get Slide Info → [Get View Details](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#7-get-view-details) per `viewIds` entry.
 
 ### Create Slide Show
 
@@ -1076,12 +1076,12 @@ CONFIG={"slideName":"Sales Overview","viewIds":["137687000006991601"]}
 - **`accessType: 1` changes the risk profile of the call.** It turns the slideshow into a login-free link, which is why it pulls in the private-link plan entitlement (`6054`/`6056`) and the organization's private-link security control (`8088`). A create with `accessType: 0` bypasses both and will succeed on plans where `1` fails.
 - **Workspace membership is checked; per-view readability is not.** All `viewIds` must live in `<workspace-id>` (`7319`), but the caller's read access to each view is not re-verified on this path.
 - **The returned URL is a convenience with fixed options.** It always carries the defaults; there is no way to influence it from this API. Call [Get Slide URL](#2-get-slide-url) when the presentation options matter.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `viewIds` → Create Slide Show → `slideId` → [Get Slide URL](#2-get-slide-url).
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `viewIds` → Create Slide Show → `slideId` → [Get Slide URL](#2-get-slide-url).
 
 ### Update Slide Show
 
 - **204 No Content, no body.** Verified against the implementation and the recorded request samples. Never parse a JSON success body, and never expect the rotated `slideUrl` back — fetch it from [Get Slide URL](#2-get-slide-url).
-- **Genuinely partial, unlike the publish-config API.** Omitted attributes retain their values, so a minimal CONFIG is safe here. This is the opposite of [Update Publish Configurations](PUBLISH_API_DOC_INFO.md#7-update-publish-configurations), which resets every omitted field — do not carry a read-merge-write habit from one API to the other assuming it is required.
+- **Genuinely partial, unlike the publish-config API.** Omitted attributes retain their values, so a minimal CONFIG is safe here. This is the opposite of [Update Publish Configurations](PUBLISH.md#7-update-publish-configurations), which resets every omitted field — do not carry a read-merge-write habit from one API to the other assuming it is required.
 - **`viewIds` is the one field that *is* a full replace.** It swaps the entire ordered list. "Add a view" therefore means [Get Slide Info](#3-get-slide-info) → append → resend everything.
 - **Partial application is possible on failure.** The four operations are applied in sequence (name, access type, views, key rotation) and each can fail on its own. A request that renames and then hits `7319` on a view ID leaves the rename in place. Always re-read with [Get Slide Info](#3-get-slide-info) after an error on a multi-field update.
 - **Two fields trigger private-link gating.** `accessType: 1` and `regenerateSlideKey: true` both run the plan check (`6054`/`6056`) and the security-control check (`8088`); a rename-only update runs neither.
@@ -1091,8 +1091,8 @@ CONFIG={"slideName":"Sales Overview","viewIds":["137687000006991601"]}
 ### Delete Slide Show
 
 - **204 No Content, no body.** Verified against the implementation and the recorded request samples.
-- **Destroys the grouping, not the content.** The views keep their own definitions, sharing, and publish state. Nothing in [SHARING_API_DOC_INFO.md](SHARING_API_DOC_INFO.md) or [PUBLISH_API_DOC_INFO.md](PUBLISH_API_DOC_INFO.md) is affected by deleting a slideshow.
-- **No trash, no restore.** Unlike views, a deleted slideshow does not land in the [Trash](TRASH_API_DOC_INFO.md) — it is gone, and so is its slide key. Recreating it produces a new `slideId` and a new key, so previously shared URLs cannot be revived.
+- **Destroys the grouping, not the content.** The views keep their own definitions, sharing, and publish state. Nothing in [Sharing](SHARING.md) or [Publish](PUBLISH.md) is affected by deleting a slideshow.
+- **No trash, no restore.** Unlike views, a deleted slideshow does not land in the [Trash](../06%20%C2%B7%20Views%20Management/TRASH_MANAGEMENT.md) — it is gone, and so is its slide key. Recreating it produces a new `slideId` and a new key, so previously shared URLs cannot be revived.
 - **Not idempotent.** A repeat delete fails with `7351`. Check existence via [Get Slide List](#1-get-slide-list) if a caller may retry.
 - **One at a time.** There is no bulk payload; clearing several slideshows means iterating over [Get Slide List](#1-get-slide-list).
 - **Dependency chain:** [Get Slide List](#1-get-slide-list) → Delete Slide Show.

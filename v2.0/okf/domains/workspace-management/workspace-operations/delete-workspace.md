@@ -43,7 +43,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -53,7 +53,7 @@ status: stable
 
 Permanently deletes the specified workspace and all of its contents — tables, views, dashboards, formulas, import configurations, and all sharing settings. This operation is irreversible.
 
-> This API accepts an optional CONFIG parameter. No CONFIG fields are required for standard use.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. An optional CONFIG envelope is accepted but has no documented fields; deletion always proceeds with defaults.
 
 # Endpoint
 

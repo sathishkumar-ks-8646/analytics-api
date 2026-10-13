@@ -44,7 +44,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -54,7 +54,7 @@ status: stable
 
 Returns the list of users who currently hold the **Workspace Admin** role in the specified workspace. When the org's Account Admin is a Client Portal Admin, the response groups admins by portal domain — showing standard org admins and portal-domain admins separately, each with a `domainName`.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

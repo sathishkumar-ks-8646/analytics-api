@@ -34,7 +34,7 @@ Returns the list of all users who are members of the specified organisation, alo
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID whose user list to retrieve. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -192,8 +192,8 @@ When the Account Admin is also a Client Portal Admin, the response includes a `d
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
 | 7301 | User is not an Account Admin or Organization Admin of the organisation. | Only Account Admins and Organization Admins can list org users. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.usermanagement.read`. |
@@ -306,14 +306,14 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
-| 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
-| 7301 | User is not an Account Admin or Organization Admin of the organisation. | Ensure the caller has the required role. |
+| Code | Reason | Solution |
+|------|--------|----------|
 | 6004 | Adding these users would exceed the organisation's user seat limit under the current plan. | Upgrade the plan to accommodate more users, or remove unused user accounts before adding new ones. |
 | 6026 | The current plan does not support adding extra users (free plan restriction). | Upgrade to a paid plan to invite additional users. |
 | 6071 | One or more of the specified email addresses is already a member of this organisation. | Remove already-existing email addresses from the `emailIds` list and retry. |
 | 6089 | Attempted to assign `"ORGADMIN"` role via a custom domain (`domainName`). Organization Admin role cannot be assigned through a custom portal domain. | Omit `domainName` when assigning the `"ORGADMIN"` role, or use a different role for domain-based additions. |
+| 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
+| 7301 | User is not an Account Admin or Organization Admin of the organisation. | Ensure the caller has the required role. |
 | 8060 | The specified `domainName` does not exist. | Provide a valid client portal domain name configured for the org. |
 | 8061 | The specified `domainName` does not belong to the calling user or the org's Account Admin. | Use a domain name that is administered by the Account Admin of this organisation. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.usermanagement.create`. |
@@ -403,13 +403,13 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
 | 7301 | User is not an Account Admin or Organization Admin of the organisation. | Ensure the caller has the required role. |
-| 8114 | One or more specified email addresses are not members of this organisation. | Verify all email IDs using the Get Users API before calling Remove Users. |
 | 8060 | The specified `domainName` does not exist. | Provide a valid client portal domain name configured for the org. |
 | 8061 | The specified `domainName` does not belong to the calling user or the org's Account Admin. | Use a domain name administered by the Account Admin of this organisation. |
+| 8114 | One or more specified email addresses are not members of this organisation. | Verify all email IDs using the Get Users API before calling Remove Users. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.usermanagement.delete`. |
 
 ---
@@ -493,14 +493,14 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
+| 6004 | Activating these users would exceed the organisation's user seat limit. | Check current user count via Get Resource Details. Upgrade the plan or remove unused users before reactivating. |
 | 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
 | 7301 | User is not an Account Admin or Organization Admin of the organisation. | Ensure the caller has the required role. |
-| 6004 | Activating these users would exceed the organisation's user seat limit. | Check current user count via Get Resource Details. Upgrade the plan or remove unused users before reactivating. |
-| 8114 | One or more specified email addresses are not members of this organisation. | Verify all email IDs using Get Users before calling this API. |
 | 8060 | The specified `domainName` does not exist. | Provide a valid client portal domain name configured for the org. |
 | 8061 | The specified `domainName` does not belong to the calling user or the org's Account Admin. | Use a domain name administered by the Account Admin of this organisation. |
+| 8114 | One or more specified email addresses are not members of this organisation. | Verify all email IDs using Get Users before calling this API. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.usermanagement.update`. |
 
 ---
@@ -586,13 +586,13 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
 | 7301 | User is not an Account Admin or Organization Admin of the organisation. | Ensure the caller has the required role. |
-| 8114 | One or more specified email addresses are not members of this organisation. | Verify all email IDs using Get Users before calling this API. |
 | 8060 | The specified `domainName` does not exist. | Provide a valid client portal domain name configured for the org. |
 | 8061 | The specified `domainName` does not belong to the calling user or the org's Account Admin. | Use a domain name administered by the Account Admin of this organisation. |
+| 8114 | One or more specified email addresses are not members of this organisation. | Verify all email IDs using Get Users before calling this API. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.usermanagement.update`. |
 
 ---
@@ -701,14 +701,14 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
+| 6089 | Attempted to assign `"ORGADMIN"` role via `domainName` (custom domain). | Omit `domainName` when assigning the Org Admin role. |
 | 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
 | 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has the required org-level role. |
-| 6089 | Attempted to assign `"ORGADMIN"` role via `domainName` (custom domain). | Omit `domainName` when assigning the Org Admin role. |
-| 8114 | One or more specified email addresses are not members of this organisation. | Verify all email IDs using Get Users before calling this API. |
 | 8060 | The specified `domainName` does not exist. | Provide a valid client portal domain name configured for the org. |
 | 8061 | The specified `domainName` does not belong to the calling user or the org's Account Admin. | Use a domain name administered by the Account Admin of this organisation. |
+| 8114 | One or more specified email addresses are not members of this organisation. | Verify all email IDs using Get Users before calling this API. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.usermanagement.update`. |
 
 ---
@@ -727,7 +727,7 @@ Returns the list of email addresses of users who currently hold the **Organizati
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID whose Org Admins to retrieve. |
 | **Permission Required** | The authenticated user must be the **Account Admin** of the specified organisation. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -791,8 +791,8 @@ ZANALYTICS-ORGID: 700000123456
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
 | 7301 | The calling user is not the Account Admin of the organisation. | This API is strictly restricted to the Account Admin. Organization Admins and other roles cannot call this endpoint. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.share.read`. |

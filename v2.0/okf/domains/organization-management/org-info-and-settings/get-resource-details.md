@@ -44,7 +44,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -54,7 +54,7 @@ status: stable
 
 Returns the current resource allocation and usage statistics for the specified organisation. This includes metrics such as user seats, row limits, API units, scheduled imports, and other plan-governed resources. Useful for monitoring usage against plan limits.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

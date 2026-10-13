@@ -43,7 +43,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -53,7 +53,7 @@ status: stable
 
 Deletes an analysis **and everything beneath it** — all its models, and all deployments attached to those models.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

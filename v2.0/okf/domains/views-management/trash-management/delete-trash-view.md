@@ -47,7 +47,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -167,6 +167,18 @@ HTTP/1.1 204 No Content
 ## SDK Examples
 
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Delete Trash View](../../../sdk-examples/views-management/trash-management/delete-trash-view.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
+
+# Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **204 No Content** | Success returns an empty body. |
+| **Irreversible** | This is permanent removal from trash. The views, their columns, formulas and relations cannot be recovered afterwards. |
+| **Children block the parent** | Deleting a view that still has dependent children in trash fails with **7942** unless `withDependents` is `true`. |
+| **`withDependents: true` deletes downwards** | It permanently removes the view **and every child dependent in trash**. See [How `withDependents` Affects Permanent Delete](overview.md#how-withdependents-affects-permanent-delete). |
+| **Leaf views delete freely** | An analysis view with no children in trash deletes with the default `withDependents: false`. |
+| **Opposite direction to Restore** | On Delete the flag walks **down** to children; on [Restore Trash View](restore-trash-view.md) it walks **up** to parents. |
+| **Dependency chain** | [Get Trash Views](get-trash-views.md) → `<view-id>` → Delete Trash View. |
 
 # Error Codes
 

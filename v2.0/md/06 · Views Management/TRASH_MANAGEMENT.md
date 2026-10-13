@@ -1,4 +1,4 @@
-# Trash View APIs – Documentation
+# Zoho Analytics V2 REST API — Trash
 
 This document describes the V2 **Trash View** REST APIs of Zoho Analytics — listing trashed views, restoring them to active state, and permanently deleting them from trash.
 
@@ -13,9 +13,9 @@ This document describes the V2 **Trash View** REST APIs of Zoho Analytics — li
 
 | # | API Name | Method | URL |
 |---|----------|--------|-----|
-| 1 | Get Trash Views | GET | `/restapi/v2/workspaces/<workspace-id>/trash` |
-| 2 | Restore Trash View | POST | `/restapi/v2/workspaces/<workspace-id>/trash/<view-id>` |
-| 3 | Delete Trash View | DELETE | `/restapi/v2/workspaces/<workspace-id>/trash/<view-id>` |
+| 1 | [Get Trash Views](#1-get-trash-views) | GET | `/restapi/v2/workspaces/<workspace-id>/trash` |
+| 2 | [Restore Trash View](#2-restore-trash-view) | POST | `/restapi/v2/workspaces/<workspace-id>/trash/<view-id>` |
+| 3 | [Delete Trash View](#3-delete-trash-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/trash/<view-id>` |
 
 ---
 
@@ -29,7 +29,7 @@ This document describes the V2 **Trash View** REST APIs of Zoho Analytics — li
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **Permission Required** | The authenticated user must be an **Account Admin** or **Organization Admin**, or a **Workspace Admin**, or a **Shared User**, or a **Group Member**, or any user with **Read** permission on the workspace. |
 
-> This API has no `CONFIG` parameter. All inputs are provided via URL path parameters.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -212,10 +212,23 @@ When a trashed view is a Live Connect report and the current plan does not suppo
 | `Dashboard` | Dashboard view. |
 | `DashTab` | A tab within a tabbed dashboard. Includes `tabParentId`, `tabParentName`, `tabPosition`. |
 
+### Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **The discovery call for the other two APIs** | Both [Restore Trash View](#2-restore-trash-view) and [Delete Trash View](#3-delete-trash-view) need a `<view-id>` that this API supplies. |
+| **Empty array, not an error** | An empty trash returns HTTP 200 with `"views": []`. |
+| **Unfiltered and unpaged** | The response covers the whole workspace trash; there is no search, sort or paging parameter. Filter client-side. |
+| **`deletedTime` is milliseconds, as a string** | Divide by 1000 for Unix epoch seconds. |
+| **All IDs are strings** | `viewId` and `tabParentId` are JSON strings even though the values are numeric. Parse as strings or longs to avoid precision loss. |
+| **Conditional keys** | `isDisabled` appears only when `true`; `tabParentId` only for `DashTab` views. Test for presence rather than assuming them. |
+| **`isDisabled` blocks restore** | A view flagged `isDisabled` cannot be restored under the current plan — typically a Live Connect report on a plan that no longer supports it. |
+| **Dependency chain** | Workspace list → `<workspace-id>` → Get Trash Views → `<view-id>` for restore or delete. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify the `<workspace-id>` in the URL. |
 | 7301 | User does not have permission to list trash views. | Ensure the user has at least Read permission on the workspace. |
 | 8535 | Invalid OAuth token. | Provide a valid, non-expired token with scope `ZohoAnalytics.metadata.read`. |
@@ -283,10 +296,22 @@ CONFIG={"withDependents":false}
 HTTP/1.1 204 No Content
 ```
 
+### Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **204 No Content** | Success returns an empty body. Treat the 2xx status as the success indicator. |
+| **Parents must exist first** | Restoring a view whose parent is also in trash fails with **7941** unless `withDependents` is `true`. A view whose parent is already active restores without it. |
+| **`withDependents: true` restores upwards** | It brings back the view *and* the parents it depends on, together with their columns, formulas, relations and data connectors. See [How `withDependents` Affects Restore](#how-withdependents-affects-restore). |
+| **Order is an alternative to the flag** | Restoring the parent table first lets each child restore with the default `withDependents: false`. |
+| **Opposite direction to Delete** | On Restore the flag walks **up** to parents; on [Delete Trash View](#3-delete-trash-view) it walks **down** to children. Same key, opposite blast radius. |
+| **Disabled views cannot be restored** | Entries reported with `isDisabled: true` by [Get Trash Views](#1-get-trash-views) are blocked by the current plan. |
+| **Dependency chain** | [Get Trash Views](#1-get-trash-views) → `<view-id>` → Restore Trash View. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7082 | An unexpected error occurred during the trash restore operation. | Retry the request. If the error persists, contact support. |
 | 7103 | Workspace not found. | Verify the `<workspace-id>` in the URL. |
 | 7301 | User does not have permission to restore this view from trash. | Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or the original owner of the trashed view. |
@@ -359,10 +384,22 @@ This returns error `7942` because `Region_vs_sales` and `product_Vs_sales` are c
 HTTP/1.1 204 No Content
 ```
 
+### Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **204 No Content** | Success returns an empty body. |
+| **Irreversible** | This is permanent removal from trash. The views, their columns, formulas and relations cannot be recovered afterwards. |
+| **Children block the parent** | Deleting a view that still has dependent children in trash fails with **7942** unless `withDependents` is `true`. |
+| **`withDependents: true` deletes downwards** | It permanently removes the view **and every child dependent in trash**. See [How `withDependents` Affects Permanent Delete](#how-withdependents-affects-permanent-delete). |
+| **Leaf views delete freely** | An analysis view with no children in trash deletes with the default `withDependents: false`. |
+| **Opposite direction to Restore** | On Delete the flag walks **down** to children; on [Restore Trash View](#2-restore-trash-view) it walks **up** to parents. |
+| **Dependency chain** | [Get Trash Views](#1-get-trash-views) → `<view-id>` → Delete Trash View. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7082 | An unexpected error occurred during the permanent delete operation. | Retry the request. If it persists, contact support. |
 | 7103 | Workspace not found. | Verify the `<workspace-id>` in the URL. |
 | 7301 | User does not have permission to delete this view from trash. | Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or the original view owner. |

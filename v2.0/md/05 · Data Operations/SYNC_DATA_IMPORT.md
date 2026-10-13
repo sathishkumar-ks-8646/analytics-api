@@ -59,7 +59,7 @@ The two imports are two halves of one workflow, joined by the `viewId` that the 
 
 | Relationship | Detail |
 |---|---|
-| **The new-table import produces what the existing-table import consumes** | `data.viewId` from [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) is the `<view-id>` for every later call — subsequent imports into the same table, the [Row APIs](ROW_API_DOC_INFO.md), exports, sharing, and so on. It is returned **only** by that API. |
+| **The new-table import produces what the existing-table import consumes** | `data.viewId` from [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) is the `<view-id>` for every later call — subsequent imports into the same table, the [Row APIs](ROW_OPERATIONS.md), exports, sharing, and so on. It is returned **only** by that API. |
 | **The new-table import is create-once** | Re-running [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) with the same `tableName` fails with `7111`, because the table already exists. Loading more data into that table is the job of [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous). |
 | **`importType` exists only on the existing-table import** | A new table is always populated by a straight load, so [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) has no `importType`. The response reports it as `APPEND` for consistency. |
 | **The two have different permission models** | [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) is gated on creating tables in the workspace; [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous) is gated per `importType` on the target table. See [Permission Model](#permission-model). |
@@ -73,7 +73,7 @@ The two imports are two halves of one workflow, joined by the `viewId` that the 
 | Add this month's rows to that dataset | [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous) with `importType: "APPEND"` |
 | Replace the dataset wholesale | [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous) with `importType: "TRUNCATEADD"` |
 | Merge updates by key | [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous) with `importType: "UPDATEADD"` + `matchingColumns` |
-| Verify what landed | [Get View Details](VIEW_OPERATIONS_API_DOC_INFO.md#7-get-view-details) or [Get Columns](COLUMNS_API_DOC_INFO.md) on the `viewId` |
+| Verify what landed | [Get View Details](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#7-get-view-details) or [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) on the `viewId` |
 
 ---
 
@@ -108,7 +108,7 @@ The authenticated user must be an Account Admin or Organization Admin, or a Work
 | `UPDATEADD` | Add or Update Import | `importAddOrUpdate` |
 | `TRUNCATEADD` | Truncate and Add Import | `importDeleteAllAdd` |
 
-> A user granted only `importAppend` can run an `APPEND` import on a shared table but receives `7301` for a `TRUNCATEADD` on the same table. Grant the specific import permissions through the [Sharing APIs](SHARING_API_DOC_INFO.md#permissions-fields).
+> A user granted only `importAppend` can run an `APPEND` import on a shared table but receives `7301` for a `TRUNCATEADD` on the same table. Grant the specific import permissions through the [Sharing APIs](../08%20%C2%B7%20Share%20%26%20Publish/SHARING.md#permissions-fields).
 
 ---
 
@@ -432,7 +432,7 @@ CONFIG={
 | **Column-count ceiling** | A source with more columns than the table format permits fails with `7478`, and a row with more fields than expected fails with `7208`. |
 | **No `criteria`** | Row selection is by file content and `skipTop` only. |
 | **No callback** | Callback notification belongs to the asynchronous/bulk import APIs; the synchronous ones return everything inline. |
-| **Dependency chain** | [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → `<workspace-id>` → Import Data into a New Table (Synchronous) → `data.viewId` → [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous), [Row APIs](ROW_API_DOC_INFO.md), [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| **Dependency chain** | [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → `<workspace-id>` → Import Data into a New Table (Synchronous) → `data.viewId` → [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous), [Row APIs](ROW_OPERATIONS.md), [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 
 ### Error Codes
 
@@ -760,7 +760,7 @@ CONFIG={
 | **The table is DDL-locked during the import** | Concurrent structural changes are blocked while the load runs, and a load attempted while another import holds the lock fails with `7092`. |
 | **Snapshot and system tables are rejected** | `7165` and `7164` respectively — see [Table Preconditions](#table-preconditions-existing-table-import). |
 | **No `criteria`** | Which rows are affected is decided by `importType` and `matchingColumns`, not by a filter expression. |
-| **Dependency chain** | [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) or [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → [Get Columns](COLUMNS_API_DOC_INFO.md) (to pick `matchingColumns`) → Import Data into an Existing Table (Synchronous). |
+| **Dependency chain** | [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) or [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) (to pick `matchingColumns`) → Import Data into an Existing Table (Synchronous). |
 
 ### Error Codes
 
@@ -768,7 +768,7 @@ CONFIG={
 |------|--------|----------|
 | 7092 | `DDL_LOCK_SINCE_IMPORT_IN_PROGRESS` — Another import is holding a DDL lock on this table. | Retry once it has finished. |
 | 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>`. |
-| 7107 | `META_OBJECT_NOT_PRESENT` — A column named in `matchingColumns` is not present in the table. | Verify the names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 7107 | `META_OBJECT_NOT_PRESENT` — A column named in `matchingColumns` is not present in the table. | Verify the names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 7164 | `SYSTEM_TABLE_DATA_MOD` — System table data cannot be modified. | Target a user-created table instead. |
 | 7165 | `SNAPSHOT_TABLE_DATAMOD` — Snapshot table data cannot be modified. | Target a non-snapshot table. |
 | 7208 | `IMPORT_FILE_NUMBER_OF_FIELDS_EXCEEDS_SIZE` — A row contains more fields than expected. | Correct the source data or the `delimiter`. |
@@ -799,7 +799,7 @@ CONFIG={
 | `Content-Type` | `multipart/form-data; boundary=…` | Conditional | Required when sending the payload as a `FILE` upload. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required when sending the payload in the `DATA` parameter. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by either API.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas).
+> **`ZANALYTICS-DEST-ORGID` is not used by either API.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas).
 
 Example (pasted data into a new table):
 
@@ -830,13 +830,13 @@ CONFIG=%7B%22tableName%22%3A%22SalesData%22%2C%22fileType%22%3A%22CSV%22%2C%22au
 
 ### Import Data into a New Table (Synchronous)
 
-- **It is the only source of the new table's `viewId`.** Everything downstream — further imports, [Row APIs](ROW_API_DOC_INFO.md), exports, sharing — needs that ID, and it appears in no other response. Capture it from `data.viewId` on the very first call.
+- **It is the only source of the new table's `viewId`.** Everything downstream — further imports, [Row APIs](ROW_OPERATIONS.md), exports, sharing — needs that ID, and it appears in no other response. Capture it from `data.viewId` on the very first call.
 - **Create-once, by design.** A second call with the same `tableName` fails with `7111` rather than appending. The API deliberately refuses to guess whether you meant "create" or "load more"; the latter is [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous).
 - **`onError` defaults to the strictest setting.** `ABORT` means one bad cell in a 100,000-row file leaves you with no table and a `7232`. For unattended loading, choose `SKIPROW` or `SETCOLUMNEMPTY` deliberately and then read `importErrors`.
 - **`columnDetails` is the type-inference report, and it matters most here.** A new table's column types are decided by this one call and are awkward to change afterwards. When `autoIdentify` is `true`, always check that `Sales` came back as `Currency` rather than `Plain Text` — a wrong `thousandSeparator` is the usual cause.
 - **`autoIdentify: false` turns two optional attributes into mandatory ones.** `delimiter` and `quoted` must both be present for CSV, and their absence surfaces as `8079` rather than as a validation message about `autoIdentify`.
 - **HTTP 200 does not mean every row landed.** `successRowCount` and `warnings` are the real success indicators.
-- **Dependency chain:** [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → Import into a New Table → `data.viewId` → everything else.
+- **Dependency chain:** [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → Import into a New Table → `data.viewId` → everything else.
 
 ### Import Data into an Existing Table (Synchronous)
 
@@ -846,7 +846,7 @@ CONFIG=%7B%22tableName%22%3A%22SalesData%22%2C%22fileType%22%3A%22CSV%22%2C%22au
 - **It cannot change an existing column's type.** `columnDataTypes` entries for columns already in the table are silently discarded, so this attribute only affects columns the import introduces.
 - **No `viewId` in the response**, since the destination was already known — the response is otherwise identical to that of [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous).
 - **The table is DDL-locked for the duration**, so concurrent structural changes are blocked and a competing import fails with `7092`.
-- **Dependency chain:** [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) or [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → [Get Columns](COLUMNS_API_DOC_INFO.md) → Import Data into an Existing Table (Synchronous).
+- **Dependency chain:** [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) or [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → Import Data into an Existing Table (Synchronous).
 
 ---
 

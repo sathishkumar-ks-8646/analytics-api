@@ -47,7 +47,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -113,6 +113,15 @@ Creates a new folder in the specified workspace. The folder can optionally be cr
 ## Success Response
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Create folder"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.folderId` | String | ID of the newly created folder, serialised as a **string**. Pass it as `parentFolderId` to nest another folder beneath this one, or as `folderId` when creating views inside it. |
 
 # Examples
 

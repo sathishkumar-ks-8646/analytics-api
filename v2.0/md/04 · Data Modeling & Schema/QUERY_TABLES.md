@@ -255,6 +255,15 @@ CONFIG={"queryTableName":"Client_Order_View","sqlQuery":"SELECT OrderID, OrderDa
 }
 ```
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Query table has been created successfully."` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.viewId` | String | ID of the newly created query table, serialised as a **string**. A query table is a view, so this ID is accepted wherever a `<view-id>` is expected. |
+
 ### Notes & Behaviour
 
 | Aspect | Detail |
@@ -401,7 +410,7 @@ Returns the full metadata of a query table, including its SQL definition, the ta
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the query table. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -536,7 +545,7 @@ ZANALYTICS-ORGID: 700000123456
 | `involvedViews[].viewId` | String | ID of the source view. |
 | `involvedViews[].viewName` | String | Display name of the source view. |
 | `involvedViews[].viewType` | String | Type of the source view, e.g., `"Table"`. |
-| `columns` | Array | Auto-derived column schema of the query table (same structure as [Get Table Metadata](TABLE_AND_SCHEMA_API_DOC_INFO.md)). |
+| `columns` | Array | Auto-derived column schema of the query table (same structure as [Get Table Metadata](TABLE_AND_SCHEMA.md)). |
 | `columns[].columnName` | String | Derived column name — typically `<table-alias>.<source-column-name>` unless aliased in the SQL with `AS`. |
 | `columns[].dataType` / `dataTypeName` | String | Internal code / display name of the data type, inherited from the source column. |
 | `columns[].pkTableName` / `pkColumnName` | String | Present only if the column is a lookup/foreign-key column resolved through a join; empty otherwise. |
@@ -595,7 +604,7 @@ ZANALYTICS-ORGID: 700000123456
 
 - **SQL is validated synchronously at creation time.** All syntax, table-reference, and column-reference checks happen before the API returns; there is no separate "draft" or "async validation" step exposed via this API.
 - **Response is minimal — only `viewId`.** Always follow up with Get Query Table Details to retrieve the resolved column schema, since column names/types are derived from the query, not specified explicitly by the caller.
-- **`folderId` defaults to the workspace's default folder.** Use Get Folder List and Make Default Folder (see [WORKSPACE_FOLDERS_API_DOC_INFO.md](WORKSPACE_FOLDERS_API_DOC_INFO.md)) to control the target folder explicitly.
+- **`folderId` defaults to the workspace's default folder.** Use Get Folder List and Make Default Folder (see [Workspace Folders](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_FOLDERS.md)) to control the target folder explicitly.
 - **Dependency chain:** Get View List (to identify valid source table names for the SQL) → Create Query Table → Get Query Table Details (to retrieve `viewId`'s resolved schema).
 
 ### Edit Query Table
@@ -618,6 +627,6 @@ ZANALYTICS-ORGID: 700000123456
 | Field / Behaviour | Detail |
 |-------------------|--------|
 | **Rate limiting is per-user AND service-wide** | Both Create Query Table and Edit Query Table enforce a 7-per-minute-per-user limit (5-minute lockout) as well as a 15-per-minute service-wide limit. Exceeding either results in throttling — plan bulk operations with delays between calls. |
-| **Query table columns follow the same schema shape as regular table columns** | The `columns` array in Get Query Table Details uses the same field structure (`columnId`, `dataType`, `dataTypeName`, `isHidden`, `sortedOrder`, etc.) documented in [TABLE_AND_SCHEMA_API_DOC_INFO.md](TABLE_AND_SCHEMA_API_DOC_INFO.md) and [COLUMNS_API_DOC_INFO.md](COLUMNS_API_DOC_INFO.md). |
+| **Query table columns follow the same schema shape as regular table columns** | The `columns` array in Get Query Table Details uses the same field structure (`columnId`, `dataType`, `dataTypeName`, `isHidden`, `sortedOrder`, etc.) documented in [Table and Schema](TABLE_AND_SCHEMA.md) and [Column Management](COLUMNS.md). |
 | **Edit Query Table has no data payload on success** | Unlike Create (`viewId`) and Get Details (full metadata), a successful Edit call returns HTTP `204 No Content` with no response body. |
 | **`orgId` in responses is the organisation ID, not the workspace ID** | Do not confuse `orgId` with `workspaceId` when parsing responses. |

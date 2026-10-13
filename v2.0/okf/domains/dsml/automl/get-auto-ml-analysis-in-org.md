@@ -43,7 +43,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -53,7 +53,7 @@ status: stable
 
 Returns every AutoML analysis across **all workspaces** in the organization, each tagged with the workspace it belongs to. This is the organization-wide inventory call.
 
-> This API has no CONFIG parameter and no workspace in its path.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. The path has no workspace segment.
 
 # Endpoint
 

@@ -48,7 +48,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -169,6 +169,18 @@ HTTP/1.1 204 No Content
 ## SDK Examples
 
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Restore Trash View](../../../sdk-examples/views-management/trash-management/restore-trash-view.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
+
+# Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **204 No Content** | Success returns an empty body. Treat the 2xx status as the success indicator. |
+| **Parents must exist first** | Restoring a view whose parent is also in trash fails with **7941** unless `withDependents` is `true`. A view whose parent is already active restores without it. |
+| **`withDependents: true` restores upwards** | It brings back the view *and* the parents it depends on, together with their columns, formulas, relations and data connectors. See [How `withDependents` Affects Restore](overview.md#how-withdependents-affects-restore). |
+| **Order is an alternative to the flag** | Restoring the parent table first lets each child restore with the default `withDependents: false`. |
+| **Opposite direction to Delete** | On Restore the flag walks **up** to parents; on [Delete Trash View](delete-trash-view.md) it walks **down** to children. Same key, opposite blast radius. |
+| **Disabled views cannot be restored** | Entries reported with `isDisabled: true` by [Get Trash Views](get-trash-views.md) are blocked by the current plan. |
+| **Dependency chain** | [Get Trash Views](get-trash-views.md) → `<view-id>` → Restore Trash View. |
 
 # Error Codes
 

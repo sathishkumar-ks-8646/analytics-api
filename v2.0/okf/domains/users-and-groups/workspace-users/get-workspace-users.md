@@ -44,7 +44,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -56,7 +56,7 @@ Returns the list of all users who have access to the specified workspace, along 
 
 The response includes the Account Admin, Organisation Admins, Workspace Admins, standard Users, and any users assigned to custom roles. When the org's Account Admin is a Client Portal Admin, each user entry also includes a `domainName` field indicating which portal domain the user was added through.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

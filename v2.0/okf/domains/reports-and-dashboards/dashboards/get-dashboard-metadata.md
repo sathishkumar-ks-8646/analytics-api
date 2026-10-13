@@ -48,10 +48,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-13T08:58:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -127,6 +127,22 @@ CONFIG is optional and travels as a URL encoded JSON query parameter. **include*
 ## Success Response
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Get dashboard metadata"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.dashboardConfig` | JSONObject | The dashboard's stored definition. |
+| `dashboardConfig.objId` | String | ID of the dashboard, as a string. |
+| `dashboardConfig.displayName` | String | Dashboard name. |
+| `dashboardConfig.description` | String | Free-text description; empty string when none was set. |
+| `dashboardConfig.themes` | JSONObject | Theme settings. See [Themes](create-dashboard.md#themes). Values are returned as **strings** even where the create API accepts numbers. |
+| `dashboardConfig.settings` | JSONObject | Dashboard behaviour switches. See [Settings](create-dashboard.md#settings). Every value is returned as a **string** (`"true"` / `"false"`), not a boolean. |
+| `settings.allowExport` | JSONObject | Per-format export switches (`csv`, `excel`, `html`, `image`, `pdf`, `zohoSheet`), each a string `"true"`/`"false"`. |
+| `dashboardConfig.layout` | JSONObject | Card map keyed by card number. **Returned as a JSON object**, whereas the create and update APIs expect `layout` as a JSON **string** — see [`layout` is a JSON **string**, not a JSON object](overview.md#layout-is-a-json-string-not-a-json-object) and [Transformations required](overview.md#transformations-required) before feeding this back into an update. |
 
 ## Notes from the OpenAPI specification
 

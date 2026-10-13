@@ -50,7 +50,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -63,7 +63,7 @@ Triggers auto analysis for a **single column** of a table. The system generates 
 > **Why `analyseAgain` is NOT present here:**
 > Unlike the full-table analysis, column-level analysis does not track whether it has been run before for a given column. Each call generates a new set of views for that column independently — there is no "already completed" guard at the column level. You can call this API multiple times on the same column (for example, after changing column data or for exploratory purposes) and it will always produce a fresh set of views. The `analyseAgain` concept does not apply because column analysis is designed to be repeatable without risk of unintended duplication of full-table views.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 
@@ -117,6 +117,16 @@ This endpoint takes no CONFIG parameter.
 ## Success Response
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Auto Generate Reports"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.status` | String | Human-readable outcome message, e.g. `"Reports generated successfully"`. This is a **display string, not a status enum** — do not branch on its exact wording; use the HTTP status code and the top-level `status` field instead. |
+| | | **The IDs of the generated reports are not returned.** List the workspace's views afterwards to discover them. |
 
 # Examples
 
@@ -183,6 +193,17 @@ Content-Type: application/x-www-form-urlencoded
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Auto Analyse Column](../../../sdk-examples/views-management/auto-analysis/auto-analyse-column.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **Tables only** | Same restriction as [Auto Analyse View](auto-analyse-view.md) — Tables, Query Tables and Pipeline Tables only; anything else fails with **7397**. |
+| **No completion state, no re-run guard** | Every call runs fresh. There is no `analyseAgain` equivalent and no **8116**. |
+| **Repeat calls accumulate views** | Each call creates a new set of views for the column. Delete the previously generated views first if you do not want duplicates. |
+| **Disabled Query Table column** | Fails with **14037**. Enable the column in the Query Table definition first. |
+| **Geo columns need their pair** | A Geo Number latitude column without a visible longitude column (or the reverse) is not eligible and the call fails. |
+| **Generated view IDs are not returned** | As with the view-level API, the response carries only a display message. |
+| **Full comparison with the view API** | See [Auto Analyse View vs Auto Analyse Column — Scope Comparison](overview.md#auto-analyse-view-vs-auto-analyse-column--scope-comparison) and [Edge Cases and Failure Scenarios](overview.md#edge-cases-and-failure-scenarios). |
+| **Dependency chain** | Table `<view-id>` → Get Column Details → `<column-id>` → Auto Analyse Column. |
 
 ## Column Eligibility
 

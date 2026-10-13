@@ -37,7 +37,7 @@ The response includes the Account Admin, Organisation Admins, Workspace Admins, 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -149,8 +149,8 @@ When the Account Admin is a Client Portal Admin, the response includes `domainNa
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access to the workspace. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.usermanagement.read`. |
@@ -281,8 +281,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access. |
 | 7550 | The specified `role` name does not exist as a custom role in the org. | Use `"WORKSPACEADMIN"`, `"USER"`, or an exact custom role name from the org. |
@@ -375,8 +375,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access. |
 | 8060 | The specified `domainName` does not exist. | Provide a valid client portal domain name. |
@@ -488,8 +488,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not the Account Admin of the organisation. Only Account Admin can change workspace user status. | Use the Account Admin credentials. |
 | 8060 | The specified `domainName` does not exist. | Provide a valid client portal domain name. |
@@ -626,8 +626,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not an Account Admin or Organization Admin of the organisation. Workspace Admins cannot call this API. | Use Account Admin or Organization Admin credentials. |
 | 7550 | The specified `role` name does not exist as a custom role in the org. | Use `"WORKSPACEADMIN"`, `"USER"`, or an exact custom role name. |
@@ -649,7 +649,7 @@ Returns the list of users who currently hold the **Workspace Admin** role in the
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -758,8 +758,8 @@ When the Account Admin is a Client Portal Admin, the response returns two groups
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not an Account Admin or Organization Admin of the organisation. | Workspace Admins and regular users cannot call this API. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.share.read`. |
@@ -853,8 +853,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not an Account Admin or Organization Admin of the organisation. | Only Account Admins and Organization Admins can manage Workspace Admins. |
 | 7390 | One or more of the specified users holds the org-level Viewer role and cannot be promoted to Workspace Admin. | Viewers cannot be Workspace Admins. Change their org-level role to `"USER"` first via the Change User Role API. |
@@ -949,8 +949,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not an Account Admin or Organization Admin of the organisation. | Only Account Admins and Organization Admins can manage Workspace Admins. |
 | 8040 | One or more specified email addresses are not currently Workspace Admins in this workspace. | Verify all email addresses are current Workspace Admins using Get Workspace Admins before calling this API. |

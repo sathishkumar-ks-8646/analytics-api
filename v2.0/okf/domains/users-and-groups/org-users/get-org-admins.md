@@ -44,7 +44,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -56,7 +56,7 @@ Returns the list of email addresses of users who currently hold the **Organizati
 
 > **Access restriction:** Unlike the other user management APIs which are accessible to both Account Admin and Organization Admin, this API is **restricted to Account Admin only**. Organization Admins cannot call this API.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

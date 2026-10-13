@@ -227,7 +227,7 @@ CONFIG={
 | **Lookup columns are validated** | A value that does not exist in the parent table fails the whole insert with `7515`. |
 | **Row-limit and plan checks apply** | The insert is checked against the organization's row allowance before it is written. |
 | **No `criteria`** | Insert has nothing to filter; the attribute is not accepted. |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → [Get Columns](COLUMNS_API_DOC_INFO.md) (to confirm column names) → Add Row. |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) (to confirm column names) → Add Row. |
 
 ### Error Codes
 
@@ -242,7 +242,7 @@ CONFIG={
 | 7405 | `DML_NOT_ALLOWED` — Row modification is not allowed for this table. | Use a table that permits DML. |
 | 7512 | `INVALID_DATE_FORMAT` — A pattern in `dateFormat` / `columnDateFormat` could not be parsed. | Supply a valid date pattern such as `dd-MMM-yyyy`. |
 | 7515 | `UNKNOWN_LOOKUP_VALUE` — A value for a lookup column does not exist in the parent table. | Add the value to the parent table first, or send an existing one. |
-| 8016 | `API_NO_COLUMN_PRESENT` — None of the supplied column names matched a column in the table. | Check the names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 8016 | `API_NO_COLUMN_PRESENT` — None of the supplied column names matched a column in the table. | Check the names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 8504 | `LESS_THAN_MIN_OCCURANCE` — `CONFIG` was not sent, or `columns` is missing. | Send a CONFIG object containing `columns`. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.data.create`. |
 | 101021 | `NOT_A_STREAM_TABLE` — Row operations are not supported on a stream table. | Target a non-stream table. |
@@ -440,7 +440,7 @@ CONFIG={
 | **Unknown columns are skipped, not rejected** | Same behaviour as Add Row — inspect `invalidColumns`. |
 | **Values are strings in both directions** | Send `"Sales": "2000"` and expect `"2000"` back. |
 | **Concurrency guard** | If another row-write request is still being processed for the same table, the call fails with `8062`. Retry after a short delay. |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → [Get Columns](COLUMNS_API_DOC_INFO.md) (for `criteria` and `columns` names) → Update Row. |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) (for `criteria` and `columns` names) → Update Row. |
 
 ### Error Codes
 
@@ -452,11 +452,11 @@ CONFIG={
 | 7164 | `SYSTEM_TABLE_DATA_MOD` — System table data cannot be modified. | Target a user-created table instead. |
 | 7165 | `SNAPSHOT_TABLE_DATAMOD` — Snapshot table data cannot be modified. | Target a non-snapshot table. |
 | 7301 | `SECURITY_NOT_PERMITTED` — The user cannot update rows in this view, or lacks Add Row permission when `addIfNotExist` fires. | Ensure the user has Update Row permission — and Add Row permission too if `addIfNotExist` is used. |
-| 7330 | `UNKNOWN_COLUMN_IN_FILTERCRITERIA` — A column referenced in `criteria` does not exist in the table. | Verify the column names in `criteria` via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 7330 | `UNKNOWN_COLUMN_IN_FILTERCRITERIA` — A column referenced in `criteria` does not exist in the table. | Verify the column names in `criteria` via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 7405 | `DML_NOT_ALLOWED` — Row modification is not allowed for this table. | Use a table that permits DML. |
 | 7512 | `INVALID_DATE_FORMAT` — A pattern in `dateFormat` / `columnDateFormat` could not be parsed. | Supply a valid date pattern. |
 | 7515 | `UNKNOWN_LOOKUP_VALUE` — A value for a lookup column does not exist in the parent table. | Send an existing lookup value. |
-| 8016 | `API_NO_COLUMN_PRESENT` — None of the supplied column names matched a column in the table. | Check the names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 8016 | `API_NO_COLUMN_PRESENT` — None of the supplied column names matched a column in the table. | Check the names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 8062 | `ADD_ROW_REQUEST_STILL_IN_PROGRESS` — Another row-write request for this table is still being processed. | Retry after the in-flight request completes. |
 | 8130 | `INVALID_UPDATE_CRITERIA_CONFIGURATION` — Both `criteria` and `updateAllRows` were sent, or neither was. | Send exactly one of the two. |
 | 8504 | `LESS_THAN_MIN_OCCURANCE` — `CONFIG` was not sent, or `columns` is missing. | Send a CONFIG object containing `columns`. |
@@ -590,11 +590,11 @@ CONFIG={
 | **`criteria` and `deleteAllRows` are mutually exclusive and jointly required** | Sending both, or neither, fails with `8131`. Omitting `criteria` does not delete everything — it errors. |
 | **`deletedRows: 0` is a success, not a failure** | A criteria matching nothing returns HTTP 200. Check the count rather than the status code. |
 | **Irreversible** | Deleted rows are not recoverable through the API; there is no row-level trash. `deleteAllRows: true` empties the table in one call. |
-| **The table itself survives** | Only rows are removed — the table, its columns, its formulas, and everything built on it remain. To remove the table, use [Delete View](VIEW_OPERATIONS_API_DOC_INFO.md#5-delete-view). |
+| **The table itself survives** | Only rows are removed — the table, its columns, its formulas, and everything built on it remain. To remove the table, use [Delete View](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#5-delete-view). |
 | **Shared users are silently constrained** | Their share filter criteria is ANDed with the supplied `criteria`, so a shared user calling `deleteAllRows: true` deletes only the rows within their own filtered slice. |
 | **No stream-table restriction** | Unlike Add Row and Update Row, delete does not run the stream-table check, so `101021` does not apply here. |
 | **Concurrency guard** | If another row-write request is still being processed for the same table, the call fails with `8062`. |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → [Get Columns](COLUMNS_API_DOC_INFO.md) (for `criteria` names) → Delete Row. |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) (for `criteria` names) → Delete Row. |
 
 ### Error Codes
 
@@ -606,7 +606,7 @@ CONFIG={
 | 7164 | `SYSTEM_TABLE_DATA_MOD` — System table data cannot be modified. | Target a user-created table instead. |
 | 7165 | `SNAPSHOT_TABLE_DATAMOD` — Snapshot table data cannot be modified. | Target a non-snapshot table. |
 | 7301 | `SECURITY_NOT_PERMITTED` — The user cannot delete rows from this view. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, View Owner, or has **Delete All Rows** permission on the view. |
-| 7330 | `UNKNOWN_COLUMN_IN_FILTERCRITERIA` — A column referenced in `criteria` does not exist in the table. | Verify the column names in `criteria` via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 7330 | `UNKNOWN_COLUMN_IN_FILTERCRITERIA` — A column referenced in `criteria` does not exist in the table. | Verify the column names in `criteria` via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 7405 | `DML_NOT_ALLOWED` — Row modification is not allowed for this table. | Use a table that permits DML. |
 | 8062 | `ADD_ROW_REQUEST_STILL_IN_PROGRESS` — Another row-write request for this table is still being processed. | Retry after the in-flight request completes. |
 | 8131 | `INVALID_DELETE_CRITERIA_CONFIGURATION` — Both `criteria` and `deleteAllRows` were sent, or neither was. | Send exactly one of the two. |
@@ -620,10 +620,10 @@ CONFIG={
 | Header | Value | Required | Description |
 |--------|-------|----------|-------------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. Must carry the scope matching the operation (see [Appendix B](#appendix-b--oauth-scope-summary)). |
-| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the view. Obtainable from the [Get Organizations](ORG_INFO_API_DOC_INFO.md) response or from listing API responses as the `orgId` field. |
+| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the view. Obtainable from the [Get Organizations](../01%20%C2%B7%20Organization%20Management/ORG_INFO_AND_SETTINGS.md) response or from listing API responses as the `orgId` field. |
 | `Content-Type` | `application/x-www-form-urlencoded` | **Mandatory** | All three APIs send `CONFIG` as a URL-encoded form parameter — including `DELETE`, which carries a body here. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas).
+> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas).
 
 Example (Add Row):
 
@@ -661,7 +661,7 @@ CONFIG=%7B%22columns%22%3A%7B%22Region%22%3A%22East%22%2C%22Sales%22%3A%221000%2
 - **Case-insensitive in, as-sent out.** Matching ignores case, but `addedColumns` echoes the casing you supplied rather than the table's, so it cannot be used to discover canonical column names.
 - **Date handling has a three-level precedence**: `columnDateFormat` for that column, then `dateFormat`, then the column's own configured format.
 - **It is the only Row API with no `criteria`**, and correspondingly the only one that cannot be constrained by a shared user's share filter.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → [Get Columns](COLUMNS_API_DOC_INFO.md) → Add Row.
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → Add Row.
 
 ### Update Row
 
@@ -670,7 +670,7 @@ CONFIG=%7B%22columns%22%3A%7B%22Region%22%3A%22East%22%2C%22Sales%22%3A%221000%2
 - **The upsert inserts, it does not merge.** Only the columns present in `columns` are written; there is no partially-matched row to fill in the rest.
 - **`updatedRows: 0` is ambiguous on its own.** It means either "criteria matched nothing" or "a row was inserted instead" — distinguish them by the presence of `newRowAdded`.
 - **Shared users see silently reduced effects**, because their share filter criteria is ANDed with the criteria they send.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → [Get Columns](COLUMNS_API_DOC_INFO.md) → Update Row.
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → Update Row.
 
 ### Delete Row
 
@@ -680,7 +680,7 @@ CONFIG=%7B%22columns%22%3A%7B%22Region%22%3A%22East%22%2C%22Sales%22%3A%221000%2
 - **It skips the stream-table check** that Add Row and Update Row perform, so `101021` is the one precondition error that cannot occur here.
 - **Shared users cannot over-delete.** Even `deleteAllRows: true` is confined to their share filter criteria, so the same request removes different amounts of data depending on who calls it.
 - **The narrowest response in the family** — `deletedRows` and nothing else.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → [Get Columns](COLUMNS_API_DOC_INFO.md) → Delete Row.
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → Delete Row.
 
 ---
 

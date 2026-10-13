@@ -42,7 +42,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -54,7 +54,7 @@ Returns the full list of aggregate formulas (Unified Metrics) across **every** v
 
 > **Renamed for clarity:** This API corresponds to the underlying `/aggregateformulas` workspace-level endpoint. It has been documented here as **"Get Unified Metrics in Workspace"** to better reflect its purpose as a workspace-wide metrics catalogue, distinct from the view-scoped [Get Aggregate Formula](get-aggregate-formula-list.md) API.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

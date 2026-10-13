@@ -33,7 +33,7 @@ Returns the list of custom formula columns defined on the specified view.
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 30 requests per user per minute (10-minute lockout on breach). |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -205,7 +205,7 @@ CONFIG={"formulaName":"Full Name","expression":"CONCATENATE(\"First Name\",\" \"
 | **Column references use exact display names in double quotes** | If a referenced column name is misspelled or does not exist in the view, an "unknown column" error is returned. |
 | **Not supported on Pipeline Tables** | Attempting to add a formula column to a Pipeline Table view returns error 7467. |
 | **Data type of the formula column is inferred** | The resulting column's data type is derived automatically from the expression (e.g., an arithmetic expression on numeric columns yields a numeric formula column). It cannot be explicitly set. |
-| **Dependency** | `<view-id>` → Get View List. Column names used in `expression` → Get Table Metadata (to confirm exact display names). After creation, the returned `formulaId` can be used with Get Column Dependents (see [COLUMNS_API_DOC_INFO.md](COLUMNS_API_DOC_INFO.md)) to trace where the formula is later used. |
+| **Dependency** | `<view-id>` → Get View List. Column names used in `expression` → Get Table Metadata (to confirm exact display names). After creation, the returned `formulaId` can be used with Get Column Dependents (see [Column Management](COLUMNS.md)) to trace where the formula is later used. |
 
 ### Error Codes
 
@@ -300,7 +300,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **Success response has no body** | Edit Custom Formula returns a bare HTTP `204 No Content` on success — no `status`/`summary` JSON to parse. |
 | **Cannot rename via this API** | There is no `formulaName` field in this API's CONFIG. To rename a formula column, use a dedicated column-rename operation if available for the view type, or delete and recreate the formula with the desired name. |
 | **`expression` is mandatory and fully replaces the old one** | There is no partial/incremental update — the entire expression must be resupplied even for a minor change. |
-| **`description` omission behaviour** | If `description` is not supplied, the internal save logic reuses the column's current display name and does not clear existing metadata; however, always resend `description` explicitly if you want to guarantee its value, since behaviour for unset optional text fields has historically reset to empty in other similar rename/edit APIs in this API suite (see [WORKSPACE_GROUPS_API_DOC_INFO.md](WORKSPACE_GROUPS_API_DOC_INFO.md) and [WORKSPACE_FOLDERS_API_DOC_INFO.md](WORKSPACE_FOLDERS_API_DOC_INFO.md) for the equivalent `*Desc` reset pattern in other object types). |
+| **`description` omission behaviour** | If `description` is not supplied, the internal save logic reuses the column's current display name and does not clear existing metadata; however, always resend `description` explicitly if you want to guarantee its value, since behaviour for unset optional text fields has historically reset to empty in other similar rename/edit APIs in this API suite (see [Workspace Groups](../02%20%C2%B7%20User%20%26%20Groups/WORKSPACE_GROUPS.md) and [Workspace Folders](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_FOLDERS.md) for the equivalent `*Desc` reset pattern in other object types). |
 | **Not supported on Pipeline Tables** | Editing a formula column on a Pipeline Table view returns error 7467. |
 | **Changing the expression may change the data type** | If the new expression changes the result type (e.g., from numeric to text), any dependent reports/charts relying on the previous data type may behave unexpectedly or show a data type mismatch. |
 | **Dependency** | `<formula-id>` → Get Custom Formulas. Column names used in `expression` → Get Table Metadata. |
@@ -398,7 +398,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **`deleteDependentViews: true` is permanent** | All dependent reports, charts, pivot tables, and other formula columns that reference this formula are permanently deleted. This cannot be undone. |
 | **DDL lock check** | If the view is locked due to an in-progress schema change, the request is rejected until the lock clears. |
 | **Not supported on Pipeline Tables** | Deleting a formula column from a Pipeline Table view returns error 7467. |
-| **Dependency** | `<formula-id>` → Get Custom Formulas. Before deleting, consider checking dependent views/formulas via [Get Column Dependents](COLUMNS_API_DOC_INFO.md#6-get-column-dependents), since a formula column's ID can also be passed as a regular `<column-id>` to that API. |
+| **Dependency** | `<formula-id>` → Get Custom Formulas. Before deleting, consider checking dependent views/formulas via [Get Column Dependents](COLUMNS.md#6-get-column-dependents), since a formula column's ID can also be passed as a regular `<column-id>` to that API. |
 
 ### Error Codes
 
@@ -436,7 +436,7 @@ Copies one or more custom formula columns (by name) from a view in the source wo
 |-----------|------|-----------|-------------|
 | `formulaColumnNames` | JSONArray of String | **Yes** | Array of formula column **display names** (not IDs) from the source view to copy. Max 1000 entries. |
 | `destWorkspaceId` | Long | **Yes** | ID of the destination workspace where the formulas will be copied to. Must contain a view with the same structure/columns as the source view. |
-| `workspaceKey` | String | Conditionally required | The destination workspace's secret key (see [Get Workspace SecretKey](WORKSPACE_OPERATIONS_API_DOC_INFO.md)). Required when the destination workspace belongs to a different organisation than the source. Not required for same-organisation copies. |
+| `workspaceKey` | String | Conditionally required | The destination workspace's secret key (see [Get Workspace SecretKey](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md)). Required when the destination workspace belongs to a different organisation than the source. Not required for same-organisation copies. |
 
 ### Sample Requests
 
@@ -558,14 +558,14 @@ No response body is returned for this API. Success is indicated solely by the HT
 ### Delete Custom Formula
 
 - **Not idempotent.** Deleting a non-existent or already-deleted formula ID returns an error, not a silent success.
-- **Use `deleteDependentViews` cautiously.** As with [Delete Column](COLUMNS_API_DOC_INFO.md#3-delete-column), cascading deletes of dependent reports/charts/formulas are irreversible.
+- **Use `deleteDependentViews` cautiously.** As with [Delete Column](COLUMNS.md#3-delete-column), cascading deletes of dependent reports/charts/formulas are irreversible.
 - **Dependency chain:** Get Custom Formulas (`formulaId`) → (optional) Get Column Dependents → Delete Custom Formula.
 
 ### Copy Custom Formulas
 
 - **Restricted to Account Admin / Org Admin only** — the only API in this document (and one of the few in the whole API suite) that excludes Workspace Admins entirely.
 - **Matches formulas by name across workspaces.** This implies the destination view must already have a compatible schema (same base columns the formula's expression references) for the copy to succeed.
-- **Cross-org copy requires `ZANALYTICS-DEST-ORGID` + `workspaceKey` (Org Admin) or `ZANALYTICS-ORGID` set to the destination org + `workspaceKey` (Account Admin)** — identical pattern to Copy Workspace. See [WORKSPACE_OPERATIONS_API_DOC_INFO.md](WORKSPACE_OPERATIONS_API_DOC_INFO.md) for the full explanation of this cross-org header mechanism.
+- **Cross-org copy requires `ZANALYTICS-DEST-ORGID` + `workspaceKey` (Org Admin) or `ZANALYTICS-ORGID` set to the destination org + `workspaceKey` (Account Admin)** — identical pattern to Copy Workspace. See [Workspace Operations](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) for the full explanation of this cross-org header mechanism.
 - **No response body.** Always verify success via Get Custom Formulas on the destination view.
 - **Dependency chain:** Get Custom Formulas (source view, to get exact `formulaName` values) → Get Workspace SecretKey (destination workspace, if cross-org) → Copy Custom Formulas → Get Custom Formulas (destination view, to verify).
 

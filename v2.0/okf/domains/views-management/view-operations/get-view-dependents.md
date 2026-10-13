@@ -46,7 +46,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -56,7 +56,7 @@ status: stable
 
 Returns all active views that **depend on** the specified view. A dependent view is any view that cannot exist independently without the specified source view — for example, a chart built on a table, a pivot built on a query table, or a query table built on another query table. Useful before a Delete operation to understand the full impact.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

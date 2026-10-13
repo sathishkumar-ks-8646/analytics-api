@@ -43,7 +43,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -55,7 +55,7 @@ Adds the specified workspace to the calling user's list of favourite workspaces.
 
 A user can favourite multiple workspaces simultaneously — there is no exclusivity constraint. If the workspace is already in the user's favourites, this call succeeds silently without error (idempotent).
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 # Endpoint
 

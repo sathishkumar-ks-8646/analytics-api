@@ -11,7 +11,7 @@ Publishing makes a single view reachable through a stand-alone URL of the form `
 | **Public URL** | `https://<analytics-domain>/open-view/<view-id>` | Anyone with the link (or everyone in the organization / business organization, depending on `publicPermLevel`) | [Make View Public](#1-make-view-public) / [Remove Public Permission](#2-remove-public-permission) |
 | **Private URL** | `https://<analytics-domain>/open-view/<view-id>/<private-key>` | Only holders of the secret 32-character key, optionally additionally gated by a password and/or an expiry date | [Get Private URL](#3-get-private-url) / [Create Private URL](#4-create-private-url) / [Remove Private Access](#5-remove-private-access) |
 
-Internally both channels are modelled as a share to a reserved pseudo-user — **`Public Visitor`** (`sharedToZuId: "-20"`) for the public channel and **`Private Link`** (`sharedToZuId: "-30"`) for the private channel. This is why the effect of these APIs is visible in the [Get Shared Details](SHARING_API_DOC_INFO.md#4-get-shared-details) response, and why the permission set accepted here is a read-only subset of the normal sharing `permissions` object.
+Internally both channels are modelled as a share to a reserved pseudo-user — **`Public Visitor`** (`sharedToZuId: "-20"`) for the public channel and **`Private Link`** (`sharedToZuId: "-30"`) for the private channel. This is why the effect of these APIs is visible in the [Get Shared Details](SHARING.md#4-get-shared-details) response, and why the permission set accepted here is a read-only subset of the normal sharing `permissions` object.
 
 Separately, [Get Publish Configurations](#6-get-publish-configurations) and [Update Publish Configurations](#7-update-publish-configurations) control **how the published page renders** (title, toolbar, search box, size, auto-refresh, legend position, URL-level criteria, Ask Zia, …). That configuration is shared by both channels and by the embed URL.
 
@@ -39,7 +39,7 @@ Separately, [Get Publish Configurations](#6-get-publish-configurations) and [Upd
 
 > **Note on naming:** "Create Private link" is documented here as **"Create Private URL"**, "Remove Private Link" as **"Remove Private Access"**, "Get Publish Details" as **"Get Publish Configurations"**, and "Update Publish Details" as **"Update Publish Configurations"**. "Make View Public" and "Remove Public Permission" are unrenamed.
 >
-> **Related APIs not in this document:** [Get View URL](VIEW_OPERATIONS_API_DOC_INFO.md#8-get-view-url) (`GET /publish`) returns the plain in-app view URL and is documented with the View Operations APIs. The embed-URL APIs (`/publish/embed`, `/publish/embedurls`) are documented separately.
+> **Related APIs not in this document:** [Get View URL](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#8-get-view-url) (`GET /publish`) returns the plain in-app view URL and is documented with the View Operations APIs. The embed-URL APIs (`/publish/embed`, `/publish/embedurls`) are documented separately.
 
 ---
 
@@ -85,7 +85,7 @@ Publishes a view as a **Public URL** and, in the same call, defines the read-onl
 
 #### `permissions` Fields
 
-Only these seven fields are accepted for a public or private link. Every other permission in the general [sharing `permissions` object](SHARING_API_DOC_INFO.md#permissions-fields) (`addRow`, `updateRow`, `deleteRow`, `deleteAllRows`, the four `import*` modes, `share`, `discussion`, `createPreset`) is forced to `false` server-side and cannot be enabled through this API.
+Only these seven fields are accepted for a public or private link. Every other permission in the general [sharing `permissions` object](SHARING.md#permissions-fields) (`addRow`, `updateRow`, `deleteRow`, `deleteAllRows`, the four `import*` modes, `share`, `discussion`, `createPreset`) is forced to `false` server-side and cannot be enabled through this API.
 
 | Field | Type | Default | Description |
 |-------|------|---------|--------------|
@@ -250,9 +250,9 @@ CONFIG={
 | **Column restrictions require the matching permission** | `vudColumns` is ignored unless `permissions.vud` is `true`; `drillColumns` is ignored unless `permissions.drillDown` is `true`. No error is raised for the ignored field. |
 | **`publicPermLevel` is forced to `1` on custom domains** | In a Client Portal / White Label request context, the organization-scoped levels (`2`, `3`) are not applicable and the level is overridden to `1`. |
 | **`criteria` is validated, `URLCriteria` is not the same thing** | The `criteria` here is a *share-level row filter* stored against the `Public Visitor` pseudo-user. It is unrelated to `URLCriteria` in [Update Publish Configurations](#7-update-publish-configurations), which is a *URL parameter* applied when the published page is rendered. |
-| **`domainName` ≠ `ZANALYTICS-DEST-ORGID`** | `domainName` scopes the operation to a Client Portal / White Label domain. It is a completely different mechanism from the `ZANALYTICS-DEST-ORGID` header used by cross-org copy operations (see [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views)) — never substitute one for the other. |
-| **Verifying the result** | The resulting public share is visible via [Get Shared Details](SHARING_API_DOC_INFO.md#4-get-shared-details) as a `shareInfo` entry with `sharedTo: "Public Visitor"`, `sharedToZuId: "-20"`, and `publicPermLevel` set to the audience level; and via [Get Publish Configurations](#6-get-publish-configurations) as `publicViewConfig.publicPermLevel`. |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → (optional) [Get Publish Configurations](#6-get-publish-configurations) to check allowed audience levels → Make View Public. |
+| **`domainName` ≠ `ZANALYTICS-DEST-ORGID`** | `domainName` scopes the operation to a Client Portal / White Label domain. It is a completely different mechanism from the `ZANALYTICS-DEST-ORGID` header used by cross-org copy operations (see [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views)) — never substitute one for the other. |
+| **Verifying the result** | The resulting public share is visible via [Get Shared Details](SHARING.md#4-get-shared-details) as a `shareInfo` entry with `sharedTo: "Public Visitor"`, `sharedToZuId: "-20"`, and `publicPermLevel` set to the audience level; and via [Get Publish Configurations](#6-get-publish-configurations) as `publicViewConfig.publicPermLevel`. |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → (optional) [Get Publish Configurations](#6-get-publish-configurations) to check allowed audience levels → Make View Public. |
 
 ### Error Codes
 
@@ -268,12 +268,12 @@ CONFIG={
 | 7531 | `PUBLIC_TO_ORG_NOT_SUPPORTED_IN_FREE` — `publicPermLevel` `2` or `3` is not supported on the Free plan. | Upgrade the plan, or use `publicPermLevel: "1"`. |
 | 7565 | `UNVERIFIED_EMAIL` — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |
 | 8054 | `INVALID_FILTER_CRITERIA` — `criteria` could not be parsed. | Correct the criteria syntax (e.g. `"Table"."Column"='Value'`). |
-| 8060 | `DOMAIN_NOT_EXIST` — The `domainName` supplied does not exist. | Use a domain returned by the [Domain and White Label APIs](DOMAIN_AND_WHITELABEL_API_DOC_INFO.md). |
+| 8060 | `DOMAIN_NOT_EXIST` — The `domainName` supplied does not exist. | Use a domain returned by the [Domain and White Label APIs](../03%20%C2%B7%20Workspace%20Management/DOMAIN_AND_WHITE_LABEL.md). |
 | 8061 | `DOMAIN_DOES_NOT_BELONGS_TO_USER` — The caller is not an admin of the supplied `domainName`. | Call as an admin of that portal domain, or omit `domainName`. |
 | 8074 | `READ_PERM_SHOULD_BE_TRUE_FOR_SHARING` — `permissions.read` was sent as `false`. | Omit `read` or set it to `true`. |
 | 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is not valid JSON, contains an unsupported key, or violates a type/length/allowed-value constraint (e.g. `publicPermLevel` outside `1`/`2`/`3`). | Send only the documented keys with the documented types. |
 | 8088 | `SECURITY_CONTROLS_FEATURE_DISABLED` — Public sharing has been disabled for this organization/workspace by security controls. | Ask the Organization Admin to re-enable public sharing in Security Controls. |
-| 8154 | `COLUMN_NOT_PRESENT_IN_TABLE` — A column in `vudColumns` / `drillColumns` (or in `criteria`) does not exist in the given table. | Verify column names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 8154 | `COLUMN_NOT_PRESENT_IN_TABLE` — A column in `vudColumns` / `drillColumns` (or in `criteria`) does not exist in the given table. | Verify column names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 8241 | `SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION` — The view carries a restricted DATA_WARNING system tag. | Review the warning, then resend with `"validateSystemTags": false` to confirm. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.embed.create`. |
 | 12052 | `WORKSPACE_NOT_ENABLED_FOR_DOMAIN_ACCESS` — The workspace is not enabled for access through the requested portal domain. | Enable the workspace for that Client Portal domain first. |
@@ -484,7 +484,7 @@ ZANALYTICS-ORGID: 700000654321
 | 7104 | `META_OBJECT_NOT_PRESENT` — View not found. | Verify `<view-id>` exists. |
 | 7301 | `SECURITY_NOT_PERMITTED` — The user does not have Publish permission on the view. | Ensure the user is an Account Admin, Organization Admin, Workspace Admin, or has Publish permission on the view. |
 | 7319 | `OBJID_NOT_BELONGS_TO_DB` — The view does not belong to the specified workspace. | Ensure `<workspace-id>` and `<view-id>` are consistent. |
-| 8060 | `DOMAIN_NOT_EXIST` — The `domainName` supplied does not exist. | Use a domain returned by the [Domain and White Label APIs](DOMAIN_AND_WHITELABEL_API_DOC_INFO.md). |
+| 8060 | `DOMAIN_NOT_EXIST` — The `domainName` supplied does not exist. | Use a domain returned by the [Domain and White Label APIs](../03%20%C2%B7%20Workspace%20Management/DOMAIN_AND_WHITE_LABEL.md). |
 | 8061 | `DOMAIN_DOES_NOT_BELONGS_TO_USER` — The caller is not an admin of the supplied `domainName`. | Call as an admin of that portal domain, or omit `domainName`. |
 | 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is not valid JSON or contains an unsupported key. | Send only `domainName` and/or `withCustomDomain`. |
 | 8115 | `VIEW_NOT_PUBLISHED_AS_PRIVATE` — The view has no private link. | Call [Create Private URL](#4-create-private-url) first. |
@@ -665,17 +665,17 @@ CONFIG={
 | **`regenerateKey` is destructive and immediate** | Every URL handed out earlier stops working the moment the new key is persisted. There is no grace period and no way to recover the old key. |
 | **Plan limits apply to private links** | Creating a *new* private link consumes one of the organization's allotted private links (`6121` / `6122` when exhausted). Regenerating an existing key does not consume a new allotment but is itself plan-gated (`6055` / `6057`). |
 | **A separate PUT endpoint also exists** | `PUT /publish/privatelink` ("Update Private Link Configurations") updates an existing private link and fails with `8115` if none exists. It is not covered by this document; this POST API covers both creation and update. |
-| **Verifying the result** | The resulting private share is visible via [Get Shared Details](SHARING_API_DOC_INFO.md#4-get-shared-details) as a `shareInfo` entry with `sharedTo: "Private Link"`, `sharedToZuId: "-30"`, and `publicPermLevel: 0`; the password/expiry state is visible via [Get Publish Configurations](#6-get-publish-configurations) (`privateLinkConfig`). |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → Create Private URL → [Get Private URL](#3-get-private-url) / [Get Publish Configurations](#6-get-publish-configurations). |
+| **Verifying the result** | The resulting private share is visible via [Get Shared Details](SHARING.md#4-get-shared-details) as a `shareInfo` entry with `sharedTo: "Private Link"`, `sharedToZuId: "-30"`, and `publicPermLevel: 0`; the password/expiry state is visible via [Get Publish Configurations](#6-get-publish-configurations) (`privateLinkConfig`). |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → Create Private URL → [Get Private URL](#3-get-private-url) / [Get Publish Configurations](#6-get-publish-configurations). |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 6055 | `REGENERATE_VIOLATION` — The current plan does not allow regenerating a private-link key. | Upgrade the plan, or omit `regenerateKey`. |
-| 6057 | `SHAREDUSR_REGENERATE_VIOLATION` — A shared user attempted a plan-restricted key regeneration. | Ask the workspace owner to regenerate the key, or upgrade the plan. |
 | 6054 | `PUBLISHCNT_VIOLATION` — The current plan does not allow private links. | Upgrade the plan. |
+| 6055 | `REGENERATE_VIOLATION` — The current plan does not allow regenerating a private-link key. | Upgrade the plan, or omit `regenerateKey`. |
 | 6056 | `SHAREDUSR_PUBLISHCNT_VIOLATION` — A shared user attempted a plan-restricted private-link creation. | Ask the workspace owner to create the link, or upgrade the plan. |
+| 6057 | `SHAREDUSR_REGENERATE_VIOLATION` — A shared user attempted a plan-restricted key regeneration. | Ask the workspace owner to regenerate the key, or upgrade the plan. |
 | 6121 | `EXCEEDING_USR_PLN_PRIVATE_LINKS` — The organization has used all private links allowed by its plan. | Remove an unused private link via [Remove Private Access](#5-remove-private-access), or upgrade the plan. |
 | 6122 | `EXCEEDING_USR_PLN_PRIVATE_LINKS_DM` — Same limit, reported to a non-super-admin caller. | Ask the Organization Admin to free up a private link or upgrade the plan. |
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
@@ -685,12 +685,12 @@ CONFIG={
 | 7319 | `OBJID_NOT_BELONGS_TO_DB` — The view does not belong to the specified workspace. | Ensure `<workspace-id>` and `<view-id>` are consistent. |
 | 7565 | `UNVERIFIED_EMAIL` — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |
 | 8054 | `INVALID_FILTER_CRITERIA` — `criteria` could not be parsed. | Correct the criteria syntax (e.g. `"Table"."Column"='Value'`). |
-| 8060 | `DOMAIN_NOT_EXIST` — The `domainName` supplied does not exist. | Use a domain returned by the [Domain and White Label APIs](DOMAIN_AND_WHITELABEL_API_DOC_INFO.md). |
+| 8060 | `DOMAIN_NOT_EXIST` — The `domainName` supplied does not exist. | Use a domain returned by the [Domain and White Label APIs](../03%20%C2%B7%20Workspace%20Management/DOMAIN_AND_WHITE_LABEL.md). |
 | 8061 | `DOMAIN_DOES_NOT_BELONGS_TO_USER` — The caller is not an admin of the supplied `domainName`. | Call as an admin of that portal domain, or omit `domainName`. |
 | 8074 | `READ_PERM_SHOULD_BE_TRUE_FOR_SHARING` — `permissions.read` was sent as `false`. | Omit `read` or set it to `true`. |
 | 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is not valid JSON, contains an unsupported key, or violates a constraint (e.g. `password` shorter than 6 characters, malformed `expiryDate`). | Send only the documented keys with the documented types and formats. |
 | 8088 | `SECURITY_CONTROLS_FEATURE_DISABLED` — Private links have been disabled for this organization/workspace by security controls. | Ask the Organization Admin to re-enable private links in Security Controls. |
-| 8154 | `COLUMN_NOT_PRESENT_IN_TABLE` — A column in `vudColumns` / `drillColumns` (or in `criteria`) does not exist in the given table. | Verify column names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 8154 | `COLUMN_NOT_PRESENT_IN_TABLE` — A column in `vudColumns` / `drillColumns` (or in `criteria`) does not exist in the given table. | Verify column names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 8241 | `SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION` — The view carries a restricted DATA_WARNING system tag. | Review the warning, then resend with `"validateSystemTags": false` to confirm. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.embed.update`. |
 | 12052 | `WORKSPACE_NOT_ENABLED_FOR_DOMAIN_ACCESS` — The workspace is not enabled for access through the requested portal domain. | Enable the workspace for that Client Portal domain first. |
@@ -984,7 +984,7 @@ ZANALYTICS-ORGID: 700000654321
 | **Reflects both channels at once** | A view can be simultaneously public and private-linked; `publicViewConfig.publicPermLevel > 0` and `privateLinkConfig.isPrivate: true` can both hold in the same response. |
 | **Custom-domain handling of `URLCriteria` is transparent** | Internally the criteria is stored under a different key for portal domains than for the Zoho Analytics domain, but this API normalises both to `URLCriteria` — callers see one field regardless of context. |
 | **No email-verification requirement** | Unlike the mutating publish APIs, this read-only API does not require the caller's primary email to be verified. |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → Get Publish Configurations (then decide which publish API to call). |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → Get Publish Configurations (then decide which publish API to call). |
 
 ### Error Codes
 
@@ -1169,7 +1169,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | 8054 | `INVALID_FILTER_CRITERIA` — `URLCriteria` could not be parsed. | Correct the criteria syntax (e.g. `"Table"."Column"='Value'`). |
 | 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is not valid JSON, contains an unsupported key, or violates a type constraint (e.g. a non-alphabetic `legendPosition`). | Send only the documented keys with the documented types. |
 | 8152 | `INTERVAL_SHOULD_BE_120_OR_ABOVE` — `autoRefresh` is a positive value below 120 seconds. | Use `-1` to disable auto-refresh, or a value of at least `120`. |
-| 8154 | `COLUMN_NOT_PRESENT_IN_TABLE` — A column referenced in `URLCriteria` does not exist. | Verify column names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 8154 | `COLUMN_NOT_PRESENT_IN_TABLE` — A column referenced in `URLCriteria` does not exist. | Verify column names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 8241 | `SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION` — The view carries a restricted DATA_WARNING system tag. | Review the warning, then resend with `"validateSystemTags": false` to confirm. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.embed.update`. |
 
@@ -1183,7 +1183,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the view. Obtainable from listing API responses as the `orgId` field. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required only for the three APIs that send a CONFIG body: [Make View Public](#1-make-view-public), [Create Private URL](#4-create-private-url), and [Update Publish Configurations](#7-update-publish-configurations). [Get Private URL](#3-get-private-url) takes its optional CONFIG as a query parameter instead. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization. Client Portal / White Label scoping in the publish APIs is expressed through the `domainName` CONFIG field (or the legacy `withCustomDomain` flag) — the two mechanisms are unrelated and must never be substituted for one another.
+> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization. Client Portal / White Label scoping in the publish APIs is expressed through the `domainName` CONFIG field (or the legacy `withCustomDomain` flag) — the two mechanisms are unrelated and must never be substituted for one another.
 
 Example:
 
@@ -1223,7 +1223,7 @@ CONFIG={"criteria":"\"Sales_1\".\"Region\"='West'"}
 - **Audience level must be pre-flighted.** `publicPermLevel` `2` and `3` are plan- and organization-gated. Read `publicViewConfig.isOrgPublicAllowed` / `isBussOrgPublicAllowed` from [Get Publish Configurations](#6-get-publish-configurations) before requesting them, rather than catching `7531`/`7500` after the fact. In a Client Portal / White Label context the level is silently forced to `1`.
 - **Read-only by construction.** The permission array is sanitised to a read-only set server-side; row-write permissions and `share` are dropped silently rather than rejected, so a caller cannot tell from the response that they were ignored. Only the seven fields in [`permissions` Fields](#permissions-fields) have any effect.
 - **`isListed` lives elsewhere.** The public-listing flag is *not* part of this API's CONFIG even though it is a public-channel concern — it is set through [Update Publish Configurations](#7-update-publish-configurations).
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → [Get Publish Configurations](#6-get-publish-configurations) (check allowed audience levels) → Make View Public → verify via [Get Shared Details](SHARING_API_DOC_INFO.md#4-get-shared-details) (`sharedTo: "Public Visitor"`).
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → [Get Publish Configurations](#6-get-publish-configurations) (check allowed audience levels) → Make View Public → verify via [Get Shared Details](SHARING.md#4-get-shared-details) (`sharedTo: "Public Visitor"`).
 
 ### Remove Public Permission
 
@@ -1248,7 +1248,7 @@ CONFIG={"criteria":"\"Sales_1\".\"Region\"='West'"}
 - **`drillThrough` is unavailable on this channel.** Public links accept it; private links force it to `false`. This is the one permission difference between the two channels.
 - **Plan-limited resource.** New links consume the organization's private-link allotment (`6121`/`6122` when exhausted). Freeing one requires [Remove Private Access](#5-remove-private-access).
 - **A sibling PUT endpoint exists but is out of scope here.** `PUT /publish/privatelink` updates an existing link only. This POST endpoint covers both create and update, so most integrations never need the PUT variant.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → Create Private URL → [Get Private URL](#3-get-private-url) / [Get Publish Configurations](#6-get-publish-configurations).
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → Create Private URL → [Get Private URL](#3-get-private-url) / [Get Publish Configurations](#6-get-publish-configurations).
 
 ### Remove Private Access
 
@@ -1265,7 +1265,7 @@ CONFIG={"criteria":"\"Sales_1\".\"Region\"='West'"}
 - **Returns the private-link password in clear text.** `privateLinkConfig.password` is decrypted for this response (sentinel `"-1"` when unset). This makes the endpoint materially more sensitive than the other read APIs in this document.
 - **`publicPermLevel: 0` is output-only.** It signals "not public" on read but is not a legal input to [Make View Public](#1-make-view-public); un-publishing goes through [Remove Public Permission](#2-remove-public-permission).
 - **Its `publishConfig` defaults are not the update API's defaults.** Before any [Update Publish Configurations](#7-update-publish-configurations) call, `includeSearchBox` reads as `false` and `includeAskZia` as `true`; the update API's own defaults for those fields are `true` and `false`. Do not treat a read as a safe round-trippable payload without setting both explicitly.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → Get Publish Configurations → the appropriate publish/un-publish API.
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → Get Publish Configurations → the appropriate publish/un-publish API.
 
 ### Update Publish Configurations
 
@@ -1291,4 +1291,4 @@ CONFIG={"criteria":"\"Sales_1\".\"Region\"='West'"}
 | **`"-1"` is the "unset" sentinel, not `null`** | `privateLinkConfig.password` and `privateLinkConfig.expiryDate` use the string `"-1"` to mean "not configured". Similarly `publishConfig.autoRefresh` uses the number `-1` to mean "no auto-refresh". No field in these responses is ever `null`. |
 | **Booleans are native, numbers are native, dates are strings** | Unlike the sharing APIs (where `inheritParentFilterCriteria` is serialised as the string `"true"`/`"false"`), every boolean in `publicViewConfig` / `privateLinkConfig` / `publishConfig` is a native JSON boolean, and `publicPermLevel`, `width`, `height`, and `autoRefresh` are native JSON numbers. `expiryDate` is a `dd/MM/yyyy` string in GMT. |
 | **View IDs in the URL are numeric path segments** | Unlike the sharing APIs' response payloads, which return IDs as JSON strings, the publish APIs carry the view ID only inside the returned URL text — extract it as a string to avoid precision loss on large IDs. |
-| **Effects are observable through the Sharing APIs** | Because both channels are modelled as shares to reserved pseudo-users, [Get Shared Details](SHARING_API_DOC_INFO.md#4-get-shared-details) is the canonical way to audit what a public or private link actually grants: look for `sharedTo: "Public Visitor"` / `sharedToZuId: "-20"` (with `publicPermLevel` set) and `sharedTo: "Private Link"` / `sharedToZuId: "-30"` (with `publicPermLevel: 0`), plus the resolved `permissionString`, `criteria`, `vudColumns`, and `drillColumns`. |
+| **Effects are observable through the Sharing APIs** | Because both channels are modelled as shares to reserved pseudo-users, [Get Shared Details](SHARING.md#4-get-shared-details) is the canonical way to audit what a public or private link actually grants: look for `sharedTo: "Public Visitor"` / `sharedToZuId: "-20"` (with `publicPermLevel` set) and `sharedTo: "Private Link"` / `sharedToZuId: "-30"` (with `publicPermLevel: 0`), plus the resolved `permissionString`, `criteria`, `vudColumns`, and `drillColumns`. |

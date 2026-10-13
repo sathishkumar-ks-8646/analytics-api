@@ -6,7 +6,7 @@ This document covers the five REST APIs that manage the **datasources** of a wor
 
 Every table in Zoho Analytics that is not hand-built has a **datasource** behind it: a cloud database, a local database reached through Zoho Databridge, an FTP or web-hosted file, a cloud-storage bucket, a business application connected through an integration connector, a live-connect database, or a snapshot. These five APIs let you inspect those datasources, trigger a pull on demand, repair a connection whose credentials or host have changed, and read the outcome of the last pull.
 
-They do **not** create datasources, and they do not load data supplied in the request. Creating a connection is done in the Zoho Analytics interface; pushing data into a table is [Synchronous Data Import](SYNC_DATA_IMPORT_API_DOC_INFO.md) or [Asynchronous & Batch Data Import](ASYNC_DATA_IMPORT_API_DOC_INFO.md).
+They do **not** create datasources, and they do not load data supplied in the request. Creating a connection is done in the Zoho Analytics interface; pushing data into a table is [Synchronous Data Import](SYNC_DATA_IMPORT.md) or [Asynchronous & Batch Data Import](ASYNC_DATA_IMPORT.md).
 
 | | Data sync (this document) | Data import |
 |---|---|---|
@@ -66,12 +66,12 @@ They do **not** create datasources, and they do not load data supplied in the re
 |--------------|--------|
 | **`datasourceId` has exactly one source** | It is returned only by [Get Datasources](#4-get-datasources), as `dataSources[].datasourceId`. It is the `<datasource-id>` for [Sync Data](#1-sync-data) and [Update Datasource Connection](#3-update-datasource-connection). No other API in the suite returns it. |
 | **`syncIntervalId` also has exactly one source** | [Get Datasources](#4-get-datasources) returns it as `dataSources[].syncIntervals[].syncIntervalId`. It becomes **mandatory** for [Sync Data](#1-sync-data) as soon as a datasource has more than one sync interval. |
-| **`viewId` comes from the datasource listing too** | `dataSources[].tableDetails[].viewId` (or `dataSources[].syncIntervals[].tableDetails[].viewId`) tells you which tables a datasource feeds. Those are the IDs [Refetch Data](#2-refetch-data) and [Get Last Import Details](#5-get-last-import-details) accept. [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) also returns view IDs, but it does not tell you which have a datasource behind them. |
+| **`viewId` comes from the datasource listing too** | `dataSources[].tableDetails[].viewId` (or `dataSources[].syncIntervals[].tableDetails[].viewId`) tells you which tables a datasource feeds. Those are the IDs [Refetch Data](#2-refetch-data) and [Get Last Import Details](#5-get-last-import-details) accept. [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) also returns view IDs, but it does not tell you which have a datasource behind them. |
 | **Sync Data and Refetch Data work at different levels** | [Sync Data](#1-sync-data) pulls a **whole datasource** — every table it feeds. [Refetch Data](#2-refetch-data) pulls **one table**. See [Two Levels of Sync](#two-levels-of-sync). |
 | **Neither sync API reports its outcome** | Both return `204` with no body. The only way to find out whether the pull succeeded is [Get Last Import Details](#5-get-last-import-details) for a table, or the `lastDataSyncStatus` fields from [Get Datasources](#4-get-datasources) for the datasource. |
 | **Update Datasource Connection is the repair path** | When `lastDataSyncStatus` reports a connection failure, [Update Datasource Connection](#3-update-datasource-connection) is how you correct the host, port, or credentials — then re-run [Sync Data](#1-sync-data). It applies only to database-style connections; see its own section. |
 | **The sync quota is shared and visible** | `syncUsed` and `totalSyncAllowed` from [Get Datasources](#4-get-datasources) report the manual-sync quota that [Sync Data](#1-sync-data) consumes. Read them before triggering a sync rather than catching `19000048`. |
-| **Data arriving through these APIs is read back with the Row and Export APIs** | Once a sync lands, the data is ordinary table data — [Get Rows](ROW_API_DOC_INFO.md), [Export Data from a View](SYNC_DATA_EXPORT_API_DOC_INFO.md#1-export-data-from-a-view), and the reporting APIs all apply. |
+| **Data arriving through these APIs is read back with the Row and Export APIs** | Once a sync lands, the data is ordinary table data — [Get Rows](ROW_OPERATIONS.md), [Export Data from a View](SYNC_DATA_EXPORT.md#1-export-data-from-a-view), and the reporting APIs all apply. |
 
 ### Typical sequences
 
@@ -196,10 +196,10 @@ Triggers an immediate pull for a whole datasource — every table it feeds.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/datasources/<datasource-id>/sync` |
-| **HTTP Method** | `POST` |
+| **Method** | POST |
 | **OAuth Scope** | `ZohoAnalytics.metadata.create` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Table or Sync Data permission on the workspace. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Optional |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -336,10 +336,10 @@ Triggers an immediate pull for **one table** from whatever datasource sits behin
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/sync` |
-| **HTTP Method** | `POST` |
+| **Method** | POST |
 | **OAuth Scope** | `ZohoAnalytics.metadata.create` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with Sync Data permission on the workspace. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Optional |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -454,7 +454,7 @@ HTTP/1.1 204 No Content
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | 7301 | `SECURITY_NOT_PERMITTED` — The request came through a Client Portal / White Label domain, or the caller is neither an admin nor the View Owner and lacks Sync Data permission. | Call from the standard API host with the required permission. |
 | 8507 | `MORE_THAN_MAX_LENGTH` — `CONFIG` exceeds 3,000 characters, or a credential exceeds 1,000. | Shorten the value. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token carrying `ZohoAnalytics.metadata.create`. |
@@ -471,10 +471,10 @@ Updates the connection details of a **database-style datasource** — host, port
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/datasources/<datasource-id>` |
-| **HTTP Method** | `PUT` |
+| **Method** | PUT |
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Table or Edit Datasource permission on the workspace. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -742,10 +742,10 @@ Lists every datasource in a workspace, the tables each one feeds, and the state 
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/datasources` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with View Datasource or Create Table permission on the workspace. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
 
@@ -981,7 +981,7 @@ A file source, an integration connector, a Live Connect database, a local-drive 
 | **The entry shape varies by source type** | A field's absence is meaningful, not an error. Test for keys rather than assuming a fixed schema — see [Source Types](#source-types). |
 | **Single-interval and multi-interval datasources report differently** | With one interval the sync fields sit directly on the datasource; with several they move into `syncIntervals`, and the top-level `syncIntervalId` disappears. Handle both. |
 | **Live Connect reports a design sync, not a data sync** | `lastDesignSyncStatus` and `lastDesignSyncTime` replace the data-sync fields, because a Live Connect datasource keeps its structure in step rather than copying rows. |
-| **Integration connectors report no tables** | Connector entries omit `tableDetails` entirely; the tables they populate are visible through [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| **Integration connectors report no tables** | Connector entries omit `tableDetails` entirely; the tables they populate are visible through [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | **Local-drive and snapshot entries have no `datasourceId`** | They cannot be synced or updated through this suite. A snapshot's target table can still be refreshed with [Refetch Data](#2-refetch-data). |
 | **Every value is a string** | Including IDs, counts, and `syncUsed` / `totalSyncAllowed`. Nothing in the response is a JSON number. |
 | **Times are pre-formatted display strings** | `dd MMMM, yyyy hh:mm:ss a z` — not epoch values and not ISO 8601. Parse against that pattern or treat them as opaque. |
@@ -1004,10 +1004,10 @@ Reports what the most recent load into a table actually did — when it ran, whe
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/importdetails` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with View Datasource or an import permission on the view. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
 
@@ -1018,7 +1018,7 @@ Reports what the most recent load into a table actually did — when it ran, whe
 | `<workspace-id>` | Long | ID of the workspace that owns the view. |
 | `<view-id>` | Long | ID of the table to report on. Must belong to `<workspace-id>`. |
 
-This API covers **every** kind of load, not only datasource syncs. A table last written by [Import Data into an Existing Table (Synchronous)](SYNC_DATA_IMPORT_API_DOC_INFO.md#2-import-data-into-an-existing-table-synchronous) reports that import here too.
+This API covers **every** kind of load, not only datasource syncs. A table last written by [Import Data into an Existing Table (Synchronous)](SYNC_DATA_IMPORT.md#2-import-data-into-an-existing-table-synchronous) reports that import here too.
 
 ### Sample Requests
 
@@ -1160,13 +1160,13 @@ An empty `data` object is a valid success. It means no import has ever run again
 | **`lastImportTime` is a pre-formatted display string** | `dd MMMM, yyyy hh:mm:ss a z`. Not epoch, not ISO 8601. |
 | **It is the only outcome report for the two sync APIs** | Both return `204`, so this is where you find out whether a sync worked. |
 | **`importSentFromEmail` is conditional** | Present only for tables fed by emailed attachments. |
-| **Dependency chain:** | [Get Datasources](#4-get-datasources) → `tableDetails[].viewId`, or [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → [Sync Data](#1-sync-data) / [Refetch Data](#2-refetch-data) → Get Last Import Details. |
+| **Dependency chain:** | [Get Datasources](#4-get-datasources) → `tableDetails[].viewId`, or [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → [Sync Data](#1-sync-data) / [Refetch Data](#2-refetch-data) → Get Last Import Details. |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | 7301 | `SECURITY_NOT_PERMITTED` — The request came through a Client Portal / White Label domain, or the caller is neither an admin nor the View Owner and lacks View Datasource or an import permission on the view. | Call from the standard API host with the required permission. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token carrying `ZohoAnalytics.metadata.read`. |
 
@@ -1180,7 +1180,7 @@ An empty `data` object is a valid success. It means no import has ever run again
 | `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace. Required by all five APIs. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required by [Sync Data](#1-sync-data), [Refetch Data](#2-refetch-data), and [Update Datasource Connection](#3-update-datasource-connection) when a CONFIG is sent. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any of these APIs.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization.
+> **`ZANALYTICS-DEST-ORGID` is not used by any of these APIs.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization.
 
 Example (a full refetch of one table):
 

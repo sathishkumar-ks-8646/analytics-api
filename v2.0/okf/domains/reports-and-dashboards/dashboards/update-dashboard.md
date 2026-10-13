@@ -72,10 +72,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-13T08:58:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -215,6 +215,18 @@ HTTP/1.1 204 No Content
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Update Dashboard](../../../sdk-examples/reports-and-dashboards/dashboards/update-dashboard.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **204 No Content** | Success returns an empty body, unlike Create which returns 200 with `data.dashboardId`. |
+| **A dashboard cannot be renamed here** | `displayName` and `description` are **rejected** with **8542**. Both are accepted only at create time. |
+| **Each supplied section is deleted and rewritten** | `DashLayoutDeletion`, `DashThemeDeletion` and `DashSettingDeletion` run before the new rows are inserted. There is **no field-level patching** — a `settings` object with one key leaves the dashboard with exactly one setting. |
+| **Omission preserves, partial content replaces** | Omitting `layout`, `themes` or `settings` leaves that section untouched; supplying it replaces the section wholesale. |
+| **Partial layouts fail confusingly** | Sending three of six cards does not move three cards — it replaces the layout with three. A subset that violates a rule raises **9001** or an overlap error rather than a clear message. |
+| **Read, merge, write — with transformations** | Read the current configuration, merge your change, then write the whole section back after applying [Transformations required](overview.md#transformations-required). |
+| **Some keys are never returned** | `layoutType`, card `properties`, card `image_properties` and `allowAllExport` are written but not read back, so a read-modify-write cycle silently loses them. See [Written but never returned](overview.md#written-but-never-returned). |
+| **Full comparison with Create** | See [What differs from Create](#what-differs-from-create). |
+| **Dependency chain** | [Read Dashboard Metadata](get-dashboard-metadata.md) → transform → Update Dashboard. |
 
 ## What differs from Create
 

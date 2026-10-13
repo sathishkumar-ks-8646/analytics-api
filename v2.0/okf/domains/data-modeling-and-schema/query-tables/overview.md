@@ -37,7 +37,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -101,7 +101,7 @@ A **Query Table** (also called a **SQL View** or **QT**) is a view whose data is
 | Field / Behaviour | Detail |
 |-------------------|--------|
 | **Rate limiting is per-user AND service-wide** | Both Create Query Table and Edit Query Table enforce a 7-per-minute-per-user limit (5-minute lockout) as well as a 15-per-minute service-wide limit. Exceeding either results in throttling — plan bulk operations with delays between calls. |
-| **Query table columns follow the same schema shape as regular table columns** | The `columns` array in Get Query Table Details uses the same field structure (`columnId`, `dataType`, `dataTypeName`, `isHidden`, `sortedOrder`, etc.) documented in [Table & Schema](../table-and-schema/overview.md) and [Columns](../columns/overview.md). |
+| **Query table columns follow the same schema shape as regular table columns** | The `columns` array in Get Query Table Details uses the same field structure (`columnId`, `dataType`, `dataTypeName`, `isHidden`, `sortedOrder`, etc.) documented in [Table and Schema](../table-and-schema/overview.md) and [Column Management](../columns/overview.md). |
 | **Edit Query Table has no data payload on success** | Unlike Create (`viewId`) and Get Details (full metadata), a successful Edit call returns HTTP `204 No Content` with no response body. |
 | **`orgId` in responses is the organisation ID, not the workspace ID** | Do not confuse `orgId` with `workspaceId` when parsing responses. |
 

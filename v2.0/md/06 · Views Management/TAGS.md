@@ -74,7 +74,7 @@ Associations are a plain many-to-many relationship: one tag can label many views
 | Relationship | Detail |
 |--------------|--------|
 | **`tagId` has exactly one origin** | [Create Tag](#4-create-tag) returns it as `data.tagId`. [Get Tags List](#1-get-tags-list) and [Get View Tags](#3-get-view-tags) return it afterwards as `tags[].id`. Every other tag-side API takes it in the path or in `tagIds`. |
-| **`viewId` comes from outside this family** | No tag API creates a view. Get view IDs from [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list), or read them back from [Get Tagged Views](#2-get-tagged-views) as `views[].id`. |
+| **`viewId` comes from outside this family** | No tag API creates a view. Get view IDs from [Get View List](VIEW_OPERATIONS.md#6-get-view-list), or read them back from [Get Tagged Views](#2-get-tagged-views) as `views[].id`. |
 | **The tag-side and view-side association APIs edit the same table from opposite ends** | [Add Tag To Multiple Views](#7-add-tag-to-multiple-views) attaches **one tag to many views**; [Add Multiple Tags To View](#9-add-multiple-tags-to-view) attaches **many tags to one view**. The resulting associations are indistinguishable. Their **permission rules differ** — see [The Two Sides of an Association](#the-two-sides-of-an-association). |
 | **The two read-back APIs are inverses** | [Get Tagged Views](#2-get-tagged-views) answers "which views carry tag X"; [Get View Tags](#3-get-view-tags) answers "which tags does view Y carry". Together they let you walk the association graph in either direction. |
 | **[Delete Tag](#6-delete-tag) cascades; the removal APIs do not** | Deleting a tag removes the tag *and* every association it had. [Remove Tag From Multiple Views](#8-remove-tag-from-multiple-views) removes associations only — the tag survives and can be re-attached. |
@@ -207,10 +207,10 @@ Returns every tag that exists in the workspace.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/tags` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **Permission Required** | Any user with access to the workspace - an Account Admin or Organization Admin, a Workspace Admin, or any shared user, including users holding a custom role. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
 
@@ -338,10 +338,10 @@ Returns the views that carry a given tag.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>/views` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **Permission Required** | Any user with access to the workspace. The returned list is filtered to the views the caller can see. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Optional |
 | **Success Status** | `200 OK` with a JSON body |
 
@@ -512,10 +512,10 @@ Returns the tags attached to a given view.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/tags` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **Permission Required** | Any user with Read permission on the view. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
 
@@ -606,13 +606,13 @@ This is what [Remove Multiple Tags From View](#10-remove-multiple-tags-from-view
 | **It is the inverse of [Get Tagged Views](#2-get-tagged-views)** | Same association table, read from the other end. |
 | **There is no pagination** | The ten-tag ceiling makes it unnecessary. |
 | **The view must belong to the workspace in the path** | A view ID from another workspace is rejected. |
-| **Dependency chain:** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) or [Get Tagged Views](#2-get-tagged-views) → `<view-id>` → Get View Tags → `tags[].id`. |
+| **Dependency chain:** | [Get View List](VIEW_OPERATIONS.md#6-get-view-list) or [Get Tagged Views](#2-get-tagged-views) → `<view-id>` → Get View Tags → `tags[].id`. |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS.md#6-get-view-list). |
 | 7301 | `SECURITY_NOT_PERMITTED` — The caller lacks Read permission on the view, or the view does not belong to `<workspace-id>`. | Ensure the view is shared with the calling user. |
 | 7390 | `WORKSPACE_NOT_BELONGS_TO_ORG` — The workspace does not belong to the organization in `ZANALYTICS-ORGID`. | Send the organization ID that owns the workspace. |
 | 8083 | `ORGID_NOT_PRESENT_IN_THE_HEADER` — The `ZANALYTICS-ORGID` header is missing. | Add the header. |
@@ -627,10 +627,10 @@ Creates one tag in the workspace.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/tags` |
-| **HTTP Method** | `POST` |
+| **Method** | POST |
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | `200 OK` with a JSON body carrying `data.tagId` |
 
@@ -772,10 +772,10 @@ Renames a tag, recolours it, or both.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>` |
-| **HTTP Method** | `PUT` |
+| **Method** | PUT |
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -911,10 +911,10 @@ Deletes a tag and every association it has.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>` |
-| **HTTP Method** | `DELETE` |
+| **Method** | DELETE |
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -1006,10 +1006,10 @@ Attaches **one tag** to a batch of views.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>/views` |
-| **HTTP Method** | `POST` |
+| **Method** | POST |
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. The View Owner alone does not qualify. Read-only users are rejected with `8180`. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -1108,9 +1108,9 @@ The message names the offending views. Nothing was written for any view in the b
 | **The batch is all-or-nothing** | Validation — workspace membership, tag existence, and the ten-tag ceiling — runs across the whole batch before anything is written. One bad view ID means no view gets tagged. |
 | **Administrators only** | Unlike its view-side counterpart [Add Multiple Tags To View](#9-add-multiple-tags-to-view), a View Owner cannot call this. See [The Two Sides of an Association](#the-two-sides-of-an-association). |
 | **Read-only users are blocked outright** | `8180`, regardless of any other permission. |
-| **`8184` covers two different mistakes** | Either the tag does not exist in the workspace, or one of the `viewIds` does not. The message does not distinguish them — verify both with [Get Tags List](#1-get-tags-list) and [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| **`8184` covers two different mistakes** | Either the tag does not exist in the workspace, or one of the `viewIds` does not. The message does not distinguish them — verify both with [Get Tags List](#1-get-tags-list) and [Get View List](VIEW_OPERATIONS.md#6-get-view-list). |
 | **No count is returned** | The response does not say how many associations were new versus already present. |
-| **Dependency chain:** | [Create Tag](#4-create-tag) → `<tag-id>`; [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `viewIds` → Add Tag To Multiple Views → [Get Tagged Views](#2-get-tagged-views). |
+| **Dependency chain:** | [Create Tag](#4-create-tag) → `<tag-id>`; [Get View List](VIEW_OPERATIONS.md#6-get-view-list) → `viewIds` → Add Tag To Multiple Views → [Get Tagged Views](#2-get-tagged-views). |
 
 ### Error Codes
 
@@ -1138,10 +1138,10 @@ Detaches **one tag** from a batch of views, or from every view at once.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>/views` |
-| **HTTP Method** | `DELETE` |
+| **Method** | DELETE |
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. The View Owner alone does not qualify. Read-only users are rejected with `8180`. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -1277,10 +1277,10 @@ Attaches a batch of **tags** to one view.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/tags` |
-| **HTTP Method** | `POST` |
+| **Method** | POST |
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with Edit Design permission on the view. Read-only users are rejected with `8180`. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -1377,13 +1377,13 @@ HTTP/1.1 204 No Content
 | **Read-only users are blocked outright** | `8180`, even if they own the view. |
 | **Duplicate IDs in `tagIds` are collapsed** | Sending the same tag twice counts once. |
 | **No count is returned** | The response does not say how many tags were newly attached. |
-| **Dependency chain:** | [Get Tags List](#1-get-tags-list) → `tagIds`; [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → Add Multiple Tags To View → [Get View Tags](#3-get-view-tags). |
+| **Dependency chain:** | [Get Tags List](#1-get-tags-list) → `tagIds`; [Get View List](VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → Add Multiple Tags To View → [Get View Tags](#3-get-view-tags). |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS.md#6-get-view-list). |
 | 7301 | `SECURITY_NOT_PERMITTED` — The caller lacks Edit Design permission on the view, or the view does not belong to `<workspace-id>`. | Call as an administrator, the View Owner, or a user with Edit Design permission. |
 | 7390 | `WORKSPACE_NOT_BELONGS_TO_ORG` — The workspace does not belong to the organization in `ZANALYTICS-ORGID`. | Send the organization ID that owns the workspace. |
 | 8079 | `ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION` — `tagIds` is missing. | Send a `tagIds` array. |
@@ -1405,10 +1405,10 @@ Detaches a batch of **tags** from one view, or clears the view entirely.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/tags` |
-| **HTTP Method** | `DELETE` |
+| **Method** | DELETE |
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with Edit Design permission on the view. Read-only users are rejected with `8180`. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -1517,7 +1517,7 @@ HTTP/1.1 204 No Content
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS.md#6-get-view-list). |
 | 7301 | `SECURITY_NOT_PERMITTED` — The caller lacks Edit Design permission on the view, or the view does not belong to `<workspace-id>`. | Call as an administrator, the View Owner, or a user with Edit Design permission. |
 | 7390 | `WORKSPACE_NOT_BELONGS_TO_ORG` — The workspace does not belong to the organization in `ZANALYTICS-ORGID`. | Send the organization ID that owns the workspace. |
 | 8083 | `ORGID_NOT_PRESENT_IN_THE_HEADER` — The `ZANALYTICS-ORGID` header is missing. | Add the header. |
@@ -1539,7 +1539,7 @@ HTTP/1.1 204 No Content
 | `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace. Required by all ten APIs. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required by the six APIs that carry a CONFIG body — 4, 5, 7, 8, 9, and 10. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any of these APIs.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization.
+> **`ZANALYTICS-DEST-ORGID` is not used by any of these APIs.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization.
 
 The `CONFIG` JSON is sent as the URL-encoded value of a form parameter named `CONFIG` on `POST`, `PUT`, and `DELETE`:
 
@@ -1604,7 +1604,7 @@ GET /restapi/v2/workspaces/320873000000419001/tags/320873000000425158/views?CONF
 - **It is the pre-flight check for the ten-tag ceiling.** The length of `tags[]` tells you how many slots are free before you call [Add Multiple Tags To View](#9-add-multiple-tags-to-view).
 - **It needs only Read on the view**, so a shared user can always see how their view is labelled even when they cannot change it.
 - **Its response shape is identical to [Get Tags List](#1-get-tags-list)**, so one parser serves both.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → Get View Tags → `tags[].id`.
+- **Dependency chain:** [Get View List](VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → Get View Tags → `tags[].id`.
 
 ### Create Tag
 
@@ -1634,7 +1634,7 @@ GET /restapi/v2/workspaces/320873000000419001/tags/320873000000425158/views?CONF
 - **The batch is validated as a whole.** One bad view ID, or one view already at ten tags, and nothing is written for any view in the request.
 - **It is safely re-runnable.** Existing pairs are skipped rather than rejected, so a retry after a network failure is harmless.
 - **`8181` names the offending views in the error message**, which is what makes it recoverable — drop those views and resend.
-- **Dependency chain:** [Create Tag](#4-create-tag) → `<tag-id>`; [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `viewIds` → Add Tag To Multiple Views.
+- **Dependency chain:** [Create Tag](#4-create-tag) → `<tag-id>`; [Get View List](VIEW_OPERATIONS.md#6-get-view-list) → `viewIds` → Add Tag To Multiple Views.
 
 ### Remove Tag From Multiple Views
 

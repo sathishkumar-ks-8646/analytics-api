@@ -115,6 +115,10 @@ LEGACY_ALIAS = {
   'AUTOML': 'automl', 'AUTOML_ANALYSIS': 'automl',
 }
 
+# Current markdown file stems (as they exist in <VERSION>/md/) -> group slug, straight from the
+# manifest. A cross-file link may name the real file, so this is tried before LEGACY_ALIAS.
+MD_STEM_ALIAS = {g[0]: g[1] for d in DOMAINS for g in d[4]}
+
 # OpenAPI operation title -> markdown endpoint title (where they differ)
 TITLE_MAP = {
  'Update Rows': 'Update Row',
@@ -559,7 +563,8 @@ def ep_url(ep):
 # Link rewriting
 # --------------------------------------------------------------------------------------------
 def legacy_group(name):
-    stem = re.sub(r'_API_DOC_INFO\.md$', '', name)
+    stem = re.sub(r'(_API_DOC_INFO)?\.md$', '', name)
+    if stem in MD_STEM_ALIAS: return MD_STEM_ALIAS[stem]
     if stem in LEGACY_ALIAS: return LEGACY_ALIAS[stem]
     k = kebab(stem)
     return k if k in GROUPS else None
@@ -618,7 +623,9 @@ def rewrite_links(text, gslug, current_ep=None):
                 UNRESOLVED[(gslug, target)] += 1
                 return m.group(0)
             return f'[{relabel(label, new, gslug)}]({new})'
-        fm = re.match(r'^([A-Za-z_]+\.md)(#(.+))?$', target)
+        # Bare file name (COLUMNS.md) or a repository-relative path to it
+        # (../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md); only the stem matters.
+        fm = re.match(r'^(?:\.{1,2}/)*(?:[^/#]+/)*([A-Za-z_]+\.md)(#(.+))?$', target)
         if fm:
             g = legacy_group(fm.group(1))
             if not g:

@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-13T08:58:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -51,13 +51,10 @@ status: stable
 
 **GET `/restapi/v2/dashboards/owned`** - Get Owned Dashboards (Dashboards / Reports & Dashboards).
 
-> This API has no request body parameters. All context is derived from the OAuth token.
+Returns the list of dashboards owned by the authenticated user across all organizations, as a single
+`views` array. Only accessible to Account Admin users.
 
-From the OpenAPI specification:
-
-Returns the list of dashboards owned by the authenticated user across every organization, as a single `views` array.
-
-This API has no request parameters; all context is derived from the OAuth token. The authenticated user must be an Account Admin.
+> This API has no CONFIG parameter and takes no request body. All context is derived from the OAuth token.
 
 # Endpoint
 
@@ -68,10 +65,11 @@ This API has no request parameters; all context is derived from the OAuth token.
 | URL | `/restapi/v2/dashboards/owned` |
 | Base URL | `https://analyticsapi.zoho.com` (data-center specific, see [Data centers](../../../foundations/data-centers.md)) |
 | OAuth scope | [`ZohoAnalytics.metadata.read`](../../../foundations/oauth-scopes.md#zohoanalyticsmetadataread) |
-| ZANALYTICS-ORGID header | Not required (user-scoped API) |
+| ZANALYTICS-ORGID header | Not required (user-scoped API) - this is a user-scoped API; the token alone identifies the caller. |
 | Permission required | The authenticated user must be an Account Admin. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| Custom domain | Not available — disabled on custom domains. |
 | OpenAPI | [`reports-dashboards-grouped-api.json`](../../../references/openapi/reports-dashboards-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1dashboards~1owned/get`; response schema `GetDashboardListResponse` |
 
 # Request

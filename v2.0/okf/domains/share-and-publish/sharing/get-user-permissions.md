@@ -42,7 +42,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -52,7 +52,7 @@ status: stable
 
 Returns the effective permission set the **calling user** currently has on a specific view.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 > **Deprecated alias:** `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/share/mypermissions` is the original path for this same API and continues to function, but is deprecated in favor of `/share/userpermissions`. New integrations should use `/share/userpermissions`.
 

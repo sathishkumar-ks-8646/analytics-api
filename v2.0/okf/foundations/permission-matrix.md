@@ -117,7 +117,7 @@ sources:
     title: AutoML - group overview
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -274,9 +274,9 @@ The `ZANALYTICS-ORGID` column says whether the organization header is `required`
 | [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md) | POST | `ZohoAnalytics.modeling.create` | required | Workspace Admin / Organization Admin, or a shared or group user holding **Create Report** permission on the workspace. A Custom Role user must have the Create Report permission explicitly granted, otherwise the call is rejected before any validation runs. |
 | [Read Dashboard Metadata](../domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md) | GET | `ZohoAnalytics.modeling.read` | required | **Read Only** or higher on the dashboard. Owners, Workspace Admins, Organization Admins, shared users and group members with read access all qualify. |
 | [Update Dashboard](../domains/reports-and-dashboards/dashboards/update-dashboard.md) | PUT | `ZohoAnalytics.modeling.update` | required | **Design Modify** on the dashboard — the owner, a Workspace Admin, an Organization Admin, or a shared user granted edit rights. |
-| [Get All Dashboards](../domains/reports-and-dashboards/dashboards/get-dashboards.md) | GET | `ZohoAnalytics.metadata.read` | not-required | The authenticated user must be any active **Zoho Analytics user**. |
+| [Get All Dashboards](../domains/reports-and-dashboards/dashboards/get-dashboards.md) | GET | `ZohoAnalytics.metadata.read` | not-required | Any active **Zoho Analytics user**. |
 | [Get Owned Dashboards](../domains/reports-and-dashboards/dashboards/get-owned-dashboards.md) | GET | `ZohoAnalytics.metadata.read` | not-required | The authenticated user must be an **Account Admin**. |
-| [Get Shared Dashboards](../domains/reports-and-dashboards/dashboards/get-shared-dashboards.md) | GET | `ZohoAnalytics.metadata.read` | not-required | The authenticated user must be any active **Zoho Analytics user**. |
+| [Get Shared Dashboards](../domains/reports-and-dashboards/dashboards/get-shared-dashboards.md) | GET | `ZohoAnalytics.metadata.read` | not-required | Any active **Zoho Analytics user**. |
 | [Get Workspace Shared Details](../domains/share-and-publish/sharing/get-workspace-shared-details.md) | GET | `ZohoAnalytics.share.read` | required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. This API is restricted to workspace owners — there is no permission-based alternative. |
 | [Share Views](../domains/share-and-publish/sharing/share-views.md) | POST | `ZohoAnalytics.share.create` | required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Share permission on all of the specified `viewIds`. |
 | [Update Shared Details](../domains/share-and-publish/sharing/update-shared-details-for-view.md) | PUT | `ZohoAnalytics.share.update` | required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Share permission on `<view-id>`. |

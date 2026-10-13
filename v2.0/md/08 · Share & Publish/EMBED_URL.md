@@ -6,7 +6,7 @@ This document covers the V2 **Embed URL** REST APIs of Zoho Analytics — the AP
 
 An **embed URL** is a signed, time-limited URL of the form `https://<analytics-domain>/open-view/<view-id>?RSCONFIG=<config-key>&FS=OS` that renders one view inside an `<iframe>` in a host application. It differs from every other publish channel in three important ways:
 
-| | Embed URL | [Public URL](PUBLISH_API_DOC_INFO.md#1-make-view-public) | [Private URL](PUBLISH_API_DOC_INFO.md#4-create-private-url) |
+| | Embed URL | [Public URL](PUBLISH.md#1-make-view-public) | [Private URL](PUBLISH.md#4-create-private-url) |
 |---|---|---|---|
 | **Lifetime** | Expires after `validityPeriod` seconds (default 1 hour, maximum 1 day) | Never expires until revoked | Never expires unless an `expiryDate` is set |
 | **Config storage** | Each call mints a **new** URL with its own permission set, filter criteria, and column restrictions | One shared configuration per view | One shared configuration per view |
@@ -36,13 +36,13 @@ The `RSCONFIG` value in the URL is the opaque key under which that URL's configu
 | 3 | [Delete Embed URL](#3-delete-embed-url) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/embed` |
 
 >
-> **Related APIs not in this document:** the per-view public/private publish channels and the publish presentation configuration are in [PUBLISH_API_DOC_INFO.md](PUBLISH_API_DOC_INFO.md); slideshow embedding is in [SLIDESHOW_API_DOC_INFO.md](SLIDESHOW_API_DOC_INFO.md); ordinary user/group sharing is in [SHARING_API_DOC_INFO.md](SHARING_API_DOC_INFO.md).
+> **Related APIs not in this document:** the per-view public/private publish channels and the publish presentation configuration are in [Publish](PUBLISH.md); slideshow embedding is in [Slideshow](SLIDESHOW_MANAGEMENT.md); ordinary user/group sharing is in [Sharing](SHARING.md).
 
 ---
 
 ## White Label / Client Portal Behaviour
 
-All three APIs are blocked in Client Portal / White Label request contexts. This is the **opposite** of the [Publish](PUBLISH_API_DOC_INFO.md) and [Slideshow](SLIDESHOW_API_DOC_INFO.md) families, and it has two distinct consequences that are easy to conflate:
+All three APIs are blocked in Client Portal / White Label request contexts. This is the **opposite** of the [Publish](PUBLISH.md) and [Slideshow](SLIDESHOW_MANAGEMENT.md) families, and it has two distinct consequences that are easy to conflate:
 
 | Scenario | Result |
 |----------|--------|
@@ -302,12 +302,12 @@ ZANALYTICS-ORGID: 700000654321
 | **`validityPeriod` is validated, not clamped** | A value above the 86400-second maximum fails with `8177` `MAX_ALLOWED_VALUE_EXCEEDED` rather than being reduced to the limit. |
 | **Exclude model beats include model** | If both `vudColumns` and `vudColumnsToExclude` are sent, the exclude list is used and the include list is ignored — no error is raised. The same applies to `drillColumns` versus `drillColumnsToExclude`. |
 | **Column restrictions need the matching permission** | `vudColumns` / `vudColumnsToExclude` are ignored unless `permissions.vud` is `true`; `drillColumns` / `drillColumnsToExclude` are ignored unless `permissions.drillDown` is `true`. No error is raised for the ignored field. |
-| **Only five permissions apply** | `read`, `export`, `vud`, `drillDown`, and `insight` are the whole permission surface of an embed URL. Anything else in the wider [sharing permission set](SHARING_API_DOC_INFO.md#permissions-fields) cannot be granted through this channel. |
+| **Only five permissions apply** | `read`, `export`, `vud`, `drillDown`, and `insight` are the whole permission surface of an embed URL. Anything else in the wider [sharing permission set](SHARING.md#permissions-fields) cannot be granted through this channel. |
 | **The URL carries no options in its query string** | Everything requested in CONFIG — permissions, criteria, column restrictions, validity — is stored server-side against the `RSCONFIG` key; the URL itself is only `?RSCONFIG=<key>&FS=OS`. Treat `embedUrl` as opaque and do not attempt to alter behaviour by editing its query string. |
 | **View-type-scoped options fail silently** | `includeSearchBox`, `includeDatatypeSymbol`, and `includeShowHideOption` apply only to table-type views and tabular reports; `legendPosition` applies only to charts. Sending them for the wrong view type is accepted and ignored. |
 | **URL-encode the CONFIG** | The value contains `{`, `"`, and `=` characters that are illegal in a raw query string. Stringify and percent-encode it; sending it raw produces a client-side URI parse failure before the request ever reaches the server. |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour) — use `domainName` from the standard API host instead. |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → Get Embed URL → (audit) [Fetch All Embed URLs](#2-fetch-all-embed-urls) → (revoke) [Delete Embed URL](#3-delete-embed-url). |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → Get Embed URL → (audit) [Fetch All Embed URLs](#2-fetch-all-embed-urls) → (revoke) [Delete Embed URL](#3-delete-embed-url). |
 
 ### Error Codes
 
@@ -320,10 +320,10 @@ ZANALYTICS-ORGID: 700000654321
 | 7319 | `OBJID_NOT_BELONGS_TO_DB` — The view does not belong to the specified workspace. | Ensure `<workspace-id>` and `<view-id>` are consistent. |
 | 8023 | `OEM_OPERATION_NOT_ALLOWED` — The organization/workspace is not enabled for Embedded Analytics. | Embedded Analytics must be enabled for the account; contact Zoho Analytics support/sales. |
 | 8054 | `INVALID_FILTER_CRITERIA` — `criteria` could not be parsed. | Correct the criteria syntax (e.g. `"Table"."Column"='Value'`). |
-| 8060 | `DOMAIN_NOT_EXIST` — The `domainName` supplied does not exist. | Use a domain returned by the [Domain and White Label APIs](DOMAIN_AND_WHITELABEL_API_DOC_INFO.md). |
+| 8060 | `DOMAIN_NOT_EXIST` — The `domainName` supplied does not exist. | Use a domain returned by the [Domain and White Label APIs](../03%20%C2%B7%20Workspace%20Management/DOMAIN_AND_WHITE_LABEL.md). |
 | 8061 | `DOMAIN_DOES_NOT_BELONGS_TO_USER` — The caller is not an admin of the supplied `domainName`. | Call as an admin of that portal domain, or omit `domainName`. |
 | 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type/length constraint. | Stringify and URL-encode the CONFIG object, and send only the documented keys. |
-| 8154 | `COLUMN_NOT_PRESENT_IN_TABLE` — A column in a `vudColumns`/`drillColumns` array (or in `criteria`) does not exist in the given table. | Verify column names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 8154 | `COLUMN_NOT_PRESENT_IN_TABLE` — A column in a `vudColumns`/`drillColumns` array (or in `criteria`) does not exist in the given table. | Verify column names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 8177 | `MAX_ALLOWED_VALUE_EXCEEDED` — `validityPeriod` exceeds the maximum of 86400 seconds (1 day). | Send a value of 86400 seconds or less. |
 | 8241 | `SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION` — The view carries a restricted DATA_WARNING system tag. | Review the warning, then resend with `"validateSystemTags": false` to confirm. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.embed.read`. |
@@ -571,7 +571,7 @@ ZANALYTICS-ORGID: 700000654321
 | `embedUrls[].vudConfig` | JSONObject | Present **only** when the URL was minted with a VUD column restriction. Absent otherwise. |
 | `vudConfig.vudConfigModel` | String | `"include"` — `vudColumns` lists the only columns visible in View Underlying Data; or `"exclude"` — `vudColumns` lists the columns hidden from it. Derived from whether `vudColumns` or `vudColumnsToExclude` was sent at mint time. |
 | `vudConfig.vudTables` | JSONArray of String | IDs of the underlying tables involved in the VUD restriction. |
-| `vudConfig.vudColumns` | JSONArray of String | Column **IDs** (not names) covered by the restriction, flattened across all tables in `vudTables`. Resolve to names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| `vudConfig.vudColumns` | JSONArray of String | Column **IDs** (not names) covered by the restriction, flattened across all tables in `vudTables`. Resolve to names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | `embedUrls[].drillConfig` | JSONObject | Present **only** when the URL was minted with a drill-down column restriction. Absent otherwise. |
 | `drillConfig.drillConfigModel` | String | `"include"` — `drillColumns` lists the only drillable columns; or `"exclude"` — `drillColumns` lists the columns excluded from drill-down. |
 | `drillConfig.drillColumns` | JSONArray of String | Column **IDs** (not names) covered by the drill restriction, flattened across tables. Note there is no `drillTables` counterpart to `vudConfig.vudTables`. |
@@ -580,17 +580,17 @@ ZANALYTICS-ORGID: 700000654321
 
 | Aspect | Detail |
 |--------|--------|
-| **Per-view, not per-workspace** | The listing covers one `<view-id>` at a time. There is no workspace-wide embed-URL inventory API — iterate over [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) to audit a whole workspace. |
+| **Per-view, not per-workspace** | The listing covers one `<view-id>` at a time. There is no workspace-wide embed-URL inventory API — iterate over [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) to audit a whole workspace. |
 | **Default hides expired URLs** | Without `includeExpiredUrls: true`, entries whose `expiryTime` has passed are filtered out server-side. A view that shows `[]` may still have historical URLs — re-query with the flag to see them. |
 | **Expiry is a raw millisecond string** | `expiryTime` is not a formatted date and there is no `isExpired` boolean. Parse it as a long and compare with the current time yourself. |
 | **`criteria` is returned decrypted** | The filter is stored encrypted but decrypted for this response, so the payload can expose tenant identifiers or customer names. Restrict who may call this API and avoid logging the response. |
 | **`vudConfig` / `drillConfig` are conditional** | They appear only when the corresponding restriction was applied at mint time. Test for key presence rather than assuming a fixed schema. |
 | **Model flags are translated for you** | The stored numeric model is converted to the readable strings `"include"` / `"exclude"` in this response — you never see the internal integer. |
-| **Columns come back as IDs, not names** | Unlike the request side of [Get Embed URL](#1-get-embed-url), which takes `tableName` / `columnNames`, this response returns numeric IDs as strings. Round-tripping requires resolving them via [Get Columns](COLUMNS_API_DOC_INFO.md). |
-| **`permissions` is narrower than the sharing permission object** | Exactly five keys, always present. Do not expect the row-write, `share`, `discussion`, `drillThrough`, or preset permissions that appear in [Get Shared Details](SHARING_API_DOC_INFO.md#4-get-shared-details). |
+| **Columns come back as IDs, not names** | Unlike the request side of [Get Embed URL](#1-get-embed-url), which takes `tableName` / `columnNames`, this response returns numeric IDs as strings. Round-tripping requires resolving them via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
+| **`permissions` is narrower than the sharing permission object** | Exactly five keys, always present. Do not expect the row-write, `share`, `discussion`, `drillThrough`, or preset permissions that appear in [Get Shared Details](SHARING.md#4-get-shared-details). |
 | **The natural verification step after minting or revoking** | Calling this API immediately after [Get Embed URL](#1-get-embed-url) shows the new entry; calling it after [Delete Embed URL](#3-delete-embed-url) confirms the entry is gone (or that the array is now empty). |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → Fetch All Embed URLs → `rsConfig` → [Delete Embed URL](#3-delete-embed-url). |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → Fetch All Embed URLs → `rsConfig` → [Delete Embed URL](#3-delete-embed-url). |
 
 ### Error Codes
 
@@ -748,7 +748,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **Not idempotent in either mode** | A repeat targeted delete fails with `8175` (`OEM_KEY_NOT_PRESENT`); a repeat bulk delete fails with `8176` (`OEM_VIEW_HOLD_NO_KEYS`). Both are "nothing to delete" conditions reported as errors, not silent successes. Guard retries with [Fetch All Embed URLs](#2-fetch-all-embed-urls). |
 | **Bulk mode also clears expired URLs** | `deleteAllUrls: true` removes every stored configuration for the view regardless of `expiryTime`, so it also wipes the historical audit trail that `includeExpiredUrls: true` would otherwise show. |
 | **Revocation is immediate and irreversible** | The stored configuration is deleted, so the URL can no longer be resolved. There is no restore path — a replacement must be minted with [Get Embed URL](#1-get-embed-url), which produces a different `RSCONFIG` key. |
-| **Only the embed channel is affected** | Public URLs, private URLs, slideshows, and ordinary user/group shares on the same view are untouched. Use [Remove Public Permission](PUBLISH_API_DOC_INFO.md#2-remove-public-permission) / [Remove Private Access](PUBLISH_API_DOC_INFO.md#5-remove-private-access) for those. |
+| **Only the embed channel is affected** | Public URLs, private URLs, slideshows, and ordinary user/group shares on the same view are untouched. Use [Remove Public Permission](PUBLISH.md#2-remove-public-permission) / [Remove Private Access](PUBLISH.md#5-remove-private-access) for those. |
 | **Deleting a URL does not delete the view** | Only the issued access URLs are removed; the view, its data, and its definition are unchanged. |
 | **CONFIG travels in the body, not the query string** | Unlike the two GET APIs in this family, this DELETE takes CONFIG as a form-encoded body parameter, so no URL encoding of the JSON is needed. |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
@@ -776,11 +776,11 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Header | Value | Required | Description |
 |--------|-------|----------|-------------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. Must carry the `ZohoAnalytics.embed.*` scope matching the operation (see [Appendix B](#appendix-b--oauth-scope-summary)). |
-| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the view. Obtainable from the [Get Organizations](ORG_INFO_API_DOC_INFO.md) response or from listing API responses as the `orgId` field. |
+| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the view. Obtainable from the [Get Organizations](../01%20%C2%B7%20Organization%20Management/ORG_INFO_AND_SETTINGS.md) response or from listing API responses as the `orgId` field. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required only for [Delete Embed URL](#3-delete-embed-url), the one API here that sends a CONFIG body. [Get Embed URL](#1-get-embed-url) and [Fetch All Embed URLs](#2-fetch-all-embed-urls) take their optional CONFIG as a URL-encoded query parameter instead. |
 | `Host` | `analyticsapi.zoho.com` (or the DC equivalent) | **Mandatory** | Must be the **standard** Zoho Analytics API host. A request whose host is a Client Portal / White Label custom domain is rejected with `7301` for all three APIs — see [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization. Portal-domain targeting in the embed APIs is expressed through the `domainName` CONFIG field (or the legacy `withCustomDomain` flag) on [Get Embed URL](#1-get-embed-url) — the two mechanisms are unrelated and must never be substituted for one another.
+> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization. Portal-domain targeting in the embed APIs is expressed through the `domainName` CONFIG field (or the legacy `withCustomDomain` flag) on [Get Embed URL](#1-get-embed-url) — the two mechanisms are unrelated and must never be substituted for one another.
 
 Example:
 
@@ -818,7 +818,7 @@ CONFIG={"deleteAllUrls":true}
 - **`domainName` supersedes `withCustomDomain`.** Both target a Client Portal / White Label domain, but the legacy flag additionally requires the caller to be an Organization Admin or Super Admin, and it fails silently when that is not the case. Prefer `domainName` in new integrations.
 - **Exclude beats include for column restrictions.** Sending both `vudColumns` and `vudColumnsToExclude` silently uses the exclude list. Same for the drill pair. Pick one model per restriction.
 - **Treat `embedUrl` as opaque.** The URL is only `?RSCONFIG=<key>&FS=OS`; every option requested in CONFIG lives server-side against that key. Do not parse it beyond extracting `RSCONFIG` when you need the revocation key, and do not try to change behaviour by editing the query string.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → Get Embed URL → [Fetch All Embed URLs](#2-fetch-all-embed-urls) to audit → [Delete Embed URL](#3-delete-embed-url) to revoke.
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → Get Embed URL → [Fetch All Embed URLs](#2-fetch-all-embed-urls) to audit → [Delete Embed URL](#3-delete-embed-url) to revoke.
 
 ### Fetch All Embed URLs
 
@@ -826,9 +826,9 @@ CONFIG={"deleteAllUrls":true}
 - **Its default view is incomplete on purpose.** Expired entries are filtered out unless `includeExpiredUrls: true` is sent, so a `[]` response does not mean nothing was ever issued. Always use the flag for a genuine audit.
 - **It returns decrypted `criteria`.** That makes the response materially more sensitive than the other reads in this family — a tenant-scoped filter can name the tenant. Restrict access and avoid logging.
 - **Expiry is raw milliseconds with no helper flag.** There is no `isExpired` boolean and no formatted date; compare `expiryTime` against the current time yourself.
-- **Columns come back as IDs while the request side takes names.** The asymmetry with [Get Embed URL](#1-get-embed-url)'s `tableName`/`columnNames` shape means a read-modify-remint workflow must resolve IDs through [Get Columns](COLUMNS_API_DOC_INFO.md) first.
+- **Columns come back as IDs while the request side takes names.** The asymmetry with [Get Embed URL](#1-get-embed-url)'s `tableName`/`columnNames` shape means a read-modify-remint workflow must resolve IDs through [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) first.
 - **Higher role bar than Get Embed URL.** Minting is available to workspace owners and OEM-enabled users; listing and revoking are restricted to Account Admins and Organization Admins. An integration user that can create URLs may well be unable to enumerate them.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → Fetch All Embed URLs → `rsConfig` → [Delete Embed URL](#3-delete-embed-url).
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → Fetch All Embed URLs → `rsConfig` → [Delete Embed URL](#3-delete-embed-url).
 
 ### Delete Embed URL
 
@@ -853,7 +853,7 @@ CONFIG={"deleteAllUrls":true}
 | **All IDs are strings** | `vudConfig.vudTables`, `vudConfig.vudColumns`, and `drillConfig.drillColumns` are arrays of **strings** even though the values are numeric IDs. Parse them as strings or longs — never as native JSON numbers — to avoid precision loss. |
 | **Conditional keys, not empty placeholders** | `vudConfig` and `drillConfig` are **omitted entirely** when the URL carries no such restriction. This differs from the sharing APIs, which return empty containers. Always test for key presence. |
 | **`criteria` is `""`, never `null` or absent** | An unfiltered embed URL reports `"criteria": ""`. `embedUrls` itself is likewise always present, empty (`[]`) when nothing matches the filter. |
-| **`permissions` in the embed channel is a fixed five-key object** | Exactly `read`, `export`, `vud`, `drillDown`, `insight`, all booleans, `read` always `true`. It is a strict subset of the [sharing `permissions` object](SHARING_API_DOC_INFO.md#permissions-fields) and of the [publish `permissions` object](PUBLISH_API_DOC_INFO.md#permissions-fields) — code against the narrow shape, not the wide one. |
+| **`permissions` in the embed channel is a fixed five-key object** | Exactly `read`, `export`, `vud`, `drillDown`, `insight`, all booleans, `read` always `true`. It is a strict subset of the [sharing `permissions` object](SHARING.md#permissions-fields) and of the [publish `permissions` object](PUBLISH.md#permissions-fields) — code against the narrow shape, not the wide one. |
 | **The returned URL host is not the API host** | `data.embedUrl` points at the Zoho Analytics **application** domain (e.g. `analytics.zoho.com`) or, when `domainName` was supplied, at that portal domain — never at the `analyticsapi.*` host the request was sent to. Do not construct these URLs client-side from the API host. |
 | **`rsConfig` and `embedUrl` are credentials** | `rsConfig` appears in the listing response and inside every `embedUrl` as the `RSCONFIG=` parameter. Anyone holding the full URL can view the data, with the baked-in permissions and filter, until it expires. Avoid logging these values and restrict who may call [Fetch All Embed URLs](#2-fetch-all-embed-urls). |
 | **Configuration is never echoed on mint** | [Get Embed URL](#1-get-embed-url) returns only `embedUrl` — not the permissions, criteria, validity, or column restrictions that were applied. Confirm what was stored with [Fetch All Embed URLs](#2-fetch-all-embed-urls) rather than assuming the request took effect verbatim. |

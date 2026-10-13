@@ -49,7 +49,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -136,6 +136,17 @@ The CONFIG parameter is a JSON object sent as a **form parameter** named `CONFIG
 ## Success Response
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Copy views"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.views` | JSONArray | One entry per view that was copied successfully. **Always present**; an empty array `[]` when `continueOnFailure` is `true` and every view failed. |
+| `views[].sourceViewId` | String | ID of the view in the source workspace, as a string. |
+| `views[].destViewId` | String | ID of the created copy in the destination workspace, as a string. Pair these to map old IDs onto new ones. |
 
 # Examples
 

@@ -42,7 +42,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -54,7 +54,7 @@ Returns all workspaces accessible to the authenticated user — both workspaces 
 
 This API is user-scoped: it returns only workspaces that the calling user has any level of access to — it does not return every workspace in the organisation. Account Admins see all workspaces in their org in the owned list.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

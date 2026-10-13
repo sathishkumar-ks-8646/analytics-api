@@ -36,7 +36,7 @@ When the Account Admin is a Client Portal Admin, each group entry includes a `do
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -163,8 +163,8 @@ When the Account Admin is a Client Portal Admin, every group entry includes `dom
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.share.read`. |
@@ -269,8 +269,8 @@ CONFIG={"groupName":"Portal Analysts","emailIds":["portal.user1@client.com","por
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7282 | A group with the same name already exists in this workspace. Group names must be unique per workspace. | Choose a different name for the group. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access. |
@@ -360,8 +360,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7282 | The new group name is already used by another group in this workspace. | Choose a name not already in use. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access. |
@@ -460,8 +460,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access. |
 | 7338 | The specified `<group-id>` does not belong to this workspace. | Verify the group ID using Get Group List. |
@@ -553,8 +553,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access. |
 | 7338 | The specified `<group-id>` does not belong to this workspace. | Verify the group ID using Get Group List. |
@@ -576,7 +576,7 @@ Permanently deletes a group from the workspace. This operation is irreversible. 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -620,8 +620,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access. |
 | 7338 | The specified `<group-id>` does not belong to this workspace. | Verify the group ID using Get Group List. |
@@ -643,7 +643,7 @@ For Client Portal Admins or users visiting via a custom portal domain URL, the r
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -738,8 +738,8 @@ ZANALYTICS-ORGID: 700000123456
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin of the workspace. | Ensure the caller has at least Workspace Admin access. |
 | 7338 | The specified `<group-id>` does not belong to this workspace. | Retrieve the correct group ID from Get Group List. |

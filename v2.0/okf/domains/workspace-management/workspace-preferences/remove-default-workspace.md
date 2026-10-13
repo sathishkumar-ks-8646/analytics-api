@@ -44,7 +44,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -56,7 +56,7 @@ Removes the default workspace designation from the specified workspace for the c
 
 Unlike Add Default Workspace, this API is **not idempotent** — if the specified workspace is not currently the user's default, the call fails with error **7415**. Verify the user's current default using Get All Workspace List (which returns `isDefault: true` for the current default) before calling this API.
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 # Endpoint
 

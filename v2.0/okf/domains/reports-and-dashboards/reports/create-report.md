@@ -80,10 +80,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-13T08:58:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -172,6 +172,16 @@ The CONFIG parameter has a maximum encoded size of 10,000,000 characters. Each o
 ## Success Response
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Create Chart View"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.viewId` | String | ID of the newly created report, serialised as a **string**. Reports are views, so this ID is accepted wherever a `<view-id>` is expected. |
+| | | `summary` varies with `reportType` — `"Create Chart View"`, and the pivot/summary equivalents. Treat it as display text, not a discriminator. |
 
 ## Notes from the OpenAPI specification
 
@@ -355,6 +365,16 @@ The `summary` string varies with `reportType`: `Create Chart View`, `Create Pivo
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Create Report](../../../sdk-examples/reports-and-dashboards/reports/create-report.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **Returns 200 with `data.viewId`** | The new report is a view; its ID is accepted wherever a `<view-id>` is expected. |
+| **`summary` varies with `reportType`** | `"Create Chart View"` and the pivot/summary equivalents. It is display text, not a discriminator. |
+| **`title` is optional but effectively required** | Omitting it creates an unnamed view, and most callers then hit **7016** or **8051**. |
+| **`axisColumns` is the core of the request** | Axis `type` must be valid for the `reportType` — using one outside its family raises **8170**. See [Appendix E – Axis Types](overview.md#axis-types). |
+| **`sizeaxis` is lowercase-only** | `sizeAxis` is rejected with **8509**, unlike the other axis types which accept several spellings. |
+| **Keep the CONFIG you submitted** | The read endpoint is lossy, so your submitted CONFIG is the only complete record of the report. You will need it for any later edit — see [Round-tripping a report](overview.md#round-tripping-a-report). |
+| **Dependency chain** | Table `baseTableName` + its columns → Create Report → `data.viewId`. |
 
 ## `axisColumns`
 

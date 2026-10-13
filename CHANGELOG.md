@@ -7,6 +7,35 @@ patch for corrections. The OKF bundle's own content version is in `vN.N/okf/mani
 
 ## Unreleased
 
+### Changed - `v2.0/md/` replaced by the API team's revised documents
+
+All 35 group documents were replaced with the revised revision supplied by the API team, and every
+generated artefact was rebuilt from them. The endpoint inventory is unchanged: **10 domains,
+35 API groups, 119 paths, 180 operations, 182 OKF endpoints and Postman requests.**
+
+- **Editorial pass across every group.** Normalised H1s, linked index tables, `Error-Code` ->
+  `Code` error-table headers with the rows sorted by code, `Method` and `ZANALYTICS-ORGID Header`
+  rows added to the endpoint attribute tables that lacked them, and new `Response Fields` and
+  `Notes & Behaviour` sections on 20 endpoints. `REPORTS.md` appendices renumbered (the common
+  headers, scope summary and failure-case appendices now lead as A-C). No error code, CONFIG
+  attribute, URL, method, scope or permission changed anywhere.
+- **The three Dashboard listing APIs were kept.** The revised `DASHBOARDS.md` again omitted
+  `Get All Dashboards` (`GET /restapi/v2/dashboards`), `Get Owned Dashboards`
+  (`GET /restapi/v2/dashboards/owned`) and `Get Shared Dashboards`
+  (`GET /restapi/v2/dashboards/shared`). All three are still live and publicly documented, so they
+  were restored as sections 4-6 - re-styled to match the revised document (prose description, the
+  `Method` / `OAuth Scope` / `ZANALYTICS-ORGID Header` / `Permission Required` / `Custom domain`
+  attribute table, `Code` error headers) with their samples, responses and error codes unchanged.
+  The index table, the `ZANALYTICS-ORGID` row of Appendix A and the Appendix B scope summary
+  distinguish the workspace-scoped APIs (1-3) from the user-scoped listings (4-6) again.
+- **Cross-file links now name the real files.** The documents link to `COLUMNS.md` and to
+  `../04 · Data Modeling & Schema/COLUMNS.md` rather than the legacy `COLUMNS_API_DOC_INFO.md`, so
+  `tools/okf/build_okf.py` resolves a link by the markdown stem in the version manifest
+  (`MD_STEM_ALIAS`) and accepts a repository-relative path, not only a bare legacy file name.
+  This cleared ~100 unresolved and 60+ broken links in the OKF bundle.
+- OKF bundle **1.6.0** (minor: documented response fields and behaviour notes added), Postman
+  collection regenerated. `v2.0/oas/` is byte-identical to the previous revision.
+
 ### Changed - every artefact re-aligned to `v2.0/md/` (the source of truth)
 
 A full audit of all 182 documented endpoints against the Zenesis OpenAPI, the samples and the

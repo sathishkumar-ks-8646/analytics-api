@@ -184,8 +184,8 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 ---
@@ -202,7 +202,7 @@ Returns the current resource allocation and usage statistics for the specified o
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID to fetch resource details for. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -329,8 +329,8 @@ ZANALYTICS-ORGID: 700000654321
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
 | 7301 | User is not an Account Admin or Organization Admin of the specified organisation. | Only Account Admins and Organization Admins can view resource details. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.usermanagement.read`. |
@@ -349,7 +349,7 @@ Returns the current subscription plan, add-on details, billing date, and trial s
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID to fetch subscription details for. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -436,8 +436,8 @@ ZANALYTICS-ORGID: 700000654321
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
 | 7301 | User is not an Account Admin or Organization Admin of the specified organisation. | Only Account Admins and Organization Admins can view subscription details. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.usermanagement.read`. |
@@ -592,8 +592,8 @@ ZANALYTICS-ORGID: 700000789012
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Organisation not found. | Verify the `ZANALYTICS-ORGID` header value. |
 | 7104 | Workspace or view not found by the provided name. | Verify the exact spelling and case of `workspaceName` and `viewName`. Names are case-sensitive. |
 | 7301 | User does not have Read access on the workspace or view. | Ensure the workspace or view is shared with the user, or the user has Workspace Admin / Account Admin / Organization Admin role. |

@@ -37,7 +37,7 @@ Returns all folders in the specified workspace, including their names, descripti
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or a Shared User or Group Member with at least READ permission on one or more views in the workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -293,6 +293,15 @@ CONFIG={"folderName":"Client Reports","folderDesc":"Reports shared with the clie
   }
 }
 ```
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Create folder"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.folderId` | String | ID of the newly created folder, serialised as a **string**. Pass it as `parentFolderId` to nest another folder beneath this one, or as `folderId` when creating views inside it. |
 
 ### Notes & Behaviour
 
@@ -796,7 +805,7 @@ Sets the specified folder as the default folder for the workspace. The previous 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Folder permission on the workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -861,7 +870,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ---
 
-## Appendix A: Common HTTP Headers
+## Appendix A – Common HTTP Headers
 
 | Header | Required | Description |
 |--------|----------|-------------|
@@ -872,7 +881,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ---
 
-## Appendix B: OAuth Scope Summary
+## Appendix B – OAuth Scope Summary
 
 | API | OAuth Scope |
 |-----|-------------|

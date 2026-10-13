@@ -2,7 +2,7 @@
 
 This document covers the five **bulk** data-import REST APIs of Zoho Analytics — the APIs that hand a large payload to the server, get back a **job ID**, and let you track that job to completion.
 
-Unlike the [synchronous import APIs](SYNC_DATA_IMPORT_API_DOC_INFO.md), none of these APIs returns the import result directly. Every one of them returns a job reference, and the outcome is retrieved later through [Get Import Job Details](#5-get-import-job-details) or delivered to a [callback URL](#the-callbackurl-attribute).
+Unlike the [synchronous import APIs](SYNC_DATA_IMPORT.md), none of these APIs returns the import result directly. Every one of them returns a job reference, and the outcome is retrieved later through [Get Import Job Details](#5-get-import-job-details) or delivered to a [callback URL](#the-callbackurl-attribute).
 
 ## The two families
 
@@ -171,7 +171,7 @@ Rules and constraints:
 | `UPDATEADD` | Add or Update Import | `importAddOrUpdate` |
 | `TRUNCATEADD` | Truncate and Add Import | `importDeleteAllAdd` |
 
-> A user granted only `importAppend` can run an `APPEND` import but receives `7301` for a `TRUNCATEADD` on the same table. Grant the specific import permissions through the [Sharing APIs](SHARING_API_DOC_INFO.md#permissions-fields).
+> A user granted only `importAppend` can run an `APPEND` import but receives `7301` for a `TRUNCATEADD` on the same table. Grant the specific import permissions through the [Sharing APIs](../08%20%C2%B7%20Share%20%26%20Publish/SHARING.md#permissions-fields).
 
 ---
 
@@ -439,13 +439,13 @@ Content-Type: text/csv
 | Aspect | Detail |
 |--------|--------|
 | **200 means "accepted", not "imported"** | The response confirms only that the job was queued. Nothing has been written yet, and the table does not exist. Poll [Get Import Job Details](#5-get-import-job-details) for the real outcome. |
-| **The new table's `viewId` arrives via the job** | Unlike the synchronous [Import Data into a New Table (Synchronous)](SYNC_DATA_IMPORT_API_DOC_INFO.md#1-import-data-into-a-new-table-synchronous), which returns `viewId` immediately, here you must wait for `jobCode` `1004` and read `jobInfo.viewId`. |
+| **The new table's `viewId` arrives via the job** | Unlike the synchronous [Import Data into a New Table (Synchronous)](SYNC_DATA_IMPORT.md#1-import-data-into-a-new-table-synchronous), which returns `viewId` immediately, here you must wait for `jobCode` `1004` and read `jobInfo.viewId`. |
 | **Duplicate names fail at creation time** | `tableName` uniqueness is validated when the job is created, so `7111` comes back synchronously rather than as a failed job. |
 | **`callbackUrl` forces asynchronous handling** | Without it, a small upload may be processed inline and complete almost at once. With it, the job always runs through the asynchronous pipeline so the callback can fire. |
 | **`autoIdentify: false` makes three attributes mandatory** | `delimiter`, `quoted`, and `commentChar` must all be supplied for CSV. |
 | **The 5-job limit is checked up front** | If the organization already has five queued or running import jobs, the call fails immediately with `8134`. |
 | **Job summary expires in one hour** | Read and store the result promptly — see [Limitations](#limitations). |
-| **Dependency chain** | [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → `<workspace-id>` → Create Import Job → `data.jobId` → [Get Import Job Details](#5-get-import-job-details) → `jobInfo.viewId`. |
+| **Dependency chain** | [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → `<workspace-id>` → Create Import Job → `data.jobId` → [Get Import Job Details](#5-get-import-job-details) → `jobInfo.viewId`. |
 
 ### Error Codes
 
@@ -682,7 +682,7 @@ Content-Type: text/csv
 | **Existing columns keep their types** | `columnDataTypes` entries naming an existing column are discarded. |
 | **Validation is split across two phases** | Structural problems (bad `importType`, unknown `matchingColumns`, missing permission) fail synchronously at job creation; data problems (unparseable values, type mismatches) surface later as `jobCode` `1003`. |
 | **`callbackUrl` forces asynchronous handling** | As in [Create Import Job for a New Table (Asynchronous)](#1-create-import-job-for-a-new-table-asynchronous). |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → [Get Columns](COLUMNS_API_DOC_INFO.md) (to pick `matchingColumns`) → Create Import Job → `data.jobId` → [Get Import Job Details](#5-get-import-job-details). |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) (to pick `matchingColumns`) → Create Import Job → `data.jobId` → [Get Import Job Details](#5-get-import-job-details). |
 
 ### Error Codes
 
@@ -690,7 +690,7 @@ Content-Type: text/csv
 |------|--------|----------|
 | 7092 | `DDL_LOCK_SINCE_IMPORT_IN_PROGRESS` — Another import is holding a DDL lock on this table. | Retry once it has finished. |
 | 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>`. |
-| 7107 | `META_OBJECT_NOT_PRESENT` — A column named in `matchingColumns` is not present in the table. | Verify the names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 7107 | `META_OBJECT_NOT_PRESENT` — A column named in `matchingColumns` is not present in the table. | Verify the names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 7164 | `SYSTEM_TABLE_DATA_MOD` — System table data cannot be modified. | Target a user-created table. |
 | 7165 | `SNAPSHOT_TABLE_DATAMOD` — Snapshot table data cannot be modified. | Target a non-snapshot table. |
 | 7203 | `IMPORT_FILE_EMPTY` — No file was uploaded, or it is empty. | Attach a non-empty `FILE` part. |
@@ -906,7 +906,7 @@ Content-Type: text/csv
 | **Ordering is preserved** | Batches are committed in the order the server receives them. There is no way to re-send or reorder a batch once accepted. |
 | **Data appears progressively** | Scheduled processing of the remaining batches starts automatically after the first batch is imported. |
 | **Errors can be synchronous or deferred** | An invalid key, a closed job, or an exceeded batch limit fails on the batch call itself. Data errors surface later as `jobCode` `1003`. |
-| **Dependency chain** | [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → first batch (`batchKey: "start"`) → `data.batchKey` + `data.jobId` → follow-up batches → final batch → [Get Import Job Details](#5-get-import-job-details). |
+| **Dependency chain** | [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → first batch (`batchKey: "start"`) → `data.batchKey` + `data.jobId` → follow-up batches → final batch → [Get Import Job Details](#5-get-import-job-details). |
 
 ### Error Codes
 
@@ -1129,7 +1129,7 @@ Content-Type: text/csv
 | **The required permission depends on `importType`** | Checked when the job is opened, on the first batch. |
 | **CSV only** | No `fileType` attribute. |
 | **The job must be closed** | Without `isLastBatch: true` the job never commits and holds a concurrent-job slot. |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>` → [Get Columns](COLUMNS_API_DOC_INFO.md) → first batch → `data.batchKey` + `data.jobId` → follow-up batches → final batch → [Get Import Job Details](#5-get-import-job-details). |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>` → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → first batch → `data.batchKey` + `data.jobId` → follow-up batches → final batch → [Get Import Job Details](#5-get-import-job-details). |
 
 ### Error Codes
 
@@ -1137,7 +1137,7 @@ Content-Type: text/csv
 |------|--------|----------|
 | 7092 | `DDL_LOCK_SINCE_IMPORT_IN_PROGRESS` — Another import holds a DDL lock on this table. | Retry once it has finished. |
 | 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>`. |
-| 7107 | `META_OBJECT_NOT_PRESENT` — A column named in `matchingColumns` is not present. | Verify the names via [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 7107 | `META_OBJECT_NOT_PRESENT` — A column named in `matchingColumns` is not present. | Verify the names via [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 7164 | `SYSTEM_TABLE_DATA_MOD` — System table data cannot be modified. | Target a user-created table. |
 | 7165 | `SNAPSHOT_TABLE_DATAMOD` — Snapshot table data cannot be modified. | Target a non-snapshot table. |
 | 7203 | `IMPORT_FILE_EMPTY` — No file was uploaded for this batch, or it is empty. | Attach a non-empty `FILE` part. |
@@ -1171,7 +1171,7 @@ Returns the current state of an import job and, once it has finished, the full i
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | **Only the user who created the import job.** Any other user — including an Account Admin or Organization Admin — receives `8138`. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -1362,7 +1362,7 @@ ZANALYTICS-ORGID: 700000654321
 | **`1005` also means "expired"** | A `jobId` that was valid an hour ago returns `JOB NOT FOUND` once the summary has been discarded — the code does not distinguish "never existed" from "no longer retained". |
 | **Poll roughly every 10 seconds** | Frequent enough to be responsive, sparse enough to avoid needless load. Stop on `1003`, `1004`, or `1005`. |
 | **Callback delivers this same payload** | If `callbackUrl` was supplied, the body POSTed to it is exactly this `data` structure. |
-| **Dependency chain** | Any of the four import APIs above → `data.jobId` → Get Import Job Details → `jobInfo.viewId` → [Row APIs](ROW_API_DOC_INFO.md), [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| **Dependency chain** | Any of the four import APIs above → `data.jobId` → Get Import Job Details → `jobInfo.viewId` → [Row APIs](ROW_OPERATIONS.md), [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 
 ### Error Codes
 
@@ -1383,7 +1383,7 @@ ZANALYTICS-ORGID: 700000654321
 | `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace. |
 | `Content-Type` | `multipart/form-data; boundary=…` | Conditional | Required by the four import APIs, which send `CONFIG` and `FILE` as form parts. [Get Import Job Details](#5-get-import-job-details) sends no payload. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas).
+> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas).
 
 Example (first batch of a batch import):
 
@@ -1426,12 +1426,12 @@ Content-Type: text/csv
 
 ### Create Import Job for a New Table (Asynchronous)
 
-- **The one-call answer for files up to 100 MB.** Everything [Import Data into a New Table (Synchronous)](SYNC_DATA_IMPORT_API_DOC_INFO.md#1-import-data-into-a-new-table-synchronous) does, but without holding the connection open — at the cost of having to poll.
+- **The one-call answer for files up to 100 MB.** Everything [Import Data into a New Table (Synchronous)](SYNC_DATA_IMPORT.md#1-import-data-into-a-new-table-synchronous) does, but without holding the connection open — at the cost of having to poll.
 - **The created table's `viewId` is deferred.** It is not in this response; it arrives in `jobInfo.viewId` once `jobCode` reaches `1004`. Integrations that immediately need the table ID must poll before they can continue.
 - **Name collisions fail fast.** `tableName` uniqueness is checked at job-creation time, so `7111` is synchronous rather than a wasted job.
 - **`callbackUrl` is what makes the job genuinely asynchronous.** Without it a small upload may be handled inline; with it the job always runs through the asynchronous pipeline so the callback can fire.
 - **The 5-job ceiling is organization-wide.** It counts every queued or running job across the whole organization, including abandoned batch jobs that were never closed — a common cause of an unexpected `8134`.
-- **Dependency chain:** [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → Create Import Job → `jobId` → [Get Import Job Details](#5-get-import-job-details) → `jobInfo.viewId`.
+- **Dependency chain:** [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → Create Import Job → `jobId` → [Get Import Job Details](#5-get-import-job-details) → `jobInfo.viewId`.
 
 ### Create Import Job for an Existing Table (Asynchronous)
 
@@ -1440,7 +1440,7 @@ Content-Type: text/csv
 - **Validation is split across two phases.** Structural errors (`importType`, `matchingColumns`, permissions) fail synchronously; data errors surface later as `jobCode` `1003`. A 200 here proves only that the *configuration* was acceptable.
 - **`UPDATEADD` matches on values.** `matchingColumns` names the columns whose values form the key; there is no row ID involved.
 - **Existing columns keep their types.** `columnDataTypes` only influences columns the import adds.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → [Get Columns](COLUMNS_API_DOC_INFO.md) → Create Import Job → `jobId` → [Get Import Job Details](#5-get-import-job-details).
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → Create Import Job → `jobId` → [Get Import Job Details](#5-get-import-job-details).
 
 ### Batch Import Data into New Table
 
@@ -1458,7 +1458,7 @@ Content-Type: text/csv
 - **The permission check happens on the first batch**, against the `importType` declared there.
 - **Configuration is read once**, exactly as in the new-table variant.
 - **The job must be closed.** An abandoned job holds a concurrent-job slot and, for `TRUNCATEADD`, never applies any of the uploaded data.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → [Get Columns](COLUMNS_API_DOC_INFO.md) → first batch → follow-up batches → final batch → [Get Import Job Details](#5-get-import-job-details).
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → first batch → follow-up batches → final batch → [Get Import Job Details](#5-get-import-job-details).
 
 ### Get Import Job Details
 

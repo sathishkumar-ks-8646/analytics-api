@@ -43,7 +43,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -55,7 +55,7 @@ Marks the specified workspace as the calling user's default workspace. The defau
 
 A user can have only one default workspace at a time. If the user already has a different workspace set as default, that previous default is silently replaced — no error is raised. Calling this API on a workspace that is already the user's default succeeds without error (idempotent).
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 # Endpoint
 

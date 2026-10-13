@@ -42,7 +42,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -52,7 +52,7 @@ status: stable
 
 Returns a list of views recently accessed by the authenticated user across **all workspaces** the user has access to, sorted by access time (most recently accessed first). This is a user-scoped, cross-workspace API — no workspace ID is required in the URL.
 
-> This API has no CONFIG parameter. Results are personal to the calling user — different users calling this API see their own respective recent view history.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. Results are personal to the calling user — different users calling this API see their own respective recent view history.
 
 # Endpoint
 

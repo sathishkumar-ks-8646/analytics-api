@@ -35,7 +35,7 @@ A user can have only one default workspace at a time. If the user already has a 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. |
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 ### Sample Requests
 
@@ -90,8 +90,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | The user has no access to the specified workspace — no views have been shared with them, and they are not a Workspace Admin. | Ensure the user is a workspace member or has at least one view shared with them before marking it as default. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.update`. |
@@ -112,7 +112,7 @@ Unlike Add Default Workspace, this API is **not idempotent** — if the specifie
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. |
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 ### Sample Requests
 
@@ -179,8 +179,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |
 | 7415 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. | Use Get All Workspace List to identify the workspace with `isDefault: true`, then call this API with that workspace ID. |
@@ -202,7 +202,7 @@ A user can favourite multiple workspaces simultaneously — there is no exclusiv
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. |
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 ### Sample Requests
 
@@ -256,8 +256,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | The user has no access to the specified workspace. | Ensure the user is a workspace member or has at least one view shared with them before adding it to favourites. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.update`. |
@@ -276,7 +276,7 @@ Removes the specified workspace from the calling user's list of favourite worksp
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. |
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 ### Sample Requests
 
@@ -329,8 +329,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.update`. |

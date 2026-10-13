@@ -54,7 +54,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -199,7 +199,7 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 | **Column references use exact display names in double quotes** | If a referenced column name is misspelled or does not exist in the view, an "unknown column" error is returned. |
 | **Not supported on Pipeline Tables** | Attempting to add a formula column to a Pipeline Table view returns error 7467. |
 | **Data type of the formula column is inferred** | The resulting column's data type is derived automatically from the expression (e.g., an arithmetic expression on numeric columns yields a numeric formula column). It cannot be explicitly set. |
-| **Dependency** | `<view-id>` → Get View List. Column names used in `expression` → Get Table Metadata (to confirm exact display names). After creation, the returned `formulaId` can be used with Get Column Dependents (see [Columns](../columns/overview.md)) to trace where the formula is later used. |
+| **Dependency** | `<view-id>` → Get View List. Column names used in `expression` → Get Table Metadata (to confirm exact display names). After creation, the returned `formulaId` can be used with Get Column Dependents (see [Column Management](../columns/overview.md)) to trace where the formula is later used. |
 
 # Error Codes
 

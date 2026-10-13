@@ -4,7 +4,7 @@ This document covers the APIs for creating, editing, deleting, listing, and eval
 
 ## What is an Aggregate Formula?
 
-Unlike a [custom formula column](FORMULA_COLUMNS_API_DOC_INFO.md) (which computes a value per row), an **aggregate formula** produces a single summarized value (e.g., total sales, average order value) by applying an aggregate function across rows of a table. Aggregate formulas:
+Unlike a [custom formula column](FORMULA_COLUMNS.md) (which computes a value per row), an **aggregate formula** produces a single summarized value (e.g., total sales, average order value) by applying an aggregate function across rows of a table. Aggregate formulas:
 
 - Are defined at the level of a specific table/view (the "owning" view), but can reference columns from related tables connected via lookups.
 - Can be reused across multiple reports, charts, and dashboards within the workspace as a single source of truth for a business metric — hence the term **Unified Metrics**.
@@ -43,7 +43,7 @@ Returns the list of aggregate formulas defined on the specified view.
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 30 requests per user per minute (10-minute lockout on breach). |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -118,7 +118,7 @@ ZANALYTICS-ORGID: 700000123456
 | `aggregateFormulas[].expression` | String | The aggregate expression (e.g., `sum("Table_1"."Sales")`). Empty string if the calling user lacks edit permission on the formula. |
 | `aggregateFormulas[].description` | String | Description of the formula. Empty string if not set. |
 | `aggregateFormulas[].subtypeId` | Integer | Internal numeric code for the result data type of the formula. See [Subtype Values](#subtype-values) below. |
-| `aggregateFormulas[].subtypeName` | String | Display-form internal code for the result data type (e.g., `"NUMBER"`, `"DECIMAL_NUMBER"`). Matches the `dataType` values used in [Add Column](COLUMNS_API_DOC_INFO.md#1-add-column). |
+| `aggregateFormulas[].subtypeName` | String | Display-form internal code for the result data type (e.g., `"NUMBER"`, `"DECIMAL_NUMBER"`). Matches the `dataType` values used in [Add Column](COLUMNS.md#1-add-column). |
 
 #### Subtype Values
 
@@ -245,7 +245,7 @@ CONFIG={"formulaName":"Unique Regions","expression":"count_distinct(\"Table_1\".
 | **`formulaName` must be unique** | Duplicate aggregate formula names within the same workspace are rejected. |
 | **Result data type (`subtypeId`) is inferred, not declared** | There is no data-type parameter; the type is derived from the aggregate function and the source column(s). |
 | **`synonyms` and `columnPriority` are NLP/insights metadata only** | These fields do not affect the computed value of the formula — they only influence how the formula surfaces in natural-language search and auto-generated insights. |
-| **Cross-table aggregates require a lookup relationship** | If the expression references columns from a table other than the owning view's table, that table must already be linked via a [lookup relationship](LOOKUPS_AND_RELATIONSHIPS_API_DOC_INFO.md). |
+| **Cross-table aggregates require a lookup relationship** | If the expression references columns from a table other than the owning view's table, that table must already be linked via a [lookup relationship](LOOKUPS_AND_RELATIONSHIPS.md). |
 | **Dependency** | `<view-id>` → Get View List. Column/table names used in `expression` → Get Table Metadata. After creation, the returned `formulaId` can be queried via [Get Aggregate Formula Value](#7-get-aggregate-formula-value). |
 
 ### Error Codes
@@ -264,7 +264,7 @@ CONFIG={"formulaName":"Unique Regions","expression":"count_distinct(\"Table_1\".
 
 ## 3. Edit Aggregate Formula
 
-Updates an existing aggregate formula. Unlike [Edit Custom Formula](FORMULA_COLUMNS_API_DOC_INFO.md#3-edit-custom-formula), this API **does support renaming** the formula.
+Updates an existing aggregate formula. Unlike [Edit Custom Formula](FORMULA_COLUMNS.md#3-edit-custom-formula), this API **does support renaming** the formula.
 
 | Attribute | Value |
 |-----------|-------|
@@ -468,7 +468,7 @@ Returns the full list of aggregate formulas (Unified Metrics) across **every** v
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Read permission on the workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -600,7 +600,7 @@ Returns all views, dashboards, and other aggregate formulas that depend on the s
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Read permission on the workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -746,7 +746,7 @@ Computes and returns the current live value of the specified aggregate formula b
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Read permission on the workspace **and** access to the columns/tables involved in the formula. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -822,7 +822,7 @@ ZANALYTICS-ORGID: 700000123456
 | **Value is computed live, not cached** | Each call re-executes the underlying aggregate query against the current data. Expect latency proportional to the size of the source table(s) and complexity of the expression. |
 | **Requires column-level access, not just workspace access** | Beyond basic workspace Read permission, the caller must have visibility into the specific columns referenced by the formula's expression. If any referenced column is restricted from the caller via column-level sharing, the request is forbidden. |
 | **`formulaValue` is always a string** | Even for numeric/decimal results, the value is serialized as a string (e.g., `"1299947.06"`) to preserve precision — parse it into a number in your application if further calculation is needed. |
-| **Works for both table-based and Query Table-based formulas** | The owning view of the formula can be a regular table or a [Query Table](QUERY_TABLES_API_DOC_INFO.md); this API transparently supports both. |
+| **Works for both table-based and Query Table-based formulas** | The owning view of the formula can be a regular table or a [Query Table](QUERY_TABLES.md); this API transparently supports both. |
 | **Dependency** | `<formula-id>` → Get Unified Metrics in Workspace or the view-scoped Get Aggregate Formula. |
 
 ### Error Codes
@@ -871,12 +871,12 @@ ZANALYTICS-ORGID: 700000123456
 ### Add Aggregate Formula
 
 - **`synonyms` and `columnPriority` power NLP/Ask Zia search**, not the computed value. Populate these fields when you want the metric to be discoverable via natural-language queries in Zoho Analytics' AI-assisted search.
-- **Cross-table expressions require an existing lookup.** If your expression spans two tables, ensure a [lookup relationship](LOOKUPS_AND_RELATIONSHIPS_API_DOC_INFO.md) already connects them, or the expression will fail to resolve the referenced column.
+- **Cross-table expressions require an existing lookup.** If your expression spans two tables, ensure a [lookup relationship](LOOKUPS_AND_RELATIONSHIPS.md) already connects them, or the expression will fail to resolve the referenced column.
 - **Dependency chain:** Get Table Metadata (verify columns) → Add Aggregate Formula → `formulaId` returned in response.
 
 ### Edit Aggregate Formula
 
-- **The only formula-edit API in this API suite that supports renaming without resending the expression.** Compare this to [Edit Custom Formula](FORMULA_COLUMNS_API_DOC_INFO.md#3-edit-custom-formula), which has no rename capability at all. This asymmetry is a deliberate design difference between per-row formula columns and workspace-level aggregate formulas — plan integrations accordingly.
+- **The only formula-edit API in this API suite that supports renaming without resending the expression.** Compare this to [Edit Custom Formula](FORMULA_COLUMNS.md#3-edit-custom-formula), which has no rename capability at all. This asymmetry is a deliberate design difference between per-row formula columns and workspace-level aggregate formulas — plan integrations accordingly.
 - **`synonyms` array is a full replace, not an append.** Always fetch and merge the existing list first if you want to add to it incrementally.
 - **Dependency chain:** Get Aggregate Formula / Get Unified Metrics in Workspace (`formulaId`) → Edit Aggregate Formula.
 
@@ -893,7 +893,7 @@ ZANALYTICS-ORGID: 700000123456
 
 ### Get Aggregate Formula Dependents
 
-- **`parentTables` is unique to this API** — none of the other Get Dependents-style APIs in this documentation set (e.g., [Get Column Dependents](COLUMNS_API_DOC_INFO.md#6-get-column-dependents)) return lineage information about what the object is built *from*; only aggregate formula dependents include this.
+- **`parentTables` is unique to this API** — none of the other Get Dependents-style APIs in this documentation set (e.g., [Get Column Dependents](COLUMNS.md#6-get-column-dependents)) return lineage information about what the object is built *from*; only aggregate formula dependents include this.
 - **Dependency chain:** Get Unified Metrics in Workspace (`formulaId`) → Get Aggregate Formula Dependents → (optional) Delete Aggregate Formula.
 
 ### Get Aggregate Formula Value

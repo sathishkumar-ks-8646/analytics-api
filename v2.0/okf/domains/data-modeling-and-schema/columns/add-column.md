@@ -52,7 +52,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -119,6 +119,15 @@ See the CONFIG schema in the OpenAPI specification referenced in the Endpoint ta
 ## Success Response
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Column added successfully."` for this API. |
+| `data` | JSONObject | Response payload wrapper. Present in **single-column mode** only — bulk mode returns no `data` key. |
+| `data.columnId` | String | ID of the newly added column, serialised as a **string**. Returned only in single-column mode; **bulk mode returns no per-column IDs**, so read them back with Get Column Details if you need them. |
 
 # Examples
 

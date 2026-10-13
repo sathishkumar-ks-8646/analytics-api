@@ -70,10 +70,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-13T08:58:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -161,6 +161,16 @@ The CONFIG parameter has a maximum encoded size of 5,000,000 characters; the enc
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
 
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Create dashboard"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.dashboardId` | String | ID of the newly created dashboard, serialised as a **string**. A dashboard is a view, so this ID is accepted wherever a `<view-id>` is expected. |
+| `data.displayName` | String | The dashboard's stored name. Echoed back so a caller can confirm the name the server actually persisted. |
+
 ## Notes from the OpenAPI specification
 
 **dashboardConfig.objId** in the metadata response, **data.dashboardId** in the Create Dashboard response and **viewId** in the listing APIs are the same value under three field names. Any of them can be used as the dashboard ID in the URL path.
@@ -193,12 +203,7 @@ Content-Type: application/x-www-form-urlencoded
 CONFIG={
   "displayName": "Regional Performance",
   "description": "Quarterly regional roll-up",
-  "layout": "{
-     \"1\": {\"type\":\"USERFILTERS\",\"width\":80,\"height\":3,\"left\":0,\"top\":0},
-     \"2\": {\"type\":\"TITLE\",\"width\":80,\"height\":3,\"left\":0,\"top\":3,\"content\":\"<b>Q3 Performance</b>\"},
-     \"3\": {\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":0,\"top\":6,\"viewName\":\"Sales by Region\"},
-     \"4\": {\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":40,\"top\":6,\"viewName\":\"Margin by Region\"}
-  }",
+  "layout": "{\"1\":{\"type\":\"USERFILTERS\",\"width\":80,\"height\":3,\"left\":0,\"top\":0},\"2\":{\"type\":\"TITLE\",\"width\":80,\"height\":3,\"left\":0,\"top\":3,\"content\":\"<b>Q3 Performance</b>\"},\"3\":{\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":0,\"top\":6,\"viewName\":\"Sales by Region\"},\"4\":{\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":40,\"top\":6,\"viewName\":\"Margin by Region\"}}",
   "settings": {"allowDrillDown":"true","fitToWidth":"true","reportAsFilter":"true","layoutType":"web"},
   "themes": {
     "layoutType": 2,
@@ -257,6 +262,18 @@ CONFIG={
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Create Dashboard](../../../sdk-examples/reports-and-dashboards/dashboards/create-dashboard.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **`layout` is a JSON string, not an object** | It must be serialised before sending. See [`layout` is a JSON **string**, not a JSON object](overview.md#layout-is-a-json-string-not-a-json-object). |
+| **Returns 200 with a body** | Unlike [Update Dashboard](update-dashboard.md), which returns 204, Create returns `data.dashboardId` and `data.displayName`. |
+| **Omitted sections get defaults, not nothing** | Omitting `themes` or `settings` writes the **default** theme and settings. Omission is not "leave unset". |
+| **Card IDs are renumbered** | Cards are stored as `"1"`…`"N"` in storage order, so the IDs you send are not necessarily the IDs you read back. Never key your own state off a card ID. |
+| **`allowExport` sub-keys default to false** | Any of the six sub-keys you omit is stored as `"false"`, and all six always come back on read. |
+| **`content` is filtered and rewritten** | Card content passes through the `antisamyfilter_reports` XSS filter on write and is rewritten on read so stored file IDs become URLs — the string you read is not necessarily the string you wrote. |
+| **`viewName` is matched case-insensitively** | It is returned in the view's stored casing, not yours. |
+| **The read endpoint is not a Create payload** | Before reusing a read response, apply [Transformations required](overview.md#transformations-required). |
+| **Dependency chain** | [Get View List](../../views-management/view-operations/get-views.md) → report `viewName`s → Create Dashboard → `data.dashboardId`. |
 
 ## Settings
 

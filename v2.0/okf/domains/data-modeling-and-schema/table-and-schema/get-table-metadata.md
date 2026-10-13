@@ -45,7 +45,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -55,7 +55,7 @@ status: stable
 
 Returns the complete column schema of the specified table — including column names, data types, descriptions, lookup relationships, formula expressions, and formatting details. Only columns the calling user has been granted access to are included in the response.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

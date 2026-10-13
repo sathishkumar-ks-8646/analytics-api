@@ -53,7 +53,7 @@ Calling this API on a workspace that is already enabled for domain access fails 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the workspace's organisation, **and** the workspace's Account Admin must have a White Label / Client Portal domain configured. |
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 ### Sample Requests
 
@@ -123,12 +123,12 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | The caller is not an Account Admin or Organization Admin of the workspace's organisation, **or** the workspace's Account Admin does not have a White Label / Client Portal domain configured. | Ensure the caller is an org admin and that the organisation has an active White Label domain setup. |
-| 12049 | The workspace is already enabled for White Label domain access. Calling Enable on an already-enabled workspace is not idempotent. | Check the current domain access state before calling. Use Disable first if you need to re-enable (e.g., after domain reconfiguration). |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.update`. |
+| 12049 | The workspace is already enabled for White Label domain access. Calling Enable on an already-enabled workspace is not idempotent. | Check the current domain access state before calling. Use Disable first if you need to re-enable (e.g., after domain reconfiguration). |
 
 ---
 
@@ -148,7 +148,7 @@ Calling this API on a workspace that is not currently enabled for domain access 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the workspace's organisation, **and** the workspace's Account Admin must have a White Label / Client Portal domain configured. |
 
-> This API has no CONFIG parameter and no request body.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
 ### Sample Requests
 
@@ -201,12 +201,12 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | The caller is not an Account Admin or Organization Admin of the workspace's organisation, or the organisation has no White Label domain. | Ensure the caller has admin access and the org has a configured White Label domain. |
-| 12050 | The workspace is not currently enabled for White Label domain access. Calling Disable on an already-disabled workspace is not idempotent. | Verify the current state before calling. Only call Disable on workspaces previously enabled via Enable Workspace for Domain Access. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.update`. |
+| 12050 | The workspace is not currently enabled for White Label domain access. Calling Disable on an already-disabled workspace is not idempotent. | Verify the current state before calling. Only call Disable on workspaces previously enabled via Enable Workspace for Domain Access. |
 
 ---
 

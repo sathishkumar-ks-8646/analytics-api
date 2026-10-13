@@ -1,4 +1,4 @@
-# View Preferences APIs – Documentation
+# Zoho Analytics V2 REST API — View Preferences
 
 This document describes the V2 **View Preferences** REST APIs of Zoho Analytics — specifically, marking and unmarking individual views (reports, tables, dashboards, etc.) as favourites for the authenticated user.
 
@@ -16,8 +16,8 @@ This document describes the V2 **View Preferences** REST APIs of Zoho Analytics 
 
 | # | API Name | Method | URL |
 |---|----------|--------|-----|
-| 1 | Add Favourite View | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/favorite` |
-| 2 | Remove Favourite View | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/favorite` |
+| 1 | [Add Favourite View](#1-add-favourite-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/favorite` |
+| 2 | [Remove Favourite View](#2-remove-favourite-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/favorite` |
 
 ---
 
@@ -70,8 +70,8 @@ HTTP/1.1 204 No Content
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify the `<workspace-id>` in the URL is correct and accessible. |
 | 7104 | View not found. | Verify the `<view-id>` exists in the specified workspace. |
 | 7301 | User does not have permission to mark this view as a favourite. | Ensure the user has at least Read Only permission on the view. |
@@ -129,8 +129,8 @@ HTTP/1.1 204 No Content
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify the `<workspace-id>` in the URL is correct and accessible. |
 | 7104 | View not found. | Verify the `<view-id>` exists in the specified workspace. |
 | 7301 | User does not have permission to modify favourites for this view. | Ensure the user has at least Read Only permission on the view. |

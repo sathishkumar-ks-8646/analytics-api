@@ -220,10 +220,10 @@ Returns every custom role defined in the organization, with its full permission 
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/orgs/roles` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.read` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organization. No other role qualifies; custom roles must be enabled for the organization and included in its plan. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
 
@@ -406,10 +406,10 @@ Creates one custom role in the organization.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/orgs/roles` |
-| **HTTP Method** | `POST` |
+| **Method** | POST |
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.create` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organization. No other role qualifies; custom roles must be enabled for the organization and included in its plan. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | `200 OK` with a JSON body carrying `data.roleId` |
 
@@ -704,10 +704,10 @@ Renames a custom role, replaces its access type and permissions, or both.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/orgs/roles/<role-id>` |
-| **HTTP Method** | `PUT` |
+| **Method** | PUT |
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.update` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organization. No other role qualifies; custom roles must be enabled for the organization and included in its plan. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -950,10 +950,10 @@ Deletes a custom role definition.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/orgs/roles/<role-id>` |
-| **HTTP Method** | `DELETE` |
+| **Method** | DELETE |
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.delete` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organization. No other role qualifies; custom roles must be enabled for the organization and included in its plan. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | **`204 No Content`** — no response body |
 
@@ -1058,7 +1058,7 @@ HTTP/1.1 204 No Content
 | `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization the role belongs to. Required by all four APIs; it is the only way the organization is identified, since no path parameter carries it. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required by [Create Custom Role](#2-create-custom-role) and [Update Custom Role](#3-update-custom-role), which carry a CONFIG body. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any of these APIs.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization.
+> **`ZANALYTICS-DEST-ORGID` is not used by any of these APIs.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization.
 
 The `CONFIG` JSON is sent as the URL-encoded value of a form parameter named `CONFIG`:
 

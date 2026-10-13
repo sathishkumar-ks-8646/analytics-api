@@ -43,7 +43,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -53,7 +53,7 @@ status: stable
 
 Returns all workspaces owned by (created within) the authenticated user's organisation. This is an admin-scoped API — only the Account Admin can call it, and it returns all workspaces in the org regardless of sharing.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

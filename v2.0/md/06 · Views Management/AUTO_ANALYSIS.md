@@ -8,7 +8,7 @@ Auto Analysis APIs allow you to automatically generate a set of meaningful views
 
 ## Index
 
-| # | API Name | Method | URL Pattern |
+| # | API Name | Method | URL |
 |---|----------|--------|-------------|
 | 1 | [Auto Analyse View](#1-auto-analyse-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/autoanalyse` |
 | 2 | [Auto Analyse Column](#2-auto-analyse-column) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>/autoanalyse` |
@@ -104,10 +104,34 @@ CONFIG={"analyseAgain":true}
 
 > **Note:** Both cases return the same response body. The difference is purely in the request: Case 2 replaces the old set of auto-generated views, while Case 1 creates them for the first time.
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Auto Generate Reports"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.status` | String | Human-readable outcome message, e.g. `"Reports generated successfully"`. This is a **display string, not a status enum** — do not branch on its exact wording; use the HTTP status code and the top-level `status` field instead. |
+| | | **The IDs of the generated reports are not returned.** List the workspace's views afterwards to discover them. |
+
+### Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **Tables only** | Accepts **Tables, Query Tables and Pipeline Tables** only. A chart, pivot, dashboard or any other derived view fails with **7397**. |
+| **Completion state is tracked** | A table is marked "analysed" after a successful run. A second call without `analyseAgain=true` fails with **8116** and leaves the existing auto-generated views untouched. |
+| **`analyseAgain` on a never-analysed table is harmless** | The guard check treats it as a no-op and the run proceeds as a first-time analysis. |
+| **Re-run after data or schema changes** | New rows change the data distribution and new columns are invisible to views generated earlier. Re-run with `analyseAgain=true` to regenerate against the current table. |
+| **Synchronous, and slow on wide tables** | Every view is created before the response returns. For very large tables prefer [Auto Analyse Column](#2-auto-analyse-column) on the columns you care about. |
+| **Empty results are not an error** | A table whose columns are all ineligible can return HTTP 200 having generated few or no views. |
+| **Generated view IDs are not returned** | The response carries only a display message. List the workspace's views afterwards to discover what was created. |
+| **Full comparison with the column API** | See [Auto Analyse View vs Auto Analyse Column — Scope Comparison](#auto-analyse-view-vs-auto-analyse-column--scope-comparison) and [Edge Cases and Failure Scenarios](#edge-cases-and-failure-scenarios). |
+| **Dependency chain** | Workspace list → `<workspace-id>` → table `<view-id>` → Auto Analyse View. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7104 | View (table) not found. | Verify `<view-id>` exists in the workspace. |
 | 7301 | User does not have Create Report permission on the workspace. | Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or has been granted Create Report permission on this workspace. |
@@ -133,7 +157,7 @@ Triggers auto analysis for a **single column** of a table. The system generates 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Report permission on the workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Column Eligibility
 
@@ -208,10 +232,33 @@ Content-Type: application/x-www-form-urlencoded
 }
 ```
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Auto Generate Reports"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.status` | String | Human-readable outcome message, e.g. `"Reports generated successfully"`. This is a **display string, not a status enum** — do not branch on its exact wording; use the HTTP status code and the top-level `status` field instead. |
+| | | **The IDs of the generated reports are not returned.** List the workspace's views afterwards to discover them. |
+
+### Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **Tables only** | Same restriction as [Auto Analyse View](#1-auto-analyse-view) — Tables, Query Tables and Pipeline Tables only; anything else fails with **7397**. |
+| **No completion state, no re-run guard** | Every call runs fresh. There is no `analyseAgain` equivalent and no **8116**. |
+| **Repeat calls accumulate views** | Each call creates a new set of views for the column. Delete the previously generated views first if you do not want duplicates. |
+| **Disabled Query Table column** | Fails with **14037**. Enable the column in the Query Table definition first. |
+| **Geo columns need their pair** | A Geo Number latitude column without a visible longitude column (or the reverse) is not eligible and the call fails. |
+| **Generated view IDs are not returned** | As with the view-level API, the response carries only a display message. |
+| **Full comparison with the view API** | See [Auto Analyse View vs Auto Analyse Column — Scope Comparison](#auto-analyse-view-vs-auto-analyse-column--scope-comparison) and [Edge Cases and Failure Scenarios](#edge-cases-and-failure-scenarios). |
+| **Dependency chain** | Table `<view-id>` → Get Column Details → `<column-id>` → Auto Analyse Column. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7104 | View (table) not found. | Verify `<view-id>` exists in the workspace. |
 | 7107 | Column not found in the specified table. | Verify `<column-id>` belongs to the table identified by `<view-id>`. |
@@ -219,8 +266,8 @@ Content-Type: application/x-www-form-urlencoded
 | 7319 | View does not belong to the specified workspace. | Verify both `<workspace-id>` and `<view-id>` are consistent. |
 | 7397 | The view is not a Table, Query Table, or Pipeline Table. | Auto analysis only works on base table types. Pass a valid table view ID. |
 | 8116 | The selected column type is not supported for auto analysis (e.g., Auto-Number, Multi-Line, URL, Geometry, or a system/hidden column). | Choose an eligible column. Refer to the Column Eligibility section for the full list of unsupported column characteristics. |
-| 14037 | The column is disabled in its Query Table definition and cannot be used for analysis. | Enable the column in the Query Table configuration or choose a different column. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
+| 14037 | The column is disabled in its Query Table definition and cannot be used for analysis. | Enable the column in the Query Table configuration or choose a different column. |
 
 ---
 

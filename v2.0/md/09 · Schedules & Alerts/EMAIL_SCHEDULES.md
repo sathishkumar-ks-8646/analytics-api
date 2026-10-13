@@ -69,7 +69,7 @@ If your integration needs stable identifiers, key your own records on `scheduleN
 
 ## White Label / Client Portal Behaviour
 
-All six APIs are blocked in Client Portal / White Label request contexts — the same posture as the [Embed URL APIs](EMBEDURL_API_DOC_INFO.md#white-label--client-portal-behaviour), and the opposite of the [Publish](PUBLISH_API_DOC_INFO.md) and [Slideshow](SLIDESHOW_API_DOC_INFO.md) families.
+All six APIs are blocked in Client Portal / White Label request contexts — the same posture as the [Embed URL APIs](../08%20%C2%B7%20Share%20%26%20Publish/EMBED_URL.md#white-label--client-portal-behaviour), and the opposite of the [Publish](../08%20%C2%B7%20Share%20%26%20Publish/PUBLISH.md) and [Slideshow](../08%20%C2%B7%20Share%20%26%20Publish/SLIDESHOW_MANAGEMENT.md) families.
 
 | Scenario | Result |
 |----------|--------|
@@ -219,7 +219,7 @@ ZANALYTICS-ORGID: 700000654321
 | **The only way to discover a regenerated ID** | After an update that changed the name or period, this API (or the update response itself) is how you learn the new `scheduleId`. |
 | **Newer builds may return additional fields** | Some builds also include `subject`, `message`, and `isBCC` on each entry. Treat the response as extensible and ignore unrecognised keys rather than validating against a closed schema. |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
-| **Dependency chain** | [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → `<workspace-id>` → Get Email Schedules → `<schedule-id>` for every other API here. |
+| **Dependency chain** | [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → `<workspace-id>` → Get Email Schedules → `<schedule-id>` for every other API here. |
 
 ### Error Codes
 
@@ -254,7 +254,7 @@ CONFIG is **mandatory** for this API.
 | `exportType` | String (enum) | **Yes** | — | File format of the attachment. See [`exportType` Values](#exporttype-values). Case-insensitive on input, normalised to upper case. **Cannot be changed after creation.** |
 | `scheduleDetails` | JSONObject | **Yes** | — | When the schedule runs. See [`scheduleDetails` Fields](#scheduledetails-fields). |
 | `emailIds` | JSONArray of String | No* | — | Recipient email addresses, 0–1000 entries. Lower-cased and de-duplicated. Addresses outside a trusted domain may be rejected (`8031`). |
-| `groupIds` | JSONArray of String/Long | No* | — | IDs of [workspace groups](WORKSPACE_GROUPS_API_DOC_INFO.md) whose members receive the email, 0–1000 entries. Must belong to `<workspace-id>`. |
+| `groupIds` | JSONArray of String/Long | No* | — | IDs of [workspace groups](../02%20%C2%B7%20User%20%26%20Groups/WORKSPACE_GROUPS.md) whose members receive the email, 0–1000 entries. Must belong to `<workspace-id>`. |
 | `cc` | JSONObject | No | — | Carbon-copy recipients. See [`cc` Fields](#cc-fields). |
 | `isBCC` | Boolean | No | `true` | When `true` (the default), the addresses in `emailIds` are placed in **BCC** so recipients cannot see one another. Set `false` to address them in the **To** line. |
 | `subject` | String | No | System default | Subject line of the email. Max 500 characters. |
@@ -517,14 +517,14 @@ CONFIG={
 | **Untrusted recipient domains are rejected** | If the organization restricts sharing to trusted domains, addresses outside them fail with `8031`. |
 | **No `criteria` attribute** | Per-request row filtering is not supported; use `applyShareCriteria` (per-recipient share filters) or `reportBurstConfig` (per-row bursting). |
 | **Not callable from a portal domain** | See [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
-| **Dependency chain** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `viewIds`; [Get Group List](WORKSPACE_GROUPS_API_DOC_INFO.md#1-get-group-list) → `groupIds` → Create Email Schedule → `scheduleId`. |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `viewIds`; [Get Group List](../02%20%C2%B7%20User%20%26%20Groups/WORKSPACE_GROUPS.md#1-get-group-list) → `groupIds` → Create Email Schedule → `scheduleId`. |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
 | 7103 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and the `ZANALYTICS-ORGID` header. |
-| 7104 | `META_OBJECT_NOT_PRESENT` — A view in `viewIds` does not exist. | Verify the IDs via [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — A view in `viewIds` does not exist. | Verify the IDs via [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | 7301 | `SECURITY_NOT_PERMITTED` — Request came through a Client Portal / White Label domain, the user lacks Create Email Schedule permission, or lacks Export permission on a view in `viewIds`. | Call from the standard API host with the required permissions. |
 | 7319 | `OBJID_NOT_BELONGS_TO_DB` — A view in `viewIds` belongs to a different workspace. | Include only views from `<workspace-id>`. |
 | 7832 | `INVALID_EXPORT_TYPE` — `exportType` is not one of the supported formats. | Use `CSV`, `XLS`, `PDF`, `HTML`, or `IMG`. |
@@ -1129,11 +1129,11 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Header | Value | Required | Description |
 |--------|-------|----------|-------------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. Must carry the scope matching the operation (see [Appendix B](#appendix-b--oauth-scope-summary)). |
-| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the schedule. Obtainable from the [Get Organizations](ORG_INFO_API_DOC_INFO.md) response or from listing API responses as the `orgId` field. |
+| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the schedule. Obtainable from the [Get Organizations](../01%20%C2%B7%20Organization%20Management/ORG_INFO_AND_SETTINGS.md) response or from listing API responses as the `orgId` field. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required only for the three APIs that send a CONFIG body: [Create Email Schedule](#2-create-email-schedule), [Update Email Schedule](#3-update-email-schedule), and [Change Email Schedule Status](#5-change-email-schedule-status). The other three send no payload. |
 | `Host` | `analyticsapi.zoho.com` (or the DC equivalent) | **Mandatory** | Must be the **standard** Zoho Analytics API host. A request whose host is a Client Portal / White Label custom domain is rejected with `7301` for all six APIs — see [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization. The email-schedule APIs have no portal-domain or cross-org targeting mechanism at all.
+> **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization. The email-schedule APIs have no portal-domain or cross-org targeting mechanism at all.
 
 Example:
 
@@ -1174,7 +1174,7 @@ CONFIG={"scheduleName":"Daily Sales Snapshot","viewIds":["137687000006991601"],"
 - **`views` and `selectedTabs` are alternatives.** Tabbed-dashboard schedules report `selectedTabs` in place of `views`. Handle both keys.
 - **`createdBy` is a permission signal.** For custom-role users without organization-wide email-schedule access, only entries whose `createdBy` matches their own address can be updated, deleted, or triggered — check it before offering those actions in a UI.
 - **Different scope group from the write APIs.** This is the one API in the family on `metadata.read`; the other five are on `modeling.*`.
-- **Dependency chain:** [Get Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md) → Get Email Schedules → `<schedule-id>` for every other API here.
+- **Dependency chain:** [Get Workspace List](../03%20%C2%B7%20Workspace%20Management/WORKSPACE_OPERATIONS.md) → Get Email Schedules → `<schedule-id>` for every other API here.
 
 ### Create Email Schedule
 
@@ -1184,7 +1184,7 @@ CONFIG={"scheduleName":"Daily Sales Snapshot","viewIds":["137687000006991601"],"
 - **`applyShareCriteria` is the per-recipient personalisation switch, and it is expensive.** It changes quota consumption from one unit per 25 addresses to **one unit per recipient**. On a 200-person list that is the difference between 8 units and 200.
 - **Uniqueness is on the name, and the name is also an ID-stability input.** A `scheduleName` must be unique in the workspace, and — because renaming regenerates the ID — it is the most stable key an integration can hold. Choose names deliberately.
 - **No per-request row filter.** There is no `criteria` attribute. Row-level personalisation comes from `applyShareCriteria`, `applyDefaultUf`, or `reportBurstConfig`.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) + [Get Group List](WORKSPACE_GROUPS_API_DOC_INFO.md#1-get-group-list) → Create Email Schedule → [Get Email Schedules](#1-get-email-schedules).
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) + [Get Group List](../02%20%C2%B7%20User%20%26%20Groups/WORKSPACE_GROUPS.md#1-get-group-list) → Create Email Schedule → [Get Email Schedules](#1-get-email-schedules).
 
 ### Update Email Schedule
 
@@ -1200,7 +1200,7 @@ CONFIG={"scheduleName":"Daily Sales Snapshot","viewIds":["137687000006991601"],"
 
 - **204 No Content, no body.** Verified against the implementation.
 - **Views survive; the schedule does not.** Only the schedule definition, its pending runs, and its history are removed — nothing about the delivered reports, dashboards, or tables changes.
-- **No trash and no restore.** Unlike views, which go through the [Trash APIs](TRASH_API_DOC_INFO.md), a deleted schedule is gone. Recreating it yields a new `scheduleId` and an empty run history.
+- **No trash and no restore.** Unlike views, which go through the [Trash APIs](../06%20%C2%B7%20Views%20Management/TRASH_MANAGEMENT.md), a deleted schedule is gone. Recreating it yields a new `scheduleId` and an empty run history.
 - **Not idempotent.** A repeat delete fails with `7812`. The same code also appears when the ID went stale because an earlier update regenerated it — so a `7812` is not always "already deleted".
 - **Frees quota immediately.** A create that previously failed on the organization's schedule limit may succeed right after a delete.
 - **Same ownership gate as Update.** Custom-role users without full access can only delete their own schedules.

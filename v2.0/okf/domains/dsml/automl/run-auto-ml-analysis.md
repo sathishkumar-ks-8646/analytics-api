@@ -43,7 +43,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -53,7 +53,7 @@ status: stable
 
 Triggers a deployment immediately — the "run now" action. Scores the input table with the deployed model and writes the results to the output table according to the deployment's `importType`.
 
-> This API has no CONFIG parameter. Note that the path segment is `/deployments/<deployment-id>/execute` — the **model ID does not appear**, unlike the deployment-creation path.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. Note that the path segment is `/deployments/<deployment-id>/execute` — the **model ID does not appear**, unlike the deployment-creation path.
 
 # Endpoint
 

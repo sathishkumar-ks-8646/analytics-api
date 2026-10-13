@@ -49,7 +49,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -129,6 +129,15 @@ The CONFIG parameter is optional. When provided, it is a JSON object passed as a
 ## Success Response
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Get view URL"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.viewUrl` | String | Absolute URL that opens the view in the Zoho Analytics UI. The host reflects the data centre, and any theme requested in CONFIG is carried as a query parameter. This is a **UI link requiring an authenticated browser session**, not an API endpoint and not a shareable public link. |
 
 # Examples
 

@@ -101,8 +101,8 @@ CONFIG={"workspaceName":"HR Analytics","workspaceDesc":"Workspace for HR team da
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Organization Admin privileges in the target organisation. |
 | 7951 | The organisation has reached its workspace creation limit based on the current subscription plan. | Upgrade the plan or delete unused workspaces before creating a new one. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
@@ -231,8 +231,8 @@ CONFIG={"newWorkspaceName":"Sales Analytics (Org B Copy)","workspaceKey":"02aee9
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Source workspace not found. | Verify `<workspace-id>` of the source workspace. |
 | 7301 | User is not an Account Admin or Organization Admin of the destination organisation. | The caller must be an admin of the destination org, not just the source org. |
 | 7951 | The destination organisation has reached its workspace limit. | Upgrade the destination org's plan or remove unused workspaces. |
@@ -323,8 +323,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7111 | The new workspace name is already used by another workspace in the organisation. | Choose a name not already in use. |
 | 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |
@@ -344,7 +344,7 @@ Permanently deletes the specified workspace and all of its contents — tables, 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. |
 
-> This API accepts an optional CONFIG parameter. No CONFIG fields are required for standard use.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. An optional CONFIG envelope is accepted but has no documented fields; deletion always proceeds with defaults.
 
 ### Sample Requests
 
@@ -381,8 +381,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.delete`. |
@@ -469,12 +469,12 @@ The `.atpt` file contains:
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7104 | One or more specified view IDs do not exist. | Verify all `viewIds` are valid using the Get View List API. |
-| 7319 | One or more specified view IDs do not belong to the specified workspace. | Ensure all `viewIds` belong to the workspace identified by `<workspace-id>`. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin. | Ensure the caller has at least Workspace Admin access. |
+| 7319 | One or more specified view IDs do not belong to the specified workspace. | Ensure all `viewIds` belong to the workspace identified by `<workspace-id>`. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 ---
@@ -493,7 +493,7 @@ This API is user-scoped: it returns only workspaces that the calling user has an
 | **ZANALYTICS-ORGID Header** | Not required. |
 | **Permission Required** | Any authenticated Zoho Analytics user. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -605,8 +605,8 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 ---
@@ -623,7 +623,7 @@ Returns all workspaces owned by (created within) the authenticated user's organi
 | **ZANALYTICS-ORGID Header** | Not required. |
 | **Permission Required** | The authenticated user must be the **Account Admin** of the organisation. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -694,8 +694,8 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7301 | User is not the Account Admin. Organization Admins and Workspace Admins cannot call this API. | Use Account Admin credentials. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
@@ -713,7 +713,7 @@ Returns all workspaces that have been shared with the authenticated user from **
 | **ZANALYTICS-ORGID Header** | Not required. |
 | **Permission Required** | Any authenticated Zoho Analytics user. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -806,8 +806,8 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 ---
@@ -888,8 +888,8 @@ CONFIG={"regenerateKey":true}
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
@@ -1044,8 +1044,8 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User does not have any access to the specified workspace. The user must be a workspace admin or have at least one view shared with them in this workspace. | Verify the user has been added to the workspace or has a view shared with them. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |

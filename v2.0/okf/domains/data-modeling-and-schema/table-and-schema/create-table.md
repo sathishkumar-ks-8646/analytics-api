@@ -56,7 +56,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -177,6 +177,15 @@ Each element in the `COLUMNS` array defines one column:
 ## Success Response
 
 HTTP `200` with content type `application/json`. JSON responses use the standard envelope `{ "status": "success", "summary": ..., "data": {...} }` described in [Response envelope](../../../foundations/response-envelope.md).
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Table has been created successfully."` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.viewId` | String | ID of the newly created table, serialised as a **string**. Tables are views, so this ID is accepted wherever a `<view-id>` is expected — including the row, import and column APIs. |
 
 # Examples
 

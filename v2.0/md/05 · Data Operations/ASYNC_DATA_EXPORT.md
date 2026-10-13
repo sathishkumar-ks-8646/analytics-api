@@ -22,7 +22,7 @@ An asynchronous export is a three-step conversation. You create a job, you find 
 
 The trade for that extra round trip is that the restrictions of the synchronous export disappear.
 
-| | Asynchronous export (this document) | [Synchronous export](SYNC_DATA_EXPORT_API_DOC_INFO.md) |
+| | Asynchronous export (this document) | [Synchronous export](SYNC_DATA_EXPORT.md) |
 |---|---|---|
 | **Endpoint prefix** | `/restapi/v2/bulk/workspaces/...` | `/restapi/v2/workspaces/...` |
 | **First response** | A JSON envelope containing `jobId` | The exported file itself |
@@ -84,13 +84,13 @@ These four are not four independent APIs. They are one pipeline, and the `jobId`
 | **Downloading before the job finishes is an error, not a wait** | [Download Exported Data](#4-download-exported-data) does not block. It fails with `8121` while the job is queued and `8122` while it is running. The poll in [Get Export Job Details](#3-get-export-job-details) is mandatory, not advisory. |
 | **The two creation APIs differ only in their source** | One takes a saved view via `<view-id>`, the other an ad-hoc `sqlQuery`. Both feed the identical job pipeline, and steps 3 and 4 cannot tell them apart. |
 | **Their CONFIG sets are close but not identical** | `criteria` and `applyDefaultUF` exist only for the view export; `sqlQuery` and `tableCriteriaList` only for the SQL query export. See [Filtering: `criteria` and `tableCriteriaList`](#filtering-criteria-and-tablecriterialist). |
-| **`<view-id>` comes from elsewhere** | Get it from [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list), from [Import Data into a New Table (Synchronous)](SYNC_DATA_IMPORT_API_DOC_INFO.md#1-import-data-into-a-new-table-synchronous), or from [Create Query Table](QUERY_TABLES_API_DOC_INFO.md#2-create-query-table). |
-| **`selectedColumns` takes column display names** | Fetch them with [Get Columns](COLUMNS_API_DOC_INFO.md). An unmatched name fails the create call with `8015`; the job is never created. |
-| **Export permission is granted by the sharing APIs** | The `export` share permission set by [Share Views](SHARING_API_DOC_INFO.md#2-share-views) is what both creation APIs check. For a SQL query export it is checked on **every table the query touches**. See [Permission Model](#permission-model). |
+| **`<view-id>` comes from elsewhere** | Get it from [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list), from [Import Data into a New Table (Synchronous)](SYNC_DATA_IMPORT.md#1-import-data-into-a-new-table-synchronous), or from [Create Query Table](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/QUERY_TABLES.md#2-create-query-table). |
+| **`selectedColumns` takes column display names** | Fetch them with [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). An unmatched name fails the create call with `8015`; the job is never created. |
+| **Export permission is granted by the sharing APIs** | The `export` share permission set by [Share Views](../08%20%C2%B7%20Share%20%26%20Publish/SHARING.md#2-share-views) is what both creation APIs check. For a SQL query export it is checked on **every table the query touches**. See [Permission Model](#permission-model). |
 | **`callbackUrl` replaces the poll, it does not replace step 4** | The callback fires when the job reaches a terminal state and carries the same fields as [Get Export Job Details](#3-get-export-job-details), but you still have to call [Download Exported Data](#4-download-exported-data) to get the bytes. |
 | **The job is owned by its creator** | Only the user who created the job can poll or download it. See [Permission Model](#permission-model). |
-| **The same CONFIG vocabulary as the synchronous export** | Formats, delimiters, page setup, and image options carry identical meanings and value sets to [Export Data from a View](SYNC_DATA_EXPORT_API_DOC_INFO.md#1-export-data-from-a-view). A CONFIG proven there works here. |
-| **Nothing consumes the exported file** | Export is read-only and terminal. Getting data back *into* a table is [Synchronous Data Import](SYNC_DATA_IMPORT_API_DOC_INFO.md) or [Asynchronous & Batch Data Import](ASYNC_DATA_IMPORT_API_DOC_INFO.md). |
+| **The same CONFIG vocabulary as the synchronous export** | Formats, delimiters, page setup, and image options carry identical meanings and value sets to [Export Data from a View](SYNC_DATA_EXPORT.md#1-export-data-from-a-view). A CONFIG proven there works here. |
+| **Nothing consumes the exported file** | Export is read-only and terminal. Getting data back *into* a table is [Synchronous Data Import](SYNC_DATA_IMPORT.md) or [Asynchronous & Batch Data Import](ASYNC_DATA_IMPORT.md). |
 
 ### Typical sequences
 
@@ -250,7 +250,7 @@ Notes that matter in practice:
 - For a **shared user**, the share filter criteria is ANDed automatically — see [Permission Model](#permission-model).
 - The expression is validated **before** the job is created, so a bad `criteria` produces an error response and no `jobId`.
 - Because `criteria` travels inside the `CONFIG` query parameter, it must be JSON-escaped and then URL-encoded. Double quotes around column names become `\"` in JSON and `%22` on the wire.
-- The same grammar is used by [Update Row](ROW_API_DOC_INFO.md#2-update-row), [Delete Row](ROW_API_DOC_INFO.md#3-delete-row), and [Export Data from a View](SYNC_DATA_EXPORT_API_DOC_INFO.md#1-export-data-from-a-view).
+- The same grammar is used by [Update Row](ROW_OPERATIONS.md#2-update-row), [Delete Row](ROW_OPERATIONS.md#3-delete-row), and [Export Data from a View](SYNC_DATA_EXPORT.md#1-export-data-from-a-view).
 
 ### `tableCriteriaList` structure
 
@@ -376,10 +376,10 @@ Creates an export job whose source is an ad-hoc SQL `SELECT` statement rather th
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/bulk/workspaces/<workspace-id>/data` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.data.read` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Export permission on every table the SQL query references. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** — it carries `sqlQuery` |
 | **Success Status** | `200 OK` with a JSON body carrying `data.jobId` |
 
@@ -549,7 +549,7 @@ Because `password` is present, [Download Exported Data](#4-download-exported-dat
 | 7301 | `SECURITY_NOT_PERMITTED` — The caller lacks Export permission on at least one table referenced by the query. | Ensure the caller holds Export permission on every table in the statement. |
 | 7401 | The SQL statement is not a valid or allowed construct. | Review the syntax; only `SELECT` statements over the workspace's own tables are accepted. |
 | 7565 | `UNVERIFIED_EMAIL` — The calling user's primary email address is not verified. | Verify the account's primary email address and retry. |
-| 7571 | `UNKNOWN_VIEWID_PASSED` — A `tableCriteriaList[].viewId` does not exist in this workspace. | Verify the IDs with [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7571 | `UNKNOWN_VIEWID_PASSED` — A `tableCriteriaList[].viewId` does not exist in this workspace. | Verify the IDs with [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | 7801 | `MARGIN_VALUE_EXCEEDS` — A PDF margin is outside `0`–`1` inches. | Send a value between `0` and `1`. |
 | 7824 | `EXPORT_REQ_BLOCKED` — Export has been blocked for this workspace. | Contact Zoho Analytics support using the address in the error message. |
 | 7827 | `EXP_PDF_RECORD_LIMIT` — The PDF exceeds 1,000,000 cells. | Narrow the statement or use `selectedColumns`. |
@@ -559,6 +559,9 @@ Because `password` is present, [Download Exported Data](#4-download-exported-dat
 | 8001 | `INVALID_RESP_FORMAT` — `responseFormat` is not a supported value. | Send one of `csv`, `json`, `xml`, `xls`, `pdf`, `html`. |
 | 8014 | `API_IMAGE_RESPONSE_NOT_POSSIBLE` — `image` was requested. | A query result cannot be rendered as an image; choose another format. |
 | 8015 | `API_EXPORT_COLUMN_NOT_PRESENT` — A name in `selectedColumns` is not in the result set. | Match the names to the columns the statement projects. |
+| 8077 | `EMPTY_JSON_CONFIGURATION` — `CONFIG` was not sent, or was sent empty. | Send a CONFIG object containing at least `sqlQuery`. |
+| 8078 | `EMPTY_JSON_ATTRIBUTE_FOUND` — `sqlQuery` was sent but is blank. | Send a non-empty `SELECT` statement. |
+| 8079 | `ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION` — A mandatory attribute is missing — `sqlQuery` on the request itself, or `viewId` / `criteria` inside a `tableCriteriaList` entry. | The message names the attribute. |
 | 8088 | `SECURITY_CONTROLS_FEATURE_DISABLED` — Export is disabled for the organization. | Ask an Organization Admin to re-enable export. |
 | 8119 | `INVALID_VALUE_FOR_ATTRIBUTE` — A numeric or enumerated attribute is outside its permitted set. | Correct the value; see [Appendix E](#appendix-e--enum-reference). |
 | 8125 | `CALLBACKURL_NOT_VALID` — `callbackUrl` is malformed. | Send a well-formed absolute `http`/`https` URL. |
@@ -568,9 +571,6 @@ Because `password` is present, [Download Exported Data](#4-download-exported-dat
 | 8132 | `ASYNC_EXPORT_LIMIT_EXCEEDED` — 5 export jobs are already queued or running for the organization. | Wait for an in-flight job to finish, then retry. |
 | 8188 | `EXPORT_INVALID_PASSWORD` — `password` is blank or shorter than 6 characters. | Send 6–256 characters. |
 | 8241 | `SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION` — A source table carries a restricted DATA_WARNING system tag. | Review the warning, then resend with `"validateSystemTags": false`. |
-| 8077 | `EMPTY_JSON_CONFIGURATION` — `CONFIG` was not sent, or was sent empty. | Send a CONFIG object containing at least `sqlQuery`. |
-| 8078 | `EMPTY_JSON_ATTRIBUTE_FOUND` — `sqlQuery` was sent but is blank. | Send a non-empty `SELECT` statement. |
-| 8079 | `ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION` — A mandatory attribute is missing — `sqlQuery` on the request itself, or `viewId` / `criteria` inside a `tableCriteriaList` entry. | The message names the attribute. |
 | 8507 | `MORE_THAN_MAX_LENGTH` — `CONFIG` exceeds 200,000 characters, or `sqlQuery` exceeds 100,000. | Shorten the statement. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token carrying `ZohoAnalytics.data.read`. |
 | 8547 | `ARRAY_SIZE_OUT_OF_RANGE` — `tableCriteriaList` exceeds 25 entries, or `selectedColumns` is empty or exceeds 300. | Stay within the documented sizes. |
@@ -584,10 +584,10 @@ Creates an export job whose source is a saved view — including the view types 
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/bulk/workspaces/<workspace-id>/views/<view-id>/data` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.data.read` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with Export permission on the view. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Optional — omitting it queues a CSV export of the whole view |
 | **Success Status** | `200 OK` with a JSON body carrying `data.jobId` |
 
@@ -761,16 +761,16 @@ This is the case the synchronous export cannot serve at all.
 | **Validation happens before the job exists** | A bad `criteria`, an unmatched `selectedColumns` name, an unreachable `callbackUrl`, or a permission failure all produce an error response and **no** `jobId`. |
 | **Creation success is not export success** | Failures while producing the file surface as `jobCode` `1003` on [Get Export Job Details](#3-get-export-job-details), never on this response. |
 | **`criteria` is not accepted by the SQL query variant** | And `sqlQuery` / `tableCriteriaList` are not accepted here. See [Filtering: `criteria` and `tableCriteriaList`](#filtering-criteria-and-tablecriterialist). |
-| **Dependency chain:** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>`; [Get Columns](COLUMNS_API_DOC_INFO.md) → `selectedColumns` names → Create Export Job using View ID (Asynchronous) → `data.jobId` → [Get Export Job Details](#3-get-export-job-details) → [Download Exported Data](#4-download-exported-data). |
+| **Dependency chain:** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>`; [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → `selectedColumns` names → Create Export Job using View ID (Asynchronous) → `data.jobId` → [Get Export Job Details](#3-get-export-job-details) → [Download Exported Data](#4-download-exported-data). |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | 7301 | `SECURITY_NOT_PERMITTED` — The caller lacks Export permission on the view, or the view does not belong to `<workspace-id>`. | Ensure the caller is an Account Admin, Organization Admin, Workspace Admin, or View Owner, or holds Export permission on the view. |
 | 7327 | `FILTER_CRITERIA_INVALID` — `criteria` parsed but could not be converted into a query. | Simplify the expression and check operator and value types. |
-| 7330 | `UNKNOWN_COLUMN_IN_FILTERCRITERIA` — A column named in `criteria` does not exist in the view. | Check the name against [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 7330 | `UNKNOWN_COLUMN_IN_FILTERCRITERIA` — A column named in `criteria` does not exist in the view. | Check the name against [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 7331 | `FILTERCRITERIA_PARSE_ERROR` — `criteria` is syntactically malformed. | Check quoting: double quotes around column names, single quotes around string literals. |
 | 7332 | `UNKNOWN_TABLE_IN_FILTERCRITERIA` — A table qualifier in `criteria` is not part of the view. | Qualify columns only with tables the view uses. |
 | 7333 | `INVALID_GROUP_FUNC_USE_IN_FILTERCRITERIA` — An aggregate function was used in `criteria`. | Filter on raw column values instead. |
@@ -782,7 +782,7 @@ This is the case the synchronous export cannot serve at all.
 | 7827 | `EXP_PDF_RECORD_LIMIT` — The PDF exceeds 1,000,000 cells. | Narrow the export with `criteria` or `selectedColumns`. |
 | 8001 | `INVALID_RESP_FORMAT` — `responseFormat` is not a supported value. | Send one of `csv`, `json`, `xml`, `xls`, `pdf`, `html`, `image`. |
 | 8014 | `API_IMAGE_RESPONSE_NOT_POSSIBLE` — `image` was requested for a view that is not a chart. | Export charts as images; use `pdf` or `html` otherwise. |
-| 8015 | `API_EXPORT_COLUMN_NOT_PRESENT` — A name in `selectedColumns` does not match any column in the view. | Check the display names with [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 8015 | `API_EXPORT_COLUMN_NOT_PRESENT` — A name in `selectedColumns` does not match any column in the view. | Check the display names with [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 8017 | `INVALID_IMAGE_FORMAT` — `imageFormat` is not `png`, `jpg`, or `jpeg`. | Send one of the three supported values. |
 | 8088 | `SECURITY_CONTROLS_FEATURE_DISABLED` — Export is disabled for the organization. | Ask an Organization Admin to re-enable export. |
 | 8119 | `INVALID_VALUE_FOR_ATTRIBUTE` — A numeric or enumerated attribute is outside its permitted set, or a dashboard was requested in a format other than PDF or HTML. | Correct the value; see [Appendix E](#appendix-e--enum-reference). |
@@ -806,10 +806,10 @@ Reports the progress of an export job, and once it has finished, where to collec
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/bulk/workspaces/<workspace-id>/exportjobs/<job-id>` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.data.read` |
 | **Permission Required** | Only the user who created the export job. Any other user, including an Account Admin or Organization Admin, receives 8124. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Not applicable — this API takes no CONFIG attributes |
 | **Success Status** | `200 OK` with a JSON body |
 
@@ -965,10 +965,10 @@ Returns the exported file produced by a completed export job.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/bulk/workspaces/<workspace-id>/exportjobs/<job-id>/data` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.data.read` |
 | **Permission Required** | Only the user who created the export job. Any other user, including an Account Admin or Organization Admin, receives 8124. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Not applicable — this API takes no CONFIG attributes |
 | **Success Status** | `200 OK`, body is the exported file |
 | **Content-Type** | Varies with the job's `responseFormat` — see [Exported File Structure by Format](#exported-file-structure-by-format) |
@@ -1081,7 +1081,7 @@ PK…
 
 ### Exported File Structure by Format
 
-The file returned here is byte-for-byte what the [synchronous export](SYNC_DATA_EXPORT_API_DOC_INFO.md#response-structure-by-format) would have produced for the same CONFIG.
+The file returned here is byte-for-byte what the [synchronous export](SYNC_DATA_EXPORT.md#response-structure-by-format) would have produced for the same CONFIG.
 
 | Job `responseFormat` | `Content-Type` | Body |
 |----------------------|----------------|------|
@@ -1100,7 +1100,7 @@ The file returned here is byte-for-byte what the [synchronous export](SYNC_DATA_
 
 ### Response Fields
 
-The success body is a file, not a JSON envelope, so structured fields exist only for the JSON and XML formats. They are identical to the synchronous export's — see [Response Fields](SYNC_DATA_EXPORT_API_DOC_INFO.md#response-fields) there for the full field tables of all four shapes.
+The success body is a file, not a JSON envelope, so structured fields exist only for the JSON and XML formats. They are identical to the synchronous export's — see [Response Fields](SYNC_DATA_EXPORT.md#response-fields) there for the full field tables of all four shapes.
 
 **Response headers**
 
@@ -1143,7 +1143,7 @@ The success body is a file, not a JSON envelope, so structured fields exist only
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user, carrying `ZohoAnalytics.data.read`. |
 | `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace. Required by all four APIs, including the two job APIs. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by any of these APIs.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization.
+> **`ZANALYTICS-DEST-ORGID` is not used by any of these APIs.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization.
 
 None of the four APIs has a request body — all are `GET`, and the two creation APIs carry `CONFIG` in the query string:
 
@@ -1191,8 +1191,8 @@ The decoded `CONFIG` above is `{"responseFormat":"csv","criteria":"\"Region\"='E
 - **`CONFIG` is optional.** A bare call queues a full CSV export, which makes this the shortest possible way to schedule a whole-view dump.
 - **`selectedColumns` silently does nothing for charts, pivots, summary views, and dashboards.** Only tables and tabular views honour it.
 - **`criteria` is validated up front.** A bad expression costs you an error response, not a wasted job.
-- **Page setup is shared with Email Schedules.** `paperSize`, `paperStyle`, the four margins, `showTitle`, `showDesc`, `exportLanguage`, and the six header/footer slots use the same value sets as [Create Email Schedule](EMAIL_SCHEDULES_API_DOC_INFO.md#2-create-email-schedule).
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) + [Get Columns](COLUMNS_API_DOC_INFO.md) → Create Export Job using View ID (Asynchronous) → `data.jobId` → [Get Export Job Details](#3-get-export-job-details) → [Download Exported Data](#4-download-exported-data).
+- **Page setup is shared with Email Schedules.** `paperSize`, `paperStyle`, the four margins, `showTitle`, `showDesc`, `exportLanguage`, and the six header/footer slots use the same value sets as [Create Email Schedule](../09%20%C2%B7%20Schedules%20%26%20Alerts/EMAIL_SCHEDULES.md#2-create-email-schedule).
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) + [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → Create Export Job using View ID (Asynchronous) → `data.jobId` → [Get Export Job Details](#3-get-export-job-details) → [Download Exported Data](#4-download-exported-data).
 
 ### Get Export Job Details
 
@@ -1206,7 +1206,7 @@ The decoded `CONFIG` above is `{"responseFormat":"csv","criteria":"\"Region\"='E
 
 ### Download Exported Data
 
-- **It is the second API in this suite whose success response is not JSON.** The other is [Export Data from a View](SYNC_DATA_EXPORT_API_DOC_INFO.md#1-export-data-from-a-view). Check the HTTP status first, parse JSON only on failure, and read `Content-Type` to handle the success body.
+- **It is the second API in this suite whose success response is not JSON.** The other is [Export Data from a View](SYNC_DATA_EXPORT.md#1-export-data-from-a-view). Check the HTTP status first, parse JSON only on failure, and read `Content-Type` to handle the success body.
 - **Its error codes are a state machine, not noise.** `8121`, `8122`, `8123`, `8120`, and `8124` each identify one job state precisely, which means a client can drive the whole pipeline from download errors alone if it prefers that to polling.
 - **No `Content-Disposition` header.** There is no server-suggested filename, and the extension is not derivable from the URL. Record the `responseFormat` you requested.
 - **`application/zip` has three separate causes** — a password, an HTML dashboard, or a multi-tab dashboard PDF. Do not treat ZIP as evidence that a password was set.

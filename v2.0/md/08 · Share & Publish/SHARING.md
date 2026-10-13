@@ -7,7 +7,7 @@ This document covers the APIs for sharing views/reports with individual users or
 A view (table, report, dashboard, etc.) can be made accessible to other users of the same organization (or, for Client Portal/White Label workspaces, users of a portal domain) without transferring ownership. Sharing is done either:
 
 - **Directly to individual users** — by email address (`emailIds`), or
-- **To a group** — a named collection of users (`groupIds`), managed via the [Workspace Groups APIs](WORKSPACE_GROUPS_API_DOC_INFO.md).
+- **To a group** — a named collection of users (`groupIds`), managed via the [Workspace Groups APIs](../02%20%C2%B7%20User%20%26%20Groups/WORKSPACE_GROUPS.md).
 
 Each share grants a specific **permission set** (read, export, row-level write actions, drill-down, discussion, etc. — see [`permissions` Fields](#permissions-fields)), and can optionally restrict the shared user to specific **columns** and/or a row-level **filter criteria**.
 
@@ -38,7 +38,7 @@ Returns a consolidated view of every share that exists in the workspace — grou
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. This API is restricted to workspace owners — there is no permission-based alternative. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -189,7 +189,7 @@ Shares one or more views with a set of users and/or groups, with a specific perm
 |-----------|------|-----------|---------|-------------|
 | `viewIds` | JSONArray of String/Long | **Yes** | — | IDs of the views to share (1–1000 entries). All views must belong to the same workspace. |
 | `emailIds` | JSONArray of String | No* | — | Email addresses of the users to share to. At least one of `emailIds` or `groupIds` must be supplied. |
-| `groupIds` | JSONArray of String/Long | No* | — | IDs of the [workspace groups](WORKSPACE_GROUPS_API_DOC_INFO.md) to share to. At least one of `emailIds` or `groupIds` must be supplied. |
+| `groupIds` | JSONArray of String/Long | No* | — | IDs of the [workspace groups](../02%20%C2%B7%20User%20%26%20Groups/WORKSPACE_GROUPS.md) to share to. At least one of `emailIds` or `groupIds` must be supplied. |
 | `permissions` | JSONObject | No | all `false` except as noted | The permission set to grant. `read` **must be `true`** (error 8074 `READ_PERM_SHOULD_BE_TRUE_FOR_SHARING` otherwise). See [`permissions` Fields](#permissions-fields). |
 | `columns` | JSONArray | No | — | Restricts the shared user to specific columns per table/view. See [`columns` / `vudColumns` / `drillColumns` Fields](#columns--vudcolumns--drillcolumns-fields). Only meaningful when sharing a **single** view (error 7543 if combined with multi-view share). |
 | `includeAllColsForVUD` | Boolean | No | `false` | If `true`, the shared user can view all columns in "View Underlying Data" mode instead of only the columns in `vudColumns`. |
@@ -324,29 +324,29 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **`read` is a hard requirement** | Every share must grant at least `read`; there is no "write-only" share. |
 | **Single-view restrictions** | `columns`, `vudColumns`, `drillColumns`, and `criteria` only apply when exactly one view is in `viewIds` — combining them with a multi-view share fails (errors 7541/7543). |
 | **Re-sharing an already-shared view** | Sharing a view/user (or view/group) combination that is already shared returns error 7321/7322 rather than silently updating it — use [Update Shared Details](#3-update-shared-details) to modify an existing share. |
-| **Dependency** | `viewIds` → [Get Views](VIEW_OPERATIONS_API_DOC_INFO.md); `groupIds` → [Get Group List](WORKSPACE_GROUPS_API_DOC_INFO.md#1-get-group-list). |
+| **Dependency** | `viewIds` → [Get Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md); `groupIds` → [Get Group List](../02%20%C2%B7%20User%20%26%20Groups/WORKSPACE_GROUPS.md#1-get-group-list). |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 8074 | `READ_PERM_SHOULD_BE_TRUE_FOR_SHARING` — `permissions.read` was `false` or omitted. | Set `permissions.read` to `true`. |
+| 7301 | `SECURITY_NOT_PERMITTED` — User does not have Share permission on one or more `viewIds`. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on all specified views. |
+| 7307 | `OWNER_CANNOT_SHARE_HIMSELF` — The sharer attempted to share a view to themselves. | Remove the sharer's own email from `emailIds`. |
+| 7320 | `CANNOT_SHARETO_SELF` — Same as above (alternate path). | Same as above. |
 | 7321 | `VIEW_ALREADY_SHARED` — The view is already shared with this user. | Use Update Shared Details to modify the existing share instead. |
 | 7322 | `VIEW_ALREADY_SHARED` (group form) — The view is already shared with this group. | Use Update Shared Details to modify the existing share instead. |
 | 7323 | `CANNOT_SHARED_TO_OBJOWNER` — Attempted to share the view with its own owner. | Remove the owner's email/group from the share request. |
-| 7307 | `OWNER_CANNOT_SHARE_HIMSELF` — The sharer attempted to share a view to themselves. | Remove the sharer's own email from `emailIds`. |
-| 7320 | `CANNOT_SHARETO_SELF` — Same as above (alternate path). | Same as above. |
+| 7533 | `CANNOT_SHARE_OBJECT_TO_GROUP` — The view's type does not support group sharing. | Share to individual `emailIds` instead. |
+| 7535 | `CANNOT_SHARE_TO_MEMBERS_NOT_PART_OF_ORG` — One or more `emailIds` do not belong to the organization. | Verify the recipients are valid organization/portal users. |
 | 7541 | `FILTER_CRITERIA_NOT_SUPPORTED_FOR_MULTI_VIEW_SHARE` — `criteria` supplied with more than one `viewIds` entry. | Share one view at a time when using row-level `criteria`. |
 | 7543 | `VUD_OR_DRILL_COLUMNS_EDIT_NOT_SUPPORTED_FOR_MULTI_VIEW_SHARE` — `vudColumns`/`drillColumns` supplied with more than one view. | Share one view at a time when restricting VUD/drill columns. |
 | 7545 | `SHARE_AND_WRITE_PERMISSIONS_NOT_ALLOWED_FOR_RO_USERS` — A Read-Only/embedded user was granted `share` together with a write permission. | Do not combine `share: true` with write permissions for Read-Only users. |
-| 7533 | `CANNOT_SHARE_OBJECT_TO_GROUP` — The view's type does not support group sharing. | Share to individual `emailIds` instead. |
-| 7535 | `CANNOT_SHARE_TO_MEMBERS_NOT_PART_OF_ORG` — One or more `emailIds` do not belong to the organization. | Verify the recipients are valid organization/portal users. |
 | 7549 | `CANNOT_SHARE_TO_CUSTOMROLE_USER` — Attempted to share directly to a user who only has a custom-role-based org-level permission. | Share via the appropriate group/role mechanism instead. |
 | 8029 | `SHARE_INVALID_EMAIL_ADDRESS` — One or more `emailIds` entries is not a valid email address. | Correct the malformed email address(es). |
+| 8074 | `READ_PERM_SHOULD_BE_TRUE_FOR_SHARING` — `permissions.read` was `false` or omitted. | Set `permissions.read` to `true`. |
+| 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is malformed or missing a required field. | Validate the CONFIG JSON against the parameter table above. |
 | 8085 / 8086 | `SHAREDTO_EXTERNAL_DOMAIN_NOT_ALLOWED` — Sharing to an email outside the allowed domain(s) is disabled by org policy. | Share only to users within the permitted domain(s), or contact the Org Admin to adjust the policy. |
 | 8241 | `SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION` (HTTP 409) — A view being shared carries a restricted DATA_WARNING system tag. | Review the warning, then resend with `"validateSystemTags": false` to confirm. |
-| 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is malformed or missing a required field. | Validate the CONFIG JSON against the parameter table above. |
-| 7301 | `SECURITY_NOT_PERMITTED` — User does not have Share permission on one or more `viewIds`. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on all specified views. |
 
 ---
 
@@ -446,14 +446,14 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 8032 | `VIEW_NOT_SHARED` — The view is not currently shared with the specified user. | Share the view first via Share Views. |
-| 8150 | `VIEW_NOT_SHARED_TO_GROUP` — The view is not currently shared with the specified group. | Share the view to this group first via Share Views. |
-| 8074 | `READ_PERM_SHOULD_BE_TRUE_FOR_SHARING` — `permissions.read` was explicitly set to `false`. | Keep `permissions.read` as `true`. |
-| 7545 | `SHARE_AND_WRITE_PERMISSIONS_NOT_ALLOWED_FOR_RO_USERS` — A Read-Only user was granted `share` together with a write permission. | Do not combine `share: true` with write permissions for Read-Only users. |
-| 7542 | `FILTER_CRITERIA_NOT_PERMITTED_FOR_SHARED_USER` — `criteria` update is not permitted for this share type. | Remove or adjust the `criteria` field. |
-| 8241 | `SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION` (HTTP 409) — `<view-id>` carries a restricted DATA_WARNING system tag. | Review the warning, then resend with `"validateSystemTags": false` to confirm. |
-| 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is malformed or missing a required field. | Validate the CONFIG JSON against the parameter table above. |
 | 7301 | `SECURITY_NOT_PERMITTED` — User does not have Share permission on `<view-id>`. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on the view. |
+| 7542 | `FILTER_CRITERIA_NOT_PERMITTED_FOR_SHARED_USER` — `criteria` update is not permitted for this share type. | Remove or adjust the `criteria` field. |
+| 7545 | `SHARE_AND_WRITE_PERMISSIONS_NOT_ALLOWED_FOR_RO_USERS` — A Read-Only user was granted `share` together with a write permission. | Do not combine `share: true` with write permissions for Read-Only users. |
+| 8032 | `VIEW_NOT_SHARED` — The view is not currently shared with the specified user. | Share the view first via Share Views. |
+| 8074 | `READ_PERM_SHOULD_BE_TRUE_FOR_SHARING` — `permissions.read` was explicitly set to `false`. | Keep `permissions.read` as `true`. |
+| 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is malformed or missing a required field. | Validate the CONFIG JSON against the parameter table above. |
+| 8150 | `VIEW_NOT_SHARED_TO_GROUP` — The view is not currently shared with the specified group. | Share the view to this group first via Share Views. |
+| 8241 | `SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION` (HTTP 409) — `<view-id>` carries a restricted DATA_WARNING system tag. | Review the warning, then resend with `"validateSystemTags": false` to confirm. |
 
 ---
 
@@ -712,14 +712,14 @@ ZANALYTICS-ORGID: 700000654321
 | **View-scoped, batched** | Unlike Get Workspace Shared Details, this API is scoped to the specific `viewIds` requested (not the whole workspace), and can fetch several views' share details in one call. |
 | **Includes derived text** | `permissionString` is a ready-to-display summary — do not attempt to reconstruct it manually from the `permissions` booleans; use it directly if you only need to show the recipient a summary. |
 | **`sharedToZuId` vs `sharedToGroupId`** | Only one of the two is present per `shareInfo` entry, depending on `isGroupShare`. |
-| **Dependency** | [Get Views](VIEW_OPERATIONS_API_DOC_INFO.md) → `viewIds` → Get Shared Details. |
+| **Dependency** | [Get Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md) → `viewIds` → Get Shared Details. |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 8080 | `INVALID_JSON_CONFIGURATION` — `viewIds` missing or malformed. | Supply a valid, non-empty `viewIds` JSONArray. |
 | 7301 | `SECURITY_NOT_PERMITTED` — User does not have Share permission on one or more requested `viewIds`. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin, or has Share permission on all requested views. |
+| 8080 | `INVALID_JSON_CONFIGURATION` — `viewIds` missing or malformed. | Supply a valid, non-empty `viewIds` JSONArray. |
 
 ---
 
@@ -819,13 +819,13 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 8031 | `REMOVESHARE_API_PARAMS` — Neither `viewIds` nor `removeAllViews: true` was supplied. | Supply either a `viewIds` array or set `removeAllViews: true`. |
-| 8105 | `REMOVESHARE_ALL_VIEWS_PRESENT` — Both `viewIds` and `removeAllViews: true` were supplied together. | Supply only one of the two — `viewIds` for a targeted removal, or `removeAllViews: true` alone for a bulk removal. |
-| 8032 | `VIEW_NOT_SHARED` — The specified view is not currently shared with this user. | Verify the share exists via Get Shared Details before removing. |
-| 8150 | `VIEW_NOT_SHARED_TO_GROUP` — The specified view is not currently shared with this group. | Verify the share exists via Get Shared Details before removing. |
-| 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is malformed or missing a required field. | Validate the CONFIG JSON against the parameter table above. |
-| 7533 | `CANNOT_SHARE_OBJECT_TO_GROUP` — The view's type does not support group-based sharing/unsharing. | Only applicable to user-based (`emailIds`) removal for this view type. |
 | 7301 | `SECURITY_NOT_PERMITTED` — User lacks Share permission on the targeted view(s), or attempted `removeAllViews: true` without Workspace Admin privileges. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin (required for `removeAllViews`), or has Share permission on the specified views. |
+| 7533 | `CANNOT_SHARE_OBJECT_TO_GROUP` — The view's type does not support group-based sharing/unsharing. | Only applicable to user-based (`emailIds`) removal for this view type. |
+| 8031 | `REMOVESHARE_API_PARAMS` — Neither `viewIds` nor `removeAllViews: true` was supplied. | Supply either a `viewIds` array or set `removeAllViews: true`. |
+| 8032 | `VIEW_NOT_SHARED` — The specified view is not currently shared with this user. | Verify the share exists via Get Shared Details before removing. |
+| 8080 | `INVALID_JSON_CONFIGURATION` — CONFIG is malformed or missing a required field. | Validate the CONFIG JSON against the parameter table above. |
+| 8105 | `REMOVESHARE_ALL_VIEWS_PRESENT` — Both `viewIds` and `removeAllViews: true` were supplied together. | Supply only one of the two — `viewIds` for a targeted removal, or `removeAllViews: true` alone for a bulk removal. |
+| 8150 | `VIEW_NOT_SHARED_TO_GROUP` — The specified view is not currently shared with this group. | Verify the share exists via Get Shared Details before removing. |
 
 ---
 
@@ -841,7 +841,7 @@ Returns the effective permission set the **calling user** currently has on a spe
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | Any authenticated user with at least Read-Only access to `<view-id>` (i.e., any user the view has been shared with, or the view's owner/Workspace Admin). |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 > **Deprecated alias:** `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/share/mypermissions` is the original path for this same API and continues to function, but is deprecated in favor of `/share/userpermissions`. New integrations should use `/share/userpermissions`.
 
@@ -936,7 +936,7 @@ ZANALYTICS-ORGID: 700000123456
 | **Self-service only** | This API always reports the *calling* user's own permissions — there is no parameter to check another user's permissions; use [Get Shared Details](#4-get-shared-details) (as the Workspace Admin) to inspect other users' shares. |
 | **Two equivalent paths** | `/share/mypermissions` (deprecated) and `/share/userpermissions` (current) return an identical response — both map to the same underlying `getUserPermissions` implementation. |
 | **Owner/Admin sees full access** | For a view's owner or the Workspace Admin, all applicable permission booleans are returned as `true` even though no explicit share record exists for them. |
-| **Dependency** | [Get Views](VIEW_OPERATIONS_API_DOC_INFO.md) → `viewId` → Get My Permissions. |
+| **Dependency** | [Get Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md) → `viewId` → Get My Permissions. |
 
 ### Error Codes
 
@@ -984,7 +984,7 @@ ZANALYTICS-ORGID: 700000123456
 - **`read` is non-negotiable.** Every successful share grants at least read access — there is no supported "write-only" share configuration (error 8074 enforces this).
 - **Single-view-only restrictions.** `columns`, `vudColumns`, `drillColumns`, and `criteria` are only usable when `viewIds` contains exactly one view — plan multi-view shares to use only the common, unrestricted permission set.
 - **Re-sharing fails, does not upsert.** Calling this API again for a view/user (or view/group) pair that is already shared returns an error (7321/7322) instead of updating the share — always route modifications through [Update Shared Details](#3-update-shared-details).
-- **Dependency chain:** [Get Views](VIEW_OPERATIONS_API_DOC_INFO.md) + [Get Group List](WORKSPACE_GROUPS_API_DOC_INFO.md#1-get-group-list) → Share Views → `<view-id>` share created.
+- **Dependency chain:** [Get Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md) + [Get Group List](../02%20%C2%B7%20User%20%26%20Groups/WORKSPACE_GROUPS.md#1-get-group-list) → Share Views → `<view-id>` share created.
 
 ### Update Shared Details
 
@@ -996,7 +996,7 @@ ZANALYTICS-ORGID: 700000123456
 
 - **The richest read API in this family.** Returns `permissionString` (ready for display), `criteria`, `isInvalidCriteria`, and column restrictions in addition to the raw `permissions` booleans — prefer this over Get Workspace Shared Details when you already know which `viewIds` you need details for.
 - **Batchable.** Accepts multiple `viewIds` in one call, returning one `sharedDetails` entry per view — avoid looping per-view calls when auditing several views at once.
-- **Dependency chain:** [Get Views](VIEW_OPERATIONS_API_DOC_INFO.md) → `viewIds` → Get Shared Details.
+- **Dependency chain:** [Get Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md) → `viewIds` → Get Shared Details.
 
 ### Remove Shared Views
 
@@ -1008,7 +1008,7 @@ ZANALYTICS-ORGID: 700000123456
 
 - **Self-only, dual path.** Always reflects the caller's own access; `/share/mypermissions` is a deprecated alias retained for backward compatibility alongside the current `/share/userpermissions` path.
 - **No admin override parameter.** There is intentionally no way to query another user's permissions through this endpoint — Workspace Admins must use [Get Shared Details](#4-get-shared-details) instead.
-- **Dependency chain:** [Get Views](VIEW_OPERATIONS_API_DOC_INFO.md) → `viewId` → Get My Permissions.
+- **Dependency chain:** [Get Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md) → `viewId` → Get My Permissions.
 
 ---
 

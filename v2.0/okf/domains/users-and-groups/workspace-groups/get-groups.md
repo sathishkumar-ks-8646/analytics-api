@@ -44,7 +44,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -56,13 +56,7 @@ Returns all groups defined in the specified workspace, along with their descript
 
 When the Account Admin is a Client Portal Admin, each group entry includes a `domainName` field indicating which portal domain the group was created for. Custom domain users (users visiting via a portal URL) see only the groups that belong to their portal domain.
 
-> This API has no CONFIG parameter.
-
-From the OpenAPI specification:
-
-Returns all groups defined in the specified workspace, along with their descriptions and current member lists.
-
-Groups are named collections of users within a workspace. A view shared with a group is accessible to every current and future member of that group, which makes groups the way to manage view-level sharing permissions in bulk.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

@@ -5523,7 +5523,7 @@
       "response_content_types": [
         "application/json"
       ],
-      "permission_required": "The authenticated user must be any active Zoho Analytics user.",
+      "permission_required": "Any active Zoho Analytics user.",
       "error_codes": [
         7301,
         8535
@@ -5591,7 +5591,7 @@
       "response_content_types": [
         "application/json"
       ],
-      "permission_required": "The authenticated user must be any active Zoho Analytics user.",
+      "permission_required": "Any active Zoho Analytics user.",
       "error_codes": [
         7301,
         8535

@@ -230,7 +230,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Aspect | Detail |
 |--------|--------|
 | **Success response has no body** | Like Add Lookup, Remove Lookup returns a bare HTTP `204 No Content` on success — no `status`/`summary` JSON to parse. Check only the HTTP status code. |
-| **Always check dependents before removing** | Use the [Get Column Dependents](COLUMNS_API_DOC_INFO.md#6-get-column-dependents) API on `<column-id>` to discover which views join on this lookup relationship. This helps decide between `deleteDependentViews: false` (safe check) and `deleteDependentViews: true` (cascade). |
+| **Always check dependents before removing** | Use the [Get Column Dependents](COLUMNS.md#6-get-column-dependents) API on `<column-id>` to discover which views join on this lookup relationship. This helps decide between `deleteDependentViews: false` (safe check) and `deleteDependentViews: true` (cascade). |
 | **`deleteDependentViews: true` is permanent** | All dependent multi-table reports, charts, pivot tables, and query tables that span the child and reference tables via this lookup are permanently deleted. This cannot be undone. |
 | **Not idempotent — no lookup means error** | If no lookup is defined on the child column at the time of the call, error 7378 is returned. This API does not silently succeed when there is nothing to remove. |
 | **All lookup relationships on the column are removed** | A column can have at most one lookup, but if the internal model has recorded multiple relation IDs for the same column (e.g., due to migrations), all of them are removed in a single atomic transaction. |

@@ -44,7 +44,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -52,7 +52,7 @@ status: stable
 
 **GET `/restapi/v2/workspaces/{workspace-id}/trash`** - Get Trash Views (Trash Management / Views Management).
 
-> This API has no `CONFIG` parameter. All inputs are provided via URL path parameters.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 From the OpenAPI specification:
 
@@ -295,6 +295,19 @@ When a trashed view is a Live Connect report and the current plan does not suppo
 ## SDK Examples
 
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Get Trash Views](../../../sdk-examples/views-management/trash-management/get-trash-views.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
+
+# Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **The discovery call for the other two APIs** | Both [Restore Trash View](restore-trash-view.md) and [Delete Trash View](delete-trash-view.md) need a `<view-id>` that this API supplies. |
+| **Empty array, not an error** | An empty trash returns HTTP 200 with `"views": []`. |
+| **Unfiltered and unpaged** | The response covers the whole workspace trash; there is no search, sort or paging parameter. Filter client-side. |
+| **`deletedTime` is milliseconds, as a string** | Divide by 1000 for Unix epoch seconds. |
+| **All IDs are strings** | `viewId` and `tabParentId` are JSON strings even though the values are numeric. Parse as strings or longs to avoid precision loss. |
+| **Conditional keys** | `isDisabled` appears only when `true`; `tabParentId` only for `DashTab` views. Test for presence rather than assuming them. |
+| **`isDisabled` blocks restore** | A view flagged `isDisabled` cannot be restored under the current plan — typically a Live Connect report on a plan that no longer supports it. |
+| **Dependency chain** | Workspace list → `<workspace-id>` → Get Trash Views → `<view-id>` for restore or delete. |
 
 # Error Codes
 

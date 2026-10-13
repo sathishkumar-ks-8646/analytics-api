@@ -157,6 +157,15 @@ CONFIG={"tableDesign":{"TABLENAME":"Client Submissions","COLUMNS":[{"COLUMNNAME"
 }
 ```
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Table has been created successfully."` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.viewId` | String | ID of the newly created table, serialised as a **string**. Tables are views, so this ID is accepted wherever a `<view-id>` is expected — including the row, import and column APIs. |
+
 ### Notes & Behaviour
 
 | Aspect | Detail |
@@ -204,7 +213,7 @@ Returns the complete column schema of the specified table — including column n
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the view. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 

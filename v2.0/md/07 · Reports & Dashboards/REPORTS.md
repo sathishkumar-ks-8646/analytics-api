@@ -121,7 +121,7 @@ characters.
 | `title` | String | No | Max 100 characters; unique within the workspace | Report name. Required in practice — omitting it creates an unnamed view and most callers will hit **7016** or **8051**. |
 | `description` | String | No | Max 250 characters | Free-text description. |
 | `folderId` | Long | No | Must exist in the workspace | Folder to create the report in. Omitted → the workspace's default folder. |
-| `chartType` | String | Conditional | Letters, digits and spaces only; max 50 | Required in practice when `reportType` is `chart`. Matched case-insensitively. Omitted or unrecognisable-as-empty → the server picks `BEST`. Ignored for pivot and summary. See [Appendix A](#appendix-a--chart-types). |
+| `chartType` | String | Conditional | Letters, digits and spaces only; max 50 | Required in practice when `reportType` is `chart`. Matched case-insensitively. Omitted or unrecognisable-as-empty → the server picks `BEST`. Ignored for pivot and summary. See [Appendix A](#appendix-d--chart-types). |
 | `isAxisMerge` | Boolean | No | `true` / `false` | Merge multiple Y axes onto one shared axis. |
 | `mergeAxisInfo` | **JSONArray** | Conditional | Max 10 entries | Required when merging. Each entry is `{"axisIndex":[<int 0-100>, …], "labelName":"<max 250 chars>"}`. If this array is non-empty, `isAxisMerge` **must** be `true`. |
 | `filters` | JSONArray | No | Max 1000 entries | Static filter criteria baked into the report. See [`filters`](#filters). |
@@ -136,9 +136,9 @@ Each entry places one column on one shelf.
 
 | Key | Type | Mandatory | Constraints | Description |
 |-----|------|-----------|-------------|-------------|
-| `type` | String | **Yes** | See [Appendix B](#appendix-b--axis-types) | Which shelf the column goes on. **Case-sensitivity matters** — see the appendix. |
+| `type` | String | **Yes** | See [Appendix B](#appendix-e--axis-types) | Which shelf the column goes on. **Case-sensitivity matters** — see the appendix. |
 | `columnName` | String | **Yes** | Max 1000 | Column display name. Matched case-insensitively. |
-| `operation` | String | **Yes** | Letters only; see [Appendix C](#appendix-c--operations) | Aggregation or date-grouping applied to the column. |
+| `operation` | String | **Yes** | Letters only; see [Appendix C](#appendix-f--operations) | Aggregation or date-grouping applied to the column. |
 | `tableName` | String | No | Max 100 | Table the column belongs to. Required when the column comes from a joined (lookup) table; may be omitted for base-table columns. |
 | `columnId` | Long | No | — | Alternative to `columnName`. |
 | `tableId` | Long | No | — | Alternative to `tableName`. |
@@ -195,9 +195,9 @@ Static criteria applied every time the report renders. Viewers cannot change the
 | Key | Type | Mandatory | Description |
 |-----|------|-----------|-------------|
 | `columnName` | String | **Yes** | Column to filter on. |
-| `operation` | String | **Yes** | How the column is interpreted before the criteria is applied. See [Appendix D](#appendix-d--filter-operations-and-types). |
-| `filterType` | String | **Yes** | Shape of the criteria. See [Appendix D](#appendix-d--filter-operations-and-types). |
-| `values` | JSONArray | **Yes** | Criteria values, as strings. Format depends on `filterType` — see [Appendix E](#appendix-e--filter-value-formats). |
+| `operation` | String | **Yes** | How the column is interpreted before the criteria is applied. See [Appendix D](#appendix-g--filter-operations-and-types). |
+| `filterType` | String | **Yes** | Shape of the criteria. See [Appendix D](#appendix-g--filter-operations-and-types). |
+| `values` | JSONArray | **Yes** | Criteria values, as strings. Format depends on `filterType` — see [Appendix E](#appendix-h--filter-value-formats). |
 | `exclude` | Boolean | **Yes** | `true` excludes the listed values, `false` includes them. Must be a JSON boolean. |
 | `tableName` | String | No | Table owning the column; needed for joined-table columns. |
 | `columnId` / `tableId` | Long | No | ID-based alternatives to the name keys. |
@@ -222,7 +222,7 @@ Interactive filter widgets rendered alongside the report.
 | `columnName` | String | **Yes** | Column to expose. Matched case-insensitively. |
 | `operation` | String | Conditional | Mandatory for date and numeric columns; ignored for text columns, which are always `actual`. Dates: `actual`, `seasonal`, `relative`, `range`, `daterange`. Numerics: `sum`, `min`, `max`, `average`, `stddev`, `std`, `count`, `variance`, `dc`, `distinctcount`, `median`, `mode`, `measure`, `dimension`, `actual`, `aggregate`. |
 | `compType` | String | Conditional | Widget type: `singleSelect`, `multiSelect`, `slider`, `dateRange`. `slider` is measure-only; `singleSelect` / `multiSelect` are for dimensions and dates. A mismatch raises **8250**; a missing required `compType` raises **8253**. |
-| `filterType` | String | Conditional | Criteria shape. Required for measures and for date `actual` / `seasonal` operations. See [Appendix D](#appendix-d--filter-operations-and-types). |
+| `filterType` | String | Conditional | Criteria shape. Required for measures and for date `actual` / `seasonal` operations. See [Appendix D](#appendix-g--filter-operations-and-types). |
 | `isallval` | Boolean | No | Whether the filter defaults to "all values". See the resolution rule below. |
 | `values` | JSONArray | Conditional | Selectable / preselected values. Required when `isallval` is `false`. |
 | `defaultFilterValues` | JSONArray | No | Values preselected on load. Must be a subset of `values`. |
@@ -459,51 +459,73 @@ The `summary` string varies with `reportType`: `Create Chart View`, `Create Pivo
 }
 ```
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Create Chart View"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.viewId` | String | ID of the newly created report, serialised as a **string**. Reports are views, so this ID is accepted wherever a `<view-id>` is expected. |
+| | | `summary` varies with `reportType` — `"Create Chart View"`, and the pivot/summary equivalents. Treat it as display text, not a discriminator. |
+
+### Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **Returns 200 with `data.viewId`** | The new report is a view; its ID is accepted wherever a `<view-id>` is expected. |
+| **`summary` varies with `reportType`** | `"Create Chart View"` and the pivot/summary equivalents. It is display text, not a discriminator. |
+| **`title` is optional but effectively required** | Omitting it creates an unnamed view, and most callers then hit **7016** or **8051**. |
+| **`axisColumns` is the core of the request** | Axis `type` must be valid for the `reportType` — using one outside its family raises **8170**. See [Appendix E – Axis Types](#appendix-e--axis-types). |
+| **`sizeaxis` is lowercase-only** | `sizeAxis` is rejected with **8509**, unlike the other axis types which accept several spellings. |
+| **Keep the CONFIG you submitted** | The read endpoint is lossy, so your submitted CONFIG is the only complete record of the report. You will need it for any later edit — see [Round-tripping a report](#round-tripping-a-report). |
+| **Dependency chain** | Table `baseTableName` + its columns → Create Report → `data.viewId`. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
-| 8504 | `baseTableName` is absent, or the `CONFIG` parameter itself is missing. | Send `CONFIG` with `baseTableName`. |
-| 7138 | `baseTableName` does not resolve to a table in this workspace. | Use the exact table display name. |
+| Code | Reason | Solution |
+|------|--------|----------|
+| 7005 | A `null` element inside `axisColumns` or `filters`. | Ensure every array element is a JSON object. |
 | 7016 | `title` is empty or whitespace-only. | Supply a non-empty title. |
 | 7111 | A view with this `title` already exists in the workspace. | Choose a unique title. |
-| 8507 | `title` exceeds 100 characters, `description` exceeds 250, or an axis `displayName` exceeds 250. | Shorten the value. |
-| 8252 | `reportType` is absent or `null`. | Supply `chart`, `pivot` or `summary`. |
-| 8092 | `reportType` resolves to a view kind that cannot be saved standalone. | Use `chart`, `pivot` or `summary`. |
-| 8144 | `chartType` is not a recognised chart name. | See [Appendix A](#appendix-a--chart-types). |
-| 8147 | `settings` was supplied for a non-pivot report. | Remove `settings`, or change `reportType` to `pivot`. |
+| 7138 | `baseTableName` does not resolve to a table in this workspace. | Use the exact table display name. |
+| 7301 | The caller lacks Create Report permission on the workspace. | Grant the permission. |
 | 7362 | `folderId` does not exist in the workspace. | Supply a valid folder ID or omit the key. |
-| 8051 | A required field is missing — `title`, `reportType`, `axisColumns`, or a mandatory key inside an axis/filter object. | Add the missing field. |
-| 8050 | A value is invalid — unknown `columnName`, an operation incompatible with the column, a `null` `axisColumns`. | Check column names and operations. |
-| 8052 | More than 1000 entries in `axisColumns`, `filters` or `userFilters`. | Reduce the array size. |
-| 8170 | An axis `type` is not valid for the chosen `reportType`. | See [Appendix B](#appendix-b--axis-types). |
 | 7701 | A chart report has no X-axis or no Y-axis column. | Add at least one of each. |
 | 7703 | A `colorAxis` column is present alongside more than one Y-axis column. | Drop the colour axis, or reduce to one Y axis. |
 | 7727 | More than 15 Y-axis columns on a chart. | Reduce to 15 or fewer. |
+| 8008 | `behaviour` was supplied on a `daterange` or `relative` user filter. | Remove `behaviour`. |
 | 8021 | The pivot or summary structure is invalid — no `data` column in a pivot, too many `data` or `groupBy` columns, or a column in a position its type cannot occupy. On **Update**, also raised when `reportType` does not match the stored view's type. | Review the axis configuration. |
-| 8166 | The `operation` is incompatible with the column's data type. | See [Appendix C](#appendix-c--operations). |
-| 8167 | The `filterType` is not valid for the column type + `operation` combination. | See [Appendix D](#appendix-d--filter-operations-and-types). |
-| 8168 | A `values` entry does not match the expected format for the `filterType`. | See [Appendix E](#appendix-e--filter-value-formats). |
-| 8191 | An invalid date value was supplied to a date filter. | Use the documented date formats. |
+| 8050 | A value is invalid — unknown `columnName`, an operation incompatible with the column, a `null` `axisColumns`. | Check column names and operations. |
+| 8051 | A required field is missing — `title`, `reportType`, `axisColumns`, or a mandatory key inside an axis/filter object. | Add the missing field. |
+| 8052 | More than 1000 entries in `axisColumns`, `filters` or `userFilters`. | Reduce the array size. |
 | 8057 | The column named in `windowFunction.baseField` cannot be used as a base field here. | Choose a different reference column. |
 | 8059 | The `tableName` is not part of the workspace or is not joined to the base table. | Use a table reachable through the join graph. |
+| 8092 | `reportType` resolves to a view kind that cannot be saved standalone. | Use `chart`, `pivot` or `summary`. |
+| 8144 | `chartType` is not a recognised chart name. | See [Appendix A](#appendix-d--chart-types). |
+| 8147 | `settings` was supplied for a non-pivot report. | Remove `settings`, or change `reportType` to `pivot`. |
 | 8162 | `rangeSize` was supplied as a string, or on an operation that does not support ranges. | Send a JSON number, and only with `range` grouping. |
-| 8516 | `rangeSize` was supplied as an array. | Send a plain number. |
+| 8166 | The `operation` is incompatible with the column's data type. | See [Appendix C](#appendix-f--operations). |
+| 8167 | The `filterType` is not valid for the column type + `operation` combination. | See [Appendix D](#appendix-g--filter-operations-and-types). |
+| 8168 | A `values` entry does not match the expected format for the `filterType`. | See [Appendix E](#appendix-h--filter-value-formats). |
+| 8170 | An axis `type` is not valid for the chosen `reportType`. | See [Appendix B](#appendix-e--axis-types). |
+| 8191 | An invalid date value was supplied to a date filter. | Use the documented date formats. |
 | 8250 | `compType` is not applicable to the column category — e.g. `slider` on a dimension, `singleSelect` on a measure. | Match the widget to the column type. |
+| 8252 | `reportType` is absent or `null`. | Supply `chart`, `pivot` or `summary`. |
 | 8253 | A mandatory `userFilters` key is missing, typically `compType` or `filterType`. | Add the missing key. |
-| 8008 | `behaviour` was supplied on a `daterange` or `relative` user filter. | Remove `behaviour`. |
 | 8254 | A `geoRole` value is wrong for the column type. | `latitude`/`longitude` for numeric columns; place roles for text columns. |
 | 8255 | `geoRole` was supplied on a column that cannot be geocoded. | Remove `geoRole`, or use a geocodable column. |
 | 8256 | More than one geo operation on the same axis. | Keep one geo column per axis. |
 | 8257 | A numeric geo column coexists with a categorical geo column. | Use one or the other. |
 | 8258 | A categorical geo column was placed on an axis other than X. | Move it to `xAxis`. |
+| 8504 | `baseTableName` is absent, or the `CONFIG` parameter itself is missing. | Send `CONFIG` with `baseTableName`. |
+| 8507 | `title` exceeds 100 characters, `description` exceeds 250, or an axis `displayName` exceeds 250. | Shorten the value. |
 | 8509 | An enumerated or pattern-constrained value does not match — `reportType: "Chart"` (must be lowercase), `type: "sizeAxis"` (must be `sizeaxis`), `sort: "descending"`, a wildcard `expression` without parentheses. | Use the exact accepted values. |
+| 8516 | `rangeSize` was supplied as an array. | Send a plain number. |
 | 8517 | A field has the wrong JSON data type — `exclude: "yes"`, `isAxisMerge: "maybe"`, `compType: 123`. | Use real JSON booleans and strings. |
 | 8534 | `CONFIG` is malformed, or a key has the wrong structural type — `axisColumns` as `{}`, `mergeAxisInfo` as an object, `values` as a bare string. | Arrays must be `[]`, objects `{}`. |
-| 8542 | An unknown key is present in `CONFIG`, or a `windowFunction` is mis-configured. | Remove the key; check `windowFunction.type` against [the list](#window-functions). |
-| 7005 | A `null` element inside `axisColumns` or `filters`. | Ensure every array element is a JSON object. |
-| 7301 | The caller lacks Create Report permission on the workspace. | Grant the permission. |
 | 8535 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.create`. |
+| 8542 | An unknown key is present in `CONFIG`, or a `windowFunction` is mis-configured. | Remove the key; check `windowFunction.type` against [the list](#window-functions). |
 
 ---
 
@@ -520,7 +542,25 @@ Returns the stored definition of a chart, pivot or summary view.
 | **Permission Required** | **Design Modify** on the report. A read-only shared user cannot call this endpoint. |
 | **Custom domain** | Not permitted. |
 
-> This API has no CONFIG parameter. All input is in the URL path.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Get analysis view metadata"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.reportConfig` | JSONObject | The report's stored definition, shaped like the create CONFIG but **not directly reusable** — see [Round-tripping a report](#round-tripping-a-report). |
+| `reportConfig.title` | String | Report name. |
+| `reportConfig.description` | String | Free-text description; empty string when none was set. |
+| `reportConfig.reportType` | String | `chart`, `pivot` or `summary`. |
+| `reportConfig.chartType` | String | Chart family (e.g. `line`). Present for `chart` reports. |
+| `reportConfig.baseTableName` | String | Display name of the table the report is built on. |
+| `reportConfig.isAxisMerge` | Boolean | Whether multiple Y axes are merged onto one scale. |
+| `reportConfig.axisColumns` | JSONArray | The drop-field configuration. Same entry shape as the request — see [`axisColumns`](#axiscolumns). |
+| `reportConfig.filters` | JSONArray | Static filters. See [`filters`](#filters). Present only when the report has them. |
+| `reportConfig.userFilters` | JSONArray | User filters. See [`userFilters`](#userfilters). Present only when the report has them. |
 
 ### Behaviour
 
@@ -600,13 +640,13 @@ ZANALYTICS-ORGID: 700000123456
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7104 / 7106 | The report does not exist or has been deleted. | Verify `<report-id>`. |
+| 7301 | The caller lacks Design Modify permission on the report. | Grant edit access. |
 | 7319 | The report belongs to a different workspace. | Make the two path IDs consistent. |
 | 8021 | The target is not a chart, pivot or summary view. | Use a report ID, not a table or dashboard. |
-| 7301 | The caller lacks Design Modify permission on the report. | Grant edit access. |
 | 8535 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.read`. |
 
 ---
@@ -721,24 +761,80 @@ CONFIG={
 HTTP/1.1 204 No Content
 ```
 
+### Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **The report is rebuilt from scratch** | There is no field-level patching. Every omitted section is dropped, not preserved — see [Update is destructive](#update-is-destructive). |
+| **Omission deletes** | Omitting `filters` removes all static filters; omitting `userFilters` removes all user filters; omitting `description` **clears** it (an absent key stores `null`); omitting `chartType` falls back to the server's `BEST` selection. |
+| **`axisColumns` is mandatory** | Omitting it fails the call outright. |
+| **Never feed the read response back in** | [Read Report Metadata](#2-read-report-metadata) is lossy. The call succeeds and the report quietly loses most of its configuration — this is the most common and most damaging mistake against this API. |
+| **User filters collapse to three keys on read** | Writing a read response back rebuilds every user filter with default behaviour: sliders become select lists, date-range pickers become single selects, restricted value lists become "all values", and pre-selections and exclusions are dropped. |
+| **A geo column cannot be round-tripped** | `operation: "geo"` is returned but `geoRole` is not, and `geo` without `geoRole` is invalid — the update fails outright. |
+| **Several read values are not valid on write** | A date `userFilters[].operation` comes back `filterType`-shaped and raises **8166**; `reportType` may come back `widget` and `axisColumns[].type` may come back `group`, both rejected with **8509**. See [Values that change across a round trip](#values-that-change-across-a-round-trip). |
+| **Retain your create-time CONFIG** | For anything beyond a trivial edit, modify the CONFIG you submitted rather than the read response. |
+| **Dependency chain** | Your retained create CONFIG (preferred) or [Read Report Metadata](#2-read-report-metadata) → Update Report. |
+
 ### Error Codes
 
 Update runs the same validation as Create, so every code in the
 [Create Report error table](#error-codes) can be returned. Codes specific to Update or with different
 triggers:
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7104 / 7106 | The report does not exist, has been deleted, or the caller cannot edit it. | Verify `<report-id>` and the caller's permission. |
+| 7301 | The caller lacks Design Modify permission on the report. | Grant edit access. |
 | 8021 | `reportType` does not match the stored view's type, or the target is not an analysis view at all. | Send the report's actual type. |
 | 8145 | `folderId` was supplied. | Remove `folderId` — reports cannot be moved through this endpoint. |
-| 8542 | `baseTableName`, `drillActionConfig`, `modifiedPaths` or any other key outside the Update schema is present. | Remove the key. |
-| 7301 | The caller lacks Design Modify permission on the report. | Grant edit access. |
 | 8535 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.update`. |
+| 8542 | `baseTableName`, `drillActionConfig`, `modifiedPaths` or any other key outside the Update schema is present. | Remove the key. |
 
 ---
 
-## Appendix A – Chart Types
+## Appendix A – Common HTTP Headers
+
+| Header | Value | Required | Notes |
+|--------|-------|----------|-------|
+| `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. |
+| `ZANALYTICS-ORGID` | Organization ID | **Mandatory** | Organization ID that owns the workspace. |
+| `Content-Type` | `application/x-www-form-urlencoded` | POST / PUT | `CONFIG` is a form-encoded body parameter on Create and Update. Read takes no parameters. |
+
+---
+
+## Appendix B – OAuth Scope Summary
+
+| API | Method | Scope |
+|-----|--------|-------|
+| Create Report | POST | `ZohoAnalytics.modeling.create` |
+| Read Report Metadata | GET | `ZohoAnalytics.modeling.read` |
+| Update Report | PUT | `ZohoAnalytics.modeling.update` |
+
+---
+
+## Appendix C – Operational Notes and Failure Cases
+
+| Scenario | Behaviour |
+|----------|-----------|
+| `reportType: "Chart"` (capitalised) | **8509**. The pattern accepts lowercase only. |
+| `type: "sizeAxis"` | **8509**. Only the all-lowercase `sizeaxis` is accepted, unlike the other axis names which accept camel case. |
+| Wildcard `expression: "1 AND 2"` | **8509**. The expression must be parenthesised: `"(1 AND 2)"`. |
+| `mergeAxisInfo` sent as an object | **8534**. It is an array of merge-group objects. |
+| `mergeAxisInfo` non-empty but `isAxisMerge` absent or `false` | Rejected — `isAxisMerge` must be `true` whenever merge groups are present. |
+| `settings` on a chart or summary | **8147**. Settings are pivot-only. |
+| `avg` as a pivot `data` operation | **8166**. Use `average`; the `avg` alias exists only for charts. |
+| `actual` on a numeric column in a pivot `row` | **8166**. Pivot row/column positions accept only `dimension` and `range` for numeric columns. |
+| Column name differs only by case from the stored name | Resolves correctly — column lookup is case-insensitive. |
+| `title` sent on Update | Silently ignored. Use a rename API instead. |
+| `description` omitted on Update | The existing description is cleared. |
+| `folderId` sent on Update | **8145**, even when it matches the report's current folder. |
+| Read metadata, then PUT it back unchanged | The report is rebuilt, but all user-filter configuration, column formatting, sorting and window functions are lost. Do not use the metadata response as an update payload. |
+| Report created on a table the caller cannot read | **7301** during column validation. |
+| More than 1000 entries in any of the three arrays | **8052**. |
+
+---
+
+## Appendix D – Chart Types
 
 `chartType` is matched case-insensitively. Only letters, digits and spaces are allowed — no hyphens or
 underscores.
@@ -761,7 +857,7 @@ than raising an error.
 
 ---
 
-## Appendix B – Axis Types
+## Appendix E – Axis Types
 
 The `type` value in an `axisColumns` entry must pass a pattern check *before* it is matched against the
 report type. The pattern accepts the exact spellings below and no others.
@@ -786,7 +882,7 @@ Using an axis type outside its report family raises **8170**.
 
 ---
 
-## Appendix C – Operations
+## Appendix F – Operations
 
 The valid `operation` for an `axisColumns` entry depends on the column's data type **and** on where the
 column sits.
@@ -833,7 +929,7 @@ An operation that is not in the map for the column's data type raises **8166**.
 
 ---
 
-## Appendix D – Filter Operations and Types
+## Appendix G – Filter Operations and Types
 
 ### Static filters (`filters`)
 
@@ -864,7 +960,7 @@ with `daterange`.
 
 ---
 
-## Appendix E – Filter Value Formats
+## Appendix H – Filter Value Formats
 
 | `filterType` | Example `values` |
 |---|---|
@@ -890,45 +986,3 @@ with `daterange`.
 | `wildcard` | `values` is unused; the criteria live in the `wildcard` object |
 
 A value that does not match the expected shape raises **8168** (or **8191** for malformed dates).
-
----
-
-## Appendix F – Common HTTP Headers
-
-| Header | Value | Required | Notes |
-|--------|-------|----------|-------|
-| `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. |
-| `ZANALYTICS-ORGID` | Organization ID | **Mandatory** | Organization ID that owns the workspace. |
-| `Content-Type` | `application/x-www-form-urlencoded` | POST / PUT | `CONFIG` is a form-encoded body parameter on Create and Update. Read takes no parameters. |
-
----
-
-## Appendix G – OAuth Scope Summary
-
-| API | Method | Scope |
-|-----|--------|-------|
-| Create Report | POST | `ZohoAnalytics.modeling.create` |
-| Read Report Metadata | GET | `ZohoAnalytics.modeling.read` |
-| Update Report | PUT | `ZohoAnalytics.modeling.update` |
-
----
-
-## Appendix H – Operational Notes and Failure Cases
-
-| Scenario | Behaviour |
-|----------|-----------|
-| `reportType: "Chart"` (capitalised) | **8509**. The pattern accepts lowercase only. |
-| `type: "sizeAxis"` | **8509**. Only the all-lowercase `sizeaxis` is accepted, unlike the other axis names which accept camel case. |
-| Wildcard `expression: "1 AND 2"` | **8509**. The expression must be parenthesised: `"(1 AND 2)"`. |
-| `mergeAxisInfo` sent as an object | **8534**. It is an array of merge-group objects. |
-| `mergeAxisInfo` non-empty but `isAxisMerge` absent or `false` | Rejected — `isAxisMerge` must be `true` whenever merge groups are present. |
-| `settings` on a chart or summary | **8147**. Settings are pivot-only. |
-| `avg` as a pivot `data` operation | **8166**. Use `average`; the `avg` alias exists only for charts. |
-| `actual` on a numeric column in a pivot `row` | **8166**. Pivot row/column positions accept only `dimension` and `range` for numeric columns. |
-| Column name differs only by case from the stored name | Resolves correctly — column lookup is case-insensitive. |
-| `title` sent on Update | Silently ignored. Use a rename API instead. |
-| `description` omitted on Update | The existing description is cleared. |
-| `folderId` sent on Update | **8145**, even when it matches the report's current folder. |
-| Read metadata, then PUT it back unchanged | The report is rebuilt, but all user-filter configuration, column formatting, sorting and window functions are lost. Do not use the metadata response as an update payload. |
-| Report created on a table the caller cannot read | **7301** during column validation. |
-| More than 1000 entries in any of the three arrays | **8052**. |

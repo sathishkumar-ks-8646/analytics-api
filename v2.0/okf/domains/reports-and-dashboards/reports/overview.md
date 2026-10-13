@@ -30,10 +30,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-13T08:58:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -134,6 +134,28 @@ it is mandatory on Update and must match the stored view type.
 > **Axis-merged reports cannot be read at all.** When `isAxisMerge` is `true` the metadata call currently
 > fails with an internal error while assembling `mergeAxisInfo`. Do not build a read-modify-write flow
 > that depends on reading a merged-axis report.
+
+---
+
+# Operational Notes and Failure Cases
+
+| Scenario | Behaviour |
+|----------|-----------|
+| `reportType: "Chart"` (capitalised) | **8509**. The pattern accepts lowercase only. |
+| `type: "sizeAxis"` | **8509**. Only the all-lowercase `sizeaxis` is accepted, unlike the other axis names which accept camel case. |
+| Wildcard `expression: "1 AND 2"` | **8509**. The expression must be parenthesised: `"(1 AND 2)"`. |
+| `mergeAxisInfo` sent as an object | **8534**. It is an array of merge-group objects. |
+| `mergeAxisInfo` non-empty but `isAxisMerge` absent or `false` | Rejected — `isAxisMerge` must be `true` whenever merge groups are present. |
+| `settings` on a chart or summary | **8147**. Settings are pivot-only. |
+| `avg` as a pivot `data` operation | **8166**. Use `average`; the `avg` alias exists only for charts. |
+| `actual` on a numeric column in a pivot `row` | **8166**. Pivot row/column positions accept only `dimension` and `range` for numeric columns. |
+| Column name differs only by case from the stored name | Resolves correctly — column lookup is case-insensitive. |
+| `title` sent on Update | Silently ignored. Use a rename API instead. |
+| `description` omitted on Update | The existing description is cleared. |
+| `folderId` sent on Update | **8145**, even when it matches the report's current folder. |
+| Read metadata, then PUT it back unchanged | The report is rebuilt, but all user-filter configuration, column formatting, sorting and window functions are lost. Do not use the metadata response as an update payload. |
+| Report created on a table the caller cannot read | **7301** during column validation. |
+| More than 1000 entries in any of the three arrays | **8052**. |
 
 ---
 
@@ -289,28 +311,6 @@ with `daterange`.
 | `wildcard` | `values` is unused; the criteria live in the `wildcard` object |
 
 A value that does not match the expected shape raises **8168** (or **8191** for malformed dates).
-
----
-
-# Operational Notes and Failure Cases
-
-| Scenario | Behaviour |
-|----------|-----------|
-| `reportType: "Chart"` (capitalised) | **8509**. The pattern accepts lowercase only. |
-| `type: "sizeAxis"` | **8509**. Only the all-lowercase `sizeaxis` is accepted, unlike the other axis names which accept camel case. |
-| Wildcard `expression: "1 AND 2"` | **8509**. The expression must be parenthesised: `"(1 AND 2)"`. |
-| `mergeAxisInfo` sent as an object | **8534**. It is an array of merge-group objects. |
-| `mergeAxisInfo` non-empty but `isAxisMerge` absent or `false` | Rejected — `isAxisMerge` must be `true` whenever merge groups are present. |
-| `settings` on a chart or summary | **8147**. Settings are pivot-only. |
-| `avg` as a pivot `data` operation | **8166**. Use `average`; the `avg` alias exists only for charts. |
-| `actual` on a numeric column in a pivot `row` | **8166**. Pivot row/column positions accept only `dimension` and `range` for numeric columns. |
-| Column name differs only by case from the stored name | Resolves correctly — column lookup is case-insensitive. |
-| `title` sent on Update | Silently ignored. Use a rename API instead. |
-| `description` omitted on Update | The existing description is cleared. |
-| `folderId` sent on Update | **8145**, even when it matches the report's current folder. |
-| Read metadata, then PUT it back unchanged | The report is rebuilt, but all user-filter configuration, column formatting, sorting and window functions are lost. Do not use the metadata response as an update payload. |
-| Report created on a table the caller cannot read | **7301** during column validation. |
-| More than 1000 entries in any of the three arrays | **8052**. |
 
 # Error Codes Used in This Group
 

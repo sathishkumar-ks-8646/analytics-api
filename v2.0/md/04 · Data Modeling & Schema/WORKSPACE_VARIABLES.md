@@ -193,6 +193,7 @@ CONFIG={"variableName":"All Regions","variableDataType":1,"variableType":3}
 
 | Code | Reason | Solution |
 |------|--------|----------|
+| 7301 | User does not have permission. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin. |
 | 70323 | `DUPLICATE_USER_VARIABLE` — A variable with this name already exists in the workspace. | Choose a different `variableName`, or edit the existing variable instead. |
 | 70324 | `BLANK_VARIABLE_NAME` — `variableName` is empty. | Provide a non-empty variable name. |
 | 70325 | `INVALID_VAR_NAME` — The name uses a reserved pattern (`system.` prefix, `${` prefix, or `}` suffix). | Choose a name that doesn't collide with system-variable syntax. |
@@ -211,7 +212,6 @@ CONFIG={"variableName":"All Regions","variableDataType":1,"variableType":3}
 | 70353 | `VARIABLE_RANGE_INCR_LESSTHAN_RANGESIZE` — `stepSize` is larger than the range span. | Reduce `stepSize` so it fits within `maxValue - minValue`. |
 | 70354 | `VARIABLE_RANGE_INCR_ZERO_ERR` — `stepSize` is zero. | Provide a non-zero `stepSize`. |
 | 70355 | `VARIABLE_RANGE_INCR_DIV_EQUALLY_ERR` — `stepSize` does not evenly divide the range span. | Choose a `stepSize` that evenly divides `maxValue - minValue`. |
-| 7301 | User does not have permission. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin. |
 
 ---
 
@@ -294,6 +294,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 | Code | Reason | Solution |
 |------|--------|----------|
+| 7301 | User does not have permission. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin. |
 | 70323 | `DUPLICATE_USER_VARIABLE` — The new `variableName` collides with a different existing variable. | Choose a name not already used by another variable in the workspace. |
 | 70324 | `BLANK_VARIABLE_NAME` — `variableName` is empty. | Provide a non-empty variable name. |
 | 70325 | `INVALID_VAR_NAME` — The name uses a reserved pattern. | Choose a name that doesn't collide with system-variable syntax. |
@@ -301,7 +302,6 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | 70335 | `VARIABLE_RANGE_NOT_ALLOWED_ON_DT` — Range type combined with Text data type. | Use a numeric `variableDataType` when `variableType` is Range. |
 | 70336–70356 | Same value/range/list validation errors as Create Variable (see [Create Variable Error Codes](#error-codes)). | Review the relevant field per the error description. |
 | 70358 | `VARIABLE_CANNOT_BE_UPDATED` — The requested type/data type change conflicts with existing formula/report references to this variable. | Remove or update the dependent formulas/reports first, or keep the existing `variableType`/`variableDataType`. |
-| 7301 | User does not have permission. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin. |
 
 ---
 
@@ -317,7 +317,7 @@ Permanently deletes a workspace variable.
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -363,12 +363,12 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 | Code | Reason | Solution |
 |------|--------|----------|
+| 7301 | User does not have permission. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin. |
 | 70321 | `USERVARIABLE_VARIABLE_IN_USE` — The variable is currently referenced elsewhere and cannot be deleted. | Remove all references to this variable (in formulas, filters, SQL queries) before deleting. |
 | 70322 | `USERVARIABLE_VARIABLE_IN_USE` (multi-variable form) — One or more of the requested variables are in use. | Same as above; applies when multiple variables are targeted in a single internal delete operation. |
 | 70326 | `CANT_DELETE_VARIABLE` — The variable cannot be deleted by this user (ownership restriction). | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin. |
 | 70329 | `CANT_DELETE_VARIABLE` (`UNAUTHORIZED_VAR_ACTION`) — `<variable-id>` does not exist in this workspace. | Verify `<variable-id>` using Get Variables. |
 | 70357 | `USERVARIABLE_VARIABLE_CANNOT_BE_DELETED` — Deletion blocked due to unresolved references. | Identify and remove dependent formulas/reports, then retry. |
-| 7301 | User does not have permission. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin. |
 
 ---
 
@@ -384,7 +384,7 @@ Returns a summary list of all variables defined in the workspace.
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -495,7 +495,7 @@ Returns the full definition of a specific variable, including its values/range, 
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 
@@ -673,8 +673,8 @@ ZANALYTICS-ORGID: 700000123456
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 70320 | `USERVARIABLE_VARIABLE_NOT_FOUND` — `<variable-id>` does not exist in this workspace. | Verify `<variable-id>` using Get Variables. |
 | 7301 | User does not have permission. | Ensure the user is an Account Admin, Organization Admin, or Workspace Admin. |
+| 70320 | `USERVARIABLE_VARIABLE_NOT_FOUND` — `<variable-id>` does not exist in this workspace. | Verify `<variable-id>` using Get Variables. |
 
 ---
 
@@ -712,13 +712,13 @@ ZANALYTICS-ORGID: 700000123456
 
 ### Edit Variable
 
-- **This is a full-replace API, not a patch API** — the exact same behavior pattern as [Edit Query Table](QUERY_TABLES_API_DOC_INFO.md#3-edit-query-table), which also requires resending the complete definition. Always fetch the current definition via Get Variable Details first, modify only the fields you intend to change, then resend the full CONFIG.
+- **This is a full-replace API, not a patch API** — the exact same behavior pattern as [Edit Query Table](QUERY_TABLES.md#3-edit-query-table), which also requires resending the complete definition. Always fetch the current definition via Get Variable Details first, modify only the fields you intend to change, then resend the full CONFIG.
 - **Uniquely among the Edit APIs in this documentation suite, this one supports changing the fundamental "shape" of the object** (`variableType` and `variableDataType`) rather than just its name/values — but doing so is blocked (error 70358) if existing formulas/reports depend on the variable in a way incompatible with the new shape.
 - **Dependency chain:** Get Variable Details (fetch current state) → Edit Variable (resend full, modified CONFIG).
 
 ### Delete Variable
 
-- **No dedicated "Get Variable Dependents" API exists in this suite**, unlike columns and aggregate formulas which both have their own dependents-lookup endpoints. To determine what references a variable before deleting it, review formula expressions (via [Get Custom Formulas](FORMULA_COLUMNS_API_DOC_INFO.md#1-get-custom-formulas) / [Get Aggregate Formula](AGGREGATE_FORMULAS_API_DOC_INFO.md#1-get-aggregate-formula)) and report/query definitions for `${variableName}` references manually.
+- **No dedicated "Get Variable Dependents" API exists in this suite**, unlike columns and aggregate formulas which both have their own dependents-lookup endpoints. To determine what references a variable before deleting it, review formula expressions (via [Get Custom Formulas](FORMULA_COLUMNS.md#1-get-custom-formulas) / [Get Aggregate Formula](AGGREGATE_FORMULAS.md#1-get-aggregate-formula)) and report/query definitions for `${variableName}` references manually.
 - **No cascade-delete flag** — this is a deliberate difference from Delete Column/Delete Aggregate Formula's `deleteDependentViews` option; dependent objects must always be updated or removed manually first.
 - **Dependency chain:** Get Variables → (manually verify no formula/report references exist) → Delete Variable.
 

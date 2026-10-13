@@ -5626,7 +5626,7 @@
             "dashboards"
            ]
           },
-          "description": "Returns all dashboards accessible to the authenticated user - both those owned by the user and those shared with them - across every organization and workspace.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/dashboards` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | Not required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be any active Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/dashboards.html)"
+          "description": "Returns all dashboards accessible to the authenticated user - both those owned by the user and those shared with them - across every organization and workspace.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/dashboards` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | Not required |\n| **Success** | `200` |\n\n**Who can call it** — Any active Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/dashboards.html)"
          },
          "response": []
         },
@@ -5670,7 +5670,7 @@
             "shared"
            ]
           },
-          "description": "Returns all dashboards that have been shared with the authenticated user across every organization and workspace, as a single views array.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/dashboards/shared` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | Not required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be any active Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/shared-dashboard.html)"
+          "description": "Returns all dashboards that have been shared with the authenticated user across every organization and workspace, as a single views array.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/dashboards/shared` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | Not required |\n| **Success** | `200` |\n\n**Who can call it** — Any active Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/shared-dashboard.html)"
          },
          "response": []
         }

@@ -185,6 +185,15 @@ CONFIG={"columnName":"Feedback","dataType":"MULTI_LINE"}
 
 > In bulk mode, individual column IDs are not returned. Use Get Table Metadata to retrieve the newly added columns and their IDs.
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Column added successfully."` for this API. |
+| `data` | JSONObject | Response payload wrapper. Present in **single-column mode** only — bulk mode returns no `data` key. |
+| `data.columnId` | String | ID of the newly added column, serialised as a **string**. Returned only in single-column mode; **bulk mode returns no per-column IDs**, so read them back with Get Column Details if you need them. |
+
 ### Notes & Behaviour
 
 | Aspect | Detail |
@@ -569,7 +578,7 @@ Returns all views, custom formula columns, and aggregate formulas that depend on
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Sample Requests
 

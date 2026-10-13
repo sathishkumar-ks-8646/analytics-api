@@ -42,7 +42,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -52,7 +52,7 @@ status: stable
 
 Returns all workspaces that have been shared with the authenticated user from **other organisations**. Workspaces in the user's own organisation are not included — use Get All Workspace List to see both owned and shared together.
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 # Endpoint
 

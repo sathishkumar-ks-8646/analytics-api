@@ -315,12 +315,7 @@ Content-Type: application/x-www-form-urlencoded
 CONFIG={
   "displayName": "Regional Performance",
   "description": "Quarterly regional roll-up",
-  "layout": "{
-     \"1\": {\"type\":\"USERFILTERS\",\"width\":80,\"height\":3,\"left\":0,\"top\":0},
-     \"2\": {\"type\":\"TITLE\",\"width\":80,\"height\":3,\"left\":0,\"top\":3,\"content\":\"<b>Q3 Performance</b>\"},
-     \"3\": {\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":0,\"top\":6,\"viewName\":\"Sales by Region\"},
-     \"4\": {\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":40,\"top\":6,\"viewName\":\"Margin by Region\"}
-  }",
+  "layout": "{\"1\":{\"type\":\"USERFILTERS\",\"width\":80,\"height\":3,\"left\":0,\"top\":0},\"2\":{\"type\":\"TITLE\",\"width\":80,\"height\":3,\"left\":0,\"top\":3,\"content\":\"<b>Q3 Performance</b>\"},\"3\":{\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":0,\"top\":6,\"viewName\":\"Sales by Region\"},\"4\":{\"type\":\"VIEW\",\"width\":40,\"height\":20,\"left\":40,\"top\":6,\"viewName\":\"Margin by Region\"}}",
   "settings": {"allowDrillDown":"true","fitToWidth":"true","reportAsFilter":"true","layoutType":"web"},
   "themes": {
     "layoutType": 2,
@@ -374,40 +369,64 @@ CONFIG={
 }
 ```
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Create dashboard"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.dashboardId` | String | ID of the newly created dashboard, serialised as a **string**. A dashboard is a view, so this ID is accepted wherever a `<view-id>` is expected. |
+| `data.displayName` | String | The dashboard's stored name. Echoed back so a caller can confirm the name the server actually persisted. |
+
+### Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **`layout` is a JSON string, not an object** | It must be serialised before sending. See [`layout` is a JSON **string**, not a JSON object](#layout-is-a-json-string-not-a-json-object). |
+| **Returns 200 with a body** | Unlike [Update Dashboard](#3-update-dashboard), which returns 204, Create returns `data.dashboardId` and `data.displayName`. |
+| **Omitted sections get defaults, not nothing** | Omitting `themes` or `settings` writes the **default** theme and settings. Omission is not "leave unset". |
+| **Card IDs are renumbered** | Cards are stored as `"1"`…`"N"` in storage order, so the IDs you send are not necessarily the IDs you read back. Never key your own state off a card ID. |
+| **`allowExport` sub-keys default to false** | Any of the six sub-keys you omit is stored as `"false"`, and all six always come back on read. |
+| **`content` is filtered and rewritten** | Card content passes through the `antisamyfilter_reports` XSS filter on write and is rewritten on read so stored file IDs become URLs — the string you read is not necessarily the string you wrote. |
+| **`viewName` is matched case-insensitively** | It is returned in the view's stored casing, not yours. |
+| **The read endpoint is not a Create payload** | Before reusing a read response, apply [Transformations required](#transformations-required). |
+| **Dependency chain** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → report `viewName`s → Create Dashboard → `data.dashboardId`. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
-| 7487 | `displayName` or `layout` is absent, `null` or empty. | Supply both. Remember `layout` is a JSON-encoded **string**. |
+| Code | Reason | Solution |
+|------|--------|----------|
+| 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7111 | A dashboard with this `displayName` already exists in the workspace. | Choose a different name. |
-| 7507 | `displayName` exceeds 100 characters, or `description` exceeds 250. | Shorten the value. |
-| 7510 | `layout` is not parseable JSON, or a `themes` sub-object is `null`. | Validate the JSON you embed in the `layout` string; never send `null` for `card`, `solid`, `gradient` or `image`. |
+| 7301 | The caller lacks Create Report permission on the workspace, or is calling from a white-label domain that is not mapped to this workspace. | Grant the permission, or call the standard data-centre domain. |
+| 7309 | `Authorization` header absent. | Send `Authorization: Zoho-oauthtoken <token>`. |
 | 7479 | A card is missing one or more of `type`, `width`, `height`, `left`, `top`. | Add the missing positional fields. |
-| 7486 | A positional field has the wrong JSON type. | `width`, `height`, `left`, `top` must be integers; `type` must be a string. |
-| 7485 | Unrecognised card `type`. | Use one of the eight values in [Card types](#card-types). |
 | 7480 | Negative offset, `width`/`height` of 1 or less, or `left + width > 80`. | Keep every card inside the 80-unit grid. |
-| 7512 | A card is smaller than the minimum for its type. | See the min height/width columns in [Card types](#card-types). |
+| 7481 | The referenced view exists but the caller cannot read it. | Have the view shared with the caller, or remove the card. |
 | 7482 | Two cards overlap. | Reposition so no two rectangles intersect. |
 | 7483 | A `HTML`, `TITLE`, `PARA`, `IMAGE` or `EMBED` card has absent, `null` or empty `content`. | Supply a non-empty `content` string. |
 | 7484 | More than 100 cards in the layout. | Split the dashboard. |
-| 8027 | One or more `VIEW` cards name a view that does not exist in this workspace, or `viewName` is absent / `null` / non-string. | Check the view display names. Matching is case-insensitive but the view must exist. |
-| 7481 | The referenced view exists but the caller cannot read it. | Have the view shared with the caller, or remove the card. |
-| 9001 | Every card in the layout is a `USERFILTERS` card. | Add at least one content-bearing card. |
+| 7485 | Unrecognised card `type`. | Use one of the eight values in [Card types](#card-types). |
+| 7486 | A positional field has the wrong JSON type. | `width`, `height`, `left`, `top` must be integers; `type` must be a string. |
+| 7487 | `displayName` or `layout` is absent, `null` or empty. | Supply both. Remember `layout` is a JSON-encoded **string**. |
+| 7488 | A `settings` or `themes` key has an empty or `null` value, or an unrecognised key reached the server. | Remove the key or give it a valid value. |
 | 7491 | The sub-object required by `themes.type` is missing, or `card` is absent. | Add the required sub-object. |
 | 7492 | A required field inside the type sub-object or inside `card` is missing. | See the required-fields table in [Themes](#themes). |
 | 7493 | A sub-object belonging to a different theme type is present, or a forbidden key accompanies `default`. | Remove the conflicting key. |
+| 7507 | `displayName` exceeds 100 characters, or `description` exceeds 250. | Shorten the value. |
+| 7510 | `layout` is not parseable JSON, or a `themes` sub-object is `null`. | Validate the JSON you embed in the `layout` string; never send `null` for `card`, `solid`, `gradient` or `image`. |
+| 7512 | A card is smaller than the minimum for its type. | See the min height/width columns in [Card types](#card-types). |
 | 7513 | `chartEffect.type` supplied while `chartEffect.apply` is `1`. | Remove `type`, or set `apply` to `2`. |
 | 7514 | `chartEffect.apply` is `2` but `chartEffect.type` is absent. | Supply `chartEffect.type`. |
-| 7488 | A `settings` or `themes` key has an empty or `null` value, or an unrecognised key reached the server. | Remove the key or give it a valid value. |
+| 8027 | One or more `VIEW` cards name a view that does not exist in this workspace, or `viewName` is absent / `null` / non-string. | Check the view display names. Matching is case-insensitive but the view must exist. |
+| 8504 | The `CONFIG` parameter is missing from the request body. | Send `CONFIG` as a form-encoded parameter. |
 | 8509 | An enumerated or pattern-constrained value does not match — a malformed colour, an out-of-range number, `layoutType` outside 1–4, a non-string colour. | Check the ranges in [Themes](#themes) and [Settings](#settings). |
 | 8517 | A value has the wrong JSON data type for its schema declaration. | Match the declared types. |
 | 8534 | A theme sub-object was supplied as an array, or `CONFIG` is malformed JSON. | Use `{}` for objects. |
-| 8504 | The `CONFIG` parameter is missing from the request body. | Send `CONFIG` as a form-encoded parameter. |
-| 8542 | An unknown key is present in `CONFIG`. | Only `displayName`, `description`, `layout`, `themes`, `settings`, `layoutType` are accepted. |
-| 7103 | Workspace not found. | Verify `<workspace-id>`. |
-| 7301 | The caller lacks Create Report permission on the workspace, or is calling from a white-label domain that is not mapped to this workspace. | Grant the permission, or call the standard data-centre domain. |
-| 7309 | `Authorization` header absent. | Send `Authorization: Zoho-oauthtoken <token>`. |
 | 8535 | Invalid or expired OAuth token. | Refresh the token with scope `ZohoAnalytics.modeling.create`. |
+| 8542 | An unknown key is present in `CONFIG`. | Only `displayName`, `description`, `layout`, `themes`, `settings`, `layoutType` are accepted. |
+| 9001 | Every card in the layout is a `USERFILTERS` card. | Add at least one content-bearing card. |
 
 ---
 
@@ -437,6 +456,22 @@ Optional. Sent as a query parameter.
 When `include` is `all`, the response carries `objId`, `displayName`, `description` and all three
 sections. When `include` names a single section, only that section is returned — the identity fields are
 omitted.
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Get dashboard metadata"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.dashboardConfig` | JSONObject | The dashboard's stored definition. |
+| `dashboardConfig.objId` | String | ID of the dashboard, as a string. |
+| `dashboardConfig.displayName` | String | Dashboard name. |
+| `dashboardConfig.description` | String | Free-text description; empty string when none was set. |
+| `dashboardConfig.themes` | JSONObject | Theme settings. See [Themes](#themes). Values are returned as **strings** even where the create API accepts numbers. |
+| `dashboardConfig.settings` | JSONObject | Dashboard behaviour switches. See [Settings](#settings). Every value is returned as a **string** (`"true"` / `"false"`), not a boolean. |
+| `settings.allowExport` | JSONObject | Per-format export switches (`csv`, `excel`, `html`, `image`, `pdf`, `zohoSheet`), each a string `"true"`/`"false"`. |
+| `dashboardConfig.layout` | JSONObject | Card map keyed by card number. **Returned as a JSON object**, whereas the create and update APIs expect `layout` as a JSON **string** — see [`layout` is a JSON **string**, not a JSON object](#layout-is-a-json-string-not-a-json-object) and [Transformations required](#transformations-required) before feeding this back into an update. |
 
 ### Behaviour
 
@@ -538,16 +573,16 @@ ZANALYTICS-ORGID: 700000123456
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
+| 7018 | Malformed URL — the ID is not a valid numeric path segment. | Use the numeric dashboard ID only. |
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7104 | The dashboard does not exist, or `<dashboard-id>` is `0`. | Verify `<dashboard-id>`. |
-| 7319 | The dashboard exists but belongs to a different workspace. | Make `<workspace-id>` and `<dashboard-id>` consistent. |
-| 7511 | The target is a tabbed dashboard. | Tabbed dashboards cannot be read through this API. |
-| 7018 | Malformed URL — the ID is not a valid numeric path segment. | Use the numeric dashboard ID only. |
-| 8509 | `include` is not one of `all`, `layout`, `themes`, `settings`. | Use a single valid section name. |
 | 7301 | The caller lacks read permission on the dashboard, or is on an unmapped white-label domain. | Share the dashboard with the caller. |
 | 7309 | `Authorization` header absent. | Send the OAuth header. |
+| 7319 | The dashboard exists but belongs to a different workspace. | Make `<workspace-id>` and `<dashboard-id>` consistent. |
+| 7511 | The target is a tabbed dashboard. | Tabbed dashboards cannot be read through this API. |
+| 8509 | `include` is not one of `all`, `layout`, `themes`, `settings`. | Use a single valid section name. |
 | 8535 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.read`. |
 
 ---
@@ -644,20 +679,34 @@ CONFIG={"themes":{"default":"true"}}
 HTTP/1.1 204 No Content
 ```
 
+### Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **204 No Content** | Success returns an empty body, unlike Create which returns 200 with `data.dashboardId`. |
+| **A dashboard cannot be renamed here** | `displayName` and `description` are **rejected** with **8542**. Both are accepted only at create time. |
+| **Each supplied section is deleted and rewritten** | `DashLayoutDeletion`, `DashThemeDeletion` and `DashSettingDeletion` run before the new rows are inserted. There is **no field-level patching** — a `settings` object with one key leaves the dashboard with exactly one setting. |
+| **Omission preserves, partial content replaces** | Omitting `layout`, `themes` or `settings` leaves that section untouched; supplying it replaces the section wholesale. |
+| **Partial layouts fail confusingly** | Sending three of six cards does not move three cards — it replaces the layout with three. A subset that violates a rule raises **9001** or an overlap error rather than a clear message. |
+| **Read, merge, write — with transformations** | Read the current configuration, merge your change, then write the whole section back after applying [Transformations required](#transformations-required). |
+| **Some keys are never returned** | `layoutType`, card `properties`, card `image_properties` and `allowAllExport` are written but not read back, so a read-modify-write cycle silently loses them. See [Written but never returned](#written-but-never-returned). |
+| **Full comparison with Create** | See [What differs from Create](#what-differs-from-create). |
+| **Dependency chain** | [Read Dashboard Metadata](#2-read-dashboard-metadata) → transform → Update Dashboard. |
+
 ### Error Codes
 
 Update runs the same layout, theme and settings validation as Create, so every code in the
 [Create Dashboard error table](#error-codes) can be returned here. The codes specific to Update or with
 different triggers are:
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7104 | The dashboard does not exist in this workspace. | Verify `<dashboard-id>`. |
+| 7301 | The caller lacks Design Modify permission on the dashboard. | Grant edit access. |
 | 7319 | The dashboard belongs to a different workspace. | Make the two path IDs consistent. |
 | 7511 | The target is a tabbed dashboard. | Tabbed dashboards cannot be modified through this API. |
-| 8542 | `displayName`, `description`, or any other key outside `layout` / `themes` / `settings` / `layoutType` is present in `CONFIG`. | Remove the key. Renaming is not supported here. |
-| 7301 | The caller lacks Design Modify permission on the dashboard. | Grant edit access. |
 | 8535 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.update`. |
+| 8542 | `displayName`, `description`, or any other key outside `layout` / `themes` / `settings` / `layoutType` is present in `CONFIG`. | Remove the key. Renaming is not supported here. |
 
 ---
 
@@ -665,16 +714,20 @@ different triggers are:
 
 ## 4. Get All Dashboards
 
+Returns all dashboards accessible to the authenticated user — both dashboards owned by the user and
+dashboards shared with the user — across all organizations and workspaces. The response groups the
+results into two separate lists: `ownedViews` and `sharedViews`.
+
 | Attribute | Value |
 |-----------|-------|
-| **API NAME** | Get All Dashboards |
-| **URL** | `GET https://<ZohoAnalytics_Server_URI>/restapi/v2/dashboards` |
-| **METHOD** | GET |
-| **DESCRIPTION** | Returns all dashboards accessible to the authenticated user — both dashboards owned by the user and dashboards shared with the user — across all organizations and workspaces. The response groups results into two separate lists: `ownedViews` and `sharedViews`. |
-| **OAUTHSCOPE** | `ZohoAnalytics.metadata.read` |
-| **PERMISSION REQUIRED** | The authenticated user must be any active **Zoho Analytics user**. |
+| **Method** | GET |
+| **URL** | `/restapi/v2/dashboards` |
+| **OAuth Scope** | `ZohoAnalytics.metadata.read` |
+| **ZANALYTICS-ORGID Header** | **Not used** — this is a user-scoped API; the token alone identifies the caller. |
+| **Permission Required** | Any active **Zoho Analytics user**. |
+| **Custom domain** | Not available — disabled on custom domains. |
 
-> This API has no request body parameters. All context is derived from the OAuth token.
+> This API has no CONFIG parameter and takes no request body. All context is derived from the OAuth token.
 
 ### Sample Requests
 
@@ -835,8 +888,8 @@ Each item in `ownedViews` and `sharedViews` has the following fields:
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7301 | User does not have permission to retrieve dashboards. | Ensure the request uses a valid OAuth token for an active Zoho Analytics user. |
 | 8535 | Invalid OAuth token. | Provide a valid, non-expired OAuth token in the `Authorization` header. |
 
@@ -844,16 +897,19 @@ Each item in `ownedViews` and `sharedViews` has the following fields:
 
 ## 5. Get Owned Dashboards
 
+Returns the list of dashboards owned by the authenticated user across all organizations, as a single
+`views` array. Only accessible to Account Admin users.
+
 | Attribute | Value |
 |-----------|-------|
-| **API NAME** | Get Owned Dashboards |
-| **URL** | `GET https://<ZohoAnalytics_Server_URI>/restapi/v2/dashboards/owned` |
-| **METHOD** | GET |
-| **DESCRIPTION** | Returns the list of dashboards owned by the authenticated user across all organizations. Only accessible to Account Admin users. The response contains a single `views` array listing all owned dashboards. |
-| **OAUTHSCOPE** | `ZohoAnalytics.metadata.read` |
-| **PERMISSION REQUIRED** | The authenticated user must be an **Account Admin**. |
+| **Method** | GET |
+| **URL** | `/restapi/v2/dashboards/owned` |
+| **OAuth Scope** | `ZohoAnalytics.metadata.read` |
+| **ZANALYTICS-ORGID Header** | **Not used** — this is a user-scoped API; the token alone identifies the caller. |
+| **Permission Required** | The authenticated user must be an **Account Admin**. |
+| **Custom domain** | Not available — disabled on custom domains. |
 
-> This API has no request body parameters. All context is derived from the OAuth token.
+> This API has no CONFIG parameter and takes no request body. All context is derived from the OAuth token.
 
 ### Sample Requests
 
@@ -974,8 +1030,8 @@ Content-Type: application/json;charset=UTF-8
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7301 | User does not have permission to retrieve owned dashboards. | Ensure the authenticated user is an **Account Admin**. |
 | 8535 | Invalid OAuth token. | Provide a valid, non-expired OAuth token in the `Authorization` header. |
 
@@ -983,16 +1039,20 @@ Content-Type: application/json;charset=UTF-8
 
 ## 6. Get Shared Dashboards
 
+Returns all dashboards that have been shared with the authenticated user across all organizations and
+workspaces, as a single `views` array. Unlike [Get All Dashboards](#4-get-all-dashboards), this
+endpoint returns only shared dashboards, not owned ones.
+
 | Attribute | Value |
 |-----------|-------|
-| **API NAME** | Get Shared Dashboards |
-| **URL** | `GET https://<ZohoAnalytics_Server_URI>/restapi/v2/dashboards/shared` |
-| **METHOD** | GET |
-| **DESCRIPTION** | Returns all dashboards that have been shared with the authenticated user across all organizations and workspaces. The response contains a single `views` array. Unlike [Get All Dashboards](#4-get-all-dashboards), this endpoint returns only shared dashboards (not owned ones), and it is also available on custom domains. |
-| **OAUTHSCOPE** | `ZohoAnalytics.metadata.read` |
-| **PERMISSION REQUIRED** | The authenticated user must be any active **Zoho Analytics user**. |
+| **Method** | GET |
+| **URL** | `/restapi/v2/dashboards/shared` |
+| **OAuth Scope** | `ZohoAnalytics.metadata.read` |
+| **ZANALYTICS-ORGID Header** | **Not used** — this is a user-scoped API; the token alone identifies the caller. |
+| **Permission Required** | Any active **Zoho Analytics user**. |
+| **Custom domain** | Available. |
 
-> This API has no request body parameters. All context is derived from the OAuth token.
+> This API has no CONFIG parameter and takes no request body. All context is derived from the OAuth token.
 
 ### Sample Requests
 
@@ -1113,12 +1173,10 @@ Content-Type: application/json;charset=UTF-8
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7301 | User does not have permission to retrieve shared dashboards. | Ensure the request uses a valid OAuth token for an active Zoho Analytics user. |
 | 8535 | Invalid OAuth token. | Provide a valid, non-expired OAuth token in the `Authorization` header. |
-
----
 
 ---
 

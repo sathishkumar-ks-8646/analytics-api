@@ -82,10 +82,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-13T08:58:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-09T14:14:46Z
+  at: 2026-10-13T08:59:53Z
 status: stable
 ---
 
@@ -253,6 +253,18 @@ HTTP/1.1 204 No Content
 Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scripting) are in [SDK examples for Update Report](../../../sdk-examples/reports-and-dashboards/reports/update-report.md). Client construction is described in [SDK clients](../../../foundations/sdk-clients.md).
 
 # Notes & Behaviour
+
+| Aspect | Detail |
+|--------|--------|
+| **The report is rebuilt from scratch** | There is no field-level patching. Every omitted section is dropped, not preserved — see [Update is destructive](#update-is-destructive). |
+| **Omission deletes** | Omitting `filters` removes all static filters; omitting `userFilters` removes all user filters; omitting `description` **clears** it (an absent key stores `null`); omitting `chartType` falls back to the server's `BEST` selection. |
+| **`axisColumns` is mandatory** | Omitting it fails the call outright. |
+| **Never feed the read response back in** | [Read Report Metadata](get-report-metadata.md) is lossy. The call succeeds and the report quietly loses most of its configuration — this is the most common and most damaging mistake against this API. |
+| **User filters collapse to three keys on read** | Writing a read response back rebuilds every user filter with default behaviour: sliders become select lists, date-range pickers become single selects, restricted value lists become "all values", and pre-selections and exclusions are dropped. |
+| **A geo column cannot be round-tripped** | `operation: "geo"` is returned but `geoRole` is not, and `geo` without `geoRole` is invalid — the update fails outright. |
+| **Several read values are not valid on write** | A date `userFilters[].operation` comes back `filterType`-shaped and raises **8166**; `reportType` may come back `widget` and `axisColumns[].type` may come back `group`, both rejected with **8509**. See [Values that change across a round trip](overview.md#values-that-change-across-a-round-trip). |
+| **Retain your create-time CONFIG** | For anything beyond a trivial edit, modify the CONFIG you submitted rather than the read response. |
+| **Dependency chain** | Your retained create CONFIG (preferred) or [Read Report Metadata](get-report-metadata.md) → Update Report. |
 
 ## Update is destructive
 

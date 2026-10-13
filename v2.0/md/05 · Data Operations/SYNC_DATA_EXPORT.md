@@ -49,14 +49,14 @@ This API is a **terminal consumer**: it produces a file and changes nothing. Eve
 
 | Relationship | Detail |
 |--------------|--------|
-| **`<view-id>` comes from elsewhere** | This API never returns a view ID; it consumes one. Get it from [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list), or from the response of [Import Data into a New Table (Synchronous)](SYNC_DATA_IMPORT_API_DOC_INFO.md#1-import-data-into-a-new-table-synchronous), or from [Create Query Table](QUERY_TABLES_API_DOC_INFO.md#2-create-query-table). |
-| **`selectedColumns` takes column *display names*, not IDs** | Fetch them with [Get Columns](COLUMNS_API_DOC_INFO.md). A name that does not match any column in the view fails with `8015` — the whole export fails, nothing partial is returned. |
-| **Export permission is granted by the sharing APIs** | The `export` share permission set by [Share Views](SHARING_API_DOC_INFO.md#2-share-views) is exactly the permission this API checks. See [Permission Model](#permission-model). |
-| **Hidden and personal-data columns are decided at design time** | Whether a column is hidden, or marked as personal data, is set through the column APIs; this export only chooses whether to *include* such columns. See [Get Columns](COLUMNS_API_DOC_INFO.md). |
-| **`criteria` shares its grammar with the Row APIs** | The same filter-expression syntax used by [Update Row](ROW_API_DOC_INFO.md#2-update-row) and [Delete Row](ROW_API_DOC_INFO.md#3-delete-row) applies here — see [`criteria` Syntax](#criteria-syntax). |
+| **`<view-id>` comes from elsewhere** | This API never returns a view ID; it consumes one. Get it from [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list), or from the response of [Import Data into a New Table (Synchronous)](SYNC_DATA_IMPORT.md#1-import-data-into-a-new-table-synchronous), or from [Create Query Table](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/QUERY_TABLES.md#2-create-query-table). |
+| **`selectedColumns` takes column *display names*, not IDs** | Fetch them with [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). A name that does not match any column in the view fails with `8015` — the whole export fails, nothing partial is returned. |
+| **Export permission is granted by the sharing APIs** | The `export` share permission set by [Share Views](../08%20%C2%B7%20Share%20%26%20Publish/SHARING.md#2-share-views) is exactly the permission this API checks. See [Permission Model](#permission-model). |
+| **Hidden and personal-data columns are decided at design time** | Whether a column is hidden, or marked as personal data, is set through the column APIs; this export only chooses whether to *include* such columns. See [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
+| **`criteria` shares its grammar with the Row APIs** | The same filter-expression syntax used by [Update Row](ROW_OPERATIONS.md#2-update-row) and [Delete Row](ROW_OPERATIONS.md#3-delete-row) applies here — see [`criteria` Syntax](#criteria-syntax). |
 | **Restricted views must go through the asynchronous export** | Dashboards, Query Tables, live-connect views, and large tables are rejected here with `8133`. They are handled by the bulk export APIs under `/restapi/v2/bulk/...`. |
-| **The same export settings drive Email Schedules** | Page setup, paper size, margins, header/footer slots, and `exportLanguage` carry the same meanings and the same value sets in [Create Email Schedule](EMAIL_SCHEDULES_API_DOC_INFO.md#2-create-email-schedule). A page layout tuned here can be reused there. |
-| **It has no reverse operation** | Export is read-only. Getting data *into* a table is [Synchronous Data Import](SYNC_DATA_IMPORT_API_DOC_INFO.md) or [Asynchronous & Batch Data Import](ASYNC_DATA_IMPORT_API_DOC_INFO.md). |
+| **The same export settings drive Email Schedules** | Page setup, paper size, margins, header/footer slots, and `exportLanguage` carry the same meanings and the same value sets in [Create Email Schedule](../09%20%C2%B7%20Schedules%20%26%20Alerts/EMAIL_SCHEDULES.md#2-create-email-schedule). A page layout tuned here can be reused there. |
+| **It has no reverse operation** | Export is read-only. Getting data *into* a table is [Synchronous Data Import](SYNC_DATA_IMPORT.md) or [Asynchronous & Batch Data Import](ASYNC_DATA_IMPORT.md). |
 
 ### Typical sequences
 
@@ -185,10 +185,10 @@ Exports the data of a view and returns the generated file in the response body.
 | Attribute | Value |
 |-----------|-------|
 | **URL** | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/data` |
-| **HTTP Method** | `GET` |
+| **Method** | GET |
 | **OAuth Scope** | `ZohoAnalytics.data.read` |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with Export permission on the view. |
-| **Mandatory Header** | `ZANALYTICS-ORGID` |
+| **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Optional — omitting it exports the whole view as CSV with defaults |
 | **Success Status** | `200 OK`, body is the exported file |
 | **Content-Type** | Varies with `responseFormat` — see [Response Structure by Format](#response-structure-by-format) |
@@ -681,16 +681,16 @@ The success body is a file, not a JSON envelope, so there are structured fields 
 | **The whole export is atomic from the caller's point of view** | Because validation happens up front and the file is streamed afterwards, a validation failure yields a clean JSON error and no partial file. A size limit tripped mid-stream (`7830`) resets the buffer and returns the error instead. |
 | **Personal-data handling is role-dependent** | For a non-administering caller, `showPersonalCols` is ignored and personal columns are included. Do not rely on this attribute as a redaction mechanism for shared users — see [Permission Model](#permission-model). |
 | **Dashboard-only page-setup attributes are silently ignored** | `generateTOC`, `dashboardLayout`, and `zoomFactor` describe multi-view dashboard PDFs, which this API cannot produce. |
-| **Dependency chain:** | [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) → `<view-id>`; [Get Columns](COLUMNS_API_DOC_INFO.md) → `selectedColumns` names → Export Data from a View → the file. |
+| **Dependency chain:** | [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) → `<view-id>`; [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → `selectedColumns` names → Export Data from a View → the file. |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list). |
+| 7104 | `META_OBJECT_NOT_PRESENT` — The view does not exist. | Verify `<view-id>` with [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list). |
 | 7301 | `SECURITY_NOT_PERMITTED` — The caller lacks Export permission on the view, or the view does not belong to `<workspace-id>`. | Ensure the caller is an Account Admin, Organization Admin, Workspace Admin, or View Owner, or holds Export permission on the view. |
 | 7327 | `FILTER_CRITERIA_INVALID` — `criteria` parsed but could not be converted into a query. | Simplify the expression and check operator and value types. |
-| 7330 | `UNKNOWN_COLUMN_IN_FILTERCRITERIA` — A column named in `criteria` does not exist in the view. | Check the name against [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 7330 | `UNKNOWN_COLUMN_IN_FILTERCRITERIA` — A column named in `criteria` does not exist in the view. | Check the name against [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 7331 | `FILTERCRITERIA_PARSE_ERROR` — `criteria` is syntactically malformed. | Check quoting: double quotes around column names, single quotes around string literals. |
 | 7332 | `UNKNOWN_TABLE_IN_FILTERCRITERIA` — A table qualifier in `criteria` is not part of the view. | Qualify columns only with tables the view actually uses. |
 | 7333 | `INVALID_GROUP_FUNC_USE_IN_FILTERCRITERIA` — An aggregate function was used in `criteria`. | Remove `sum`, `avg`, `count`, and similar functions; filter on raw column values instead. |
@@ -707,7 +707,7 @@ The success body is a file, not a JSON envelope, so there are structured fields 
 | 7830 | `EXP_ALL_RECORD_LIMIT` — The exported payload exceeds 100 MB. | Split the export with `criteria`, or use the asynchronous export. |
 | 8001 | `INVALID_RESP_FORMAT` — `responseFormat` is not a supported value. | Send one of `csv`, `json`, `xml`, `xls`, `pdf`, `html`, `image`. |
 | 8014 | `API_IMAGE_RESPONSE_NOT_POSSIBLE` — `image` was requested for a view that is not a chart. | Export charts as images; use `pdf` or `html` for tables and reports. |
-| 8015 | `API_EXPORT_COLUMN_NOT_PRESENT` — A name in `selectedColumns` does not match any column in the view. | Check the display names with [Get Columns](COLUMNS_API_DOC_INFO.md). |
+| 8015 | `API_EXPORT_COLUMN_NOT_PRESENT` — A name in `selectedColumns` does not match any column in the view. | Check the display names with [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md). |
 | 8017 | `INVALID_IMAGE_FORMAT` — `imageFormat` is not `png`, `jpg`, or `jpeg`. | Send one of the three supported values. |
 | 8088 | `SECURITY_CONTROLS_FEATURE_DISABLED` — Export has been disabled for the organization by an administrator. | Ask an Organization Admin to re-enable export in the organization's security controls. |
 | 8119 | `INVALID_VALUE_FOR_ATTRIBUTE` — A numeric or enumerated attribute is outside its permitted set. The message names the attribute and the accepted values. | Correct the value; see [Appendix E](#appendix-e--enum-reference). |
@@ -715,8 +715,8 @@ The success body is a file, not a JSON envelope, so there are structured fields 
 | 8188 | `EXPORT_INVALID_PASSWORD` — `password` is empty, blank, or shorter than 6 characters. | Send a password of 6–256 characters. |
 | 8241 | `SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION` — The view carries a restricted DATA_WARNING system tag. | Review the warning, then resend with `"validateSystemTags": false`. |
 | 8507 | `MORE_THAN_MAX_LENGTH` — `CONFIG` exceeds 100,000 characters. | Shorten `criteria` or `selectedColumns`. |
-| 8547 | `ARRAY_SIZE_OUT_OF_RANGE` — `selectedColumns` is empty or holds more than 300 entries. | Send between 1 and 300 column names, or omit the attribute. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token carrying `ZohoAnalytics.data.read`. |
+| 8547 | `ARRAY_SIZE_OUT_OF_RANGE` — `selectedColumns` is empty or holds more than 300 entries. | Send between 1 and 300 column names, or omit the attribute. |
 
 ---
 
@@ -727,7 +727,7 @@ The success body is a file, not a JSON envelope, so there are structured fields 
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user, carrying `ZohoAnalytics.data.read`. |
 | `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the view. |
 
-> **`ZANALYTICS-DEST-ORGID` is not used by this API.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](VIEW_OPERATIONS_API_DOC_INFO.md#2-copy-views), Copy Formulas), which target a destination organization.
+> **`ZANALYTICS-DEST-ORGID` is not used by this API.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas), which target a destination organization.
 
 There is no request body — this is a `GET`, and `CONFIG` travels in the query string:
 
@@ -758,15 +758,15 @@ The decoded `CONFIG` above is `{"responseFormat":"csv","criteria":"\"Region\"='E
 
 - **This is the only API in the suite whose success response is not JSON.** Everything else in the V2 surface returns either a `status`/`summary`/`data` envelope or an empty `204`. Here the success body is the file. Write client code that checks the HTTP status first, parses JSON only on failure, and reads `Content-Type` to decide how to handle the success body.
 - **No `Content-Disposition` header is returned.** There is no server-suggested filename. Derive one yourself from the view name and the format, and remember that a password-protected `csv` arrives as a ZIP.
-- **The view type decides more than the format does.** `image` needs a chart; dashboards and query tables are unavailable entirely; `selectedColumns` only applies to tables and tabular views. Establish the view type once via [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) and drive the CONFIG from it, rather than probing formats until one succeeds.
+- **The view type decides more than the format does.** `image` needs a chart; dashboards and query tables are unavailable entirely; `selectedColumns` only applies to tables and tabular views. Establish the view type once via [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) and drive the CONFIG from it, rather than probing formats until one succeeds.
 - **`8133` is a routing signal, not a bug.** It means "this view belongs to the asynchronous export". Treat it as a branch in the integration — fall back to the bulk export APIs — rather than as an error to retry.
 - **`keyValueFormat` inverts between JSON and XML.** JSON defaults to key-value pairs; XML defaults to the wrapped `<column name="…">` envelope. An integration that sets neither gets two structurally unrelated documents from the same view. Set it explicitly whenever both formats are in play.
 - **`keyValueFormat: true` for XML produces a fragment, not a document.** No `<?xml?>` declaration, no `<response>` root. Strict XML parsers will need the `keyValueFormat: false` shape, which is also the safer choice when column names contain spaces or punctuation.
 - **`criteria` is the single most useful attribute for staying inside the limits.** The row-count ceiling, the PDF cell ceiling, and the 100 MB payload ceiling are all evaluated on what the export actually produces, so a narrowing `criteria` is what turns an unexportable view into an exportable one.
 - **Password protection changes the response content type.** For `csv`, `json`, `xml`, `html`, and `image` the payload becomes a ZIP. This is the most common cause of "the exported file is corrupt" reports.
-- **`showPersonalCols` is a convenience for administrators, not an access control.** For any other caller it is ignored and personal columns are included. Column-level restriction for shared users belongs in [Share Views](SHARING_API_DOC_INFO.md#2-share-views).
-- **Page-setup values are shared with Email Schedules.** `paperSize`, `paperStyle`, the four margins, `showTitle`, `showDesc`, `exportLanguage`, and the six header/footer slots use the same value sets as [Create Email Schedule](EMAIL_SCHEDULES_API_DOC_INFO.md#2-create-email-schedule). A layout proven here can be transplanted there unchanged.
-- **Dependency chain:** [Get View List](VIEW_OPERATIONS_API_DOC_INFO.md#6-get-view-list) + [Get Columns](COLUMNS_API_DOC_INFO.md) → Export Data from a View → the exported file. Nothing consumes this API's output within the V2 surface; it is the end of the line.
+- **`showPersonalCols` is a convenience for administrators, not an access control.** For any other caller it is ignored and personal columns are included. Column-level restriction for shared users belongs in [Share Views](../08%20%C2%B7%20Share%20%26%20Publish/SHARING.md#2-share-views).
+- **Page-setup values are shared with Email Schedules.** `paperSize`, `paperStyle`, the four margins, `showTitle`, `showDesc`, `exportLanguage`, and the six header/footer slots use the same value sets as [Create Email Schedule](../09%20%C2%B7%20Schedules%20%26%20Alerts/EMAIL_SCHEDULES.md#2-create-email-schedule). A layout proven here can be transplanted there unchanged.
+- **Dependency chain:** [Get View List](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#6-get-view-list) + [Get Columns](../04%20%C2%B7%20Data%20Modeling%20%26%20Schema/COLUMNS.md) → Export Data from a View → the exported file. Nothing consumes this API's output within the V2 surface; it is the end of the line.
 
 ---
 

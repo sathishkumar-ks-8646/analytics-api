@@ -1,4 +1,4 @@
-# View Operations APIs – Documentation
+# Zoho Analytics V2 REST API — View Operations
 
 This document covers V2 REST APIs for managing views within workspaces in Zoho Analytics: creating copies, renaming, deleting, and listing views.
 
@@ -14,16 +14,16 @@ This document covers V2 REST APIs for managing views within workspaces in Zoho A
 
 | # | API Name | Method | URL |
 |---|----------|--------|-----|
-| 1 | Save As View | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/saveas` |
-| 2 | Copy Views | POST | `/restapi/v2/workspaces/<workspace-id>/views/copy` |
-| 3 | Create Similar Views | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/similarviews` |
-| 4 | Rename View | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>` |
-| 5 | Delete View | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>` |
-| 6 | Get View List | GET | `/restapi/v2/workspaces/<workspace-id>/views` |
-| 7 | Get View Details | GET | `/restapi/v2/views/<view-id>` |
-| 8 | Get View URL | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish` |
-| 9 | Get View Dependents | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/dependents` |
-| 10 | Get Recent Views | GET | `/restapi/v2/recentviews` |
+| 1 | [Save As View](#1-save-as-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/saveas` |
+| 2 | [Copy Views](#2-copy-views) | POST | `/restapi/v2/workspaces/<workspace-id>/views/copy` |
+| 3 | [Create Similar Views](#3-create-similar-views) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/similarviews` |
+| 4 | [Rename View](#4-rename-view) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>` |
+| 5 | [Delete View](#5-delete-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>` |
+| 6 | [Get View List](#6-get-view-list) | GET | `/restapi/v2/workspaces/<workspace-id>/views` |
+| 7 | [Get View Details](#7-get-view-details) | GET | `/restapi/v2/views/<view-id>` |
+| 8 | [Get View URL](#8-get-view-url) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish` |
+| 9 | [Get View Dependents](#9-get-view-dependents) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/dependents` |
+| 10 | [Get Recent Views](#10-get-recent-views) | GET | `/restapi/v2/recentviews` |
 
 ---
 
@@ -115,10 +115,19 @@ CONFIG={"viewName":"Revenue Trend - Copy","viewDesc":"Duplicate of Q3 revenue tr
 | `summary` | String | Human-readable result summary: `"Saveas view"`. |
 | `data.viewId` | String | The ID of the **newly created** view. Use this ID in subsequent APIs. |
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Saveas view"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.viewId` | String | ID of the newly created copy, serialised as a **string**. The source view is unchanged. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>` in the URL is a valid, accessible workspace. |
 | 7104 | Source view not found. | Verify `<view-id>` exists within the specified workspace. |
 | 7111 | A view with the given `viewName` already exists in this workspace. | Choose a different, unique name for the new view. |
@@ -263,17 +272,28 @@ CONFIG={"viewIds":[466206000000105001],"destWorkspaceId":467200000000090000,"wor
 
 > When `continueOnFailure=true` and some views fail, only successfully copied views appear in the `views` array. There is no explicit failure list in the current response format.
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Copy views"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.views` | JSONArray | One entry per view that was copied successfully. **Always present**; an empty array `[]` when `continueOnFailure` is `true` and every view failed. |
+| `views[].sourceViewId` | String | ID of the view in the source workspace, as a string. |
+| `views[].destViewId` | String | ID of the created copy in the destination workspace, as a string. Pair these to map old IDs onto new ones. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Source or destination workspace not found. | Verify `<workspace-id>` (URL) and `destWorkspaceId` (CONFIG) are valid. |
 | 7104 | One or more view IDs in `viewIds` do not exist. | Verify each view ID in the array exists and is accessible. |
 | 7301 | User does not have permission. Occurs when the user is not an Account Admin / Org Admin of the destination org, or when `createAsSystemTable=true` is used outside of an authorised internal service. | Ensure the user is an Account Admin or Organization Admin of the destination organisation. |
 | 7319 | One or more view IDs do not belong to the source workspace specified in the URL. | Ensure all view IDs in `viewIds` are from the workspace specified in `<workspace-id>`. |
-| 15007 | Cross-organisation copy not authorised. Occurs when the destination org differs from the source workspace's org and the `workspaceKey` is missing or incorrect. | Provide the correct `workspaceKey` of the source workspace for cross-org copy operations. |
 | 8058 | The organisation ID provided in `ZANALYTICS-DEST-ORGID` does not exist. | Provide a valid, existing organisation ID in `ZANALYTICS-DEST-ORGID`. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.create`. |
+| 15007 | Cross-organisation copy not authorised. Occurs when the destination org differs from the source workspace's org and the `workspaceKey` is missing or incorrect. | Provide the correct `workspaceKey` of the source workspace for cross-org copy operations. |
 
 ---
 
@@ -360,8 +380,8 @@ HTTP/1.1 204 No Content
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>` in the URL is valid. |
 | 7104 | Target table (`<view-id>`) or reference table (`referenceViewId`) not found. | Verify both view IDs exist in the workspace. |
 | 7144 | The specified `folderId` does not exist in this workspace. | Provide a valid, existing folder ID within the same workspace. |
@@ -442,8 +462,8 @@ HTTP/1.1 204 No Content
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>` in the URL. |
 | 7104 | View not found. | Verify `<view-id>` exists in the workspace. |
 | 7111 | A view with the given `viewName` already exists in this workspace. | Choose a unique name for the view. |
@@ -518,8 +538,8 @@ HTTP/1.1 204 No Content
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>` in the URL. |
 | 7104 | View not found. | Verify `<view-id>` exists in the workspace. |
 | 7301 | User does not have permission to delete this view. Occurs when the user is neither a Workspace Admin, Account Admin, Organization Admin, nor the View Owner. | Ensure the user has the required role. |
@@ -715,8 +735,8 @@ ZANALYTICS-ORGID: 700000123456
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | User does not have permission to list views in this workspace. | Ensure the user has at least Read permission on the workspace. |
 | 8119 | Invalid value for `sortedColumn` (must be 0–2) or `sortedOrder` (must be 0–1). | Use only the documented integer values for sort parameters. |
@@ -1055,8 +1075,8 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7104 | View not found. | Verify `<view-id>` is valid and accessible. |
 | 7301 | User does not have Read Only permission on the view. | Ensure the user has been granted at least Read Only access to the view. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
@@ -1169,10 +1189,19 @@ ZANALYTICS-ORGID: 700000123456
 |----------------|------|-------------|
 | `data.viewUrl` | String | The complete, ready-to-use URL. Open this directly in a browser. The URL includes all visual customisations and filter criteria as query parameters. |
 
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|--------------|
+| `status` | String | `"success"` on a successful call, `"failure"` on error. |
+| `summary` | String | Localised operation summary. `"Get view URL"` for this API. |
+| `data` | JSONObject | Response payload wrapper. |
+| `data.viewUrl` | String | Absolute URL that opens the view in the Zoho Analytics UI. The host reflects the data centre, and any theme requested in CONFIG is carried as a query parameter. This is a **UI link requiring an authenticated browser session**, not an API endpoint and not a shareable public link. |
+
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7104 | View not found. | Verify `<view-id>` exists in the workspace. |
 | 7301 | User does not have Publish or Make Public permission on the workspace. | Ensure the user is a Workspace Admin, Account Admin, Organization Admin, or has been granted Publish or Make Public permission. |
@@ -1196,7 +1225,7 @@ Returns all active views that **depend on** the specified view. A dependent view
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin, Organization Admin, or Workspace Admin. |
 
-> This API has no CONFIG parameter.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
 ### Dependency Resolution Rules
 
@@ -1332,8 +1361,8 @@ ZANALYTICS-ORGID: 700000123456
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7104 | View not found. | Verify `<view-id>` exists in the workspace. |
 | 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin. | Ensure the user has Workspace Admin or higher role in this workspace. |
@@ -1354,7 +1383,7 @@ Returns a list of views recently accessed by the authenticated user across **all
 | **ZANALYTICS-ORGID Header** | Not required — this API is user-scoped and not tied to a single workspace or organisation. |
 | **Permission Required** | Any authenticated Zoho Analytics user. |
 
-> This API has no CONFIG parameter. Results are personal to the calling user — different users calling this API see their own respective recent view history.
+> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. Results are personal to the calling user — different users calling this API see their own respective recent view history.
 
 ### Sample Requests
 
@@ -1472,8 +1501,8 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 
 ### Error Codes
 
-| Error-Code | Reason | Solution |
-|-----------:|--------|----------|
+| Code | Reason | Solution |
+|------|--------|----------|
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 ---
