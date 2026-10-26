@@ -7,6 +7,111 @@ patch for corrections. The OKF bundle's own content version is in `vN.N/okf/mani
 
 ## Unreleased
 
+### Fixed - Go SDK parity and three defects in the SDK reference generator
+
+A cross-language comparison of all seven SDK surfaces (Go against Python, Node.js, Java, C#, PHP and
+Ruby) turned up four real defects, all now fixed:
+
+- **Go carried three misspelled duplicate methods** - `GetDashboars`, `GetOwnedDashboars` and
+  `GetSharedDashboars`, byte-identical to the correctly spelled `GetDashboards` trio that was added
+  later. Both sets were live public API and both were published in `go/docs/`. The misspelled trio is
+  removed from `go/source/` and from `go/sample/test.go`, which defined callers for both.
+- **Go was the only SDK missing `ImportRawData` and `ImportRawDataInNewTable`** (present in the other
+  six). Both are added to Go's `BulkAPI`, with a `sendRawImportAPIRequest`/`submitRawImportRequest`
+  transport pair that posts the payload as a `DATA` multipart field, matching the Java client.
+  `go/sample/test.go` gained the two matching sample functions.
+- **`tools/sdkdocs/extract.py` silently dropped every method whose parameter list wrapped across
+  lines.** The parsers match `name(args)` on one physical line, so 30+ public methods - the whole
+  AutoML family in Java/Go/C#/PHP/Node.js, plus `sortDataByColumns`, `exportDataUsingSQL`,
+  `getWorkspaceMetadata`, `importDataInBatches`, C#'s `ExportData` and Python's two
+  `import_*_as_batches` - existed in the sources but appeared in no reference page. A `_fold_signatures`
+  helper now joins wrapped declarations before parsing, keeping line indexes stable. Documented method
+  counts: Java 218->225, C# 215->222, PHP 219->221, Node.js 218->220, Python 214->216, Go 205->210.
+- **The Python sample raised `NameError`** in `import_raw_data` and `import_raw_data_in_new_table`:
+  both assigned `raw_bulk` and passed `raw_data`.
+
+Every Go snippet in `v2.0/zenesis-oas-samples/` was verified against the Go package's real exported
+surface, and all 1,687 snippets across the seven languages now resolve to a method that exists. The
+Go package and `go/sample/test.go` both build and vet clean.
+
+Note for anyone verifying Go locally: a stale copy of this SDK at `/usr/local/go/src/zoho/` shadows
+the repository source in both GOPATH and module mode, which makes current methods look undefined.
+Build against a GOROOT that excludes it.
+
+### Changed - workspace access restrictions move from `OrgAPI` to `WorkspaceAPI` in all seven SDKs
+
+`GET`/`PUT /restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` is a
+workspace-scoped operation, but the `security-controls` path prefix had placed it on the
+organization surface. `getWorkspaceAccessRestrictions` and `updateWorkspaceAccessRestrictions` now
+live on `WorkspaceAPI` in all seven SDKs (Java, Python, C#, Go, PHP, Node.js, Ruby) and take the
+workspace from the instance instead of a `workspaceId` argument. Each `WorkspaceAPI` gained a
+`securityControlsEndPoint` field (`/restapi/v2/security-controls/workspaces/<id>`) alongside the
+existing `workspaceEndPoint`, mirroring how `BulkAPI` already carries its `/restapi/v2/bulk/...`
+prefix. **This is a breaking change for SDK callers.** The SDK snippets in
+`v2.0/zenesis-oas-samples/`, the sample programs under `restapi-sdk/v2/<lang>/sample/` and every
+generated page (`restapi-sdk/v2/<lang>/docs/`, `v2.0/okf/sdk-examples/`) were rebuilt to match. The
+REST endpoint, its path and its API group are unchanged.
+
+An audit of the remaining surfaces found no other misplacement: the `/restapi/v2/automl/workspaces/`
+and `/restapi/v2/bulk/workspaces/` operations already sit on `WorkspaceAPI` and `BulkAPI`, and
+`getWorkspaceDetails`/`getViewDetails` stay on `AnalyticsClient` because they do not require the
+organization header.
+
+### Added - four new API groups (28 endpoints) from the API team's `new_md` hand-off
+
+`v2.0/new_md/` was merged into `v2.0/md/` and removed. Four new group documents introduced four new
+API groups and 28 endpoints; every generated artefact was rebuilt from them. The inventory moves to
+**10 domains, 39 API groups, 138 paths, 208 operations, 210 OKF endpoints and Postman requests**
+(from 35 groups, 119 paths, 180 operations, 182 endpoints).
+
+- **`01 · Organization Management/SECURITY_CONTROLS.md`** - new group `Security Controls`
+  (tag `Security Controls`, OKF/Postman slug `security-controls`), 4 endpoints: Get/Update Org
+  Access Restrictions and Get/Update Workspace Access Restrictions, covering the master switch and
+  the `shareViews`, `privateLinks`, `publicViews`, `exportViews` and `emailViews` sections.
+- **`03 · Workspace Management/LINKED_WORKSPACES.md`** - new group `Linked Workspaces`, 8 endpoints:
+  listing linked workspaces for an organisation and for a master workspace, linkable workspaces,
+  linking compatibility, Link, Sync, sync details and Unlink.
+- **`03 · Workspace Management/WORKSPACE_BACKUP_AND_RESTORE.md`** - new group
+  `Workspace Backup & Restore`, 6 endpoints: list backups, back up now, download a backup
+  (`application/x-zip-compressed` stream), restore, and the backup and restore status polls.
+- **`09 · Schedules & Alerts/DATA_ALERTS.md`** - new group `Data Alerts`, 10 endpoints: alerts in a
+  workspace and in a view, view metadata for an alert, alert configuration, Create, Update, Delete,
+  Change Status, Run and alert events.
+- New path parameters `backup-id`, `restore-id` and `alert-id`; new OAuth scope entries registered
+  in the affected specifications. The Postman environment ships the three new identifier variables
+  disabled, as it does for every identifier.
+- SDK snippets added for all 28 endpoints in all nine languages.
+
+### Changed - `REPORTS.md` rewritten by the API team
+
+Same three endpoints, same methods, paths and scopes; substantially expanded behavioural
+documentation (new concept, limitation, permission-model and enum/availability appendices).
+
+- `CreateReportConfig` drops `settings`, `drillActionConfig` and `modifiedPaths`;
+  `UpdateReportConfig` drops `settings`, `folderId` (now rejected with `8145`) and `objId`.
+  Nine schemas orphaned by those removals were pruned.
+- Error-code catalogues reworked: Create Report 41 -> 56 codes, Update Report 44 -> 54,
+  Read Report Metadata 7 -> 8. Update Report's table is written as a delta of Create Report's
+  ("every code in that table except 7111, 7137, 7138, 7324, 7362, 8201 and 8504"), so its
+  `x-zenesis-statuscodes` is the composed set, not the nine rows printed in the document.
+
+### Fixed - three dashboard listing endpoints kept
+
+`DASHBOARDS.md` as delivered in the hand-off had dropped **Get All Dashboards**
+(`GET /restapi/v2/dashboards`), **Get Owned Dashboards** (`GET /restapi/v2/dashboards/owned`) and
+**Get Shared Dashboards** (`GET /restapi/v2/dashboards/shared`). The API team confirmed the removal
+was unintended, so all three were restored from the reference document and re-appended to
+`DASHBOARDS.md` as sections 4-6 with their index rows.
+
+They are present in every knowledge base: the three markdown sections, the three operations and six
+schemas in `zenesis-oas/` and `oas/`, SDK snippets in all nine languages, the OKF endpoint and SDK
+example documents, the endpoint catalog (markdown and JSON), the permission matrix, the
+`dashboard-id` identifier sources, the Postman requests, and their `api-reference-links.json` pages.
+
+### Changed - OKF bundle version 1.6.0 -> 1.7.0
+
+Minor: the release is additive at the endpoint level. No endpoint is removed or renamed.
+
 ### Changed - `v2.0/md/` replaced by the API team's revised documents
 
 All 35 group documents were replaced with the revised revision supplied by the API team, and every

@@ -17,15 +17,15 @@ md/
 
 | Folder | Groups | Specification |
 |---|---|---|
-| `01 · Organization Management` | 1 | `org-management-grouped-api.json` |
+| `01 · Organization Management` | 2 | `org-management-grouped-api.json` |
 | `02 · User & Groups` | 4 | `user-groups-grouped-api.json` |
-| `03 · Workspace Management` | 4 | `workspace-management-grouped-api.json` |
+| `03 · Workspace Management` | 6 | `workspace-management-grouped-api.json` |
 | `04 · Data Modeling & Schema` | 7 | `data-modeling-schema-grouped-api.json` |
 | `05 · Data Operations` | 6 | `data-operations-grouped-api.json` |
 | `06 · Views Management` | 5 | `views-management-grouped-api.json` |
 | `07 · Reports & Dashboards` | 2 | `reports-dashboards-grouped-api.json` |
 | `08 · Share & Publish` | 4 | `share-publish-grouped-api.json` |
-| `09 · Schedules & Alerts` | 1 | `schedules-alerts-grouped-api.json` |
+| `09 · Schedules & Alerts` | 2 | `schedules-alerts-grouped-api.json` |
 | `10 · DSML` | 1 | `dsml-grouped-api.json` |
 
 ## Naming

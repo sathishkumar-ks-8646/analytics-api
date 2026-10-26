@@ -3,7 +3,7 @@
   "info": {
     "title": "Zoho Analytics API",
     "version": "v2",
-    "description": "API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, and folder management."
+    "description": "API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, folder management, linked workspaces, and backup and restore."
   },
   "servers": [
     {
@@ -26,6 +26,14 @@
     {
       "name": "Workspace Folders",
       "description": "APIs that manage the folders of a workspace, covering the creation, renaming, deletion, nesting and reordering of folders, the movement of views between folders, and the selection of the default folder. Folders provide a hierarchical organization layer within a workspace and support exactly one level of nesting."
+    },
+    {
+      "name": "Linked Workspaces",
+      "description": "APIs for listing, linking, syncing and unlinking client workspaces against a master workspace, and for checking which workspaces can be linked."
+    },
+    {
+      "name": "Workspace Backup & Restore",
+      "description": "APIs for listing and triggering workspace backups, downloading a backup, restoring a workspace from one, and tracking the status of either job."
     }
   ],
   "paths": {
@@ -2521,6 +2529,2037 @@
           }
         }
       }
+    },
+    "/restapi/v2/linkedworkspaces": {
+      "get": {
+        "operationId": "getLinkedWorkspacesForOrganization",
+        "summary": "Get Linked Workspaces For Organization",
+        "description": "Returns every master↔client link in the organisation named by ZANALYTICS-ORGID, grouped one entry per master workspace. This is the broadest discovery call, and the usual way to find a sandboxId.",
+        "tags": [
+          "Linked Workspaces"
+        ],
+        "x-zenesis-title": "Get Linked Workspaces For Organization",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get linked workspaces for organization request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLinkedWorkspacesForOrganizationResponse"
+                },
+                "examples": {
+                  "okOneMaster": {
+                    "description": "OK One master with",
+                    "summary": "OK — One master with two clients in a single client organisation.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get linked workspaces for organization",
+                      "data": {
+                        "linkedWorkspaces": [
+                          {
+                            "master": {
+                              "workspaceId": "137687000271334001",
+                              "workspaceName": "ISV Master Analytics",
+                              "orgId": "700000123456",
+                              "orgName": "Zylker Analytics"
+                            },
+                            "clients": [
+                              {
+                                "orgId": "700000654321",
+                                "orgName": "Northwind Retail",
+                                "workspaces": [
+                                  {
+                                    "workspaceId": "466206000000071000",
+                                    "workspaceName": "Northwind Sandbox",
+                                    "sandboxId": "137687000012345001",
+                                    "lastSync": {
+                                      "syncTime": "1779226560981",
+                                      "syncStatus": "success",
+                                      "syncedBy": "jane.doe@example.com",
+                                      "syncedByName": "Jane Doe",
+                                      "syncedByZuId": "60002000000000123"
+                                    },
+                                    "hasPendingEntities": false
+                                  },
+                                  {
+                                    "workspaceId": "466206000000071010",
+                                    "workspaceName": "Northwind EU Sandbox",
+                                    "sandboxId": "137687000012345002",
+                                    "lastSync": {
+                                      "syncTime": "1779140160981",
+                                      "syncStatus": "partialSuccess",
+                                      "syncedBy": "john.roe@example.com",
+                                      "syncedByName": "John Roe",
+                                      "syncedByZuId": "60002000000000456"
+                                    },
+                                    "hasPendingEntities": true
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "okOrganisationWith": {
+                    "description": "OK Organisation with no",
+                    "summary": "OK — Organisation with no linked workspaces.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get linked workspaces for organization",
+                      "data": {
+                        "linkedWorkspaces": []
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin of the organisation in ZANALYTICS-ORGID, or the request arrived through a Client Portal / White Label domain.",
+                "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use the standard API host."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces": {
+      "get": {
+        "operationId": "getLinkedWorkspacesForMasterWorkspace",
+        "summary": "Get Linked Workspaces For Master Workspace",
+        "description": "Returns the links of a single master workspace, in the same shape as one entry of Get Linked Workspaces For Organization - but as a single object, not an array.",
+        "tags": [
+          "Linked Workspaces"
+        ],
+        "x-zenesis-title": "Get Linked Workspaces For Master Workspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get linked workspaces for master workspace request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLinkedWorkspacesForMasterWorkspaceResponse"
+                },
+                "examples": {
+                  "okTwoClient": {
+                    "description": "OK Two client workspaces",
+                    "summary": "OK — Two client workspaces across two client organisations.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get linked workspaces for master workspace",
+                      "data": {
+                        "linkedWorkspaces": {
+                          "master": {
+                            "workspaceId": "137687000271334001",
+                            "workspaceName": "ISV Master Analytics",
+                            "orgId": "700000123456",
+                            "orgName": "Zylker Analytics"
+                          },
+                          "clients": [
+                            {
+                              "orgId": "700000654321",
+                              "orgName": "Northwind Retail",
+                              "workspaces": [
+                                {
+                                  "workspaceId": "466206000000071000",
+                                  "workspaceName": "Northwind Sandbox",
+                                  "sandboxId": "137687000012345001",
+                                  "lastSync": {
+                                    "syncTime": "1779226560981",
+                                    "syncStatus": "partialSuccess",
+                                    "syncedBy": "jane.doe@example.com",
+                                    "syncedByName": "Jane Doe",
+                                    "syncedByZuId": "60002000000000123"
+                                  },
+                                  "hasPendingEntities": true
+                                }
+                              ]
+                            },
+                            {
+                              "orgId": "700000999999",
+                              "orgName": "Contoso Distribution",
+                              "workspaces": [
+                                {
+                                  "workspaceId": "466206000000081010",
+                                  "workspaceName": "Contoso Sandbox",
+                                  "sandboxId": "137687000012345003",
+                                  "lastSync": {
+                                    "syncTime": "0",
+                                    "syncStatus": "inProgress",
+                                    "syncedBy": "john.roe@example.com",
+                                    "syncedByName": "John Roe",
+                                    "syncedByZuId": "60002000000000456"
+                                  },
+                                  "hasPendingEntities": true
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "okFailurePaired": {
+                    "description": "OK Failure paired with",
+                    "summary": "OK — Failure paired with Case 2: the workspace has no links.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get linked workspaces for master workspace",
+                      "data": {
+                        "linkedWorkspaces": {}
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain.",
+                "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use the standard API host."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "operationId": "linkWorkspaces",
+        "summary": "Link Workspaces",
+        "description": "Links one or more client workspaces to a master. The request is validated for compatibility first and, if every candidate passes, the initial design push is scheduled. Candidates already linked to this master are skipped silently.",
+        "tags": [
+          "Linked Workspaces"
+        ],
+        "x-zenesis-title": "Link Workspaces",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.create"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/LinkWorkspacesConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "linkOneClient": {
+                  "description": "Link one client workspace",
+                  "summary": "Link one client workspace.",
+                  "value": {
+                    "CONFIG": {
+                      "clients": [
+                        {
+                          "orgId": 700000654321,
+                          "workspaceIds": [
+                            "466206000000071000"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "linkSeveralWorkspaces": {
+                  "description": "Link several workspaces across",
+                  "summary": "Link several workspaces across two client organisations.",
+                  "value": {
+                    "CONFIG": {
+                      "clients": [
+                        {
+                          "orgId": 700000654321,
+                          "workspaceIds": [
+                            "466206000000071000",
+                            "466206000000071010"
+                          ]
+                        },
+                        {
+                          "orgId": 700000999999,
+                          "workspaceIds": [
+                            "466206000000081010"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully completed. No response body is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - The master workspace or one of the candidate workspaces was not found.",
+                "resolution": "Verify <workspace-id> and every clients[].workspaceIds entry."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or one of the organisations named in clients[].orgId; or the request arrived through a Client Portal / White Label domain.",
+                "resolution": "Authenticate as an administrator of every organisation in the payload, from the standard API host."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - One or more workspaceIds do not belong to the orgId they were listed under.",
+                "resolution": "Group each workspace under the organisation that owns it."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use the standard API host."
+              },
+              {
+                "name": "8077",
+                "description": "EMPTY_JSON_CONFIGURATION - CONFIG carries no clients array.",
+                "resolution": "Send {\"clients\":[{\"orgId\":…,\"workspaceIds\":[…]}]}."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON.",
+                "resolution": "Send a valid, URL-encoded JSON object."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8246",
+                "description": "INVALID_MASTER_WORKSPACE_MAPPING - <workspace-id> is itself linked as a client of another master.",
+                "resolution": "Use a workspace that is not already a client."
+              },
+              {
+                "name": "8247",
+                "description": "LINK_WORKSPACES_INCOMPATIBLE_WORKSPACES - At least one candidate failed the compatibility check. Nothing was linked.",
+                "resolution": "Read data.incompatibleWorkspaces, resolve the conflicts or drop those workspaces, and resend."
+              },
+              {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound.",
+                "resolution": "Send CONFIG with between 1 and 100 organisation entries."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "unlinkWorkspaces",
+        "summary": "Unlink Workspaces",
+        "description": "Removes links between a master workspace and its clients, either all of them or a named set. The client workspaces themselves survive - only the mapping, and the design relationship it carries, is removed.",
+        "tags": [
+          "Linked Workspaces"
+        ],
+        "x-zenesis-title": "Unlink Workspaces",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.delete"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/UnlinkWorkspacesConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "unlinkEveryClient": {
+                  "description": "Unlink every client of",
+                  "summary": "Unlink every client of the master.",
+                  "value": {
+                    "CONFIG": {
+                      "scope": "ALL"
+                    }
+                  }
+                },
+                "unlinkTwoNamed": {
+                  "description": "Unlink two named sandboxes",
+                  "summary": "Unlink two named sandboxes.",
+                  "value": {
+                    "CONFIG": {
+                      "scope": "SELECTED",
+                      "sandboxIds": [
+                        "137687000012345001",
+                        "137687000012345002"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully completed. No response body is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - The master workspace was not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain.",
+                "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use the standard API host."
+              },
+              {
+                "name": "8078",
+                "description": "EMPTY_JSON_ATTRIBUTE_FOUND - scope was sent with an empty value.",
+                "resolution": "Send ALL or SELECTED."
+              },
+              {
+                "name": "8079",
+                "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG.",
+                "resolution": "Add scope."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON.",
+                "resolution": "Send a valid, URL-encoded JSON object."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8119",
+                "description": "INVALID_VALUE_FOR_ATTRIBUTE - scope is not exactly ALL or SELECTED.",
+                "resolution": "Send upper-case ALL or SELECTED."
+              },
+              {
+                "name": "8248",
+                "description": "SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more sandboxIds are not linked to this master. The message names them.",
+                "resolution": "Use sandbox IDs from Get Linked Workspaces For Master Workspace."
+              },
+              {
+                "name": "8249",
+                "description": "INVALID_CONFIGURATION_REMOVE_LINKED_WORKSPACES - sandboxIds was supplied with scope: \"ALL\", or omitted with scope: \"SELECTED\".",
+                "resolution": "Send {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"sandboxIds\":[…]}."
+              },
+              {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or sandboxIds is outside its 1-100 bound.",
+                "resolution": "Send CONFIG as a URL-encoded form body on the DELETE request."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable": {
+      "get": {
+        "operationId": "getLinkableWorkspaces",
+        "summary": "Get Linkable Workspaces",
+        "description": "Returns, grouped by organisation, the workspaces the caller may offer as link candidates for a given master. This is the only source of the workspaceIds that Link Workspaces accepts.",
+        "tags": [
+          "Linked Workspaces"
+        ],
+        "x-zenesis-title": "Get Linkable Workspaces",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get linkable workspaces request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLinkableWorkspacesResponse"
+                },
+                "examples": {
+                  "okCandidatesIn": {
+                    "description": "OK Candidates in two",
+                    "summary": "OK — Candidates in two organisations.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get linkable workspaces",
+                      "data": {
+                        "orgs": [
+                          {
+                            "orgId": "700000654321",
+                            "orgName": "Northwind Retail",
+                            "workspaces": [
+                              {
+                                "workspaceName": "Northwind Sandbox",
+                                "workspaceId": "466206000000071000"
+                              },
+                              {
+                                "workspaceName": "Northwind EU Sandbox",
+                                "workspaceId": "466206000000071010"
+                              }
+                            ]
+                          },
+                          {
+                            "orgId": "700000999999",
+                            "orgName": "Contoso Distribution",
+                            "workspaces": [
+                              {
+                                "workspaceName": "Contoso Sandbox",
+                                "workspaceId": "466206000000081010"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "okNoCandidates": {
+                    "description": "OK No candidates available",
+                    "summary": "OK — No candidates available.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get linkable workspaces",
+                      "data": {
+                        "orgs": []
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain.",
+                "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use the standard API host."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility": {
+      "get": {
+        "operationId": "getWorkspaceLinkingCompatibility",
+        "summary": "Get Workspace Linking Compatibility",
+        "description": "Runs the full linking validation against a set of candidate client workspaces without linking anything, and returns a per-workspace verdict with the conflicting entities broken out. Link Workspaces runs exactly this check internally and refuses the whole request if any candidate fails, so calling this first is how you avoid an all-or-nothing rejection.",
+        "tags": [
+          "Linked Workspaces"
+        ],
+        "x-zenesis-title": "Get Workspace Linking Compatibility",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "name": "CONFIG",
+            "in": "query",
+            "required": true,
+            "description": "Configuration for this request. As this is a GET request, the value must be stringified and URL encoded before it is sent.",
+            "schema": {
+              "$ref": "#/components/schemas/GetWorkspaceLinkingCompatibilityConfig"
+            },
+            "style": "form",
+            "explode": false,
+            "examples": {
+              "checkOneCandidate": {
+                "description": "Check one candidate workspace",
+                "summary": "Check one candidate workspace.",
+                "value": {
+                  "clients": [
+                    {
+                      "orgId": 700000654321,
+                      "workspaceIds": [
+                        "466206000000071000"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "checkSeveralWorkspaces": {
+                "description": "Check several workspaces across",
+                "summary": "Check several workspaces across two organisations.",
+                "value": {
+                  "clients": [
+                    {
+                      "orgId": 700000654321,
+                      "workspaceIds": [
+                        "466206000000071000",
+                        "466206000000071010"
+                      ]
+                    },
+                    {
+                      "orgId": 700000999999,
+                      "workspaceIds": [
+                        "466206000000081010"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get workspace linking compatibility request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkspaceLinkingCompatibilityResponse"
+                },
+                "examples": {
+                  "okOneCompatible": {
+                    "description": "OK One compatible workspace",
+                    "summary": "OK — One compatible workspace and one with entity conflicts.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace linking compatibility",
+                      "data": {
+                        "clients": [
+                          {
+                            "orgId": "700000654321",
+                            "orgName": "Northwind Retail",
+                            "workspaces": [
+                              {
+                                "workspaceId": "466206000000071000",
+                                "workspaceName": "Northwind Sandbox",
+                                "isCompatible": true,
+                                "error": null,
+                                "entities": {
+                                  "dataSources": [],
+                                  "tables": [],
+                                  "views": []
+                                }
+                              },
+                              {
+                                "workspaceId": "466206000000071010",
+                                "workspaceName": "Northwind EU Sandbox",
+                                "isCompatible": false,
+                                "error": "Some entities have conflicts",
+                                "entities": {
+                                  "dataSources": [
+                                    {
+                                      "datasourceId": "466206000000095001",
+                                      "datasourceName": "Books Connection",
+                                      "status": "failure",
+                                      "message": "Connection configuration differs"
+                                    }
+                                  ],
+                                  "tables": [
+                                    {
+                                      "viewId": "137687000006991601",
+                                      "viewName": "Sales_Fact",
+                                      "status": "warning",
+                                      "message": "Column structure differs"
+                                    }
+                                  ],
+                                  "views": [
+                                    {
+                                      "viewId": "466206000000105001",
+                                      "viewName": "Revenue by Region",
+                                      "status": "failure",
+                                      "message": "Formula column missing in client workspace"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "okAWorkspace": {
+                    "description": "OK A workspace blocked",
+                    "summary": "OK — A workspace blocked for a workspace-level reason: entities is null.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace linking compatibility",
+                      "data": {
+                        "clients": [
+                          {
+                            "orgId": "700000999999",
+                            "orgName": "Contoso Distribution",
+                            "workspaces": [
+                              {
+                                "workspaceId": "466206000000081010",
+                                "workspaceName": "Contoso Sandbox",
+                                "isCompatible": false,
+                                "error": "This workspace is already linked to another master workspace.",
+                                "entities": null
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - The master workspace or one of the candidate workspaces was not found.",
+                "resolution": "Verify <workspace-id> and every clients[].workspaceIds entry."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or one of the organisations named in clients[].orgId; or the request arrived through a Client Portal / White Label domain.",
+                "resolution": "Authenticate as an administrator of every organisation in the payload, from the standard API host."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - One or more workspaceIds do not belong to the orgId they were listed under.",
+                "resolution": "Group each workspace under the organisation that actually owns it, as reported by Get Linkable Workspaces."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use the standard API host."
+              },
+              {
+                "name": "8077",
+                "description": "EMPTY_JSON_CONFIGURATION - CONFIG carries no clients array.",
+                "resolution": "Send {\"clients\":[{\"orgId\":…,\"workspaceIds\":[…]}]}."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON.",
+                "resolution": "Send a valid, URL-encoded JSON object."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8246",
+                "description": "INVALID_MASTER_WORKSPACE_MAPPING - <workspace-id> is itself linked as a client of another master.",
+                "resolution": "Use a workspace that is not already a client; a workspace cannot be both."
+              },
+              {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound.",
+                "resolution": "Send CONFIG with between 1 and 100 organisation entries."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync": {
+      "post": {
+        "operationId": "syncLinkedWorkspaces",
+        "summary": "Sync Linked Workspaces",
+        "description": "Pushes the master workspace's design to its linked clients. The request either syncs every link, or names the sandboxes to sync and - per sandbox - either everything or a specific list of master-workspace views.",
+        "tags": [
+          "Linked Workspaces"
+        ],
+        "x-zenesis-title": "Sync Linked Workspaces",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.create"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/SyncLinkedWorkspacesConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "syncEveryLinked": {
+                  "description": "Sync every linked workspace",
+                  "summary": "Sync every linked workspace.",
+                  "value": {
+                    "CONFIG": {
+                      "scope": "ALL"
+                    }
+                  }
+                },
+                "syncTwoNamed": {
+                  "description": "Sync two named sandboxes",
+                  "summary": "Sync two named sandboxes, one fully and one with selected views.",
+                  "value": {
+                    "CONFIG": {
+                      "scope": "SELECTED",
+                      "clients": [
+                        {
+                          "sandboxId": 137687000012345001,
+                          "scope": "ALL"
+                        },
+                        {
+                          "sandboxId": 137687000012345002,
+                          "scope": "SELECTED",
+                          "masterViewIds": [
+                            "137687000006991601",
+                            "466206000000105001"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully completed. No response body is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - The master workspace was not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7104",
+                "description": "META_OBJECT_NOT_PRESENT - A masterViewIds entry does not exist.",
+                "resolution": "Verify every view ID via Get View List against the master workspace."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or the organisation owning a workspace named in masterViewIds; or the request arrived through a Client Portal / White Label domain.",
+                "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use the standard API host."
+              },
+              {
+                "name": "8077",
+                "description": "EMPTY_JSON_CONFIGURATION - CONFIG is empty.",
+                "resolution": "Send at least {\"scope\":\"ALL\"}."
+              },
+              {
+                "name": "8079",
+                "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG.",
+                "resolution": "Add the top-level scope."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON.",
+                "resolution": "Send a valid, URL-encoded JSON object."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8119",
+                "description": "INVALID_VALUE_FOR_ATTRIBUTE - The top-level scope is not exactly ALL or SELECTED.",
+                "resolution": "Send upper-case ALL or SELECTED."
+              },
+              {
+                "name": "8246",
+                "description": "INVALID_MASTER_WORKSPACE_MAPPING - <workspace-id> is itself linked as a client of another master.",
+                "resolution": "Sync from the real master."
+              },
+              {
+                "name": "8248",
+                "description": "SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more clients[].sandboxId values are not linked to this master. The message names them.",
+                "resolution": "Use sandbox IDs from Get Linked Workspaces For Master Workspace."
+              },
+              {
+                "name": "8250",
+                "description": "INVALID_CONFIGURATION_SYNC_SCOPE_LINKED_WORKSPACES - clients was supplied with scope: \"ALL\", omitted with scope: \"SELECTED\", or resolved to nothing to sync.",
+                "resolution": "Send {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"clients\":[…]}."
+              },
+              {
+                "name": "8251",
+                "description": "INVALID_CONFIGURATION_SYNC_CLIENT_SCOPE_LINKED_WORKSPACES - A clients[] entry is missing sandboxId, carries a scope other than ALL / SELECTED, supplies masterViewIds with scope: \"ALL\", or omits them with scope: \"SELECTED\".",
+                "resolution": "Give each entry a sandboxId plus either {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"masterViewIds\":[…]}."
+              },
+              {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound.",
+                "resolution": "Send CONFIG with a valid JSON object."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "get": {
+        "operationId": "getLinkedWorkspaceSyncDetails",
+        "summary": "Get Linked Workspace Sync Details",
+        "description": "Returns, per linked sandbox, what the last sync did entity by entity and what is still waiting to be pushed. This is the only API that reports sync outcomes at entity granularity.",
+        "tags": [
+          "Linked Workspaces"
+        ],
+        "x-zenesis-title": "Get Linked Workspace Sync Details",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "name": "CONFIG",
+            "in": "query",
+            "required": false,
+            "description": "Configuration for this request. As this is a GET request, the value must be stringified and URL encoded before it is sent.",
+            "schema": {
+              "$ref": "#/components/schemas/GetLinkedWorkspaceSyncDetailsConfig"
+            },
+            "style": "form",
+            "explode": false,
+            "examples": {
+              "twoNamedSandboxes": {
+                "description": "Two named sandboxes",
+                "summary": "Two named sandboxes.",
+                "value": {
+                  "sandboxIds": [
+                    "137687000012345001",
+                    "137687000012345002"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get linked workspace sync details request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLinkedWorkspaceSyncDetailsResponse"
+                },
+                "examples": {
+                  "okOneSandbox": {
+                    "description": "OK One sandbox with",
+                    "summary": "OK — One sandbox with a partially successful last sync and pending work.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get linked workspace sync details",
+                      "data": {
+                        "workspaces": [
+                          {
+                            "sandboxId": "137687000012345001",
+                            "workspaceId": "466206000000071000",
+                            "workspaceName": "Northwind Sandbox",
+                            "lastSync": {
+                              "syncTime": "1779226560981",
+                              "syncStatus": "partialSuccess",
+                              "syncedBy": "jane.doe@example.com",
+                              "syncedByName": "Jane Doe",
+                              "syncedByZuId": "60002000000000123",
+                              "entities": {
+                                "dataSources": [
+                                  {
+                                    "datasourceName": "Books Connection",
+                                    "status": "success",
+                                    "message": "Compatible"
+                                  }
+                                ],
+                                "tables": [
+                                  {
+                                    "viewId": "137687000006991601",
+                                    "viewName": "Sales_Fact",
+                                    "viewType": "Table",
+                                    "viewTypeId": 0,
+                                    "status": "success",
+                                    "message": "Compatible"
+                                  }
+                                ],
+                                "views": [
+                                  {
+                                    "viewId": "466206000000105001",
+                                    "viewName": "Revenue by Region",
+                                    "viewType": "Chart View",
+                                    "viewTypeId": 2,
+                                    "status": "failure",
+                                    "message": "Formula column missing in client workspace"
+                                  }
+                                ]
+                              }
+                            },
+                            "hasPendingEntities": true,
+                            "pendingEntities": {
+                              "dataSources": [],
+                              "tables": [
+                                {
+                                  "viewId": "137687000006991601",
+                                  "viewName": "Sales_Fact",
+                                  "viewType": "Table",
+                                  "viewTypeId": 0,
+                                  "modifiedStatus": "updated"
+                                }
+                              ],
+                              "views": [
+                                {
+                                  "viewId": "466206000000105001",
+                                  "viewName": "Revenue by Region",
+                                  "viewType": "Chart View",
+                                  "viewTypeId": 2,
+                                  "modifiedStatus": "created"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "okALink": {
+                    "description": "OK A link that",
+                    "summary": "OK — A link that has never synced.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get linked workspace sync details",
+                      "data": {
+                        "workspaces": [
+                          {
+                            "sandboxId": "137687000012345003",
+                            "workspaceId": "466206000000081010",
+                            "workspaceName": "Contoso Sandbox",
+                            "lastSync": {
+                              "syncTime": "0",
+                              "syncStatus": "inProgress",
+                              "syncedBy": "john.roe@example.com",
+                              "syncedByName": "John Roe",
+                              "syncedByZuId": "60002000000000456",
+                              "entities": {
+                                "dataSources": [],
+                                "tables": [],
+                                "views": []
+                              }
+                            },
+                            "hasPendingEntities": false,
+                            "pendingEntities": {
+                              "dataSources": [],
+                              "tables": [],
+                              "views": []
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - The master workspace was not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain.",
+                "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use the standard API host."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object.",
+                "resolution": "Send a valid, URL-encoded JSON object, or omit CONFIG entirely."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8248",
+                "description": "SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more sandboxIds are not linked to this master. The message names them.",
+                "resolution": "Use sandbox IDs from Get Linked Workspaces For Master Workspace."
+              },
+              {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - CONFIG was sent without sandboxIds, or with more than 100 entries.",
+                "resolution": "Omit CONFIG to fetch everything, or send 1-100 sandbox IDs."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/backups": {
+      "get": {
+        "operationId": "getWorkspaceBackups",
+        "summary": "Get Workspace Backups",
+        "description": "Returns the workspace's backup settings and the list of its retained backups. Supplies the backupId values used by every other API in this document.",
+        "tags": [
+          "Workspace Backup & Restore"
+        ],
+        "x-zenesis-title": "Get Workspace Backups",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get workspace backups request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkspaceBackupsResponse"
+                },
+                "examples": {
+                  "okTwoBackups": {
+                    "description": "OK Two backups the",
+                    "summary": "OK — Two backups, the newest still downloadable, no failed backup.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace backups",
+                      "data": {
+                        "backupEnabled": true,
+                        "isInstantBackupInProgress": false,
+                        "isLastBackupFailed": false,
+                        "lastBackupFailedTime": "",
+                        "backups": [
+                          {
+                            "backupId": "137687000285490001",
+                            "createdDate": "14-Jun-2025",
+                            "createdDateWithTime": "14-Jun-2025 10:42:17 IST",
+                            "isLatestBackup": true,
+                            "version": 2,
+                            "backupMode": "STRUCTURE_AND_DATA",
+                            "isReadyToDownload": true,
+                            "isFailed": false
+                          },
+                          {
+                            "backupId": "137687000281450003",
+                            "createdDate": "07-Jun-2025",
+                            "createdDateWithTime": "07-Jun-2025 02:00:05 IST",
+                            "isLatestBackup": false,
+                            "version": 1,
+                            "backupMode": "STRUCTURE",
+                            "isReadyToDownload": true,
+                            "isFailed": false
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "okWorkspaceWith": {
+                    "description": "OK Workspace with no",
+                    "summary": "OK — Workspace with no backup information.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace backups",
+                      "data": {
+                        "backups": []
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "6025",
+                "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+                "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "operationId": "backupWorkspaceNow",
+        "summary": "Backup Workspace Now",
+        "description": "Queues an immediate backup of the workspace. Returns at once with the new backupId; the backup itself runs in the background. Poll Get Workspace Backup Status until it finishes.",
+        "tags": [
+          "Workspace Backup & Restore"
+        ],
+        "x-zenesis-title": "Backup Workspace Now",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.create"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/BackupWorkspaceNowConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "structureOnlyBackup": {
+                  "description": "Structure only backup",
+                  "summary": "Structure-only backup.",
+                  "value": {
+                    "CONFIG": {
+                      "backupMode": "STRUCTURE"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully completed the backup workspace now request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BackupWorkspaceNowResponse"
+                },
+                "examples": {
+                  "okBackupQueued": {
+                    "description": "OK Backup queued",
+                    "summary": "OK — Backup queued.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Backup workspace now",
+                      "data": {
+                        "backupId": "137687000285490001",
+                        "backupMode": "STRUCTURE_AND_DATA",
+                        "status": "IN_PROGRESS"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "6025",
+                "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+                "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG is present but is not valid JSON.",
+                "resolution": "Send a valid JSON object, or omit CONFIG."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8251",
+                "description": "INVALID_BACKUP_MODE - backupMode is not an allowed value.",
+                "resolution": "Use STRUCTURE or STRUCTURE_AND_DATA."
+              },
+              {
+                "name": "8253",
+                "description": "RESTORE_ALREADY_IN_PROGRESS - A restore is running for this workspace.",
+                "resolution": "Wait for the restore to finish (Get Workspace Restore Status), then retry."
+              },
+              {
+                "name": "8255",
+                "description": "CONNECTOR_SYNC_IN_PROGRESS - A connector sync is running for this workspace.",
+                "resolution": "Wait for the sync to complete, then retry."
+              },
+              {
+                "name": "8257",
+                "description": "BACKUP_ALREADY_IN_PROGRESS - A backup is already running for this workspace.",
+                "resolution": "Wait for it to complete (Get Workspace Backup Status), then retry if you still need another."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.create."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download": {
+      "get": {
+        "operationId": "downloadWorkspaceBackup",
+        "summary": "Download Workspace Backup",
+        "description": "Downloads a completed backup as a .wsbkp file. The response is the file itself, not a JSON envelope.",
+        "tags": [
+          "Workspace Backup & Restore"
+        ],
+        "x-zenesis-title": "Download Workspace Backup",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/backup-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - The backup file is streamed as the response body",
+            "content": {
+              "application/x-zip-compressed": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "The file is streamed as the response body."
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "6025",
+                "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+                "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8245",
+                "description": "BACKUP_NOT_FOUND - The backup does not exist, or does not belong to this workspace.",
+                "resolution": "Take the backupId from Get Workspace Backups for the same workspace."
+              },
+              {
+                "name": "8246",
+                "description": "BACKUP_NOT_READY - The backup is not SUCCESS, or has no stored file.",
+                "resolution": "Poll Get Workspace Backup Status until SUCCESS; a FAILED or DELETED backup cannot be downloaded."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore": {
+      "post": {
+        "operationId": "restoreWorkspaceFromBackup",
+        "summary": "Restore Workspace from Backup",
+        "description": "Queues a restore of the workspace from one of its own backups. Returns at once with a restoreId; the restore runs in the background. Poll Get Workspace Restore Status with the restoreId.",
+        "tags": [
+          "Workspace Backup & Restore"
+        ],
+        "x-zenesis-title": "Restore Workspace from Backup",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.create"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/backup-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/RestoreWorkspaceFromBackupConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "restoreEverythingThe": {
+                  "description": "Restore everything the backup",
+                  "summary": "Restore everything the backup holds.",
+                  "value": {
+                    "CONFIG": {
+                      "confirmRestore": true
+                    }
+                  }
+                },
+                "restoreOnlyThe": {
+                  "description": "Restore only the structure",
+                  "summary": "Restore only the structure from a full backup.",
+                  "value": {
+                    "CONFIG": {
+                      "confirmRestore": true,
+                      "restoreMode": "STRUCTURE"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully completed the restore workspace from backup request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestoreWorkspaceFromBackupResponse"
+                },
+                "examples": {
+                  "okRestoreQueued": {
+                    "description": "OK Restore queued",
+                    "summary": "OK — Restore queued.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Restore workspace backup",
+                      "data": {
+                        "restoreId": "137687000286120001",
+                        "backupMode": "STRUCTURE_AND_DATA",
+                        "status": "IN_PROGRESS"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "6025",
+                "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+                "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+              },
+              {
+                "name": "8077",
+                "description": "EMPTY_JSON_CONFIGURATION - CONFIG is present but empty.",
+                "resolution": "Send CONFIG={\"confirmRestore\":true}."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG is present but is not valid JSON.",
+                "resolution": "Send a valid JSON object."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8245",
+                "description": "BACKUP_NOT_FOUND - The backup does not exist, or does not belong to this workspace.",
+                "resolution": "Take the backupId from Get Workspace Backups for the same workspace."
+              },
+              {
+                "name": "8246",
+                "description": "BACKUP_NOT_READY - The backup is not in a state that can be restored (for example IN_PROGRESS).",
+                "resolution": "Poll Get Workspace Backup Status until SUCCESS, then retry."
+              },
+              {
+                "name": "8247",
+                "description": "BACKUP_NOT_RESTORABLE - The backup is DELETED or FAILED.",
+                "resolution": "Choose a backup with isReadyToDownload: true, or take a new one."
+              },
+              {
+                "name": "8248",
+                "description": "BACKUP_EXPIRED - The backup is older than the restore window, or its stored file has expired.",
+                "resolution": "Take a new backup; an expired one cannot be restored."
+              },
+              {
+                "name": "8249",
+                "description": "CONFIRM_RESTORE_REQUIRED - confirmRestore is not true.",
+                "resolution": "Send \"confirmRestore\": true in CONFIG."
+              },
+              {
+                "name": "8253",
+                "description": "RESTORE_ALREADY_IN_PROGRESS - A restore is running for this workspace.",
+                "resolution": "Wait for it to finish (Get Workspace Restore Status), then retry if still needed."
+              },
+              {
+                "name": "8254",
+                "description": "INVALID_RESTORE_MODE_BACKUP - STRUCTURE_AND_DATA was requested from a STRUCTURE-only backup.",
+                "resolution": "Omit restoreMode, or send STRUCTURE."
+              },
+              {
+                "name": "8257",
+                "description": "BACKUP_ALREADY_IN_PROGRESS - A backup is running for this workspace.",
+                "resolution": "Wait for it to complete (Get Workspace Backup Status), then retry."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.create."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status": {
+      "get": {
+        "operationId": "getWorkspaceBackupStatus",
+        "summary": "Get Workspace Backup Status",
+        "description": "Returns the current status of one backup. Use it to poll a backup started with Backup Workspace Now, and to check a backup before downloading or restoring it.",
+        "tags": [
+          "Workspace Backup & Restore"
+        ],
+        "x-zenesis-title": "Get Workspace Backup Status",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/backup-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get workspace backup status request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkspaceBackupStatusResponse"
+                },
+                "examples": {
+                  "okBackupCompleted": {
+                    "description": "OK Backup completed",
+                    "summary": "OK — Backup completed.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get backup status",
+                      "data": {
+                        "backupId": "137687000285490001",
+                        "status": "SUCCESS",
+                        "backupMode": "STRUCTURE_AND_DATA"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "6025",
+                "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+                "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8245",
+                "description": "BACKUP_NOT_FOUND - The backup does not exist, does not belong to this workspace, or is in an unrecognised state.",
+                "resolution": "Take the backupId from Get Workspace Backups for the same workspace."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status": {
+      "get": {
+        "operationId": "getWorkspaceRestoreStatus",
+        "summary": "Get Workspace Restore Status",
+        "description": "Returns the current status of one restore. Use it to poll a restore started with Restore Workspace from Backup.",
+        "tags": [
+          "Workspace Backup & Restore"
+        ],
+        "x-zenesis-title": "Get Workspace Restore Status",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/restore-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get workspace restore status request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkspaceRestoreStatusResponse"
+                },
+                "examples": {
+                  "okRestoreStill": {
+                    "description": "OK Restore still running",
+                    "summary": "OK — Restore still running.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get restore status",
+                      "data": {
+                        "restoreId": "137687000286120001",
+                        "status": "INIT",
+                        "backupMode": "STRUCTURE_AND_DATA"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "6025",
+                "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+                "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8256",
+                "description": "RESTORE_NOT_FOUND - The restore does not exist, or does not belong to this workspace.",
+                "resolution": "Use the restoreId returned by Restore Workspace from Backup for the same workspace."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2569,6 +4608,24 @@
           "type": "string"
         },
         "description": "The ID of the destination organization into which the workspace has to be copied. It is used by Organization Admins who have admin access in more than one organization. When this header is present, the system validates that the requesting user is a member of the specified organization and uses it as the target of the copy. When it is absent, the destination organization defaults to the organization resolved from the ZANALYTICS-ORGID header."
+      },
+      "backup-id": {
+        "name": "backup-id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the backup."
+      },
+      "restore-id": {
+        "name": "restore-id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the restore."
       }
     },
     "securitySchemes": {
@@ -2587,7 +4644,8 @@
               "ZohoAnalytics.modeling.update": "Update modeling objects in Zoho Analytics.",
               "ZohoAnalytics.modeling.delete": "Delete modeling objects in Zoho Analytics.",
               "ZohoAnalytics.modeling.all": "Full access to modeling objects in Zoho Analytics.",
-              "ZohoAnalytics.fullaccess.all": "Full access to all Zoho Analytics features."
+              "ZohoAnalytics.fullaccess.all": "Full access to all Zoho Analytics features.",
+              "ZohoAnalytics.metadata.create": "Create workspace backup & restore resources"
             }
           }
         }
@@ -3297,6 +5355,853 @@
             7617000000510003
           ]
         ]
+      },
+      "GetLinkedWorkspacesForOrganizationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Localised operation summary - \"Get linked workspaces for organization\" for this API. Never branch on it."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "linkedWorkspaces": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "One entry per master workspace that has at least one live link. Always present; [] when the organisation has no links, or when every link was filtered out by the permission check. A master with no clients never appears."
+              }
+            },
+            "description": "Response payload wrapper."
+          },
+          "linkedWorkspaces": {
+            "type": "object",
+            "properties": {
+              "master": {
+                "type": "object",
+                "description": "The master workspace of this group. Always present."
+              },
+              "clients": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The master's clients, grouped by client organisation, in the order the links were read. Always present and never empty within an entry."
+              }
+            },
+            "description": "linkedWorkspaces"
+          },
+          "master": {
+            "type": "object",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "description": "Master workspace ID, serialised as a string."
+              },
+              "workspaceName": {
+                "type": "string",
+                "description": "Master workspace display name. This is also the grouping key - see Limitations."
+              },
+              "orgId": {
+                "type": "string",
+                "description": "Organisation ID that owns the master."
+              },
+              "orgName": {
+                "type": "string",
+                "description": "Organisation display name. On an on-premise build this is the calling user's full name rather than an organisation name."
+              }
+            },
+            "description": "master"
+          },
+          "clients": {
+            "type": "object",
+            "properties": {
+              "orgId": {
+                "type": "string",
+                "description": "Client organisation ID."
+              },
+              "orgName": {
+                "type": "string",
+                "description": "Client organisation display name."
+              },
+              "workspaces": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The linked client workspaces inside that organisation."
+              }
+            },
+            "description": "clients"
+          },
+          "workspaces": {
+            "type": "object",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "description": "Client workspace ID."
+              },
+              "workspaceName": {
+                "type": "string",
+                "description": "Client workspace display name."
+              },
+              "sandboxId": {
+                "type": "string",
+                "description": "The link's identifier. Use it for Unlink Workspaces, Sync Linked Workspaces and Get Linked Workspace Sync Details."
+              },
+              "lastSync": {
+                "type": "object",
+                "description": "Summary of the most recent successful sync. Always present, with empty-ish members when the link has never synced."
+              },
+              "hasPendingEntities": {
+                "type": "boolean",
+                "description": "true when the master has entities created, modified or deleted since the last successful sync to this client. Native JSON boolean. The detail behind it is in Get Linked Workspace Sync Details."
+              }
+            },
+            "description": "workspaces"
+          },
+          "lastSync": {
+            "type": "object",
+            "properties": {
+              "syncTime": {
+                "type": "string",
+                "description": "Time of the last successful sync as epoch milliseconds in a string (\"1779226560981\"). \"0\" when the link has never synced. Not a formatted date."
+              },
+              "syncStatus": {
+                "type": "string",
+                "description": "Outcome of the last sync as a stable enum - success, failure, partialSuccess, inProgress or unknown. See Sync Status Values."
+              },
+              "syncedBy": {
+                "type": "string",
+                "description": "E-mail address of the user who ran that sync."
+              },
+              "syncedByName": {
+                "type": "string",
+                "description": "Display name of that user."
+              },
+              "syncedByZuId": {
+                "type": "string",
+                "description": "ZUID of that user, serialised as a string."
+              }
+            },
+            "description": "lastSync"
+          }
+        },
+        "title": "GetLinkedWorkspacesForOrganizationResponse"
+      },
+      "GetLinkedWorkspacesForMasterWorkspaceResponse": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "\"Get linked workspaces for master workspace\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "linkedWorkspaces": {
+                "type": "object",
+                "description": "A single object, not an array. Always present, but an empty object {} when the master has no links the caller may see. Test for the presence of master rather than for an empty array."
+              }
+            },
+            "description": "data"
+          }
+        },
+        "title": "GetLinkedWorkspacesForMasterWorkspaceResponse"
+      },
+      "GetLinkableWorkspacesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "\"Get linkable workspaces\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "orgs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Candidate workspaces grouped by organisation. Always present; [] when nothing can be linked. Note the key is orgs, not clients - the compatibility and linking APIs use clients."
+              }
+            },
+            "description": "Response payload wrapper."
+          },
+          "orgs": {
+            "type": "object",
+            "properties": {
+              "orgId": {
+                "type": "string",
+                "description": "Organisation ID. Empty string on the rare grouping where the server could not resolve an ID and returned the organisation name as the grouping key instead; orgName then carries that key."
+              },
+              "orgName": {
+                "type": "string",
+                "description": "Organisation display name."
+              },
+              "workspaces": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Workspaces inside that organisation that may be offered as link candidates. May be empty for an organisation that has none."
+              }
+            },
+            "description": "orgs"
+          },
+          "workspaces": {
+            "type": "object",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "description": "Workspace ID. This is what goes into clients[].workspaceIds of Get Workspace Linking Compatibility and Link Workspaces."
+              },
+              "workspaceName": {
+                "type": "string",
+                "description": "Workspace display name, for a user-facing picker."
+              }
+            },
+            "description": "workspaces"
+          }
+        },
+        "title": "GetLinkableWorkspacesResponse"
+      },
+      "LinkedWorkspaceClients": {
+        "type": "object",
+        "title": "LinkedWorkspaceClients",
+        "description": "Candidate client workspaces, grouped by the organisation that owns them. 1-100 entries. An absent or non-array clients is 8077. See clients Fields.",
+        "required": [
+          "orgId",
+          "workspaceIds"
+        ],
+        "properties": {
+          "orgId": {
+            "type": "integer",
+            "description": "Organisation that owns the listed workspaces, as a JSON number. The caller must administer it (7301)."
+          },
+          "workspaceIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Client workspace IDs to validate, as numeric strings, 1-100 entries. Every ID must belong to orgId (7387). Duplicates across organisation entries are de-duplicated before validation."
+          }
+        }
+      },
+      "GetWorkspaceLinkingCompatibilityConfig": {
+        "type": "object",
+        "title": "GetWorkspaceLinkingCompatibilityConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "clients"
+        ],
+        "properties": {
+          "clients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkedWorkspaceClients"
+            },
+            "description": "Candidate client workspaces, grouped by the organisation that owns them. 1-100 entries. An absent or non-array clients is 8077. See clients Fields."
+          }
+        }
+      },
+      "GetWorkspaceLinkingCompatibilityResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error. A workspace being incompatible is not a failure - the envelope is still success."
+          },
+          "summary": {
+            "type": "string",
+            "description": "\"Get workspace linking compatibility\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "clients": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "One entry per organisation in the request, in request order. Always present."
+              }
+            },
+            "description": "Response payload wrapper."
+          },
+          "clients": {
+            "type": "object",
+            "properties": {
+              "orgId": {
+                "type": "string",
+                "description": "Organisation ID, echoed from the request but serialised as a string."
+              },
+              "orgName": {
+                "type": "string",
+                "description": "Organisation display name, resolved server-side."
+              },
+              "workspaces": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "One report per workspace in that organisation's workspaceIds, in request order. A workspace the validator could not evaluate at all is omitted, so this array can be shorter than what you sent."
+              }
+            },
+            "description": "clients"
+          },
+          "workspaces": {
+            "type": "object",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "description": "The candidate workspace."
+              },
+              "workspaceName": {
+                "type": "string",
+                "description": "Its display name."
+              },
+              "isCompatible": {
+                "type": "boolean",
+                "description": "true when the workspace can be linked as-is. This is the field Link Workspaces gates on."
+              },
+              "error": {
+                "type": "string",
+                "description": "null when compatible. Otherwise either a workspace-level reason (already linked, unsupported configuration, …) or the fixed string \"Some entities have conflicts\" when the detail is in entities."
+              },
+              "entities": {
+                "type": "object",
+                "description": "The per-entity breakdown - null when the workspace was blocked for a workspace-level reason with no entity detail. Always a populated object otherwise, including for compatible workspaces, where its three arrays are empty."
+              }
+            },
+            "description": "workspaces"
+          },
+          "entities": {
+            "type": "object",
+            "properties": {
+              "dataSources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Conflicting or noteworthy data sources."
+              },
+              "tables": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Conflicting or noteworthy tables."
+              },
+              "views": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Conflicting or noteworthy reports."
+              }
+            },
+            "description": "entities"
+          },
+          "dataSources": {
+            "type": "object",
+            "properties": {
+              "datasourceId": {
+                "type": "string",
+                "description": "Data source ID. Present here but absent from the same structure in Get Linked Workspace Sync Details."
+              },
+              "datasourceName": {
+                "type": "string",
+                "description": "Data source name."
+              },
+              "status": {
+                "type": "string",
+                "description": "Per-entity verdict - success, warning or failure. See Entity Status Values."
+              },
+              "message": {
+                "type": "string",
+                "description": "Human-readable reason. \"Compatible\" when the underlying reason is the no-conflict sentinel. Always rendered in English, regardless of the caller's locale."
+              }
+            },
+            "description": "dataSources"
+          }
+        },
+        "title": "GetWorkspaceLinkingCompatibilityResponse"
+      },
+      "LinkWorkspacesConfig": {
+        "type": "object",
+        "title": "LinkWorkspacesConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "clients"
+        ],
+        "properties": {
+          "clients": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Client workspaces to link, grouped by the organisation that owns them. 1-100 entries. Identical in shape to the attribute of Get Workspace Linking Compatibility - see clients Fields."
+          }
+        }
+      },
+      "SyncLinkedWorkspacesConfig": {
+        "type": "object",
+        "title": "SyncLinkedWorkspacesConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "scope"
+        ],
+        "properties": {
+          "scope": {
+            "type": "string",
+            "description": "ALL syncs every linked sandbox of this master; SELECTED requires clients. Case-sensitive - must be upper case (8119 otherwise). See scope Values and The scope Attribute."
+          },
+          "clients": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Per-sandbox sync instructions, 1-100 entries. Mandatory when scope is SELECTED, and must be omitted when scope is ALL - either mistake is 8250. See clients Sync Fields."
+          }
+        }
+      },
+      "GetLinkedWorkspaceSyncDetailsConfig": {
+        "type": "object",
+        "title": "GetLinkedWorkspaceSyncDetailsConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "sandboxIds"
+        ],
+        "properties": {
+          "sandboxIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Restricts the response to these links, as numeric strings, 1-100 entries. Every ID must already be mapped to <workspace-id> (8248)."
+          }
+        }
+      },
+      "GetLinkedWorkspaceSyncDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "\"Get linked workspace sync details\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "workspaces": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "One entry per requested (or resolved) sandbox. Always present; [] when the master has no links. Note the key is workspaces, not clients."
+              }
+            },
+            "description": "Response payload wrapper."
+          },
+          "workspaces": {
+            "type": "object",
+            "properties": {
+              "sandboxId": {
+                "type": "string",
+                "description": "The link's identifier."
+              },
+              "workspaceId": {
+                "type": "string",
+                "description": "The client workspace behind that link."
+              },
+              "workspaceName": {
+                "type": "string",
+                "description": "Client workspace display name."
+              },
+              "lastSync": {
+                "type": "object",
+                "description": "What the last sync did. Always present."
+              },
+              "hasPendingEntities": {
+                "type": "boolean",
+                "description": "true when the master has changes not yet pushed to this client. Native JSON boolean."
+              },
+              "pendingEntities": {
+                "type": "object",
+                "description": "What the next sync would push. Always present, with three empty arrays when nothing is pending."
+              }
+            },
+            "description": "workspaces"
+          },
+          "lastSync": {
+            "type": "object",
+            "properties": {
+              "syncTime": {
+                "type": "string",
+                "description": "Time of the last successful sync as epoch milliseconds in a string, \"0\" when the link has never synced successfully. Same representation as the listing APIs - not a formatted date."
+              },
+              "syncStatus": {
+                "type": "string",
+                "description": "success, failure, partialSuccess, inProgress or unknown. See Sync Status Values."
+              },
+              "syncedBy": {
+                "type": "string",
+                "description": "E-mail address of the user who ran that sync."
+              },
+              "syncedByName": {
+                "type": "string",
+                "description": "Display name of that user."
+              },
+              "syncedByZuId": {
+                "type": "string",
+                "description": "ZUID of that user, as a string."
+              },
+              "entities": {
+                "type": "object",
+                "description": "Per-entity outcome of the last sync, read from the stored sync state. Always present, with three empty arrays when no state is stored."
+              }
+            },
+            "description": "lastSync"
+          },
+          "entities": {
+            "type": "object",
+            "properties": {
+              "dataSources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Data sources touched by the last sync: datasourceName, status, message. There is no datasourceId here - unlike the same structure in Get Workspace Linking Compatibility."
+              }
+            },
+            "description": "entities"
+          },
+          "pendingEntities": {
+            "type": "object",
+            "properties": {
+              "dataSources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Always empty. Pending data sources are not reported; only tables and reports are."
+              },
+              "tables": {
+                "type": "object",
+                "properties": {
+                  "modifiedStatus": {
+                    "type": "string",
+                    "description": "created, updated or deleted - what the next sync will do to this entity on the client. See Modified Status Values."
+                  }
+                },
+                "description": "tables"
+              }
+            },
+            "description": "pendingEntities"
+          }
+        },
+        "title": "GetLinkedWorkspaceSyncDetailsResponse"
+      },
+      "UnlinkWorkspacesConfig": {
+        "type": "object",
+        "title": "UnlinkWorkspacesConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "scope"
+        ],
+        "properties": {
+          "scope": {
+            "type": "string",
+            "description": "ALL unlinks every client of this master; SELECTED unlinks the listed sandboxIds. Case-sensitive - must be upper case (8119 otherwise). See scope Values."
+          },
+          "sandboxIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Links to remove, as numeric strings, 1-100 entries. Mandatory when scope is SELECTED, and must be omitted or empty when scope is ALL - either mistake is 8249. Every ID must already be mapped to <workspace-id> (8248)."
+          }
+        }
+      },
+      "GetWorkspaceBackupsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Localised operation summary. \"Get workspace backups\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "backupEnabled": {
+                "type": "boolean",
+                "description": "Whether backups are enabled for the workspace. Absent when the workspace has no backup information (see Notes)."
+              },
+              "isInstantBackupInProgress": {
+                "type": "boolean",
+                "description": "true while a backup started with Backup Workspace Now is running. Absent in the same case."
+              },
+              "isLastBackupFailed": {
+                "type": "boolean",
+                "description": "true when the most recent backup attempt failed. Absent in the same case."
+              },
+              "lastBackupFailedTime": {
+                "type": "string",
+                "description": "Time of the last failed backup, or \"\" when there is none. Absent in the same case."
+              },
+              "scheduleInfo": {
+                "type": "object",
+                "properties": {
+                  "nextScheduleTime": {
+                    "type": "string",
+                    "description": "When the next scheduled backup will run."
+                  },
+                  "periodicUnit": {
+                    "type": "string",
+                    "description": "Periodic unit of the schedule, where one is set."
+                  },
+                  "calendarFreq": {
+                    "type": "string",
+                    "description": "Calendar frequency of the schedule, where one is set. Note the key is calendarFreq, not calendarFrequency."
+                  },
+                  "calendarTime": {
+                    "type": "string",
+                    "description": "Time of day of a calendar schedule."
+                  },
+                  "calendarDay": {
+                    "type": "string",
+                    "description": "Day of the week of a calendar schedule."
+                  },
+                  "calendarDate": {
+                    "type": "string",
+                    "description": "Day of the month of a calendar schedule."
+                  }
+                },
+                "description": "The workspace's backup schedule. Present only when a schedule exists. Values are returned as stored and are not normalised; treat them as display values, not as an input to other APIs."
+              },
+              "backups": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "backupId": {
+                      "type": "string",
+                      "description": "Backup ID. Use it in the other .../backups/<backup-id>/... URLs. Returned as a string."
+                    },
+                    "createdDate": {
+                      "type": "string",
+                      "description": "Creation date, dd-MMM-yyyy, for example 14-Jun-2025."
+                    },
+                    "createdDateWithTime": {
+                      "type": "string",
+                      "description": "Creation date and time, dd-MMM-yyyy HH:mm:ss z, in the workspace's display time zone."
+                    },
+                    "isLatestBackup": {
+                      "type": "boolean",
+                      "description": "true for the most recently created backup."
+                    },
+                    "version": {
+                      "type": "integer",
+                      "description": "Version number of the backup, as recorded when it was taken."
+                    },
+                    "backupMode": {
+                      "type": "string",
+                      "description": "STRUCTURE_AND_DATA or STRUCTURE. See backupMode Values."
+                    },
+                    "isReadyToDownload": {
+                      "type": "boolean",
+                      "description": "true only for a successfully completed backup that has a stored file."
+                    },
+                    "isFailed": {
+                      "type": "boolean",
+                      "description": "true whenever isReadyToDownload is false - that is, for a failed backup and for any backup that has not completed successfully. It is not a precise failure flag; use Get Workspace Backup Status for the exact state."
+                    }
+                  }
+                },
+                "description": "The retained backups. Always present; [] when there are none."
+              }
+            },
+            "description": "Response payload wrapper."
+          }
+        },
+        "title": "GetWorkspaceBackupsResponse"
+      },
+      "BackupWorkspaceNowConfig": {
+        "type": "object",
+        "title": "BackupWorkspaceNowConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "properties": {
+          "backupMode": {
+            "type": "string",
+            "description": "What the backup contains. Up to 100 characters. See backupMode Values. A value outside the list is refused with 8251.",
+            "default": "STRUCTURE_AND_DATA"
+          }
+        }
+      },
+      "BackupWorkspaceNowResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Localised operation summary. \"Backup workspace now\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "backupId": {
+                "type": "string",
+                "description": "ID of the backup that was queued. Use it with Get Workspace Backup Status."
+              },
+              "backupMode": {
+                "type": "string",
+                "description": "The mode of the backup that was queued: the value you sent, or the default."
+              },
+              "status": {
+                "type": "string",
+                "description": "Always IN_PROGRESS in a success response. It is the state at the time of queuing, not the outcome."
+              }
+            },
+            "description": "Response payload wrapper."
+          }
+        },
+        "title": "BackupWorkspaceNowResponse"
+      },
+      "RestoreWorkspaceFromBackupConfig": {
+        "type": "object",
+        "title": "RestoreWorkspaceFromBackupConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "confirmRestore"
+        ],
+        "properties": {
+          "confirmRestore": {
+            "type": "boolean",
+            "description": "Must be true. Any other value, or omitting it, refuses the request with 8249 and queues nothing."
+          },
+          "restoreMode": {
+            "type": "string",
+            "description": "What to restore. Up to 100 characters. See restoreMode Values. STRUCTURE_AND_DATA on a STRUCTURE backup is refused with 8254."
+          }
+        }
+      },
+      "RestoreWorkspaceFromBackupResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Localised operation summary. \"Restore workspace backup\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "restoreId": {
+                "type": "string",
+                "description": "ID of the restore that was queued. Pass it to Get Workspace Restore Status. It is not the backupId."
+              },
+              "backupMode": {
+                "type": "string",
+                "description": "The mode that will be restored: the effective restoreMode, after the default is applied."
+              },
+              "status": {
+                "type": "string",
+                "description": "Always IN_PROGRESS in a success response. It is the state at the time of queuing, not the outcome."
+              }
+            },
+            "description": "Response payload wrapper."
+          }
+        },
+        "title": "RestoreWorkspaceFromBackupResponse"
+      },
+      "GetWorkspaceBackupStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Localised operation summary. \"Get backup status\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "backupId": {
+                "type": "string",
+                "description": "The backup ID from the URL."
+              },
+              "status": {
+                "type": "string",
+                "description": "The backup's state. See Backup status Values. Note this is a field inside data, separate from the top-level status."
+              },
+              "backupMode": {
+                "type": "string",
+                "description": "STRUCTURE_AND_DATA or STRUCTURE. See backupMode Values."
+              }
+            },
+            "description": "Response payload wrapper."
+          }
+        },
+        "title": "GetWorkspaceBackupStatusResponse"
+      },
+      "GetWorkspaceRestoreStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Localised operation summary. \"Get restore status\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "restoreId": {
+                "type": "string",
+                "description": "The restore ID from the URL."
+              },
+              "status": {
+                "type": "string",
+                "description": "The restore's state: INIT, SUCCESS or FAILURE. See Restore status Values."
+              },
+              "backupMode": {
+                "type": "string",
+                "description": "The mode the restore applies: STRUCTURE_AND_DATA or STRUCTURE."
+              }
+            },
+            "description": "Response payload wrapper."
+          }
+        },
+        "title": "GetWorkspaceRestoreStatusResponse"
       }
     }
   }

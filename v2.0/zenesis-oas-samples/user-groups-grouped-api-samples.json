@@ -404,7 +404,7 @@
       "Node": {
         "snippets": [
           {
-            "code": "var analyticsClient = require('./AnalyticsClient');\n\nvar clientId = '1000.xxxxxxx';\nvar clientSecret = 'xxxxxxx';\nvar refreshToken = '1000.xxxxxxx.xxxxxxx';\nvar orgId = '55522777';\n\nvar ac = new analyticsClient(clientId, clientSecret, refreshToken);\n\nvar org = ac.getOrgInstance(orgId);\nvar emailIds = [\"user@example.com\"];\n\norg.deactivateUsers(emailIds).then(function () {\n    console.log('success');\n}).catch(function (err) {\n    console.log(err);\n});"
+            "code": "var analyticsClient = require('./AnalyticsClient');\n\nvar clientId = '1000.xxxxxxx';\nvar clientSecret = 'xxxxxxx';\nvar refreshToken = '1000.xxxxxxx.xxxxxxx';\nvar orgId = '55522777';\n\nvar ac = new analyticsClient(clientId, clientSecret, refreshToken);\n\nvar org = ac.getOrgInstance(orgId);\nvar emailIds = [\"user@example.com\"];\n\norg.deActivateUsers(emailIds).then(function () {\n    console.log('success');\n}).catch(function (err) {\n    console.log(err);\n});"
           }
         ]
       },

@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-13T08:58:58Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: endpoint-doc
     resource: "/domains/reports-and-dashboards/reports/create-report.md"
     title: Endpoint reference - Create Report
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -65,6 +65,7 @@ curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/35130000001055707/repo
 ```csharp
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using ZohoAnalytics;
 
 namespace ZohoAnalyticsTest
@@ -74,21 +75,12 @@ namespace ZohoAnalyticsTest
         long orgId = 55522777;
         long workspaceId = 35130000001055707;
 
-        public void CreateVisual(IAnalyticsClient ac)
+        public void CreateReport(IAnalyticsClient ac)
         {
-            string baseTableName = "Sales";
-            string title = "Sales by Region";
-            string description = "Comprehensive analysis of sales metrics across regions";
-            // Allowed values for reportType: "chart", "pivot", "summary"
-            string reportType = "chart";
-            // Allowed values for chartType: see the supported chart types reference
-            string chartType = "bar";
-            List<Dictionary<string, object>> axisColumns = new List<Dictionary<string, object>>();
-            axisColumns.Add(new Dictionary<string, object>{{"type","xAxis"},{"columnName","Region"},{"operation","actual"}});
-            axisColumns.Add(new Dictionary<string, object>{{"type","yAxis"},{"columnName","Sales"},{"operation","sum"}});
+            Dictionary<string, object> config = JsonSerializer.Deserialize<Dictionary<string, object>>("{\"baseTableName\":\"Sales\",\"title\":\"Sales by Region\",\"description\":\"Comprehensive analysis of sales metrics across regions\",\"reportType\":\"chart\",\"chartType\":\"bar\",\"axisColumns\":[{\"type\":\"xAxis\",\"columnName\":\"Region\",\"operation\":\"actual\"},{\"type\":\"yAxis\",\"columnName\":\"Sales\",\"operation\":\"sum\"}]}");
             IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);
-            string viewId = workspace.CreateView(baseTableName, title, description, reportType, chartType, axisColumns, null, null);
-            Console.WriteLine(viewId);
+            long result = workspace.CreateReport(config);
+            Console.WriteLine(result);
         }
 
         static void Main(string[] args)
@@ -98,7 +90,7 @@ namespace ZohoAnalyticsTest
             string refreshToken = "1000.xxxxxxx.xxxxxxx";
             IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
             Program obj = new Program();
-            obj.CreateVisual(ac);
+            obj.CreateReport(ac);
         }
     }
 }
@@ -122,26 +114,38 @@ var (
     workspaceId = "35130000001055707"
 )
 
-func CreateVisual(ac ZAnalytics.Client) {
-    baseTableName := "Sales"
-    title := "Sales by Region"
-    description := "Comprehensive analysis of sales metrics across regions"
-    // Allowed values for reportType: "chart", "pivot", "summary"
-    reportType := "chart"
-    // Allowed values for chartType: see the supported chart types reference
-    chartType := "bar"
-    xAxis := map[string]interface{}{"type": "xAxis", "columnName": "Region", "operation": "actual"}
-    yAxis := map[string]interface{}{"type": "yAxis", "columnName": "Sales", "operation": "sum"}
-    axisColumns := []map[string]interface{}{xAxis, yAxis}
+func CreateReport(ac ZAnalytics.Client) {
+    config := map[string]interface{}{
+        "baseTableName": "Sales",
+        "title": "Sales by Region",
+        "description": "Comprehensive analysis of sales metrics across regions",
+        "reportType": "chart",
+        "chartType": "bar",
+        "axisColumns": []interface{}{
+            map[string]interface{}{
+                "type": "xAxis",
+                "columnName": "Region",
+                "operation": "actual",
+            },
+            map[string]interface{}{
+                "type": "yAxis",
+                "columnName": "Sales",
+                "operation": "sum",
+            },
+        },
+    }
     workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)
-    viewId, exception := workspace.CreateView(baseTableName, title, description, reportType, chartType, axisColumns, nil, nil)
-    if exception != nil { fmt.Println(exception.ErrorMessage); return }
-    fmt.Println(viewId)
+    result, exception := workspace.CreateReport(config)
+    if exception != nil {
+        fmt.Println(exception.ErrorMessage)
+        return
+    }
+    fmt.Println(result)
 }
 
 func main() {
     ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)
-    CreateVisual(ac)
+    CreateReport(ac)
 }
 ```
 
@@ -162,34 +166,17 @@ public class Test {
         Test tObj = new Test();
         AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
         try {
-            tObj.createVisual(ac);
+            tObj.createReport(ac);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void createVisual(AnalyticsClient ac) throws Exception {
-        String baseTableName = "Sales";
-        String title = "Sales by Region";
-        String description = "Comprehensive analysis of sales metrics across regions";
-        // Allowed values for reportType: "chart", "pivot", "summary"
-        String reportType = "chart";
-        // Allowed values for chartType: see the supported chart types reference
-        String chartType = "bar";
-        JSONObject xAxis = new JSONObject();
-        xAxis.put("type", "xAxis");
-        xAxis.put("columnName", "Region");
-        xAxis.put("operation", "actual");
-        JSONObject yAxis = new JSONObject();
-        yAxis.put("type", "yAxis");
-        yAxis.put("columnName", "Sales");
-        yAxis.put("operation", "sum");
-        JSONArray axisColumns = new JSONArray();
-        axisColumns.put(xAxis);
-        axisColumns.put(yAxis);
+    public void createReport(AnalyticsClient ac) throws Exception {
+        JSONObject config = new JSONObject("{\"baseTableName\":\"Sales\",\"title\":\"Sales by Region\",\"description\":\"Comprehensive analysis of sales metrics across regions\",\"reportType\":\"chart\",\"chartType\":\"bar\",\"axisColumns\":[{\"type\":\"xAxis\",\"columnName\":\"Region\",\"operation\":\"actual\"},{\"type\":\"yAxis\",\"columnName\":\"Sales\",\"operation\":\"sum\"}]}");
         WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);
-        String viewId = workspace.createView(baseTableName, title, description, reportType, chartType, axisColumns, null, null);
-        System.out.println(viewId);
+        long result = workspace.createReport(config);
+        System.out.println(result);
     }
 }
 ```
@@ -204,29 +191,39 @@ class Test {
     public $ac;
     public $org_id = "55522777";
     public $workspace_id = "35130000001055707";
+
     function __construct() {
         $this->ac = new AnalyticsClient("1000.xxxxxxx", "xxxxxxx", "1000.xxxxxxx.xxxxxxx");
     }
 
-    function createVisual() {
-        $base_table_name = "Sales";
-        $title = "Sales by Region";
-        $description = "Comprehensive analysis of sales metrics across regions";
-        // Allowed values for $report_type: "chart", "pivot", "summary"
-        $report_type = "chart";
-        // Allowed values for $chart_type: see the supported chart types reference
-        $chart_type = "bar";
-        $x_axis = ["type" => "xAxis", "columnName" => "Region", "operation" => "actual"];
-        $y_axis = ["type" => "yAxis", "columnName" => "Sales", "operation" => "sum"];
-        $axis_columns = [$x_axis, $y_axis];
+    function createReport() {
+        $config = array(
+            "baseTableName" => "Sales",
+            "title" => "Sales by Region",
+            "description" => "Comprehensive analysis of sales metrics across regions",
+            "reportType" => "chart",
+            "chartType" => "bar",
+            "axisColumns" => array(
+                array(
+                    "type" => "xAxis",
+                    "columnName" => "Region",
+                    "operation" => "actual"
+                ),
+                array(
+                    "type" => "yAxis",
+                    "columnName" => "Sales",
+                    "operation" => "sum"
+                )
+            )
+        );
         $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);
-        $view_id = $workspace->createView($base_table_name, $title, $description, $report_type, $chart_type, $axis_columns);
-        print_r($view_id);
+        $response = $workspace->createReport($config);
+        print_r($response);
     }
 }
 
 $obj = new Test();
-$obj->createVisual();
+$obj->createReport();
 ?>
 ```
 
@@ -242,26 +239,35 @@ class Config:
     ORGID = "55522777"
     WORKSPACEID = "35130000001055707"
 
-class sample:
+class Sample:
     ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)
 
-    def create_visual(self, ac):
-        base_table_name = "Sales"
-        title = "Sales by Region"
-        description = "Comprehensive analysis of sales metrics across regions"
-        # Allowed values for report_type: "chart", "pivot", "summary"
-        report_type = "chart"
-        # Allowed values for chart_type: see the supported chart types reference
-        chart_type = "bar"
-        xAxis = {"type": "xAxis", "columnName": "Region", "operation": "actual"}
-        yAxis = {"type": "yAxis", "columnName": "Sales", "operation": "sum"}
-        axis_columns = [xAxis, yAxis]
+    def create_report(self, ac):
+        config = {
+            "baseTableName": "Sales",
+            "title": "Sales by Region",
+            "description": "Comprehensive analysis of sales metrics across regions",
+            "reportType": "chart",
+            "chartType": "bar",
+            "axisColumns": [
+                {
+                    "type": "xAxis",
+                    "columnName": "Region",
+                    "operation": "actual"
+                },
+                {
+                    "type": "yAxis",
+                    "columnName": "Sales",
+                    "operation": "sum"
+                }
+            ]
+        }
         workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)
-        view_id = workspace.create_view(base_table_name, title, description, report_type, chart_type, axis_columns)
-        print(view_id)
+        result = workspace.create_report(config)
+        print(result)
 
-obj = sample()
-obj.create_visual(obj.ac)
+obj = Sample()
+obj.create_report(obj.ac)
 ```
 
 ## Node.js
@@ -272,18 +278,27 @@ var ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');
 var orgId = '55522777';
 var workspaceId = '35130000001055707';
 
-var baseTableName = 'Sales';
-var title = 'Sales by Region';
-var description = 'Comprehensive analysis of sales metrics across regions';
-// Allowed values for reportType: "chart", "pivot", "summary"
-var reportType = 'chart';
-// Allowed values for chartType: see the supported chart types reference
-var chartType = 'bar';
-var xAxis = { type: 'xAxis', columnName: 'Region', operation: 'actual' };
-var yAxis = { type: 'yAxis', columnName: 'Sales', operation: 'sum' };
-var axisColumns = [xAxis, yAxis];
+var config = {
+    "baseTableName": "Sales",
+    "title": "Sales by Region",
+    "description": "Comprehensive analysis of sales metrics across regions",
+    "reportType": "chart",
+    "chartType": "bar",
+    "axisColumns": [
+        {
+            "type": "xAxis",
+            "columnName": "Region",
+            "operation": "actual"
+        },
+        {
+            "type": "yAxis",
+            "columnName": "Sales",
+            "operation": "sum"
+        }
+    ]
+};
 var workspace = ac.getWorkspaceInstance(orgId, workspaceId);
-workspace.createView(baseTableName, title, description, reportType, chartType, axisColumns).then((viewId) => { console.log(viewId); }).catch((error) => { console.log(error); });
+workspace.createReport(config).then((result) => { console.log(result); }).catch((error) => { console.log(error); });
 ```
 
 ## Ruby
@@ -305,25 +320,34 @@ class Sample
     }).build
   end
 
-  def create_visual
-    base_table_name = "Sales"
-    title = "Sales by Region"
-    description = "Comprehensive analysis of sales metrics across regions"
-    # Allowed values for report_type: "chart", "pivot", "summary"
-    report_type = "chart"
-    # Allowed values for chart_type: see the supported chart types reference
-    chart_type = "bar"
-    xAxis = { "type" => "xAxis", "columnName" => "Region", "operation" => "actual" }
-    yAxis = { "type" => "yAxis", "columnName" => "Sales", "operation" => "sum" }
-    axis_columns = [xAxis, yAxis]
+  def create_report
+    config = {
+      "baseTableName" => "Sales",
+      "title" => "Sales by Region",
+      "description" => "Comprehensive analysis of sales metrics across regions",
+      "reportType" => "chart",
+      "chartType" => "bar",
+      "axisColumns" => [
+        {
+          "type" => "xAxis",
+          "columnName" => "Region",
+          "operation" => "actual"
+        },
+        {
+          "type" => "yAxis",
+          "columnName" => "Sales",
+          "operation" => "sum"
+        }
+      ]
+    }
     workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)
-    view_id = workspace.create_view(base_table_name, title, description, report_type, chart_type, axis_columns)
-    puts view_id
+    result = workspace.create_report(config)
+    puts result
   end
 end
 
 obj = Sample.new
-obj.create_visual
+obj.create_report
 ```
 
 ## Deluge (Zoho scripting)

@@ -26,10 +26,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -220,7 +220,7 @@ The new-table import has no such checks — there is no existing table yet — b
 | [7478](../../../foundations/error-codes.md#error-7478) | 400 | MORETHANMAXCOLUMN — The source has more columns than a table can hold. |
 | [7512](../../../foundations/error-codes.md#error-7512) | 400 | INVALIDDATEFORMAT — A date pattern could not be parsed. |
 | [8046](../../../foundations/error-codes.md#error-8046) | 400 | INVALIDCOLUMNSSELECTED — A name in selectedColumns is not present in the source data. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. |
 | [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
 | [8139](../../../foundations/error-codes.md#error-8139) | 400 | PASTEDDATALIMITEXCEEDED — The DATA parameter exceeds 10,000,000 characters. |
 | [8148](../../../foundations/error-codes.md#error-8148) | 400 | Separator configuration errors. |

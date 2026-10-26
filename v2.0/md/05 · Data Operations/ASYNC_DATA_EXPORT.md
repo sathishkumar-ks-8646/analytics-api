@@ -128,7 +128,7 @@ These are the limits that apply with **default settings**. A request that exceed
 | Limitation | Value | Enforced by |
 |------------|-------|-------------|
 | **Simultaneous export jobs** | **5** per organization. A job counts against the limit while it is queued or running. | `8132` |
-| **Export job retention** | **72 hours** from the moment the job is **created** — not from when it completes. After that the job record and the exported file are removed, and both [Get Export Job Details](#3-get-export-job-details) and [Download Exported Data](#4-download-exported-data) behave as though the job never existed. | `expiryTime` in the response, then `8120` / `jobCode` `1005` |
+| **Export job retention** | **1 hour** from the moment the job **completes** (`jobCode` `1004`) — not from when it was created. After that the job record and the exported file are removed together, and both [Get Export Job Details](#3-get-export-job-details) and [Download Exported Data](#4-download-exported-data) behave as though the job never existed. | `expiryTime` in the response, then `8120` / `jobCode` `1005` |
 | **Job visibility** | An export job can be polled and downloaded **only by the user who created it**. An Account Admin cannot collect another user's job. | `8124` |
 | **SQL query length** | **100,000** characters for `sqlQuery`. | `8507` |
 | **SQL query result rows** | **800,000** rows. A row limit is appended to the query automatically. | Truncated silently |
@@ -151,7 +151,7 @@ These are the limits that apply with **default settings**. A request that exceed
 | **`image` is only valid for chart views** | Any other view type fails with `8014`, and a SQL query export can never produce an image. |
 | **A SQL query export is always a flat sheet** | `image` is unavailable, and the dashboard-only page-setup attributes have nothing to act on. |
 
-> **Poll and download promptly, then persist.** Because the whole job — record and file — lives for 72 hours from creation, an integration that needs a durable copy must download inside that window and store the file itself. Nothing is recoverable afterwards.
+> **Poll and download promptly, then persist.** Because the whole job — record and file — lives for only **one hour after the job completes**, an integration that needs a durable copy must download inside that window and store the file itself. Nothing is recoverable afterwards, and the window is short enough that a nightly or hourly collector will routinely miss it.
 
 ---
 
@@ -165,7 +165,7 @@ These are the limits that apply with **default settings**. A request that exceed
 | `1002` | `JOB IN PROGRESS` | The job is being processed. | Wait a few seconds and poll again. |
 | `1003` | `ERROR OCCURRED` | The job stopped because of an error. | Stop polling. The job will never complete; create a new one. |
 | `1004` | `JOB COMPLETED` | The file is ready. | Read `downloadUrl` and `expiryTime`, then call [Download Exported Data](#4-download-exported-data). |
-| `1005` | `JOB NOT FOUND` | No job exists for this ID — it was never created, or it has passed its 72-hour retention. | Stop polling. Verify the job ID. |
+| `1005` | `JOB NOT FOUND` | No job exists for this ID — it was never created, or it has passed its one-hour post-completion retention. | Stop polling. Verify the job ID. |
 
 `1003` and `1005` are terminal, exactly like `1004`. Only `1001` and `1002` justify another poll.
 
@@ -190,7 +190,7 @@ Rules and constraints:
 - If the endpoint cannot be reached while the request is being validated, the create call fails with `8126` and no job is created.
 - Your endpoint should answer with a 2xx status. A non-2xx response is recorded as a delivery failure.
 - **Delivery is attempted once.** There is no retry, and a failed callback does not affect the job — the file is still there to download.
-- The callback is a **notification, not a guarantee**. Keep [Get Export Job Details](#3-get-export-job-details) as the fallback, and remember the 72-hour window.
+- The callback is a **notification, not a guarantee**. Keep [Get Export Job Details](#3-get-export-job-details) as the fallback, and remember that the one-hour retention window starts the moment the job completes — a callback your endpoint fails to process is an hour of budget already spent.
 
 ---
 
@@ -932,7 +932,7 @@ Note the HTTP status is still `200` — the *request* succeeded, the *job* did n
 | `data.jobCode` | String | Current state as a numeric code **in a string**: `"1001"`, `"1002"`, `"1003"`, `"1004"`, or `"1005"`. See [Job Codes and Polling](#job-codes-and-polling). |
 | `data.jobStatus` | String | Human-readable form of `jobCode`: `JOB NOT INITIATED`, `JOB IN PROGRESS`, `ERROR OCCURRED`, `JOB COMPLETED`, or `JOB NOT FOUND`. Intended for display; branch on `jobCode`. |
 | `data.downloadUrl` | String | Fully-qualified URL of [Download Exported Data](#4-download-exported-data) for this job. **Present only when `jobCode` is `"1004"`.** |
-| `data.expiryTime` | String | Epoch time in **milliseconds**, as a string, at which the job and its file are removed. Set to 72 hours after the job was **created**. **Present only when `jobCode` is `"1004"`.** |
+| `data.expiryTime` | String | Epoch time in **milliseconds**, as a string, at which the job and its file are removed. Set to **1 hour after the job completed**. **Present only when `jobCode` is `"1004"`.** |
 
 ### Notes & Behaviour
 
@@ -941,7 +941,7 @@ Note the HTTP status is still `200` — the *request* succeeded, the *job* did n
 | **A failed job is still a successful request** | `jobCode` `1003` comes back with HTTP `200` and `status: "success"`. Never infer job health from the HTTP status. |
 | **`1005` is returned, not raised** | If a job has expired or its ID was never valid *but the ID is well-formed*, the response is `200` with `jobCode` `1005`. A structurally unresolvable job produces `8120` instead. Handle both. |
 | **`downloadUrl` and `expiryTime` are conditional** | They exist only alongside `jobCode` `1004`. Test for the keys. |
-| **`expiryTime` is anchored to creation, not completion** | A job created at 09:00 and finishing at 09:40 still expires 72 hours after 09:00. A long-running job therefore leaves a shorter collection window. |
+| **`expiryTime` is anchored to completion, not creation** | A job created at 09:00 and finishing at 09:40 expires at 10:40. How long the job spent queued or running does not extend or shorten the collection window — it is always one hour from `jobCode` `1004`. |
 | **This API does not distinguish the two creation APIs** | A view export and a SQL query export produce identical response shapes. Track which is which yourself. |
 | **It reveals nothing about the export content** | No row count, no file size, no format. If you need those, record the CONFIG you sent. |
 | **Polling is cheap but not free** | Poll every few seconds rather than in a tight loop; use `callbackUrl` when you control an endpoint. |
@@ -952,7 +952,7 @@ Note the HTTP status is still `200` — the *request* succeeded, the *job* did n
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 8120 | `EXPORT_JOB_NOT_FOUND` — No export job exists for the given ID (HTTP 404). | Verify the `jobId` returned by the create call, and that the job has not passed its 72-hour retention. |
+| 8120 | `EXPORT_JOB_NOT_FOUND` — No export job exists for the given ID (HTTP 404). | Verify the `jobId` returned by the create call, and that the job has not passed its one-hour post-completion retention. |
 | 8124 | `EXPORT_JOB_ACCESS_DENIED` — The caller did not create this job (HTTP 403). | Poll with the same user that created the job. |
 | 8535 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token carrying `ZohoAnalytics.data.read`. |
 
@@ -1116,8 +1116,8 @@ The success body is a file, not a JSON envelope, so structured fields exist only
 | **The response body is the file, not a wrapper** | A successful call returns no `status` / `summary` / `data` envelope. Only **failures** use the JSON envelope, so branch on the HTTP status before parsing. |
 | **It never waits** | Calling before the job has finished is an error, not a blocking read: `8121` while queued, `8122` while running, `8123` if the job failed. Poll [Get Export Job Details](#3-get-export-job-details) first. |
 | **Each error code names a distinct job state** | `8121` queued, `8122` running, `8123` failed, `8120` absent or expired, `8124` not yours. They map one-to-one onto `jobCode`, so the download error alone is enough to decide whether to retry. |
-| **The file can be downloaded more than once** | Within the 72-hour window there is no single-use restriction and no state change on download. |
-| **After 72 hours the job is gone** | The record and the file are removed together, and this endpoint then fails with `8120`. |
+| **The file can be downloaded more than once** | Within the one-hour window there is no single-use restriction and no state change on download. |
+| **One hour after the job completes, the job is gone** | The record and the file are removed together, and this endpoint then fails with `8120`. |
 | **No `Content-Disposition`, no filename** | Derive one from the view or query and the format, and remember that a password-protected `csv` arrives as a ZIP. |
 | **Only the creator may download** | Even an Account Admin gets `8124` for another user's job — see [Permission Model](#permission-model). |
 | **`downloadUrl` and this endpoint are the same thing** | Following the URL from [Get Export Job Details](#3-get-export-job-details) and constructing the path yourself are equivalent. |
@@ -1127,7 +1127,7 @@ The success body is a file, not a JSON envelope, so structured fields exist only
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 8120 | `EXPORT_JOB_NOT_FOUND` — No export job exists for the given ID, or it has passed its 72-hour retention (HTTP 404). | Verify the `jobId`; if it has expired, create a new job. |
+| 8120 | `EXPORT_JOB_NOT_FOUND` — No export job exists for the given ID, or it has passed its one-hour post-completion retention (HTTP 404). | Verify the `jobId`; if it has expired, create a new job. |
 | 8121 | `EXPORT_JOB_NOT_INITIATED` — The job is queued but has not started (`jobCode` `1001`). | Poll [Get Export Job Details](#3-get-export-job-details) until `jobCode` is `1004`. |
 | 8122 | `EXPORT_JOB_NOT_COMPLETED` — The job is still running (`jobCode` `1002`). | Poll [Get Export Job Details](#3-get-export-job-details) until `jobCode` is `1004`. |
 | 8123 | `EXPORT_JOB_ERROR_OCCURRED` — The job failed (`jobCode` `1003`). | Nothing to download. Create a new job; if the failure repeats, contact support. |
@@ -1198,7 +1198,7 @@ The decoded `CONFIG` above is `{"responseFormat":"csv","criteria":"\"Region\"='E
 
 - **HTTP status and job status are independent.** A failed job is reported as `200` / `success` / `jobCode` `1003`. An integration that only inspects HTTP codes will treat a failed export as a success and then get `8123` from the download.
 - **Two terminal codes look like progress and are not.** `1003` and `1005` never change. Polling either forever is the most common mistake with this pipeline.
-- **`expiryTime` counts from creation.** The window shrinks while the job runs, so a slow job leaves less time to collect. Read `expiryTime` rather than adding 72 hours to the moment you saw `1004`.
+- **`expiryTime` counts from completion, and the window is one hour.** Download as soon as you observe `jobCode` `1004`; do not queue the collection for later. Read `expiryTime` rather than assuming any fixed duration.
 - **`expiryTime` is epoch milliseconds in a **string**.** So is `jobId`, and so is `jobCode`. Nothing in `data` is a JSON number.
 - **The response says nothing about the export itself.** No format, no row count, no size. Keep your own record of what the job was for.
 - **Prefer `callbackUrl` when you can host an endpoint.** It carries the same fields, removes the poll entirely, and fires on failure too.

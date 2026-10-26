@@ -44,7 +44,7 @@ sources:
     title: Endpoint reference - Add Lookup
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -233,7 +233,7 @@ public class Test {
                 "referenceColumnId" => 35130000001055821
             );
             $view = $this->ac->getViewInstance($this->org_id, $this->workspace_id, $view_id);
-            $view->addLookup($column_id, $ref_view_id, $ref_column_id, $config);
+            $view->createLookup($column_id, $ref_view_id, $ref_column_id, $config);
             echo "success\n";
         }
     }

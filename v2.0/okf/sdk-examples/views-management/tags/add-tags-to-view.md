@@ -44,7 +44,7 @@ sources:
     title: Endpoint reference - Add Multiple Tags To View
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -82,7 +82,7 @@ namespace ZohoAnalyticsTest
             tagIds.Add(35130000001364501L);
             tagIds.Add(35130000001364503L);
             IViewAPI view = ac.GetViewInstance(orgId, workspaceId, viewId);
-            view.AddTags(tagIds);
+            view.AddTagsToView(tagIds, null);
             Console.WriteLine("success");
         }
 
@@ -121,7 +121,7 @@ var (
 func AddTagsToView(ac ZAnalytics.Client) {
     tagIds := []string{"35130000001364501", "35130000001364503"}
     view := ZAnalytics.GetViewInstance(&ac, orgId, workspaceId, viewId)
-    exception := view.AddTags(tagIds)
+    exception := view.AddTagsToView(tagIds, nil)
     if exception != nil {
         fmt.Println(exception.ErrorMessage)
         return
@@ -164,7 +164,7 @@ public class Test {
         tagIds.put("35130000001364501");
         tagIds.put("35130000001364503");
         ViewAPI view = ac.getViewInstance(orgId, workspaceId, viewId);
-        view.addTags(tagIds);
+        view.addTagsToView(tagIds, null);
         System.out.println("success");
     }
 }
@@ -189,7 +189,7 @@ class Test {
     function addTagsToView() {
         $tag_ids = array("35130000001364501", "35130000001364503");
         $view = $this->ac->getViewInstance($this->org_id, $this->workspace_id, $this->view_id);
-        $view->addTags($tag_ids);
+        $view->addTagsToView($tag_ids);
         echo "success\n";
     }
 }
@@ -218,7 +218,7 @@ class Sample:
     def add_tags_to_view(self, ac):
         tag_ids = ["35130000001364501", "35130000001364503"]
         view = ac.get_view_instance(Config.ORGID, Config.WORKSPACEID, Config.VIEWID)
-        view.add_tags(tag_ids)
+        view.add_tags_to_view(tag_ids)
         print("success")
 
 obj = Sample()
@@ -236,7 +236,7 @@ var viewId = '35130000001055717';
 
 var tagIds = ['35130000001364501', '35130000001364503'];
 var view = ac.getViewInstance(orgId, workspaceId, viewId);
-view.addTags(tagIds).then(() => { console.log('success'); }).catch((error) => { console.log(error); });
+view.addTagsToView(tagIds).then(() => { console.log('success'); }).catch((error) => { console.log(error); });
 ```
 
 ## Ruby
@@ -262,7 +262,7 @@ class Sample
   def add_tags_to_view
     tag_ids = ["35130000001364501", "35130000001364503"]
     view = @ac.get_view_instance(Config::ORGID, Config::WORKSPACEID, Config::VIEWID)
-    view.add_tags(tag_ids)
+    view.add_tags_to_view(tag_ids)
     puts "success"
   end
 end

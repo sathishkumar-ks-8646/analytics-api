@@ -44,7 +44,7 @@ sources:
     title: Endpoint reference - Deactivate Users
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -273,7 +273,7 @@ var ac = new analyticsClient(clientId, clientSecret, refreshToken);
 var org = ac.getOrgInstance(orgId);
 var emailIds = ["user@example.com"];
 
-org.deactivateUsers(emailIds).then(function () {
+org.deActivateUsers(emailIds).then(function () {
     console.log('success');
 }).catch(function (err) {
     console.log(err);

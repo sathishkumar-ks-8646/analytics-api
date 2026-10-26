@@ -41,7 +41,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -132,7 +132,7 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | [7427](../../../foundations/error-codes.md#error-7427) | 400 | The specified <formula-id> is not a valid formula column on this view. |
 | [7467](../../../foundations/error-codes.md#error-7467) | 400 | Formula columns are not supported on Pipeline Tables. |
 | [8058](../../../foundations/error-codes.md#error-8058) | 400 | The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. |
 | [15007](../../../foundations/error-codes.md#error-15007) | 400 | The copy operation is not allowed — the destination workspace's organisation does not match the caller's organisation, and no valid workspaceKey was supplied (or it does not match). |
 
 # Related

@@ -44,7 +44,7 @@ sources:
     title: Endpoint reference - Remove Multiple Tags From View
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -91,7 +91,7 @@ namespace ZohoAnalyticsTest
             List<long> tagIds = new List<long>();
             tagIds.Add(35130000001364503L);
             IViewAPI view = ac.GetViewInstance(orgId, workspaceId, viewId);
-            view.RemoveTags(tagIds, null);
+            view.RemoveTagsFromView(tagIds, false, null);
             Console.WriteLine("success");
         }
 
@@ -126,10 +126,8 @@ namespace ZohoAnalyticsTest
 
         public void RemoveTagsFromView(IAnalyticsClient ac)
         {
-            Dictionary<string, object> config = new Dictionary<string, object>();
-            config.Add("dissociateAll", true);
             IViewAPI view = ac.GetViewInstance(orgId, workspaceId, viewId);
-            view.RemoveTags(null, config);
+            view.RemoveTagsFromView(null, true, null);
             Console.WriteLine("success");
         }
 
@@ -170,7 +168,7 @@ var (
 func RemoveTagsFromView(ac ZAnalytics.Client) {
     tagIds := []string{"35130000001364503"}
     view := ZAnalytics.GetViewInstance(&ac, orgId, workspaceId, viewId)
-    exception := view.RemoveTags(tagIds, nil)
+    exception := view.RemoveTagsFromView(tagIds, false, nil)
     if exception != nil {
         fmt.Println(exception.ErrorMessage)
         return
@@ -204,9 +202,8 @@ var (
 )
 
 func RemoveTagsFromView(ac ZAnalytics.Client) {
-    config := map[string]interface{}{"dissociateAll": true}
     view := ZAnalytics.GetViewInstance(&ac, orgId, workspaceId, viewId)
-    exception := view.RemoveTags(nil, config)
+    exception := view.RemoveTagsFromView(nil, true, nil)
     if exception != nil {
         fmt.Println(exception.ErrorMessage)
         return
@@ -250,7 +247,7 @@ public class Test {
         JSONArray tagIds = new JSONArray();
         tagIds.put("35130000001364503");
         ViewAPI view = ac.getViewInstance(orgId, workspaceId, viewId);
-        view.removeTags(tagIds, null);
+        view.removeTagsFromView(tagIds, false, null);
         System.out.println("success");
     }
 }
@@ -281,10 +278,8 @@ public class Test {
     }
 
     public void removeTagsFromView(AnalyticsClient ac) throws Exception {
-        JSONObject config = new JSONObject();
-        config.put("dissociateAll", true);
         ViewAPI view = ac.getViewInstance(orgId, workspaceId, viewId);
-        view.removeTags(null, config);
+        view.removeTagsFromView(null, true, null);
         System.out.println("success");
     }
 }
@@ -311,7 +306,7 @@ class Test {
     function removeTagsFromView() {
         $tag_ids = array("35130000001364503");
         $view = $this->ac->getViewInstance($this->org_id, $this->workspace_id, $this->view_id);
-        $view->removeTags($tag_ids);
+        $view->removeTagsFromView($tag_ids);
         echo "success\n";
     }
 }
@@ -338,9 +333,8 @@ class Test {
     }
 
     function removeTagsFromView() {
-        $config = array("dissociateAll" => true);
         $view = $this->ac->getViewInstance($this->org_id, $this->workspace_id, $this->view_id);
-        $view->removeTags(null, $config);
+        $view->removeTagsFromView(NULL, true);
         echo "success\n";
     }
 }
@@ -371,7 +365,7 @@ class Sample:
     def remove_tags_from_view(self, ac):
         tag_ids = ["35130000001364503"]
         view = ac.get_view_instance(Config.ORGID, Config.WORKSPACEID, Config.VIEWID)
-        view.remove_tags(tag_ids)
+        view.remove_tags_from_view(tag_ids)
         print("success")
 
 obj = Sample()
@@ -395,9 +389,8 @@ class Sample:
     ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)
 
     def remove_tags_from_view(self, ac):
-        config = {"dissociateAll": True}
         view = ac.get_view_instance(Config.ORGID, Config.WORKSPACEID, Config.VIEWID)
-        view.remove_tags(None, config)
+        view.remove_tags_from_view(None, True)
         print("success")
 
 obj = Sample()
@@ -417,7 +410,7 @@ var viewId = '35130000001055717';
 
 var tagIds = ['35130000001364503'];
 var view = ac.getViewInstance(orgId, workspaceId, viewId);
-view.removeTags(tagIds).then(() => { console.log('success'); }).catch((error) => { console.log(error); });
+view.removeTagsFromView(tagIds).then(() => { console.log('success'); }).catch((error) => { console.log(error); });
 ```
 
 Variant 2:
@@ -429,9 +422,8 @@ var orgId = '55522777';
 var workspaceId = '35130000001055707';
 var viewId = '35130000001055717';
 
-var config = {dissociateAll: true};
 var view = ac.getViewInstance(orgId, workspaceId, viewId);
-view.removeTags(null, config).then(() => { console.log('success'); }).catch((error) => { console.log(error); });
+view.removeTagsFromView(null, true).then(() => { console.log('success'); }).catch((error) => { console.log(error); });
 ```
 
 ## Ruby
@@ -459,7 +451,7 @@ class Sample
   def remove_tags_from_view
     tag_ids = ["35130000001364503"]
     view = @ac.get_view_instance(Config::ORGID, Config::WORKSPACEID, Config::VIEWID)
-    view.remove_tags(tag_ids)
+    view.remove_tags_from_view(tag_ids)
     puts "success"
   end
 end
@@ -489,9 +481,8 @@ class Sample
   end
 
   def remove_tags_from_view
-    config = {"dissociateAll" => true}
     view = @ac.get_view_instance(Config::ORGID, Config::WORKSPACEID, Config::VIEWID)
-    view.remove_tags(nil, config)
+    view.remove_tags_from_view(nil, true)
     puts "success"
   end
 end

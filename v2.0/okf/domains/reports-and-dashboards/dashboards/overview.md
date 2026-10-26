@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-13T08:58:58Z
+    last_modified: 2026-10-20T17:34:40Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -277,10 +277,10 @@ These are silently lost by a read-modify-write cycle:
 | [8027](../../../foundations/error-codes.md#error-8027) | 400 | One or more VIEW cards name a view that does not exist in this workspace, or viewName is absent / null / non-string. |
 | [8504](../../../foundations/error-codes.md#error-8504) | 400 | LESSTHANMINOCCURANCE — CONFIG was not sent. |
 | [8509](../../../foundations/error-codes.md#error-8509) | 400 | PATTERNNOTMATCHED — roleName contains disallowed characters, or accessType is not one of the three values. |
-| [8517](../../../foundations/error-codes.md#error-8517) | 400 | A field has the wrong JSON data type — exclude: "yes", isAxisMerge: "maybe", compType: 123. |
+| [8517](../../../foundations/error-codes.md#error-8517) | 400 | DATATYPE_NOT_MATCHED - A value has the wrong JSON type: exclude: "yes", isAxisMerge: 1, folderId: "abc". |
 | [8534](../../../foundations/error-codes.md#error-8534) | 400 | JSONPARSEERROR — CONFIG is not valid JSON. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [8542](../../../foundations/error-codes.md#error-8542) | 400 | An unknown key is present in CONFIG, or a windowFunction is mis-configured. |
+| [8542](../../../foundations/error-codes.md#error-8542) | 400 | EXTRA_KEY_FOUND_IN_JSON - A key not listed in this document is present. |
 | [9001](../../../foundations/error-codes.md#error-9001) | 400 | Every card in the layout is a USERFILTERS card. |
 
 # Related

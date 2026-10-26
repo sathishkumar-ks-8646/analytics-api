@@ -49,7 +49,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -153,7 +153,7 @@ Unlike a [custom formula column](../formula-columns/overview.md) (which computes
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
 | [7428](../../../foundations/error-codes.md#error-7428) | 400 | The specified <formula-id> is not a valid aggregate formula on this view. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. |
 
 # Related
 

@@ -13,6 +13,9 @@ sources:
   - id: group-org-info-and-settings
     resource: "/domains/organization-management/org-info-and-settings/overview.md"
     title: Organization Info & Settings - group overview
+  - id: group-security-controls
+    resource: "/domains/organization-management/security-controls/overview.md"
+    title: Security Controls - group overview
   - id: group-org-users
     resource: "/domains/users-and-groups/org-users/overview.md"
     title: Organization Users - group overview
@@ -37,6 +40,12 @@ sources:
   - id: group-domain-and-white-label
     resource: "/domains/workspace-management/domain-and-white-label/overview.md"
     title: Domain & White Label Access - group overview
+  - id: group-linked-workspaces
+    resource: "/domains/workspace-management/linked-workspaces/overview.md"
+    title: Linked Workspaces - group overview
+  - id: group-workspace-backup-and-restore
+    resource: "/domains/workspace-management/workspace-backup-and-restore/overview.md"
+    title: Workspace Backup & Restore - group overview
   - id: group-table-and-schema
     resource: "/domains/data-modeling-and-schema/table-and-schema/overview.md"
     title: Table & Schema - group overview
@@ -112,6 +121,9 @@ sources:
   - id: group-email-schedules
     resource: "/domains/schedules-and-alerts/email-schedules/overview.md"
     title: Email Schedules - group overview
+  - id: group-data-alerts
+    resource: "/domains/schedules-and-alerts/data-alerts/overview.md"
+    title: Data Alerts - group overview
   - id: group-automl
     resource: "/domains/dsml/automl/overview.md"
     title: AutoML - group overview
@@ -119,7 +131,7 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
@@ -129,7 +141,7 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
@@ -139,7 +151,7 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
@@ -149,7 +161,7 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-13T08:58:58Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
@@ -159,7 +171,7 @@ sources:
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
@@ -167,7 +179,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -206,8 +218,8 @@ Additional documented limits:
 - Create Query Table and Edit Query Table are also limited to 15 requests per minute service-wide, in addition to the per-user throttle.
 - Copy Workspace allows only one copy operation per organization at a time; a second request while a copy is running is rejected.
 - Sync Data and Refetch Data are rate limited per user; a burst of calls is locked out for a short cool-off period. Refetch is additionally guarded by one refetch per table at a time (error [`18072`](error-codes.md#error-18072)).
-- Asynchronous export: at most 5 simultaneous export jobs per organization (error [`8132`](error-codes.md#error-8132)); jobs and their files are retained for 72 hours from creation.
-- Synchronous export: payload ceiling 100 MB; tables above one million rows, dashboards, query tables and live-connect views must use the asynchronous export (error [`8133`](error-codes.md#error-8133)).
+- Asynchronous export: at most 5 simultaneous export jobs per organization (error [`8132`](error-codes.md#error-8132)); jobs and their files are retained for 1 hour from job completion.
+- Synchronous export: payload ceiling 100 MB (error [`7830`](error-codes.md#error-7830)). The Export Data API is restricted for certain resources, which must use the asynchronous export (error [`8133`](error-codes.md#error-8133)): tables having more than one million rows; tables and views from live connect workspaces; dashboard and query table view types.
 - Synchronous import: maximum file size 20 MB per request.
 
 # API Units

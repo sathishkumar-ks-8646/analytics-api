@@ -3,7 +3,7 @@
   "info": {
     "title": "Zoho Analytics API",
     "version": "v2",
-    "description": "API for Schedules & Alerts in Zoho Analytics — covering creation, management, and triggering of email schedules."
+    "description": "API for Schedules & Alerts in Zoho Analytics — covering creation, management, and triggering of email schedules, and the full lifecycle of data alerts on a view."
   },
   "servers": [
     {
@@ -14,6 +14,10 @@
     {
       "name": "Email Schedules",
       "description": "APIs for creating, updating, triggering, and deleting email schedules, and retrieving schedule details."
+    },
+    {
+      "name": "Data Alerts",
+      "description": "APIs for creating, listing, updating, running and deleting data alerts on a view, changing their status and reading their event history."
     }
   ],
   "paths": {
@@ -900,6 +904,1971 @@
           }
         }
       }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/alerts": {
+      "get": {
+        "operationId": "getAlertsInWorkspace",
+        "summary": "Get Alerts In Workspace",
+        "description": "Returns every alert defined anywhere in the workspace, with its name, the view it watches, its enabled state, audit stamps, and the outcome of its last run. This is the broadest discovery call for <alert-id>.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Get Alerts In Workspace",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get alerts in workspace request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAlertsInWorkspaceResponse"
+                },
+                "examples": {
+                  "okOneAlert": {
+                    "description": "OK One alert that",
+                    "summary": "OK — One alert that has run, one that never has.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get alerts in workspace",
+                      "data": {
+                        "alerts": [
+                          {
+                            "id": "137687000010815003",
+                            "name": "Sales Drop Alert",
+                            "viewId": "137687000006991601",
+                            "viewName": "Sales By Region",
+                            "enabled": true,
+                            "createdTime": "2026-03-12T10:15:22+05:30",
+                            "createdByName": "Jane Doe",
+                            "createdBy": "jane.doe@example.com",
+                            "lastModifiedTime": "2026-03-20T09:00:00+05:30",
+                            "lastModifiedByName": "Jane Doe",
+                            "lastModifiedBy": "jane.doe@example.com",
+                            "lastAlertSentTime": "2026-03-20T09:05:00+05:30",
+                            "lastRunTime": "2026-03-20T09:05:00+05:30",
+                            "lastRunStatus": "Condition met",
+                            "nextScheduleTime": "2026-03-21T09:00:00+05:30"
+                          },
+                          {
+                            "id": "137687000010815005",
+                            "name": "Region sub-total monitor",
+                            "viewId": "466206000000105001",
+                            "viewName": "Sales Pivot",
+                            "enabled": false,
+                            "createdTime": "2026-03-19T18:42:03+05:30",
+                            "createdByName": "John Roe",
+                            "createdBy": "john.roe@example.com",
+                            "lastModifiedTime": "2026-03-19T18:42:03+05:30",
+                            "lastModifiedByName": "John Roe",
+                            "lastModifiedBy": "john.roe@example.com",
+                            "lastAlertSentTime": "",
+                            "lastRunTime": "",
+                            "lastRunStatus": "",
+                            "nextScheduleTime": ""
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "okWorkspaceWith": {
+                    "description": "OK Workspace with no",
+                    "summary": "OK — Workspace with no alerts.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get alerts in workspace",
+                      "data": {
+                        "alerts": []
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is neither a Workspace Admin nor a custom-role user with Manage Data Alerts, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as an admin or a user with Manage Data Alerts, and call from the standard API host unless the workspace is bound to your custom domain."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteAlerts",
+        "summary": "Delete Alerts",
+        "description": "Deletes one or more alerts in a workspace. Every id is validated before anything is removed, so the call is all-or-nothing.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Delete Alerts",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.delete"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/DeleteAlertsConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "deleteTwoAlerts": {
+                  "description": "Delete two alerts",
+                  "summary": "Delete two alerts.",
+                  "value": {
+                    "CONFIG": {
+                      "alertIds": [
+                        "137687000010815003",
+                        "137687000010815005"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully completed. No response body is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller may not act on at least one of the listed alerts, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as the DB Owner, or list only alerts you own, from the standard API host."
+              },
+              {
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - At least one alert's view does not belong to the workspace in the URL.",
+                "resolution": "Delete alerts from the workspace that owns them."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8078",
+                "description": "EMPTY_JSON_ATTRIBUTE_FOUND - alertIds was sent with an empty value.",
+                "resolution": "Send an array of id strings, or omit the call."
+              },
+              {
+                "name": "8079",
+                "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - alertIds is missing from CONFIG.",
+                "resolution": "Add alertIds."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - An alertIds entry is not a JSON string.",
+                "resolution": "Quote every id: [\"137687000010815003\"]."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent.",
+                "resolution": "Send CONFIG as a URL-encoded form body on the DELETE request."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts": {
+      "get": {
+        "operationId": "getAlertsInView",
+        "summary": "Get Alerts In View",
+        "description": "Returns the alerts configured on one report. The response entries are identical in shape to Get Alerts In Workspace, narrowed to a single <view-id>.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Get Alerts In View",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/view-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get alerts in view request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAlertsInViewResponse"
+                },
+                "examples": {
+                  "okOneAlert": {
+                    "description": "OK One alert on",
+                    "summary": "OK — One alert on the requested view.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get alerts in view",
+                      "data": {
+                        "alerts": [
+                          {
+                            "id": "137687000010815003",
+                            "name": "Sales Drop Alert",
+                            "viewId": "137687000006991601",
+                            "viewName": "Sales By Region",
+                            "enabled": true,
+                            "createdTime": "2026-03-12T10:15:22+05:30",
+                            "createdByName": "Jane Doe",
+                            "createdBy": "jane.doe@example.com",
+                            "lastModifiedTime": "2026-03-20T09:00:00+05:30",
+                            "lastModifiedByName": "Jane Doe",
+                            "lastModifiedBy": "jane.doe@example.com",
+                            "lastAlertSentTime": "2026-03-20T09:05:00+05:30",
+                            "lastRunTime": "2026-03-20T09:05:00+05:30",
+                            "lastRunStatus": "Condition met",
+                            "nextScheduleTime": "2026-03-21T09:00:00+05:30"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "okViewWith": {
+                    "description": "OK View with no",
+                    "summary": "OK — View with no alerts.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get alerts in view",
+                      "data": {
+                        "alerts": []
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7104",
+                "description": "META_OBJECT_NOT_PRESENT - View not found.",
+                "resolution": "Verify <view-id> via Get View List."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host."
+              },
+              {
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL.",
+                "resolution": "Make <workspace-id> and <view-id> consistent."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createAlert",
+        "summary": "Create Alert",
+        "description": "Creates an alert on the specified report and returns its id. The view must be a Chart (AnalysisView), Pivot or SummaryView; the alert is created live, with its schedule registered immediately.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Create Alert",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.create"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/view-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/CreateAlertConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "minimalValidAlert": {
+                  "description": "Minimal valid alert one",
+                  "summary": "Minimal valid alert: one rule, one channel, daily schedule.",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Sales Drop Alert",
+                      "scheduleDetails": {
+                        "calendarFrequency": "daily",
+                        "hour": 9,
+                        "minute": 0
+                      },
+                      "email": {
+                        "notifyAdmins": true,
+                        "subject": "Sales dropped below threshold",
+                        "message": "Please review the report."
+                      },
+                      "rules": [
+                        {
+                          "operator": "lt",
+                          "viewColumnIndex": "2",
+                          "type": "constant",
+                          "values": [
+                            "1000"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "threeRulesCombined": {
+                  "description": "Three rules combined by",
+                  "summary": "Three rules combined by a custom conditionExpression, with an inline report attachment.",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Sales / Profit / Discount Monitor",
+                      "summaryType": "data",
+                      "conditionExpression": "(1 AND 2) OR 3",
+                      "notifyOnChange": false,
+                      "scheduleDetails": {
+                        "calendarFrequency": "daily",
+                        "interval": 1,
+                        "hour": 9,
+                        "minute": 0,
+                        "timeZone": "Asia/Kolkata",
+                        "skipWeekends": true
+                      },
+                      "email": {
+                        "notifyAdmins": true,
+                        "emailIds": [
+                          "jane.doe@example.com",
+                          "manager@example.com"
+                        ],
+                        "subject": "Sales / Profit / Discount alert",
+                        "message": "One of the configured rules has been breached. Please review.",
+                        "includeReport": true,
+                        "attachmentType": "inline",
+                        "attachFilteredDataset": true,
+                        "systemMailId": false
+                      },
+                      "rules": [
+                        {
+                          "operator": "lt",
+                          "viewColumnIndex": "2",
+                          "type": "constant",
+                          "values": [
+                            "1000"
+                          ]
+                        },
+                        {
+                          "operator": "lt",
+                          "viewColumnIndex": "3",
+                          "type": "constant",
+                          "values": [
+                            "100"
+                          ]
+                        },
+                        {
+                          "operator": "gt",
+                          "viewColumnIndex": "4",
+                          "type": "constant",
+                          "values": [
+                            "25"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "thresholdRuleAnd": {
+                  "description": "Threshold rule and column",
+                  "summary": "Threshold rule and column-vs-column rule, hourly schedule, in-app notification.",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Sales above T1 or below Profit",
+                      "conditionExpression": "(1 OR 2)",
+                      "notifyOnChange": true,
+                      "scheduleDetails": {
+                        "calendarFrequency": "hourly",
+                        "interval": 3,
+                        "timeZone": "Asia/Kolkata",
+                        "skipWeekends": true
+                      },
+                      "notification": {
+                        "notifyAdmins": true,
+                        "notifySharedUsers": true,
+                        "subject": "Sales crossed T1",
+                        "message": "Sales has crossed threshold T1 on the Sales By Region chart."
+                      },
+                      "rules": [
+                        {
+                          "operator": "gt",
+                          "viewColumnIndex": "2",
+                          "type": "threshold",
+                          "values": [
+                            "T1"
+                          ]
+                        },
+                        {
+                          "operator": "lt",
+                          "viewColumnIndex": "2",
+                          "type": "column",
+                          "values": [
+                            "3"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "anomalyAlertNo": {
+                  "description": "Anomaly alert no viewColumnIndex",
+                  "summary": "Anomaly alert: no viewColumnIndex, every rule carries anomaly.",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Sales spike anomaly",
+                      "notifyOnChange": false,
+                      "scheduleDetails": {
+                        "calendarFrequency": "daily",
+                        "hour": 7,
+                        "minute": 0
+                      },
+                      "notification": {
+                        "notifyAdmins": true,
+                        "notifySharedUsers": false,
+                        "subject": "Sales spike detected",
+                        "message": "An anomaly was detected on Sales."
+                      },
+                      "rules": [
+                        {
+                          "operator": "sinceLastAlert",
+                          "anomaly": {
+                            "name": "Sales Spike",
+                            "value": "",
+                            "comboType": "top",
+                            "comboTypeValue": "5"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "pivotReportSub": {
+                  "description": "Pivot report sub total",
+                  "summary": "Pivot report, sub-total slice: summaryType and rowAxis are both required.",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Region sub-total monitor",
+                      "summaryType": "subTotal",
+                      "rowAxis": "1",
+                      "columnAxis": "5",
+                      "notifyOnChange": true,
+                      "scheduleDetails": {
+                        "calendarFrequency": "weekly",
+                        "interval": 2,
+                        "hour": 9,
+                        "minute": 0,
+                        "weekDays": [
+                          2,
+                          4
+                        ]
+                      },
+                      "email": {
+                        "notifyAdmins": true,
+                        "groupIds": [
+                          "137687000002108009"
+                        ],
+                        "subject": "Regional sub-total alert",
+                        "message": "Regional sub total has crossed the configured limit.",
+                        "includeReport": true,
+                        "attachmentType": "attachment"
+                      },
+                      "rules": [
+                        {
+                          "operator": "btw",
+                          "viewColumnIndex": "2",
+                          "type": "constant",
+                          "values": [
+                            "10000",
+                            "50000"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "multiSelectDimensional": {
+                  "description": "Multi select dimensional rule",
+                  "summary": "Multi-select dimensional rule, a date rule, and a no-value rule across three channels.",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Recent East/West orders",
+                      "conditionExpression": "(1 AND 2) AND 3",
+                      "scheduleDetails": {
+                        "calendarFrequency": "monthly",
+                        "hour": 7,
+                        "minute": 15,
+                        "monthDays": [
+                          1,
+                          15
+                        ],
+                        "timeZone": "Europe/London"
+                      },
+                      "slack": {
+                        "url": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXX",
+                        "messageType": "STANDARD",
+                        "subject": "New East/West orders",
+                        "message": "Orders from the East and West regions were detected."
+                      },
+                      "msteams": {
+                        "url": "https://example.webhook.office.com/webhookb2/00000000-0000-0000-0000-000000000000",
+                        "messageType": "CUSTOM",
+                        "payload": "{\"text\":\"New East/West orders detected\"}"
+                      },
+                      "webhook": {
+                        "url": "https://example.com/zoho-analytics/alert-hook",
+                        "method": "POST",
+                        "body": "{\"event\":\"newOrders\",\"severity\":\"info\"}",
+                        "params": [
+                          {
+                            "name": "source",
+                            "value": "analytics"
+                          }
+                        ],
+                        "headers": [
+                          {
+                            "name": "X-Source",
+                            "value": "ZohoAnalytics"
+                          }
+                        ]
+                      },
+                      "rules": [
+                        {
+                          "operator": "is",
+                          "viewColumnIndex": "1",
+                          "type": "constant",
+                          "values": [
+                            "East",
+                            "West"
+                          ]
+                        },
+                        {
+                          "operator": "gte",
+                          "viewColumnIndex": "6",
+                          "type": "constant",
+                          "values": [
+                            "2026-01-01 00:00:00"
+                          ]
+                        },
+                        {
+                          "operator": "notisn",
+                          "viewColumnIndex": "7",
+                          "type": "constant"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "yearlyByWeekday": {
+                  "description": "Yearly by weekday schedule",
+                  "summary": "Yearly \"by weekday\" schedule, every 2 years, delivered to a webhook.",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Biennial audit trigger",
+                      "summaryType": "grandTotal",
+                      "scheduleDetails": {
+                        "calendarFrequency": "yearly",
+                        "interval": 2,
+                        "hour": 6,
+                        "minute": 0,
+                        "months": [
+                          4
+                        ],
+                        "weekOfMonth": 1,
+                        "dayOfWeek": 2
+                      },
+                      "webhook": {
+                        "url": "https://example.com/zoho-analytics/audit-hook",
+                        "method": "POST",
+                        "body": "{\"event\":\"biennialAudit\"}"
+                      },
+                      "rules": [
+                        {
+                          "operator": "gte",
+                          "viewColumnIndex": "4",
+                          "type": "constant",
+                          "values": [
+                            "1000000"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully completed the create alert request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAlertResponse"
+                },
+                "examples": {
+                  "okAlertCreated": {
+                    "description": "OK Alert created",
+                    "summary": "OK — Alert created.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Create alert",
+                      "data": {
+                        "alertId": "137687000010815003"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7104",
+                "description": "META_OBJECT_NOT_PRESENT - View not found.",
+                "resolution": "Verify <view-id> via Get View List."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host."
+              },
+              {
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL.",
+                "resolution": "Make <workspace-id> and <view-id> consistent."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8078",
+                "description": "EMPTY_JSON_ATTRIBUTE_FOUND - A mandatory CONFIG attribute was sent with an empty value.",
+                "resolution": "Give the named attribute a non-empty value."
+              },
+              {
+                "name": "8079",
+                "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - A mandatory attribute is missing: alertName, scheduleDetails, rules, summaryType on a Pivot view, conditionExpression with more than one rule, or attachmentType when includeReport is true.",
+                "resolution": "Add the named attribute."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - An attribute that must be a JSON string was sent as another type, typically viewColumnIndex, rowAxis, columnAxis or a values entry sent as a bare number.",
+                "resolution": "Quote numeric identifiers and rule values: \"viewColumnIndex\": \"2\", \"values\": [\"1000\"]."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8119",
+                "description": "INVALID_VALUE_FOR_ATTRIBUTE - A value is outside its permitted set: an operator or type not in the column's allowedOperators / allowedRuleTypes, an unknown summaryType or messageType, an attachmentType other than inline / attachment, or a scheduleDetails number out of range (hour, minute, interval, weekDays, monthDays, months, weekOfMonth, dayOfWeek).",
+                "resolution": "Take operators and rule types from Get View Metadata For Alert and keep schedule numbers within the ranges in scheduleDetails Fields."
+              },
+              {
+                "name": "8241",
+                "description": "SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION - The view carries a restricted Data Warning system tag and the alert attaches the report to an e-mail. HTTP 409.",
+                "resolution": "Resolve the data warning, or resend with \"validateSystemTags\": false."
+              },
+              {
+                "name": "8245",
+                "description": "INVALID_VIEW_TYPE_FOR_OPERATION - The view is not a Chart, Pivot Table or Summary View.",
+                "resolution": "Create the alert on a supported report type."
+              },
+              {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or a templated attribute is below its minimum occurrence.",
+                "resolution": "Send CONFIG as a URL-encoded form parameter containing a valid JSON object."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata": {
+      "get": {
+        "operationId": "getViewMetadataForAlert",
+        "summary": "Get View Metadata For Alert",
+        "description": "Returns everything needed to construct a rule for a report: its alertable columns with their viewColumnIndex, the operator and rule-type catalogues each column permits, the chart thresholds on each column, and the view-level anomaly definitions. This is the only source of viewColumnIndex - call it before every Create Alert or Update Alert.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Get View Metadata For Alert",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/view-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get view metadata for alert request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetViewMetadataForAlertResponse"
+                },
+                "examples": {
+                  "okChartWith": {
+                    "description": "OK Chart with a",
+                    "summary": "OK — Chart with a dimension column, a measure column carrying two thresholds, and one anomaly.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get view metadata for alert",
+                      "data": {
+                        "viewType": "AnalysisView",
+                        "viewColumns": [
+                          {
+                            "viewColumnIndex": "1",
+                            "axis": "X",
+                            "axisType": "XAXIS",
+                            "axisDisplayName": "Region",
+                            "operation": "GROUP",
+                            "dataType": "PLAIN",
+                            "viewId": "137687000006991601",
+                            "formulaId": "",
+                            "thresholds": [],
+                            "allowedOperators": [
+                              "is",
+                              "isnot",
+                              "isn",
+                              "notisn"
+                            ],
+                            "allowedRuleTypes": [
+                              "constant"
+                            ]
+                          },
+                          {
+                            "viewColumnIndex": "2",
+                            "axis": "Y",
+                            "axisType": "YAXIS",
+                            "axisDisplayName": "Sales",
+                            "operation": "SUM",
+                            "dataType": "NUMBER",
+                            "viewId": "137687000006991601",
+                            "formulaId": "",
+                            "thresholds": [
+                              "T1",
+                              "T2"
+                            ],
+                            "allowedOperators": [
+                              "is",
+                              "isnot",
+                              "gt",
+                              "lt",
+                              "gte",
+                              "lte",
+                              "btw",
+                              "notbtw",
+                              "isn",
+                              "notisn"
+                            ],
+                            "allowedRuleTypes": [
+                              "constant",
+                              "column",
+                              "threshold"
+                            ]
+                          },
+                          {
+                            "viewColumnIndex": "3",
+                            "axis": "Y",
+                            "axisType": "YAXIS",
+                            "axisDisplayName": "Profit",
+                            "operation": "SUM",
+                            "dataType": "NUMBER",
+                            "viewId": "137687000006991601",
+                            "formulaId": "",
+                            "thresholds": [],
+                            "allowedOperators": [
+                              "is",
+                              "isnot",
+                              "gt",
+                              "lt",
+                              "gte",
+                              "lte",
+                              "btw",
+                              "notbtw",
+                              "isn",
+                              "notisn"
+                            ],
+                            "allowedRuleTypes": [
+                              "constant",
+                              "column"
+                            ]
+                          }
+                        ],
+                        "anomalies": [
+                          {
+                            "viewColumnIndex": "2",
+                            "anomalyName": "Sales Spike"
+                          }
+                        ],
+                        "allowedAnomalyOperators": [
+                          "sinceLastAlert"
+                        ]
+                      }
+                    }
+                  },
+                  "okChartWith2": {
+                    "description": "OK Chart with no",
+                    "summary": "OK — Chart with no thresholds and no anomalies.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get view metadata for alert",
+                      "data": {
+                        "viewType": "AnalysisView",
+                        "viewColumns": [
+                          {
+                            "viewColumnIndex": "1",
+                            "axis": "X",
+                            "axisType": "XAXIS",
+                            "axisDisplayName": "Order Date",
+                            "operation": "ABSMONTH",
+                            "dataType": "DATE",
+                            "viewId": "137687000006991601",
+                            "formulaId": "",
+                            "thresholds": [],
+                            "allowedOperators": [
+                              "is",
+                              "isnot",
+                              "curMonth",
+                              "prevMonth",
+                              "prevNMonths",
+                              "lastNMonths",
+                              "nextMonth",
+                              "nextNMonths"
+                            ],
+                            "allowedRuleTypes": [
+                              "constant"
+                            ]
+                          }
+                        ],
+                        "anomalies": [],
+                        "allowedAnomalyOperators": []
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7104",
+                "description": "META_OBJECT_NOT_PRESENT - View not found.",
+                "resolution": "Verify <view-id> via Get View List."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host."
+              },
+              {
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL.",
+                "resolution": "Make <workspace-id> and <view-id> consistent."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8245",
+                "description": "INVALID_VIEW_TYPE_FOR_OPERATION - The view is not a Chart, Pivot Table or Summary View.",
+                "resolution": "Alerts are supported only on those three report types; pick a different view."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}": {
+      "get": {
+        "operationId": "getAlertConfiguration",
+        "summary": "Get Alert Configuration",
+        "description": "Returns one alert's complete configuration in exactly the CONFIG shape that Create Alert and Update Alert accept, so the response can be edited and posted straight back. This is the intended starting point for any edit.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Get Alert Configuration",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/alert-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get alert configuration request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAlertConfigurationResponse"
+                },
+                "examples": {
+                  "okDailyE": {
+                    "description": "OK Daily e mail",
+                    "summary": "OK — Daily e-mail alert with one constant rule and two mapped workflows.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get alert configuration",
+                      "data": {
+                        "alertName": "Sales Drop Alert",
+                        "summaryType": "data",
+                        "isAnomaly": false,
+                        "conditionExpression": "(1)",
+                        "notifyOnChange": false,
+                        "scheduleDetails": {
+                          "timeZone": "Asia/Kolkata",
+                          "calendarFrequency": "daily",
+                          "hour": 9,
+                          "minute": 0,
+                          "interval": 1,
+                          "skipWeekends": true
+                        },
+                        "email": {
+                          "notifyAdmins": true,
+                          "subject": "Sales dropped below threshold",
+                          "message": "Please review the attached report.",
+                          "includeReport": true,
+                          "attachFilteredDataset": false,
+                          "attachmentType": "attachment",
+                          "systemMailId": false,
+                          "emailIds": [
+                            "jane.doe@example.com"
+                          ]
+                        },
+                        "workflows": [
+                          {
+                            "id": "137687000012564035",
+                            "name": "Notify sales channel",
+                            "enabled": true
+                          },
+                          {
+                            "id": "137687000012564054",
+                            "name": "Create follow-up task",
+                            "enabled": false
+                          }
+                        ],
+                        "rules": [
+                          {
+                            "operator": "lt",
+                            "viewColumnIndex": "2",
+                            "type": "constant",
+                            "values": [
+                              "1000"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "okAnomalyAlert": {
+                    "description": "OK Anomaly alert note",
+                    "summary": "OK — Anomaly alert: note that viewColumnIndex is absent from the rule.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get alert configuration",
+                      "data": {
+                        "alertName": "Sales spike anomaly",
+                        "summaryType": "data",
+                        "isAnomaly": true,
+                        "conditionExpression": "(1)",
+                        "notifyOnChange": false,
+                        "scheduleDetails": {
+                          "timeZone": "Asia/Kolkata",
+                          "calendarFrequency": "daily",
+                          "hour": 7,
+                          "minute": 0,
+                          "interval": 1,
+                          "skipWeekends": false
+                        },
+                        "notification": {
+                          "notifyAdmins": true,
+                          "notifySharedUsers": false,
+                          "subject": "Sales spike detected",
+                          "message": "An anomaly was detected on Sales."
+                        },
+                        "rules": [
+                          {
+                            "operator": "sinceLastAlert",
+                            "anomaly": {
+                              "name": "Sales Spike",
+                              "value": "",
+                              "comboType": "top",
+                              "comboTypeValue": "5"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host."
+              },
+              {
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL.",
+                "resolution": "Make <workspace-id> and <alert-id> consistent."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateAlert",
+        "summary": "Update Alert",
+        "description": "Replaces an existing alert's configuration. The CONFIG body is the same shape as Create Alert and is treated as a full replacement - not a patch. It is also the only API that accepts the Zoho Flow mapping attributes.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Update Alert",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/alert-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/UpdateAlertConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "minimalUpdateNew": {
+                  "description": "Minimal update new name",
+                  "summary": "Minimal update: new name, new schedule, same single rule.",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Sales Drop Alert (weekly)",
+                      "scheduleDetails": {
+                        "calendarFrequency": "weekly",
+                        "hour": 9,
+                        "minute": 30,
+                        "weekDays": [
+                          6
+                        ],
+                        "timeZone": "Asia/Kolkata"
+                      },
+                      "email": {
+                        "notifyAdmins": true,
+                        "emailIds": [
+                          "finance@example.com"
+                        ],
+                        "subject": "Weekly sales monitor",
+                        "message": "Weekly alert summary."
+                      },
+                      "rules": [
+                        {
+                          "operator": "lt",
+                          "viewColumnIndex": "2",
+                          "type": "constant",
+                          "values": [
+                            "1000"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "reAssertingA": {
+                  "description": "Re asserting a mapped",
+                  "summary": "Re-asserting a mapped workflow and a mapped Flow action.",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Sales Drop Alert",
+                      "summaryType": "data",
+                      "conditionExpression": "(1 OR 2)",
+                      "notifyOnChange": true,
+                      "scheduleDetails": {
+                        "calendarFrequency": "hourly",
+                        "interval": 2,
+                        "timeZone": "Asia/Kolkata",
+                        "skipWeekends": true
+                      },
+                      "email": {
+                        "notifyAdmins": true,
+                        "emailIds": [
+                          "jane.doe@example.com"
+                        ],
+                        "subject": "Sales dropped below threshold",
+                        "message": "Please review the report.",
+                        "includeReport": true,
+                        "attachmentType": "attachment"
+                      },
+                      "workflows": [
+                        {
+                          "id": "137687000012564035"
+                        },
+                        {
+                          "id": "137687000012564054"
+                        }
+                      ],
+                      "actionsByFlow": [
+                        {
+                          "actionConfigName": "Notify sales channel",
+                          "actionConfigId": "137687000012564035",
+                          "connectionId": "137687000012564041"
+                        }
+                      ],
+                      "rules": [
+                        {
+                          "operator": "lt",
+                          "viewColumnIndex": "2",
+                          "type": "constant",
+                          "values": [
+                            "1000"
+                          ]
+                        },
+                        {
+                          "operator": "gt",
+                          "viewColumnIndex": "3",
+                          "type": "constant",
+                          "values": [
+                            "100"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                "monthlyScheduleMoved": {
+                  "description": "Monthly schedule moved to",
+                  "summary": "Monthly schedule moved to \"the last Friday of every third month\".",
+                  "value": {
+                    "CONFIG": {
+                      "alertName": "Quarter-end margin check",
+                      "summaryType": "subTotal",
+                      "rowAxis": "1",
+                      "scheduleDetails": {
+                        "calendarFrequency": "monthly",
+                        "interval": 3,
+                        "hour": 20,
+                        "minute": 0,
+                        "weekOfMonth": 5,
+                        "dayOfWeek": 6,
+                        "timeZone": "Europe/London"
+                      },
+                      "msteams": {
+                        "url": "https://example.webhook.office.com/webhookb2/00000000-0000-0000-0000-000000000000",
+                        "messageType": "CUSTOM",
+                        "payload": "{\"text\":\"Quarter-end margin is below 18%\"}"
+                      },
+                      "rules": [
+                        {
+                          "operator": "lt",
+                          "viewColumnIndex": "2",
+                          "type": "constant",
+                          "values": [
+                            "18"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully completed. No response body is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host."
+              },
+              {
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL.",
+                "resolution": "Make <workspace-id> and <alert-id> consistent."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8245",
+                "description": "INVALID_VIEW_TYPE_FOR_OPERATION - The alert's view is no longer a Chart, Pivot Table or Summary View.",
+                "resolution": "The report has been converted to an unsupported type; recreate the alert elsewhere."
+              },
+              {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent.",
+                "resolution": "Send CONFIG as a URL-encoded form parameter containing a valid JSON object."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.update."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/alerts/status": {
+      "put": {
+        "operationId": "changeAlertStatus",
+        "summary": "Change Alert Status",
+        "description": "Enables (resumes) or pauses one or more alerts without altering their configuration. One request sets one state for every id it lists.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Change Alert Status",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/ChangeAlertStatusConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "pauseTwoAlerts": {
+                  "description": "Pause two alerts",
+                  "summary": "Pause two alerts.",
+                  "value": {
+                    "CONFIG": {
+                      "alertIds": [
+                        "137687000010815003",
+                        "137687000010815005"
+                      ],
+                      "enabled": false
+                    }
+                  }
+                },
+                "resumeASingle": {
+                  "description": "Resume a single alert",
+                  "summary": "Resume a single alert.",
+                  "value": {
+                    "CONFIG": {
+                      "alertIds": [
+                        "137687000010815003"
+                      ],
+                      "enabled": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully completed. No response body is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller may not act on at least one of the listed alerts, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as the DB Owner, or list only alerts you own, from the standard API host."
+              },
+              {
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - At least one alert's view does not belong to the workspace in the URL.",
+                "resolution": "Change status from the workspace that owns the alerts."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8078",
+                "description": "EMPTY_JSON_ATTRIBUTE_FOUND - alertIds or enabled was sent with an empty value.",
+                "resolution": "Provide a non-empty value for both attributes."
+              },
+              {
+                "name": "8079",
+                "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - alertIds or enabled is missing from CONFIG.",
+                "resolution": "Add the missing attribute."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - enabled is not a boolean, or an alertIds entry is not a JSON string.",
+                "resolution": "Send \"enabled\": true / false and quote every id."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent.",
+                "resolution": "Send CONFIG as a URL-encoded form parameter containing a valid JSON object."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.update."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute": {
+      "post": {
+        "operationId": "runAlert",
+        "summary": "Run Alert",
+        "description": "Queues an off-schedule evaluation of one alert. The alert is evaluated against live data and, if its condition is met, every configured channel delivers for real. There is no dry-run mode.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Run Alert",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.modeling.create"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/alert-id"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/RunAlertConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "runAReport": {
+                  "description": "Run a report attaching",
+                  "summary": "Run a report-attaching alert past a Data Warning tag.",
+                  "value": {
+                    "CONFIG": {
+                      "validateSystemTags": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully completed. No response body is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "6079",
+                "description": "ALERT_NOTSUPPORTED - The organisation's plan allows no alert schedules.",
+                "resolution": "Upgrade the plan, or add alert-schedule add-ons."
+              },
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host."
+              },
+              {
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL.",
+                "resolution": "Make <workspace-id> and <alert-id> consistent."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object.",
+                "resolution": "Send a valid, URL-encoded JSON object, or omit CONFIG entirely."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8241",
+                "description": "SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION - The alert attaches a report from a view carrying a restricted Data Warning tag. HTTP 409.",
+                "resolution": "Resolve the data warning, or resend with \"validateSystemTags\": false."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events": {
+      "get": {
+        "operationId": "getAlertEvents",
+        "summary": "Get Alert Events",
+        "description": "Returns the audit trail of one alert's evaluations - when each ran, and whether it triggered, did not trigger, or failed. This is the only machine-readable source of an alert's outcome, and the only paginated API in this family.",
+        "tags": [
+          "Data Alerts"
+        ],
+        "x-zenesis-title": "Get Alert Events",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          },
+          {
+            "$ref": "#/components/parameters/alert-id"
+          },
+          {
+            "name": "CONFIG",
+            "in": "query",
+            "required": false,
+            "description": "Configuration for this request. As this is a GET request, the value must be stringified and URL encoded before it is sent.",
+            "schema": {
+              "$ref": "#/components/schemas/GetAlertEventsConfig"
+            },
+            "style": "form",
+            "explode": false,
+            "examples": {
+              "aDateRange": {
+                "description": "A date range an",
+                "summary": "A date range, an outcome filter and a smaller page.",
+                "value": {
+                  "fromDate": "2026-05-01 00:00:00",
+                  "toDate": "2026-05-31 23:59:59",
+                  "status": [
+                    "triggered",
+                    "error"
+                  ],
+                  "pageNo": 1,
+                  "recordsPerPage": 50
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get alert events request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAlertEventsResponse"
+                },
+                "examples": {
+                  "okMixedOutcomes": {
+                    "description": "OK Mixed outcomes more",
+                    "summary": "OK — Mixed outcomes, more pages available.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get alert events",
+                      "data": {
+                        "alertEvents": [
+                          {
+                            "alertTime": "1779226560981",
+                            "status": "triggered"
+                          },
+                          {
+                            "alertTime": "1779228341225",
+                            "status": "error",
+                            "message": "Given date value 'East 23:59:59' is not compatible with the given date format 'dd MMM yyyy HH:mm:ss'",
+                            "errorCode": "INCOMPATIBLE_DATE_VALUE"
+                          },
+                          {
+                            "alertTime": "1779228341230",
+                            "status": "notTriggered"
+                          }
+                        ],
+                        "pageDetails": {
+                          "pageNo": 1,
+                          "recordsPerPage": 50,
+                          "hasNextPage": true
+                        }
+                      }
+                    }
+                  },
+                  "okNoEvents": {
+                    "description": "OK No events matched",
+                    "summary": "OK — No events matched the filters.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get alert events",
+                      "data": {
+                        "alertEvents": [],
+                        "pageDetails": {
+                          "pageNo": 1,
+                          "recordsPerPage": 100,
+                          "hasNextPage": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to.",
+                "resolution": "Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host."
+              },
+              {
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL.",
+                "resolution": "Make <workspace-id> and <alert-id> consistent."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+                "resolution": "Send the organisation id that owns the workspace."
+              },
+              {
+                "name": "8060",
+                "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+                "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object.",
+                "resolution": "Send a valid, URL-encoded JSON object, or omit CONFIG entirely."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+                "resolution": "Add the ZANALYTICS-ORGID request header."
+              },
+              {
+                "name": "8119",
+                "description": "INVALID_VALUE_FOR_ATTRIBUTE - fromDate is later than toDate, or a status entry is not one of triggered, notTriggered, error, or pageNo / recordsPerPage is outside its declared range.",
+                "resolution": "Correct the range, the filter values, or the paging numbers."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -930,6 +2899,24 @@
           "type": "string"
         },
         "description": "ID of the workspace."
+      },
+      "view-id": {
+        "name": "view-id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the view."
+      },
+      "alert-id": {
+        "name": "alert-id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the alert."
       }
     },
     "securitySchemes": {
@@ -1678,6 +3665,1086 @@
             "$ref": "#/components/schemas/EmailScheduleIdData"
           }
         }
+      },
+      "GetAlertsInWorkspaceResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Localised operation summary - \"Get alerts in workspace\" for this API. Never branch on it."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "alerts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "One entry per alert in the workspace. Always present; [] when the workspace has no alerts. Alerts on every supported view type (Chart / Pivot / Summary) are included."
+              }
+            },
+            "description": "Response payload wrapper."
+          },
+          "alerts": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Alert id, numeric but serialised as a string. This is the <alert-id> for the six alert-id-addressed APIs and for the alertIds arrays."
+              },
+              "name": {
+                "type": "string",
+                "description": "Alert name, as set by alertName."
+              },
+              "viewId": {
+                "type": "string",
+                "description": "Id of the view the alert watches. Fixed for the life of the alert."
+              },
+              "viewName": {
+                "type": "string",
+                "description": "Display name of that view."
+              },
+              "enabled": {
+                "type": "boolean",
+                "description": "true when the alert is live, false when it is paused. Native JSON boolean. Toggled by Change Alert Status."
+              },
+              "createdTime": {
+                "type": "string",
+                "description": "Creation time as an ISO-8601 offset timestamp (2026-03-12T10:15:22+05:30), rendered in the caller's profile time zone - not in the alert's scheduleDetails.timeZone."
+              },
+              "createdByName": {
+                "type": "string",
+                "description": "Display name of the user who created the alert."
+              },
+              "createdBy": {
+                "type": "string",
+                "description": "E-mail address of that user, resolved from the owner ZUID. Empty string when the lookup fails - enrichment failures never break this response."
+              },
+              "lastModifiedTime": {
+                "type": "string",
+                "description": "Last modification time, same format as createdTime."
+              },
+              "lastModifiedByName": {
+                "type": "string",
+                "description": "Display name of the user who last modified the alert."
+              },
+              "lastModifiedBy": {
+                "type": "string",
+                "description": "E-mail address of that user, same fallback as createdBy."
+              },
+              "lastAlertSentTime": {
+                "type": "string",
+                "description": "When a notification was last sent. Empty string when the alert has never notified anyone."
+              },
+              "lastRunTime": {
+                "type": "string",
+                "description": "When the alert was last evaluated, whether or not it notified. Empty string when it has never run."
+              },
+              "lastRunStatus": {
+                "type": "string",
+                "description": "Outcome of that last evaluation as a localised label - \"Condition met\" or \"Condition unmet\". Empty string when the alert has never run. Do not switch on this value; use status from Get Alert Events, which is a stable enum."
+              },
+              "nextScheduleTime": {
+                "type": "string",
+                "description": "Next scheduled evaluation, same format as createdTime. Empty string when the alert is paused or has no active schedule."
+              }
+            },
+            "description": "alerts"
+          }
+        },
+        "title": "GetAlertsInWorkspaceResponse"
+      },
+      "GetAlertsInViewResponse": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "\"Get alerts in view\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "alerts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Restricted to the alerts of the requested <view-id>, so every entry carries the same viewId and viewName. Always present; [] when that view has no alerts."
+              }
+            },
+            "description": "data"
+          }
+        },
+        "title": "GetAlertsInViewResponse"
+      },
+      "GetViewMetadataForAlertResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "\"Get view metadata for alert\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "viewType": {
+                "type": "string",
+                "description": "View type token - AnalysisView, Pivot or SummaryView. These are the internal type names, not the UI labels (\"Chart View\", \"Pivot View\", \"Summary View\"). Any other type is refused with 8245 before this response is built."
+              },
+              "viewColumns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "One entry per column of the view that can take part in an alert. Always present."
+              },
+              "anomalies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Anomaly definitions configured on the view. Always present; [] when the view has none, in which case anomaly alerts cannot be created on it."
+              },
+              "allowedAnomalyOperators": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Operators legal for an anomaly rule on this view - a view-level property, not a per-column one. Derived from the X axis: a YEAR bucket yields the yearly tokens, ABSMONTH the monthly ones, DATE / TIMESTAMP the full day-level set. [\"sinceLastAlert\"] when the view has anomalies but no date-bucketed X axis; [] when anomalies is empty. Always present."
+              }
+            },
+            "description": "Response payload wrapper."
+          },
+          "viewColumns": {
+            "type": "object",
+            "properties": {
+              "viewColumnIndex": {
+                "type": "string",
+                "description": "The positional index identifying this column in a write request (rules[].viewColumnIndex, rowAxis, columnAxis, and values[0] for type: \"column\"). The only column identifier the Alert APIs accept - see The viewColumnIndex Contract."
+              },
+              "axis": {
+                "type": "string",
+                "description": "Axis the column occupies in the view - X, Y, and so on."
+              },
+              "axisType": {
+                "type": "string",
+                "description": "Axis role - XAXIS, YAXIS, COLOR, TOOLTIP, …"
+              },
+              "axisDisplayName": {
+                "type": "string",
+                "description": "Display name of the column as the report shows it. Use this for a user-facing column picker."
+              },
+              "operation": {
+                "type": "string",
+                "description": "Aggregation or date bucket applied to the column - SUM, GROUP, YEAR, ABSQUARTER, ABSMONTH, ABSWEEK, DATE, TIMESTAMP, MEACATEGORY, GEO, … It is what decides the date-bucket operators and, for the view's X axis, the contents of allowedAnomalyOperators."
+              },
+              "dataType": {
+                "type": "string",
+                "description": "The column's original data type - PLAIN, NUMBER, DATE, TIMESTAMP, … Informative only: the operator catalogue is computed server-side from fields that are not all exposed here, so never derive operators from dataType yourself."
+              },
+              "viewId": {
+                "type": "string",
+                "description": "Id of the view (or of the underlying table, for a base-layer column) the column belongs to."
+              },
+              "formulaId": {
+                "type": "string",
+                "description": "Id of the backing formula when the column is a formula column; empty string otherwise."
+              },
+              "geoRole": {
+                "type": "number",
+                "description": "Geo role of the column. Conditional - present only for geo columns. Role 1 (geometry) narrows allowedOperators to isn / notisn."
+              },
+              "thresholds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Chart threshold display names configured on this column, sorted by their internal property order (T1, T2, …). [] when the column has none. A value from this array is what a type: \"threshold\" rule puts in values[0]. An empty array is also the reason threshold is absent from allowedRuleTypes."
+              },
+              "allowedOperators": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Every rules[].operator token legal for this column, already narrowed by its data type, aggregation and geo role. Treat it as the authoritative allow-list - an operator outside it fails with 8119. Token meanings: Appendix E."
+              },
+              "allowedRuleTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Which rules[].type values this column supports: constant always; column only when the view has at least two NUMBER columns and this column is one of them; threshold only when thresholds is non-empty. A type outside this list fails with 8119."
+              }
+            },
+            "description": "viewColumns"
+          },
+          "anomalies": {
+            "type": "object",
+            "properties": {
+              "viewColumnIndex": {
+                "type": "string",
+                "description": "The column the anomaly is defined on. Conditional - omitted when the underlying column reference cannot be resolved to an index."
+              },
+              "anomalyName": {
+                "type": "string",
+                "description": "The name to send as rules[].anomaly.name. Must match exactly, otherwise 32000042."
+              }
+            },
+            "description": "anomalies"
+          }
+        },
+        "title": "GetViewMetadataForAlertResponse"
+      },
+      "GetAlertConfigurationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "\"Get alert configuration\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "alertName": {
+                "type": "string",
+                "description": "Alert name. Always present."
+              },
+              "summaryType": {
+                "type": "string",
+                "description": "data, subTotal or grandTotal. Always present. An anomaly alert reports data."
+              },
+              "isAnomaly": {
+                "type": "boolean",
+                "description": "true when the alert's rules are anomaly rules. Always present. Read-only - it is derived from rules[], and a value sent on write is ignored."
+              },
+              "rowAxis": {
+                "type": "string",
+                "description": "viewColumnIndex of the row axis of a Pivot / Summary alert. Conditional - omitted when the alert has no row axis, and also omitted when the stored column no longer exists in the view."
+              },
+              "columnAxis": {
+                "type": "string",
+                "description": "viewColumnIndex of the column axis, same conditions as rowAxis."
+              },
+              "conditionExpression": {
+                "type": "string",
+                "description": "The boolean expression combining the rules, e.g. \"(1 AND 2)\". Always present; \"\" when the stored value is null. It is emitted verbatim from storage, so an alert created outside the V2 API can carry an expression that references more rules than exist - validate it against rules.length before posting back."
+              },
+              "notifyOnChange": {
+                "type": "boolean",
+                "description": "true when the alert notifies only on a state change. Always present."
+              },
+              "scheduleDetails": {
+                "type": "object",
+                "description": "The schedule, normalised into write shape: array-valued weekDays / monthDays / months, an explicit 1-based interval, and skipWeekends present only for hourly and daily. Always present, but {} for an alert with no stored schedule."
+              },
+              "email": {
+                "type": "object",
+                "description": "E-mail channel. Conditional - present only when configured. Within it, emailIds and groupIds are themselves omitted when empty, and attachmentType is omitted when no report is attached."
+              },
+              "notification": {
+                "type": "object",
+                "description": "In-app (WMS) channel. Conditional."
+              },
+              "slack": {
+                "type": "object",
+                "description": "Slack channel - url, messageType, plus subject / message or payload. Conditional."
+              },
+              "msteams": {
+                "type": "object",
+                "description": "Microsoft Teams channel, same shape as slack. Conditional."
+              },
+              "webhook": {
+                "type": "object",
+                "description": "Webhook channel - url, method, body, params, headers. Conditional. params and headers are omitted when empty."
+              },
+              "workflows": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Zoho Flow workflows mapped to this alert. Conditional - omitted when none are mapped."
+              },
+              "actionsByFlow": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Zoho Flow actions mapped to this alert. Conditional - omitted when none are mapped."
+              },
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The alert's rules in rules[] shape. Always present. Column references come back as viewColumnIndex, threshold references as display names (\"T1\"), and date values re-normalised to yyyy-MM-dd HH:mm:ss. Anomaly rules carry an anomaly object and no viewColumnIndex."
+              }
+            },
+            "description": "The alert configuration. It does not repeat the alert id - you already supplied it in the URL."
+          },
+          "workflows": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Workflow id. This is the only field Update Alert reads back."
+              },
+              "name": {
+                "type": "string",
+                "description": "Workflow name; \"\" when the workflow has none. Display only - it is not validated on write."
+              },
+              "enabled": {
+                "type": "boolean",
+                "description": "true when the workflow is active. Display only."
+              }
+            },
+            "description": "workflows"
+          },
+          "actionsByFlow": {
+            "type": "object",
+            "properties": {
+              "actionConfigId": {
+                "type": "number",
+                "description": "Flow action configuration id. A genuine JSON number, unlike every other id in this family - and Update Alert requires it back as a string, so this one field does not round-trip unedited."
+              },
+              "actionConfigName": {
+                "type": "string",
+                "description": "Flow action name."
+              },
+              "connectionId": {
+                "type": "number",
+                "description": "Id of the connection the action uses. Also a JSON number, with the same conversion caveat."
+              }
+            },
+            "description": "actionsByFlow"
+          }
+        },
+        "title": "GetAlertConfigurationResponse"
+      },
+      "AlertScheduleDetails": {
+        "type": "object",
+        "title": "AlertScheduleDetails",
+        "description": "How often the alert is evaluated. See scheduleDetails Fields.",
+        "required": [
+          "calendarFrequency",
+          "interval",
+          "hour",
+          "minute",
+          "weekDays",
+          "months"
+        ],
+        "properties": {
+          "calendarFrequency": {
+            "type": "string",
+            "description": "hourly, daily, weekly, monthly or yearly. Case-insensitive on input, normalised to lower case. Any other value is 8119. See calendarFrequency Values.",
+            "enum": [
+              "hourly",
+              "daily",
+              "weekly",
+              "monthly",
+              "yearly"
+            ],
+            "x-zenesis-enums-desc": [
+              "Every N hours, around the clock.",
+              "Every N days at a fixed time.",
+              "Every N weeks on the selected weekDays.",
+              "Every N months, on a date or an Nth weekday.",
+              "Every N years, in the selected months."
+            ]
+          },
+          "interval": {
+            "type": "integer",
+            "description": "\"Repeat every N units of calendarFrequency\". Permitted values depend on the frequency: hourly → 1, 2, 3, 4, 6 or 12; daily → 1-7; weekly → 1-4; monthly → 1-12; yearly → 1-5. Out of range is 8119.",
+            "default": 1
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "IANA time zone id used to evaluate the schedule - Asia/Kolkata, America/New_York, Europe/London, UTC. An unrecognised id, or an explicit null / empty string, is 32000045."
+          },
+          "hour": {
+            "type": "integer",
+            "description": "Hour of day, 0-23. Out of range is 8119. Not applicable to hourly (32000052)."
+          },
+          "minute": {
+            "type": "integer",
+            "description": "Minute of hour. Must be a multiple of 5 in the range 0-55; 9 is 8119. Not applicable to hourly."
+          },
+          "skipWeekends": {
+            "type": "boolean",
+            "description": "Skip the evaluations that fall on weekend days. You do not choose the days - they are the weekend of the schedule time zone's locale (Sunday for Asia/Kolkata; Saturday and Sunday for America/New_York and UTC; Friday and Saturday for Asia/Riyadh). Applicable only to hourly and daily (32000052 elsewhere).",
+            "default": false
+          },
+          "weekDays": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Days of the week, 1 = Sunday … 7 = Saturday. More than one may be selected ([2, 4] = Monday and Wednesday); a single day is still a one-entry array ([6]). Duplicates are dropped. Applicable only to weekly."
+          },
+          "monthDays": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Dates of the month, 1-31, or the single-entry list [99] meaning \"last day of the month\" (99 cannot be combined with other dates). For monthly several dates may be selected ([1, 15]); for yearly the array must carry exactly one entry, because a yearly schedule stores one date per selected month. One of monthDays or (weekOfMonth + dayOfWeek) is mandatory for monthly and yearly - see below."
+          },
+          "weekOfMonth": {
+            "type": "integer",
+            "description": "Which occurrence of dayOfWeek within the month: 1 = first … 4 = fourth, 5 = last. Used together with dayOfWeek. Applicable only to monthly and yearly."
+          },
+          "dayOfWeek": {
+            "type": "integer",
+            "description": "Day of the week for the \"Nth weekday\" form, 1 = Sunday … 7 = Saturday. weekOfMonth: 2, dayOfWeek: 3 reads \"the second Tuesday of the month\". Used together with weekOfMonth."
+          },
+          "months": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Months in which the alert runs, 1 = January … 12 = December. More than one may be selected ([1, 7]). Applicable only to yearly."
+          }
+        }
+      },
+      "AlertEmail": {
+        "type": "object",
+        "title": "AlertEmail",
+        "description": "E-mail notification channel. See email Fields.",
+        "required": [
+          "subject",
+          "message",
+          "attachmentType"
+        ],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "description": "E-mail subject line. A blank value is 32000012."
+          },
+          "message": {
+            "type": "string",
+            "description": "E-mail body. HTML is permitted and filtered through AntiSamy. When systemMailId is true a stricter filter that strips all HTML is applied instead."
+          },
+          "notifyAdmins": {
+            "type": "boolean",
+            "description": "Include the workspace admins / DB Owner in the recipient list.",
+            "default": false
+          },
+          "emailIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Explicit recipient addresses. Maximum 25 entries - the request template permits 1,000, but the server refuses more than 25 with 32000007. Blank entries are skipped."
+          },
+          "groupIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Workspace group ids whose members receive the e-mail, as numeric strings. 1-1000 entries."
+          },
+          "includeReport": {
+            "type": "boolean",
+            "description": "Attach or inline the report itself. When true, attachmentType becomes mandatory (8079).",
+            "default": false
+          },
+          "attachmentType": {
+            "type": "string",
+            "description": "inline or attachment. Any other value is 8119. Ignored when includeReport is false. See attachmentType Values.",
+            "enum": [
+              "inline",
+              "attachment"
+            ],
+            "x-zenesis-enums-desc": [
+              "The report is rendered inside the e-mail body.",
+              "The report is sent as a file attachment."
+            ]
+          },
+          "attachFilteredDataset": {
+            "type": "boolean",
+            "description": "Also attach the dataset filtered to the rows that matched the alert criteria. Independent of includeReport - it may be set on its own.",
+            "default": false
+          },
+          "systemMailId": {
+            "type": "boolean",
+            "description": "true sends from the Zoho Analytics system mail id; false sends from the alert creator's address. Organisation-level display-e-mail settings can override this.",
+            "default": false
+          }
+        }
+      },
+      "AlertNotification": {
+        "type": "object",
+        "title": "AlertNotification",
+        "description": "In-product (WMS) notification channel. See notification Fields.",
+        "required": [
+          "notifyAdmins",
+          "notifySharedUsers",
+          "subject",
+          "message"
+        ],
+        "properties": {
+          "notifyAdmins": {
+            "type": "boolean",
+            "description": "Notify the workspace admins / DB Owner."
+          },
+          "notifySharedUsers": {
+            "type": "boolean",
+            "description": "Notify every user the view is shared with."
+          },
+          "subject": {
+            "type": "string",
+            "description": "Notification title. A blank value is 32000012."
+          },
+          "message": {
+            "type": "string",
+            "description": "Notification body. HTML is filtered through AntiSamy."
+          }
+        }
+      },
+      "AlertWebhook": {
+        "type": "object",
+        "title": "AlertWebhook",
+        "description": "Generic HTTPS webhook channel. See webhook Fields.",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Target URL. Must start with https:// - anything else is 32000025."
+          },
+          "method": {
+            "type": "string",
+            "description": "HTTP method used to invoke the webhook. See method Values.",
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ],
+            "x-zenesis-enums-desc": [
+              "Invoke the webhook with an HTTP GET.",
+              "Invoke the webhook with an HTTP POST. The default.",
+              "Invoke the webhook with an HTTP PUT.",
+              "Invoke the webhook with an HTTP PATCH.",
+              "Invoke the webhook with an HTTP DELETE."
+            ],
+            "default": "POST"
+          },
+          "body": {
+            "type": "string",
+            "description": "Raw request body sent with the call. Not parsed or validated."
+          },
+          "params": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Query / form parameters appended to the request, 0-10 entries. See params and headers Fields."
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Additional HTTP headers sent with the request, 0-10 entries. Same entry shape as params. See params and headers Fields."
+          }
+        }
+      },
+      "AlertAnomaly": {
+        "type": "object",
+        "title": "AlertAnomaly",
+        "description": "Turns the rule into an anomaly rule. When any rule carries it, every rule must (32000017), and the alert must be on a Chart view (32000019). See anomaly Fields.",
+        "required": [
+          "name",
+          "comboTypeValue"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of an anomaly definition configured on the view, taken verbatim from anomalies[].anomalyName of Get View Metadata For Alert. An unknown name is 32000042. This is also what resolves the rule's column, which is why viewColumnIndex must be absent."
+          },
+          "value": {
+            "type": "string",
+            "description": "The operator's argument, when the chosen anomaly operator takes one (for example the N of lastNMonths)."
+          },
+          "comboType": {
+            "type": "string",
+            "description": "How matched anomalies are aggregated: top or all. See comboType Values.",
+            "enum": [
+              "top",
+              "all"
+            ],
+            "x-zenesis-enums-desc": [
+              "Consider only the N most significant anomalies.",
+              "Consider every detected anomaly."
+            ]
+          },
+          "comboTypeValue": {
+            "type": "string",
+            "description": "The number of top anomalies to consider, as a numeric string. Must parse to a positive integer, otherwise 32000021."
+          }
+        }
+      },
+      "AlertRules": {
+        "type": "object",
+        "title": "AlertRules",
+        "description": "The evaluation rules. 1-10 entries - more is 32000018, none is 32000006. See rules Fields.",
+        "required": [
+          "operator",
+          "viewColumnIndex"
+        ],
+        "properties": {
+          "operator": {
+            "type": "string",
+            "description": "The comparison. It must appear in the column's allowedOperators from Get View Metadata For Alert - anything else is 8119. Full catalogue in Appendix E."
+          },
+          "viewColumnIndex": {
+            "type": "string",
+            "description": "The column the rule tests, as a viewColumnIndex string. Must be omitted on anomaly rules (32000046); the column is resolved from anomaly.name instead. An index that does not resolve is 32000041."
+          },
+          "type": {
+            "type": "string",
+            "description": "What the column is compared against: constant, column or threshold. It must appear in the column's allowedRuleTypes (8119 otherwise). See type Values.",
+            "enum": [
+              "constant",
+              "column",
+              "threshold"
+            ],
+            "x-zenesis-enums-desc": [
+              "Compare the column against a literal value.",
+              "Compare the column against another NUMBER column of the same view.",
+              "Compare the column against a chart threshold (T1, T2, …)."
+            ],
+            "default": "constant"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The comparison value(s), always strings, 1-300 entries. How many are required depends on the operator and the column - see the value-shape table below. Supplying values for a no-value operator is 32000047."
+          },
+          "anomaly": {
+            "$ref": "#/components/schemas/AlertAnomaly"
+          }
+        }
+      },
+      "CreateAlertConfig": {
+        "type": "object",
+        "title": "CreateAlertConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "alertName",
+          "scheduleDetails",
+          "rules"
+        ],
+        "properties": {
+          "alertName": {
+            "type": "string",
+            "description": "Display name of the alert. Must be unique within the view (32000011 otherwise) and non-blank (32000005). It can be changed later through Update Alert."
+          },
+          "summaryType": {
+            "type": "string",
+            "description": "Which slice of the report the rules are evaluated against. Mandatory when the view is a Pivot Table - omitting it there is 8079. For Chart and Summary views it defaults to data. See summaryType Values.",
+            "enum": [
+              "data",
+              "subTotal",
+              "grandTotal"
+            ],
+            "x-zenesis-enums-desc": [
+              "Evaluate the rules against the report's data rows.",
+              "Evaluate against sub-total rows.",
+              "Evaluate against the single grand-total row."
+            ],
+            "default": "data"
+          },
+          "rowAxis": {
+            "type": "string",
+            "description": "viewColumnIndex of the row-axis column of a Pivot / Summary report. Mandatory when summaryType is subTotal on a Pivot or Summary view (32000044 otherwise); meaningless and ignorable elsewhere. Must resolve to a column of this view (32000041 / 32000029). Send it as a string."
+          },
+          "columnAxis": {
+            "type": "string",
+            "description": "viewColumnIndex of the column-axis column of a Pivot / Summary report. Same validation as rowAxis, but never mandatory."
+          },
+          "conditionExpression": {
+            "type": "string",
+            "description": "Boolean expression combining the rules by their 1-based position in rules[]. Allowed tokens are rule numbers, AND, OR, ( and ) - e.g. \"(1 AND 2) OR 3\". Mandatory when rules has more than one entry (8079 otherwise); with a single rule it defaults to (1). The grammar is validated strictly: unbalanced parentheses or a dangling operator is 32000024, a reference outside 1..rules.length is 32000020, a blank value is 32000015."
+          },
+          "notifyOnChange": {
+            "type": "boolean",
+            "description": "When true, a notification is sent only when the alert's state changes (the condition turning true after having been false) rather than on every matching evaluation.",
+            "default": false
+          },
+          "isAnomaly": {
+            "type": "boolean",
+            "description": "Accepted but ignored. The server derives it from whether rules[] carries anomaly objects and overwrites whatever you send. It is returned by Get Alert Configuration so that response can be posted back unchanged."
+          },
+          "scheduleDetails": {
+            "$ref": "#/components/schemas/AlertScheduleDetails"
+          },
+          "email": {
+            "$ref": "#/components/schemas/AlertEmail"
+          },
+          "notification": {
+            "$ref": "#/components/schemas/AlertNotification"
+          },
+          "slack": {
+            "type": "object",
+            "description": "Slack incoming-webhook channel. See slack and msteams Fields."
+          },
+          "msteams": {
+            "type": "object",
+            "description": "Microsoft Teams incoming-webhook channel. Identical shape to slack."
+          },
+          "webhook": {
+            "$ref": "#/components/schemas/AlertWebhook"
+          },
+          "workflows": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Rejected by this API with 32000049. Zoho Flow workflow mappings can only be re-asserted through Update Alert, because the mapping cannot exist before the alert does."
+          },
+          "actionsByFlow": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Rejected by this API with 32000049, for the same reason as workflows."
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlertRules"
+            },
+            "description": "The evaluation rules. 1-10 entries - more is 32000018, none is 32000006. See rules Fields."
+          },
+          "validateSystemTags": {
+            "type": "boolean",
+            "description": "When true (the default) and the alert attaches the report to an e-mail, the view's Data Warning system tags are checked and creation is refused with 8241 if a restricted tag is present. Set it to false to create the alert anyway. It has no effect when no report is attached.",
+            "default": true
+          }
+        }
+      },
+      "CreateAlertResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "\"Create alert\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "alertId": {
+                "type": "string",
+                "description": "Id of the alert just created, numeric but serialised as a string. This is the <alert-id> for Get Alert Configuration, Update Alert, Change Alert Status, Run Alert, Get Alert Events, and the alertIds array of Delete Alerts."
+              }
+            },
+            "description": "Response payload wrapper."
+          }
+        },
+        "title": "CreateAlertResponse"
+      },
+      "AlertWorkflows": {
+        "type": "object",
+        "title": "AlertWorkflows",
+        "description": "Accepted only here. Re-asserts the Zoho Flow workflow mappings that already exist on this alert. Every id must already be mapped to this alert, otherwise 32000043 naming all offending ids at once. See workflows Fields.",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Workflow id, exactly as returned by workflows[].id of Get Alert Configuration for the same alert. Digits only, up to 20 characters. An id not already mapped to this alert fails with 32000043."
+          }
+        }
+      },
+      "AlertActionsByFlow": {
+        "type": "object",
+        "title": "AlertActionsByFlow",
+        "description": "Accepted only here. Re-asserts the Zoho Flow action mappings that already exist on this alert. Every actionConfigId must already be mapped to this alert, otherwise 32000050. See actionsByFlow Fields.",
+        "required": [
+          "actionConfigId"
+        ],
+        "properties": {
+          "actionConfigId": {
+            "type": "string",
+            "description": "Flow action configuration id. Must already be mapped to this alert (32000050). Send it as a JSON string, even though Get Alert Configuration returns it as a number - see the note below."
+          },
+          "actionConfigName": {
+            "type": "string",
+            "description": "Flow action name, up to 50 characters. Read when the mapping row has to be re-created."
+          },
+          "connectionId": {
+            "type": "string",
+            "description": "Id of the connection the action uses, also as a JSON string. Read when the mapping row has to be re-created."
+          }
+        }
+      },
+      "UpdateAlertConfig": {
+        "type": "object",
+        "title": "UpdateAlertConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "alertName",
+          "scheduleDetails",
+          "rules"
+        ],
+        "properties": {
+          "alertName": {
+            "type": "string",
+            "description": "As in Create Alert. Uniqueness is still enforced within the view, excluding this alert itself."
+          },
+          "summaryType": {
+            "type": "string",
+            "description": "As in Create Alert. Still mandatory when the alert's view is a Pivot Table. See summaryType Values.",
+            "default": "data"
+          },
+          "rowAxis": {
+            "type": "string",
+            "description": "As in Create Alert. Mandatory when summaryType is subTotal on a Pivot / Summary view."
+          },
+          "columnAxis": {
+            "type": "string",
+            "description": "As in Create Alert."
+          },
+          "conditionExpression": {
+            "type": "string",
+            "description": "As in Create Alert. Mandatory when rules has more than one entry."
+          },
+          "notifyOnChange": {
+            "type": "boolean",
+            "description": "As in Create Alert. Omitting it resets the alert to false.",
+            "default": false
+          },
+          "isAnomaly": {
+            "type": "boolean",
+            "description": "Accepted but ignored; derived from rules."
+          },
+          "scheduleDetails": {
+            "type": "object",
+            "description": "As in Create Alert, parsed as a complete period definition - never merged field-by-field with the stored one. See scheduleDetails Fields."
+          },
+          "email": {
+            "type": "object",
+            "description": "See email Fields. Omitting it removes the e-mail channel."
+          },
+          "notification": {
+            "type": "object",
+            "description": "See notification Fields. Omitting it removes the in-app channel."
+          },
+          "slack": {
+            "type": "object",
+            "description": "See slack and msteams Fields. Omitting it removes the channel."
+          },
+          "msteams": {
+            "type": "object",
+            "description": "Same shape as slack. Omitting it removes the channel."
+          },
+          "webhook": {
+            "type": "object",
+            "description": "See webhook Fields. Omitting it removes the channel."
+          },
+          "workflows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlertWorkflows"
+            },
+            "description": "Accepted only here. Re-asserts the Zoho Flow workflow mappings that already exist on this alert. Every id must already be mapped to this alert, otherwise 32000043 naming all offending ids at once. See workflows Fields."
+          },
+          "actionsByFlow": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlertActionsByFlow"
+            },
+            "description": "Accepted only here. Re-asserts the Zoho Flow action mappings that already exist on this alert. Every actionConfigId must already be mapped to this alert, otherwise 32000050. See actionsByFlow Fields."
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "As in Create Alert, 1-10 entries. See rules Fields."
+          },
+          "validateSystemTags": {
+            "type": "boolean",
+            "description": "As in Create Alert - the Data Warning gate applies to updates too.",
+            "default": true
+          }
+        }
+      },
+      "DeleteAlertsConfig": {
+        "type": "object",
+        "title": "DeleteAlertsConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "alertIds"
+        ],
+        "properties": {
+          "alertIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Alert ids to delete, as numeric strings - a bare numeric literal fails. 0-1000 entries; an empty array is accepted and deletes nothing. Every id must belong to <workspace-id> (7319) and must still exist (32000009), and the caller must be permitted to act on each one (7301)."
+          }
+        }
+      },
+      "ChangeAlertStatusConfig": {
+        "type": "object",
+        "title": "ChangeAlertStatusConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "required": [
+          "alertIds",
+          "enabled"
+        ],
+        "properties": {
+          "alertIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Alert ids whose status changes, as numeric strings. 0-1000 entries; an empty array is accepted and changes nothing. Every id must belong to <workspace-id> and must still exist."
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "The state applied to every id in alertIds: true makes the alert live, false pauses it. There is no per-id state - to enable some and pause others, send two requests."
+          }
+        }
+      },
+      "RunAlertConfig": {
+        "type": "object",
+        "title": "RunAlertConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "properties": {
+          "validateSystemTags": {
+            "type": "boolean",
+            "description": "When true (the default) and the alert has an e-mail attachment configured, the view's Data Warning system tags are checked and the run is refused with 8241 (HTTP 409) if a restricted tag is present. Set it to false to run anyway. It has no effect on an alert with no e-mail attachment.",
+            "default": true
+          }
+        }
+      },
+      "GetAlertEventsConfig": {
+        "type": "object",
+        "title": "GetAlertEventsConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "description": "Inclusive lower bound, as yyyy-MM-dd HH:mm:ss or yyyy-MM-dd (the time then defaults to 00:00:00.000). Interpreted in the caller's profile time zone. A malformed value is 32000028."
+          },
+          "toDate": {
+            "type": "string",
+            "description": "Inclusive upper bound, same formats. A date-only value defaults the time to 23:59:59.999. Must be greater than or equal to fromDate, otherwise 8119."
+          },
+          "status": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Outcome filter, 1-3 distinct entries drawn from triggered, notTriggered and error. Duplicates collapse silently. An unknown value, or a non-string entry, is 8119. See Alert Event Statuses."
+          },
+          "pageNo": {
+            "type": "integer",
+            "description": "1-based page number, 1-100000.",
+            "default": 1
+          },
+          "recordsPerPage": {
+            "type": "integer",
+            "description": "Page size, 1-100. A larger value is silently clamped to 100 - compare pageDetails.recordsPerPage against what you asked for.",
+            "default": 100
+          }
+        }
+      },
+      "GetAlertEventsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "\"Get alert events\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "alertEvents": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "One entry per evaluation inside the requested window, oldest first (ascending alertTime). Always present; [] when nothing matched - still HTTP 200."
+              },
+              "pageDetails": {
+                "type": "object",
+                "description": "Pagination block. Always present - this API always paginates, even when the caller sends no pagination attributes."
+              }
+            },
+            "description": "Response payload wrapper."
+          },
+          "alertEvents": {
+            "type": "object",
+            "properties": {
+              "alertTime": {
+                "type": "string",
+                "description": "When the evaluation happened, as epoch milliseconds in a string (\"1779226560981\") - deliberately unformatted so the caller can render it in its own locale and time zone. Conditional: omitted on the rare feed row with no stored timestamp."
+              },
+              "status": {
+                "type": "string",
+                "description": "Outcome as a stable enum: triggered, notTriggered or error. Always present. Unlike lastRunStatus of the listing APIs this value is not localised and is safe to switch on. Any unrecognised stored code is reported as notTriggered."
+              },
+              "message": {
+                "type": "string",
+                "description": "Description of the failure. Conditional - present only when a message was recorded, which in practice means status is error."
+              },
+              "errorCode": {
+                "type": "string",
+                "description": "Symbolic error name of the failure, e.g. INCOMPATIBLE_DATE_VALUE. Conditional - present only when status is error. Note it is a name, not one of the numeric codes used by the Error Codes tables."
+              }
+            },
+            "description": "alertEvents"
+          },
+          "pageDetails": {
+            "type": "object",
+            "properties": {
+              "pageNo": {
+                "type": "number",
+                "description": "The page that was served, 1-based. Native JSON number."
+              },
+              "recordsPerPage": {
+                "type": "number",
+                "description": "The effective page size, already clamped to the 100-record maximum. Compare it against what you requested."
+              },
+              "hasNextPage": {
+                "type": "boolean",
+                "description": "true when more records match the filters. Re-issue with pageNo + 1; do not infer the end of the data from a short page."
+              }
+            },
+            "description": "pageDetails"
+          }
+        },
+        "title": "GetAlertEventsResponse"
       }
     }
   }

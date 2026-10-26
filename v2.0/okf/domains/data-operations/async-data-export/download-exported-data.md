@@ -52,10 +52,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -241,8 +241,8 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 | **The response body is the file, not a wrapper** | A successful call returns no `status` / `summary` / `data` envelope. Only **failures** use the JSON envelope, so branch on the HTTP status before parsing. |
 | **It never waits** | Calling before the job has finished is an error, not a blocking read: `8121` while queued, `8122` while running, `8123` if the job failed. Poll [Get Export Job Details](get-export-job-details.md) first. |
 | **Each error code names a distinct job state** | `8121` queued, `8122` running, `8123` failed, `8120` absent or expired, `8124` not yours. They map one-to-one onto `jobCode`, so the download error alone is enough to decide whether to retry. |
-| **The file can be downloaded more than once** | Within the 72-hour window there is no single-use restriction and no state change on download. |
-| **After 72 hours the job is gone** | The record and the file are removed together, and this endpoint then fails with `8120`. |
+| **The file can be downloaded more than once** | Within the one-hour window there is no single-use restriction and no state change on download. |
+| **One hour after the job completes, the job is gone** | The record and the file are removed together, and this endpoint then fails with `8120`. |
 | **No `Content-Disposition`, no filename** | Derive one from the view or query and the format, and remember that a password-protected `csv` arrives as a ZIP. |
 | **Only the creator may download** | Even an Account Admin gets `8124` for another user's job — see [Permission Model](overview.md#permission-model). |
 | **`downloadUrl` and this endpoint are the same thing** | Following the URL from [Get Export Job Details](get-export-job-details.md) and constructing the path yourself are equivalent. |
@@ -274,7 +274,7 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | Code | HTTP | Reason | Solution |
 |---|---|---|---|
 | [7005](../../../foundations/error-codes.md#error-7005) | 500 | Unexpected error on the Zoho Analytics server while processing an otherwise valid request. Not caused by the request payload. | Retry after a short interval. If the error persists, contact Zoho Analytics support quoting the error code and the time of the request. |
-| [8120](../../../foundations/error-codes.md#error-8120) | 404 | `EXPORT_JOB_NOT_FOUND` — No export job exists for the given ID, or it has passed its 72-hour retention (HTTP 404). | Verify the `jobId`; if it has expired, create a new job. |
+| [8120](../../../foundations/error-codes.md#error-8120) | 404 | `EXPORT_JOB_NOT_FOUND` — No export job exists for the given ID, or it has passed its one-hour post-completion retention (HTTP 404). | Verify the `jobId`; if it has expired, create a new job. |
 | [8121](../../../foundations/error-codes.md#error-8121) | 400 | `EXPORT_JOB_NOT_INITIATED` — The job is queued but has not started (`jobCode` `1001`). | Poll [Get Export Job Details](get-export-job-details.md) until `jobCode` is `1004`. |
 | [8122](../../../foundations/error-codes.md#error-8122) | 400 | `EXPORT_JOB_NOT_COMPLETED` — The job is still running (`jobCode` `1002`). | Poll [Get Export Job Details](get-export-job-details.md) until `jobCode` is `1004`. |
 | [8123](../../../foundations/error-codes.md#error-8123) | 400 | `EXPORT_JOB_ERROR_OCCURRED` — The job failed (`jobCode` `1003`). | Nothing to download. Create a new job; if the failure repeats, contact support. |

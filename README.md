@@ -8,7 +8,7 @@ that takes any markdown description of an API change and carries it through ever
 
 | Version | API | Status | Sources | Built artefacts |
 |---|---|---|---|---|
-| [`v2.0/`](v2.0/README.md) | v2 | current | 10 domains, 35 API groups, 119 paths, 180 operations | [OpenAPI](v2.0/oas) · [OKF bundle](v2.0/okf/index.md) (182 endpoints, 306 error codes) · [Postman](v2.0/postman) |
+| [`v2.0/`](v2.0/README.md) | v2 | current | 10 domains, 39 API groups, 138 paths, 208 operations | [OpenAPI](v2.0/oas) · [OKF bundle](v2.0/okf/index.md) (210 endpoints, 382 error codes) · [Postman](v2.0/postman) |
 
 [`manifest.json`](manifest.json) is the machine-readable form of that table: every version directory,
 which is `latest`, and where each version's sources and artefacts are. Tooling starts there rather

@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: endpoint-doc
     resource: "/domains/schedules-and-alerts/email-schedules/change-email-schedule-status.md"
     title: Endpoint reference - Change Email Schedule Status
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 

@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-13T08:58:58Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: endpoint-doc
     resource: "/domains/reports-and-dashboards/reports/get-report-metadata.md"
     title: Endpoint reference - Read Report Metadata
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -64,6 +64,7 @@ curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/35130000001055707/repo
 
 ```csharp
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using ZohoAnalytics;
 
@@ -74,12 +75,12 @@ namespace ZohoAnalyticsTest
         long orgId = 55522777;
         long workspaceId = 35130000001055707;
 
-        public void GetVisualMetadata(IAnalyticsClient ac)
+        public void GetReportMetadata(IAnalyticsClient ac)
         {
-            long viewId = 35130000001055901;
-            IViewAPI view = ac.GetViewInstance(orgId, workspaceId, viewId);
-            JsonElement reportConfig = view.GetMetadata();
-            Console.WriteLine(reportConfig);
+            long viewId = 35130000001055901L;
+            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);
+            JsonElement result = workspace.GetReportMetadata(viewId);
+            Console.WriteLine(result);
         }
 
         static void Main(string[] args)
@@ -89,7 +90,7 @@ namespace ZohoAnalyticsTest
             string refreshToken = "1000.xxxxxxx.xxxxxxx";
             IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
             Program obj = new Program();
-            obj.GetVisualMetadata(ac);
+            obj.GetReportMetadata(ac);
         }
     }
 }
@@ -113,17 +114,20 @@ var (
     workspaceId = "35130000001055707"
 )
 
-func GetVisualMetadata(ac ZAnalytics.Client) {
-    viewId := "35130000001055901"
-    view := ZAnalytics.GetViewInstance(&ac, orgId, workspaceId, viewId)
-    reportConfig, exception := view.GetMetadata()
-    if exception != nil { fmt.Println(exception.ErrorMessage); return }
-    fmt.Println(reportConfig)
+func GetReportMetadata(ac ZAnalytics.Client) {
+    viewid := "35130000001055901"
+    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)
+    result, exception := workspace.GetReportMetadata(viewid)
+    if exception != nil {
+        fmt.Println(exception.ErrorMessage)
+        return
+    }
+    fmt.Println(result)
 }
 
 func main() {
     ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)
-    GetVisualMetadata(ac)
+    GetReportMetadata(ac)
 }
 ```
 
@@ -144,17 +148,17 @@ public class Test {
         Test tObj = new Test();
         AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
         try {
-            tObj.getVisualMetadata(ac);
+            tObj.getReportMetadata(ac);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void getVisualMetadata(AnalyticsClient ac) throws Exception {
+    public void getReportMetadata(AnalyticsClient ac) throws Exception {
         long viewId = 35130000001055901l;
-        ViewAPI view = ac.getViewInstance(orgId, workspaceId, viewId);
-        JSONObject reportConfig = view.getMetadata();
-        System.out.println(reportConfig);
+        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+        JSONObject result = workspace.getReportMetadata(viewId);
+        System.out.println(result);
     }
 }
 ```
@@ -169,20 +173,21 @@ class Test {
     public $ac;
     public $org_id = "55522777";
     public $workspace_id = "35130000001055707";
+
     function __construct() {
         $this->ac = new AnalyticsClient("1000.xxxxxxx", "xxxxxxx", "1000.xxxxxxx.xxxxxxx");
     }
 
-    function getVisualMetadata() {
+    function getReportMetadata() {
         $view_id = "35130000001055901";
-        $view = $this->ac->getViewInstance($this->org_id, $this->workspace_id, $view_id);
-        $report_config = $view->getMetadata();
-        print_r($report_config);
+        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);
+        $response = $workspace->getReportMetadata($view_id);
+        print_r($response);
     }
 }
 
 $obj = new Test();
-$obj->getVisualMetadata();
+$obj->getReportMetadata();
 ?>
 ```
 
@@ -198,17 +203,17 @@ class Config:
     ORGID = "55522777"
     WORKSPACEID = "35130000001055707"
 
-class sample:
+class Sample:
     ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)
 
-    def get_visual_metadata(self, ac):
+    def get_report_metadata(self, ac):
         view_id = "35130000001055901"
-        view = ac.get_view_instance(Config.ORGID, Config.WORKSPACEID, view_id)
-        report_config = view.get_metadata()
-        print(report_config)
+        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)
+        result = workspace.get_report_metadata(view_id)
+        print(result)
 
-obj = sample()
-obj.get_visual_metadata(obj.ac)
+obj = Sample()
+obj.get_report_metadata(obj.ac)
 ```
 
 ## Node.js
@@ -219,9 +224,9 @@ var ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');
 var orgId = '55522777';
 var workspaceId = '35130000001055707';
 
-var viewId = '35130000001055901';
-var view = ac.getViewInstance(orgId, workspaceId, viewId);
-view.getMetadata().then((reportConfig) => { console.log(reportConfig); }).catch((error) => { console.log(error); });
+var viewId = "35130000001055901";
+var workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+workspace.getReportMetadata(viewId).then((result) => { console.log(result); }).catch((error) => { console.log(error); });
 ```
 
 ## Ruby
@@ -243,16 +248,16 @@ class Sample
     }).build
   end
 
-  def get_visual_metadata
+  def get_report_metadata
     view_id = "35130000001055901"
-    view = @ac.get_view_instance(Config::ORGID, Config::WORKSPACEID, view_id)
-    report_config = view.get_metadata
-    puts report_config
+    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)
+    result = workspace.get_report_metadata(view_id)
+    puts result
   end
 end
 
 obj = Sample.new
-obj.get_visual_metadata
+obj.get_report_metadata
 ```
 
 ## Deluge (Zoho scripting)

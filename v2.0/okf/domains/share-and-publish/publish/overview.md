@@ -49,7 +49,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -186,7 +186,7 @@ Separately, [Get Publish Configurations](get-publish-configurations.md) and [Upd
 | [6122](../../../foundations/error-codes.md#error-6122) | 400 | EXCEEDINGUSRPLNPRIVATELINKSDM — Same limit, reported to a non-super-admin caller. |
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7138](../../../foundations/error-codes.md#error-7138) | 400 | baseTableName does not resolve to a table in this workspace. |
+| [7138](../../../foundations/error-codes.md#error-7138) | 400 | METAOBJECTNOTPRESENT — A tableName in vudColumns / drillColumns is not a table involved in this view. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
 | [7500](../../../foundations/error-codes.md#error-7500) | 400 | UNAUTHORIZEDORGCANNOTMAKEPUBLIC — publicPermLevel: "3" requested but the caller does not belong to the workspace admin's business organization. |
@@ -194,7 +194,7 @@ Separately, [Get Publish Configurations](get-publish-configurations.md) and [Upd
 | [7565](../../../foundations/error-codes.md#error-7565) | 400 | UNVERIFIEDEMAIL — The calling user's primary email address is not verified. |
 | [8032](../../../foundations/error-codes.md#error-8032) | 400 | VIEWNOTSHARED — The view is not currently shared with the specified user. |
 | [8054](../../../foundations/error-codes.md#error-8054) | 400 | INVALIDFILTERCRITERIA — criteria could not be parsed. |
-| [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
+| [8060](../../../foundations/error-codes.md#error-8060) | 400 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. |
 | [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
 | [8074](../../../foundations/error-codes.md#error-8074) | 400 | READPERMSHOULDBETRUEFORSHARING — permissions.read was sent as false. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint. |

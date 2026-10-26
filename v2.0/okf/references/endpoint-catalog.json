@@ -1,6 +1,6 @@
 {
   "base_url": "https://analyticsapi.zoho.com",
-  "endpoint_count": 182,
+  "endpoint_count": 210,
   "endpoints": [
     {
       "operation_id": "getOrganizations",
@@ -139,6 +139,165 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1metadetails/get"
+      }
+    },
+    {
+      "operation_id": "getOrgAccessRestrictions",
+      "title": "Get Org Access Restrictions",
+      "method": "GET",
+      "path": "/restapi/v2/security-controls/access-restrictions",
+      "domain": "organization-management",
+      "domain_title": "Organization Management",
+      "group": "security-controls",
+      "group_title": "Security Controls",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins and custom-role users are refused (7301).",
+      "error_codes": [
+        7301,
+        8083,
+        8084,
+        8535
+      ],
+      "doc": "/domains/organization-management/security-controls/get-org-access-restrictions.md",
+      "sdk_examples": "/sdk-examples/organization-management/security-controls/get-org-access-restrictions.md",
+      "openapi": {
+        "file": "/references/openapi/org-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1security-controls~1access-restrictions/get"
+      }
+    },
+    {
+      "operation_id": "updateOrgAccessRestrictions",
+      "title": "Update Org Access Restrictions",
+      "method": "PUT",
+      "path": "/restapi/v2/security-controls/access-restrictions",
+      "domain": "organization-management",
+      "domain_title": "Organization Management",
+      "group": "security-controls",
+      "group_title": "Security Controls",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.update"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins and custom-role users are refused (7301).",
+      "error_codes": [
+        7301,
+        8077,
+        8080,
+        8083,
+        8084,
+        8192,
+        8193,
+        8194,
+        8195,
+        8196,
+        8200,
+        8535
+      ],
+      "doc": "/domains/organization-management/security-controls/update-org-access-restrictions.md",
+      "sdk_examples": "/sdk-examples/organization-management/security-controls/update-org-access-restrictions.md",
+      "openapi": {
+        "file": "/references/openapi/org-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1security-controls~1access-restrictions/put"
+      }
+    },
+    {
+      "operation_id": "getWorkspaceAccessRestrictions",
+      "title": "Get Workspace Access Restrictions",
+      "method": "GET",
+      "path": "/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions",
+      "domain": "organization-management",
+      "domain_title": "Organization Management",
+      "group": "security-controls",
+      "group_title": "Security Controls",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins of the workspace and custom-role users are refused (7301).",
+      "error_codes": [
+        7301,
+        7387,
+        8083,
+        8084,
+        8535
+      ],
+      "doc": "/domains/organization-management/security-controls/get-workspace-access-restrictions.md",
+      "sdk_examples": "/sdk-examples/organization-management/security-controls/get-workspace-access-restrictions.md",
+      "openapi": {
+        "file": "/references/openapi/org-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1security-controls~1workspaces~1{workspace-id}~1access-restrictions/get"
+      }
+    },
+    {
+      "operation_id": "updateWorkspaceAccessRestrictions",
+      "title": "Update Workspace Access Restrictions",
+      "method": "PUT",
+      "path": "/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions",
+      "domain": "organization-management",
+      "domain_title": "Organization Management",
+      "group": "security-controls",
+      "group_title": "Security Controls",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.update"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins of the workspace and custom-role users are refused (7301). The organisation's accessRestrictionEnabled must be true (8197).",
+      "error_codes": [
+        7301,
+        7387,
+        8077,
+        8080,
+        8083,
+        8084,
+        8192,
+        8193,
+        8194,
+        8195,
+        8197,
+        8198,
+        8199,
+        8535
+      ],
+      "doc": "/domains/organization-management/security-controls/update-workspace-access-restrictions.md",
+      "sdk_examples": "/sdk-examples/organization-management/security-controls/update-workspace-access-restrictions.md",
+      "openapi": {
+        "file": "/references/openapi/org-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1security-controls~1workspaces~1{workspace-id}~1access-restrictions/put"
       }
     },
     {
@@ -1926,6 +2085,567 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1wlaccess/delete"
+      }
+    },
+    {
+      "operation_id": "getLinkedWorkspacesForOrganization",
+      "title": "Get Linked Workspaces For Organization",
+      "method": "GET",
+      "path": "/restapi/v2/linkedworkspaces",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "linked-workspaces",
+      "group_title": "Linked Workspaces",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID. Individual links are additionally filtered to those whose master and client organisations the caller administers.",
+      "error_codes": [
+        7301,
+        8060,
+        8083,
+        8535
+      ],
+      "doc": "/domains/workspace-management/linked-workspaces/get-linked-workspaces-for-organization.md",
+      "sdk_examples": "/sdk-examples/workspace-management/linked-workspaces/get-linked-workspaces-for-organization.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1linkedworkspaces/get"
+      }
+    },
+    {
+      "operation_id": "getLinkedWorkspacesForMasterWorkspace",
+      "title": "Get Linked Workspaces For Master Workspace",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "linked-workspaces",
+      "group_title": "Linked Workspaces",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>. Individual client entries are further filtered to organisations the caller administers.",
+      "error_codes": [
+        7103,
+        7301,
+        8060,
+        8083,
+        8535
+      ],
+      "doc": "/domains/workspace-management/linked-workspaces/get-linked-workspaces-for-master-workspace.md",
+      "sdk_examples": "/sdk-examples/workspace-management/linked-workspaces/get-linked-workspaces-for-master-workspace.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces/get"
+      }
+    },
+    {
+      "operation_id": "getLinkableWorkspaces",
+      "title": "Get Linkable Workspaces",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "linked-workspaces",
+      "group_title": "Linked Workspaces",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>. Candidates are drawn only from organisations the caller administers.",
+      "error_codes": [
+        7103,
+        7301,
+        8060,
+        8083,
+        8535
+      ],
+      "doc": "/domains/workspace-management/linked-workspaces/get-linkable-workspaces.md",
+      "sdk_examples": "/sdk-examples/workspace-management/linked-workspaces/get-linkable-workspaces.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces~1linkable/get"
+      }
+    },
+    {
+      "operation_id": "getWorkspaceLinkingCompatibility",
+      "title": "Get Workspace Linking Compatibility",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "linked-workspaces",
+      "group_title": "Linked Workspaces",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "query",
+        "required": true
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID, of the organisation that owns <workspace-id>, and of every organisation named in clients[].orgId.",
+      "error_codes": [
+        7103,
+        7301,
+        7387,
+        8060,
+        8077,
+        8080,
+        8083,
+        8246,
+        8504,
+        8535
+      ],
+      "doc": "/domains/workspace-management/linked-workspaces/get-workspace-linking-compatibility.md",
+      "sdk_examples": "/sdk-examples/workspace-management/linked-workspaces/get-workspace-linking-compatibility.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces~1compatibility/get"
+      }
+    },
+    {
+      "operation_id": "linkWorkspaces",
+      "title": "Link Workspaces",
+      "method": "POST",
+      "path": "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "linked-workspaces",
+      "group_title": "Linked Workspaces",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.create"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID, of the organisation that owns <workspace-id>, and of every organisation named in clients[].orgId.",
+      "error_codes": [
+        7103,
+        7301,
+        7387,
+        8060,
+        8077,
+        8080,
+        8083,
+        8246,
+        8247,
+        8504,
+        8535
+      ],
+      "doc": "/domains/workspace-management/linked-workspaces/link-workspaces.md",
+      "sdk_examples": "/sdk-examples/workspace-management/linked-workspaces/link-workspaces.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces/post"
+      }
+    },
+    {
+      "operation_id": "syncLinkedWorkspaces",
+      "title": "Sync Linked Workspaces",
+      "method": "POST",
+      "path": "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "linked-workspaces",
+      "group_title": "Linked Workspaces",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.create"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>. When masterViewIds is used, the caller must additionally administer the organisation owning each listed view's workspace.",
+      "error_codes": [
+        7103,
+        7104,
+        7301,
+        8060,
+        8077,
+        8079,
+        8080,
+        8083,
+        8119,
+        8246,
+        8248,
+        8250,
+        8251,
+        8504,
+        8535
+      ],
+      "doc": "/domains/workspace-management/linked-workspaces/sync-linked-workspaces.md",
+      "sdk_examples": "/sdk-examples/workspace-management/linked-workspaces/sync-linked-workspaces.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces~1sync/post"
+      }
+    },
+    {
+      "operation_id": "getLinkedWorkspaceSyncDetails",
+      "title": "Get Linked Workspace Sync Details",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "linked-workspaces",
+      "group_title": "Linked Workspaces",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "query",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>.",
+      "error_codes": [
+        7103,
+        7301,
+        8060,
+        8080,
+        8083,
+        8248,
+        8504,
+        8535
+      ],
+      "doc": "/domains/workspace-management/linked-workspaces/get-linked-workspace-sync-details.md",
+      "sdk_examples": "/sdk-examples/workspace-management/linked-workspaces/get-linked-workspace-sync-details.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces~1sync/get"
+      }
+    },
+    {
+      "operation_id": "unlinkWorkspaces",
+      "title": "Unlink Workspaces",
+      "method": "DELETE",
+      "path": "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "linked-workspaces",
+      "group_title": "Linked Workspaces",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.delete"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>.",
+      "error_codes": [
+        7103,
+        7301,
+        8060,
+        8078,
+        8079,
+        8080,
+        8083,
+        8119,
+        8248,
+        8249,
+        8504,
+        8535
+      ],
+      "doc": "/domains/workspace-management/linked-workspaces/unlink-workspaces.md",
+      "sdk_examples": "/sdk-examples/workspace-management/linked-workspaces/unlink-workspaces.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces/delete"
+      }
+    },
+    {
+      "operation_id": "getWorkspaceBackups",
+      "title": "Get Workspace Backups",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/backups",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "workspace-backup-and-restore",
+      "group_title": "Workspace Backup & Restore",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).",
+      "error_codes": [
+        6025,
+        7301,
+        8083,
+        8084,
+        8535
+      ],
+      "doc": "/domains/workspace-management/workspace-backup-and-restore/get-workspace-backups.md",
+      "sdk_examples": "/sdk-examples/workspace-management/workspace-backup-and-restore/get-workspace-backups.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups/get"
+      }
+    },
+    {
+      "operation_id": "backupWorkspaceNow",
+      "title": "Backup Workspace Now",
+      "method": "POST",
+      "path": "/restapi/v2/workspaces/{workspace-id}/backups",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "workspace-backup-and-restore",
+      "group_title": "Workspace Backup & Restore",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.create"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": false
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).",
+      "error_codes": [
+        6025,
+        7301,
+        8080,
+        8083,
+        8084,
+        8251,
+        8253,
+        8255,
+        8257,
+        8535
+      ],
+      "doc": "/domains/workspace-management/workspace-backup-and-restore/backup-workspace-now.md",
+      "sdk_examples": "/sdk-examples/workspace-management/workspace-backup-and-restore/backup-workspace-now.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups/post"
+      }
+    },
+    {
+      "operation_id": "downloadWorkspaceBackup",
+      "title": "Download Workspace Backup",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "workspace-backup-and-restore",
+      "group_title": "Workspace Backup & Restore",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/x-zip-compressed"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).",
+      "error_codes": [
+        6025,
+        7301,
+        8083,
+        8084,
+        8245,
+        8246,
+        8535
+      ],
+      "doc": "/domains/workspace-management/workspace-backup-and-restore/download-workspace-backup.md",
+      "sdk_examples": "/sdk-examples/workspace-management/workspace-backup-and-restore/download-workspace-backup.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups~1{backup-id}~1download/get"
+      }
+    },
+    {
+      "operation_id": "restoreWorkspaceFromBackup",
+      "title": "Restore Workspace from Backup",
+      "method": "POST",
+      "path": "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "workspace-backup-and-restore",
+      "group_title": "Workspace Backup & Restore",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.create"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).",
+      "error_codes": [
+        6025,
+        7301,
+        8077,
+        8080,
+        8083,
+        8084,
+        8245,
+        8246,
+        8247,
+        8248,
+        8249,
+        8253,
+        8254,
+        8257,
+        8535
+      ],
+      "doc": "/domains/workspace-management/workspace-backup-and-restore/restore-workspace-from-backup.md",
+      "sdk_examples": "/sdk-examples/workspace-management/workspace-backup-and-restore/restore-workspace-from-backup.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups~1{backup-id}~1restore/post"
+      }
+    },
+    {
+      "operation_id": "getWorkspaceBackupStatus",
+      "title": "Get Workspace Backup Status",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "workspace-backup-and-restore",
+      "group_title": "Workspace Backup & Restore",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).",
+      "error_codes": [
+        6025,
+        7301,
+        8083,
+        8084,
+        8245,
+        8535
+      ],
+      "doc": "/domains/workspace-management/workspace-backup-and-restore/get-workspace-backup-status.md",
+      "sdk_examples": "/sdk-examples/workspace-management/workspace-backup-and-restore/get-workspace-backup-status.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups~1{backup-id}~1status/get"
+      }
+    },
+    {
+      "operation_id": "getWorkspaceRestoreStatus",
+      "title": "Get Workspace Restore Status",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status",
+      "domain": "workspace-management",
+      "domain_title": "Workspace Management",
+      "group": "workspace-backup-and-restore",
+      "group_title": "Workspace Backup & Restore",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).",
+      "error_codes": [
+        6025,
+        7301,
+        8083,
+        8084,
+        8256,
+        8535
+      ],
+      "doc": "/domains/workspace-management/workspace-backup-and-restore/get-workspace-restore-status.md",
+      "sdk_examples": "/sdk-examples/workspace-management/workspace-backup-and-restore/get-workspace-restore-status.md",
+      "openapi": {
+        "file": "/references/openapi/workspace-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1restores~1{restore-id}~1status/get"
       }
     },
     {
@@ -5171,35 +5891,47 @@
       "response_content_types": [
         "application/json"
       ],
-      "permission_required": "Workspace Admin / Organization Admin, or a shared or group user holding Create Report permission on the base table.",
+      "permission_required": "Account Admin, Organization Admin, Workspace Owner or Workspace Admin; a Custom Role user whose role grants Create Report on the base table; or a shared / group user holding Create Report permission. The caller must additionally be able to read the base table and every column the report uses. See Permission Model.",
       "error_codes": [
-        7005,
         7016,
+        7103,
         7111,
+        7137,
         7138,
         7301,
+        7309,
+        7324,
         7362,
         7701,
         7703,
+        7705,
+        7706,
+        7725,
         7727,
         8008,
-        8021,
         8050,
         8051,
         8052,
+        8053,
+        8055,
+        8056,
         8057,
+        8058,
         8059,
-        8092,
         8144,
-        8147,
         8162,
+        8164,
         8166,
         8167,
         8168,
+        8169,
         8170,
-        8191,
+        8179,
+        8187,
+        8188,
+        8201,
         8250,
-        8252,
+        8251,
         8253,
         8254,
         8255,
@@ -5213,7 +5945,10 @@
         8517,
         8534,
         8535,
-        8542
+        8542,
+        8544,
+        8547,
+        14037
       ],
       "doc": "/domains/reports-and-dashboards/reports/create-report.md",
       "sdk_examples": "/sdk-examples/reports-and-dashboards/reports/create-report.md",
@@ -5244,12 +5979,13 @@
       "response_content_types": [
         "application/json"
       ],
-      "permission_required": "Design Modify on the report. A read-only shared user cannot call this endpoint.",
+      "permission_required": "The report's owner, or a user holding Design Modify on the report: Account Admin, Organization Admin, Workspace Owner, Workspace Admin, or a shared / group / Custom Role user granted edit rights. A read-only shared user cannot call this endpoint.",
       "error_codes": [
         7103,
         7104,
         7106,
         7301,
+        7309,
         7319,
         8021,
         8535
@@ -5281,52 +6017,62 @@
       "request_content_type": "application/x-www-form-urlencoded",
       "success_status": 204,
       "response_content_types": [],
-      "permission_required": "Design Modify on the report — the owner, a Workspace Admin, an Organization Admin, or a shared or group user granted edit rights.",
+      "permission_required": "The report's owner, an Account Admin, an Organization Admin, the Workspace Owner or a Workspace Admin. Any other caller — including a shared, group or Custom Role user holding Design Modify — is rejected with 7301. The caller must also be able to read the base table.",
       "error_codes": [
-        7005,
         7016,
-        7104,
+        7103,
         7106,
-        7111,
-        7138,
         7301,
-        7362,
+        7309,
+        7319,
         7701,
         7703,
+        7705,
+        7706,
+        7725,
         7727,
         8008,
         8021,
         8050,
         8051,
         8052,
+        8053,
+        8055,
+        8056,
         8057,
+        8058,
         8059,
-        8092,
         8144,
         8145,
-        8147,
         8162,
+        8164,
         8166,
         8167,
         8168,
+        8169,
         8170,
-        8191,
+        8179,
+        8187,
+        8188,
+        8192,
         8250,
-        8252,
+        8251,
         8253,
         8254,
         8255,
         8256,
         8257,
         8258,
-        8504,
         8507,
         8509,
         8516,
         8517,
         8534,
         8535,
-        8542
+        8542,
+        8544,
+        8547,
+        14037
       ],
       "doc": "/domains/reports-and-dashboards/reports/update-report.md",
       "sdk_examples": "/sdk-examples/reports-and-dashboards/reports/update-report.md",
@@ -6723,6 +7469,413 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1emailschedules~1{schedule-id}/post"
+      }
+    },
+    {
+      "operation_id": "getAlertsInWorkspace",
+      "title": "Get Alerts In Workspace",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/alerts",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or a custom-role user whose role has the Manage Data Alerts permission on this workspace. The check is workspace-wide — see Permission Model.",
+      "error_codes": [
+        7103,
+        7301,
+        7387,
+        8060,
+        8083,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/get-alerts-in-workspace.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/get-alerts-in-workspace.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts/get"
+      }
+    },
+    {
+      "operation_id": "getAlertsInView",
+      "title": "Get Alerts In View",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the view's workspace, or hold the CREATEALERT (Manage Data Alerts) permission on that specific view. Stricter than Get Alerts In Workspace.",
+      "error_codes": [
+        7103,
+        7104,
+        7301,
+        7319,
+        7387,
+        8060,
+        8083,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/get-alerts-in-view.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/get-alerts-in-view.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1alerts/get"
+      }
+    },
+    {
+      "operation_id": "getViewMetadataForAlert",
+      "title": "Get View Metadata For Alert",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the view's workspace, or hold the CREATEALERT (Manage Data Alerts) permission on that specific view.",
+      "error_codes": [
+        7103,
+        7104,
+        7301,
+        7319,
+        7387,
+        8060,
+        8083,
+        8245,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/get-view-metadata-for-alert.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/get-view-metadata-for-alert.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1alerts~1metadata/get"
+      }
+    },
+    {
+      "operation_id": "getAlertConfiguration",
+      "title": "Get Alert Configuration",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns this alert. The alert must belong to <workspace-id>.",
+      "error_codes": [
+        7103,
+        7301,
+        7319,
+        7387,
+        8060,
+        8083,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/get-alert-configuration.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/get-alert-configuration.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1{alert-id}/get"
+      }
+    },
+    {
+      "operation_id": "createAlert",
+      "title": "Create Alert",
+      "method": "POST",
+      "path": "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.create"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the view's workspace, or hold the CREATEALERT (Manage Data Alerts) permission on that specific view.",
+      "error_codes": [
+        7103,
+        7104,
+        7301,
+        7319,
+        7387,
+        8060,
+        8078,
+        8079,
+        8080,
+        8083,
+        8119,
+        8241,
+        8245,
+        8504,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/create-alert.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/create-alert.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1alerts/post"
+      }
+    },
+    {
+      "operation_id": "updateAlert",
+      "title": "Update Alert",
+      "method": "PUT",
+      "path": "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.update"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns this alert.",
+      "error_codes": [
+        7103,
+        7301,
+        7319,
+        7387,
+        8060,
+        8083,
+        8245,
+        8504,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/update-alert.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/update-alert.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1{alert-id}/put"
+      }
+    },
+    {
+      "operation_id": "deleteAlerts",
+      "title": "Delete Alerts",
+      "method": "DELETE",
+      "path": "/restapi/v2/workspaces/{workspace-id}/alerts",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.delete"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns every alert listed. The check runs per id.",
+      "error_codes": [
+        7103,
+        7301,
+        7319,
+        7387,
+        8060,
+        8078,
+        8079,
+        8080,
+        8083,
+        8504,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/delete-alerts.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/delete-alerts.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts/delete"
+      }
+    },
+    {
+      "operation_id": "changeAlertStatus",
+      "title": "Change Alert Status",
+      "method": "PUT",
+      "path": "/restapi/v2/workspaces/{workspace-id}/alerts/status",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.update"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": true
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns every alert listed. The check runs per id.",
+      "error_codes": [
+        7103,
+        7301,
+        7319,
+        7387,
+        8060,
+        8078,
+        8079,
+        8080,
+        8083,
+        8504,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/change-alert-status.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/change-alert-status.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1status/put"
+      }
+    },
+    {
+      "operation_id": "runAlert",
+      "title": "Run Alert",
+      "method": "POST",
+      "path": "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.modeling.create"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "form",
+        "required": false
+      },
+      "request_content_type": "application/x-www-form-urlencoded",
+      "success_status": 204,
+      "response_content_types": [],
+      "permission_required": "The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns this alert.",
+      "error_codes": [
+        6079,
+        7103,
+        7301,
+        7319,
+        7387,
+        8060,
+        8080,
+        8083,
+        8241,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/run-alert.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/run-alert.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1{alert-id}~1execute/post"
+      }
+    },
+    {
+      "operation_id": "getAlertEvents",
+      "title": "Get Alert Events",
+      "method": "GET",
+      "path": "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events",
+      "domain": "schedules-and-alerts",
+      "domain_title": "Schedules & Alerts",
+      "group": "data-alerts",
+      "group_title": "Data Alerts",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "query",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns this alert.",
+      "error_codes": [
+        7103,
+        7301,
+        7319,
+        7387,
+        8060,
+        8080,
+        8083,
+        8119,
+        8535
+      ],
+      "doc": "/domains/schedules-and-alerts/data-alerts/get-alert-events.md",
+      "sdk_examples": "/sdk-examples/schedules-and-alerts/data-alerts/get-alert-events.md",
+      "openapi": {
+        "file": "/references/openapi/schedules-alerts-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1{alert-id}~1events/get"
       }
     },
     {

@@ -4,7 +4,7 @@ Everything for the [Zoho Analytics REST API v2](https://www.zoho.com/analytics/a
 source documents and the artefacts built from them. This is the `current` version in
 [`../manifest.json`](../manifest.json).
 
-**10 domains, 35 API groups, 119 paths, 180 operations** (182 endpoints in the OKF bundle and the
+**10 domains, 39 API groups, 138 paths, 208 operations** (210 endpoints in the OKF bundle and the
 Postman collection: two Embed URL endpoints are documented from the API reference only).
 
 ## Layout
@@ -32,15 +32,15 @@ v2.0/
 
 | # | Domain folder (`md/`) | Groups | Specification (`zenesis-oas/`, `oas/`) | Samples (`zenesis-oas-samples/`) | OKF domain (`okf/domains/`) |
 |---|---|---|---|---|---|
-| 01 | `01 · Organization Management` | 1 | `org-management-grouped-api.json` | `org-management-grouped-api-samples.json` | `organization-management` |
+| 01 | `01 · Organization Management` | 2 | `org-management-grouped-api.json` | `org-management-grouped-api-samples.json` | `organization-management` |
 | 02 | `02 · User & Groups` | 4 | `user-groups-grouped-api.json` | `user-groups-grouped-api-samples.json` | `users-and-groups` |
-| 03 | `03 · Workspace Management` | 4 | `workspace-management-grouped-api.json` | `workspace-management-grouped-api-samples.json` | `workspace-management` |
+| 03 | `03 · Workspace Management` | 6 | `workspace-management-grouped-api.json` | `workspace-management-grouped-api-samples.json` | `workspace-management` |
 | 04 | `04 · Data Modeling & Schema` | 7 | `data-modeling-schema-grouped-api.json` | `data-modeling-schema-grouped-api-samples.json` | `data-modeling-and-schema` |
 | 05 | `05 · Data Operations` | 6 | `data-operations-grouped-api.json` | `data-operations-grouped-api-samples.json` | `data-operations` |
 | 06 | `06 · Views Management` | 5 | `views-management-grouped-api.json` | `views-management-grouped-api-samples.json` | `views-management` |
 | 07 | `07 · Reports & Dashboards` | 2 | `reports-dashboards-grouped-api.json` | `reports-dashboards-grouped-api-samples.json` | `reports-and-dashboards` |
 | 08 | `08 · Share & Publish` | 4 | `share-publish-grouped-api.json` | `share-publish-grouped-api-samples.json` | `share-and-publish` |
-| 09 | `09 · Schedules & Alerts` | 1 | `schedules-alerts-grouped-api.json` | `schedules-alerts-grouped-api-samples.json` | `schedules-and-alerts` |
+| 09 | `09 · Schedules & Alerts` | 2 | `schedules-alerts-grouped-api.json` | `schedules-alerts-grouped-api-samples.json` | `schedules-and-alerts` |
 | 10 | `10 · DSML` | 1 | `dsml-grouped-api.json` | `dsml-grouped-api-samples.json` | `dsml` |
 
 The `(markdown file, OpenAPI tag)` pairs inside each domain, and the slugs and titles the OKF bundle

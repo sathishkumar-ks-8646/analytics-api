@@ -9,7 +9,7 @@ Knowledge bundle covering every public Zoho Analytics REST API v2 endpoint, the 
 # Start Here
 
 * [Zoho Analytics REST API v2 - overview](overview.md) - What the Zoho Analytics REST API v2 is, how it is organized into 10 domains and 168 endpoints, and the five conventions every call shares.
-* [Endpoint catalog](endpoint-catalog.md) - All 182 Zoho Analytics REST API v2 endpoints in one table: method, path, operation ID, group, OAuth scope, success status and organization-header requirement.
+* [Endpoint catalog](endpoint-catalog.md) - All 210 Zoho Analytics REST API v2 endpoints in one table: method, path, operation ID, group, OAuth scope, success status and organization-header requirement.
 * [How to use this bundle](how-to-use-this-bundle.md) - Structure of the Zoho Analytics REST API v2 OKF bundle, the frontmatter contract of each concept type, and navigation rules for AI assistants, SDK generators, Postman runners and MCP servers.
 
 # Foundations (shared by every endpoint)
@@ -18,8 +18,8 @@ Knowledge bundle covering every public Zoho Analytics REST API v2 endpoint, the 
 * [Authentication (OAuth 2.0)](foundations/authentication.md) - How to authenticate Zoho Analytics REST API v2 calls with OAuth 2.0 access tokens, the Authorization header format, token lifetime and refresh, and the errors returned when authentication fails.
 * [Custom roles](foundations/custom-roles.md) - Organization-defined custom roles in Zoho Analytics - the three access permission levels, the full permission catalogue by category, how a custom role name is used by the REST API v2 user-management endpoints, and how its permissions map onto the API's authorization vocabulary.
 * [Data centers and base URLs](foundations/data-centers.md) - The Zoho Analytics API host (ZohoAnalytics_Server_URI) and OAuth accounts host for each data center, and the rules for choosing them.
-* [Error codes - quick reference](foundations/error-codes-quick-reference.md) - Compact one-line-per-code table of all 352 Zoho Analytics REST API v2 error codes (code, summary constant, HTTP status, meaning); use the full catalog for per-operation reasons and solutions.
-* [Error code catalog](foundations/error-codes.md) - Every documented Zoho Analytics REST API v2 error code (352 codes) with its meaning, typical HTTP status, resolution and the operations that raise it.
+* [Error codes - quick reference](foundations/error-codes-quick-reference.md) - Compact one-line-per-code table of all 382 Zoho Analytics REST API v2 error codes (code, summary constant, HTTP status, meaning); use the full catalog for per-operation reasons and solutions.
+* [Error code catalog](foundations/error-codes.md) - Every documented Zoho Analytics REST API v2 error code (382 codes) with its meaning, typical HTTP status, resolution and the operations that raise it.
 * [Export formats and enumerations](foundations/export-formats-and-enums.md) - Every enumerated CONFIG attribute shared by the Zoho Analytics REST API v2 export endpoints and email schedules - responseFormat, CSV delimiters, PDF page setup, header and footer slots, image options, email exportType - with default values and error codes.
 * [Filter criteria syntax](foundations/filter-criteria-syntax.md) - Grammar and rules of the SQL-like criteria expression used by Zoho Analytics REST API v2 to filter rows in exports, row updates and deletes, shares, embed URLs, publish configurations and email schedules.
 * [Glossary](foundations/glossary.md) - Definitions of every Zoho Analytics object and term used across the REST API v2 documentation - organization, workspace, view, table, query table, report, dashboard, column, lookup, formula, variable, datasource, job, share, publish, embed, slideshow, schedule, AutoML, portal and more.
@@ -38,15 +38,15 @@ Knowledge bundle covering every public Zoho Analytics REST API v2 endpoint, the 
 
 # API Domains
 
-* [Organization Management](domains/organization-management/index.md) - 4 endpoints in 1 groups: Organization Info & Settings.
+* [Organization Management](domains/organization-management/index.md) - 8 endpoints in 2 groups: Organization Info & Settings, Security Controls.
 * [Users & Groups](domains/users-and-groups/index.md) - 26 endpoints in 4 groups: Organization Users, Custom Roles, Workspace Users, Workspace Groups.
-* [Workspace Management](domains/workspace-management/index.md) - 24 endpoints in 4 groups: Workspace Operations, Workspace Folders, Workspace Preferences, Domain & White Label Access.
+* [Workspace Management](domains/workspace-management/index.md) - 38 endpoints in 6 groups: Workspace Operations, Workspace Folders, Workspace Preferences, Domain & White Label Access, Linked Workspaces, Workspace Backup & Restore.
 * [Data Modeling & Schema](domains/data-modeling-and-schema/index.md) - 33 endpoints in 7 groups: Table & Schema, Columns, Lookups & Relationships, Query Tables, Custom Formula Columns, Aggregate Formulas (Unified Metrics), Workspace Variables.
 * [Data Operations](domains/data-operations/index.md) - 20 endpoints in 6 groups: Synchronous Data Import, Asynchronous & Batch Data Import, Synchronous Data Export, Asynchronous Data Export, Row Operations, Data Sync & Connectivity.
 * [Views Management](domains/views-management/index.md) - 27 endpoints in 5 groups: View Operations, View Preferences, Trash Management, Auto Analysis, Tags.
 * [Reports & Dashboards](domains/reports-and-dashboards/index.md) - 9 endpoints in 2 groups: Reports (Analysis Views), Dashboards.
 * [Share & Publish](domains/share-and-publish/index.md) - 22 endpoints in 4 groups: Sharing, Publish, Embed URL, Slideshow Management.
-* [Schedules & Alerts](domains/schedules-and-alerts/index.md) - 6 endpoints in 1 groups: Email Schedules.
+* [Schedules & Alerts](domains/schedules-and-alerts/index.md) - 16 endpoints in 2 groups: Email Schedules, Data Alerts.
 * [Data Science & Machine Learning (AutoML)](domains/dsml/index.md) - 11 endpoints in 1 groups: AutoML.
 
 # Workflows

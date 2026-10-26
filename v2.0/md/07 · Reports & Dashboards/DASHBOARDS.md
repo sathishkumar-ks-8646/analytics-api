@@ -710,8 +710,6 @@ different triggers are:
 
 ---
 
-> The three listing APIs below are **user-scoped**: they return dashboards across every organization the caller belongs to and take no `ZANALYTICS-ORGID` header. They are kept here so that every Dashboard API is documented in one place.
-
 ## 4. Get All Dashboards
 
 Returns all dashboards accessible to the authenticated user — both dashboards owned by the user and
@@ -1180,12 +1178,13 @@ Content-Type: application/json;charset=UTF-8
 
 ---
 
+
 ## Appendix A – Common HTTP Headers
 
 | Header | Value | Required | Notes |
 |--------|-------|----------|-------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. |
-| `ZANALYTICS-ORGID` | Organization ID | **Mandatory** for the workspace-scoped APIs (1–3) | Organization ID that owns the workspace. Not used by the three listing APIs (4–6). |
+| `ZANALYTICS-ORGID` | Organization ID | **Mandatory** | Organization ID that owns the workspace. |
 | `Content-Type` | `application/x-www-form-urlencoded` | POST / PUT | `CONFIG` is a form-encoded body parameter on Create and Update. On Read it is a query parameter. |
 
 ---
@@ -1197,9 +1196,6 @@ Content-Type: application/json;charset=UTF-8
 | Create Dashboard | POST | `ZohoAnalytics.modeling.create` |
 | Read Dashboard Metadata | GET | `ZohoAnalytics.modeling.read` |
 | Update Dashboard | PUT | `ZohoAnalytics.modeling.update` |
-| Get All Dashboards | GET | `ZohoAnalytics.metadata.read` |
-| Get Owned Dashboards | GET | `ZohoAnalytics.metadata.read` |
-| Get Shared Dashboards | GET | `ZohoAnalytics.metadata.read` |
 
 ---
 

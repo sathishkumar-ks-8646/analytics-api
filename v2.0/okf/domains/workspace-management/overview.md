@@ -1,7 +1,7 @@
 ---
 type: API Domain
 title: Workspace Management
-description: "API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, and folder management."
+description: "API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, folder management, linked workspaces, and backup and restore."
 tags:
   - zoho-analytics
   - rest-api-v2
@@ -26,23 +26,31 @@ api:
       title: Domain & White Label Access
       doc: "/domains/workspace-management/domain-and-white-label/overview.md"
       endpoint_count: 2
-  endpoint_count: 24
+    - group: linked-workspaces
+      title: Linked Workspaces
+      doc: "/domains/workspace-management/linked-workspaces/overview.md"
+      endpoint_count: 8
+    - group: workspace-backup-and-restore
+      title: Workspace Backup & Restore
+      doc: "/domains/workspace-management/workspace-backup-and-restore/overview.md"
+      endpoint_count: 6
+  endpoint_count: 38
   openapi: "/references/openapi/workspace-management-grouped-api.json"
 sources:
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
 # Summary
 
-API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, and folder management.
+API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, folder management, linked workspaces, and backup and restore.
 
 # API Groups
 
@@ -52,6 +60,8 @@ API for managing workspaces in Zoho Analytics — covering workspace operations,
 | [Workspace Folders](workspace-folders/overview.md) | 8 | APIs that manage the folders of a workspace, covering the creation, renaming, deletion, nesting and reordering of folders, the movement of views between folders, and the selection of the default folder. |
 | [Workspace Preferences](workspace-preferences/overview.md) | 4 | APIs that manage the workspace preferences of a user, covering the default workspace that opens on login and the favourite workspaces starred for quick access. |
 | [Domain & White Label Access](domain-and-white-label/overview.md) | 2 | APIs that control whether a workspace is reachable through the White Label or Client Portal domain of the organization. |
+| [Linked Workspaces](linked-workspaces/overview.md) | 8 | APIs for listing, linking, syncing and unlinking client workspaces against a master workspace, and for checking which workspaces can be linked. |
+| [Workspace Backup & Restore](workspace-backup-and-restore/overview.md) | 6 | APIs for listing and triggering workspace backups, downloading a backup, restoring a workspace from one, and tracking the status of either job. |
 
 # Endpoints
 
@@ -81,6 +91,20 @@ API for managing workspaces in Zoho Analytics — covering workspace operations,
 | [Remove Favourite Workspace](workspace-preferences/remove-favorite-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/favorite` | `removeFavoriteWorkspace` | `ZohoAnalytics.metadata.update` | 204 |
 | [Enable Workspace for Domain Access](domain-and-white-label/enable-domain-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `enableDomainWorkspace` | `ZohoAnalytics.metadata.update` | 204 |
 | [Disable Workspace for Domain Access](domain-and-white-label/disable-domain-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `disableDomainWorkspace` | `ZohoAnalytics.metadata.update` | 204 |
+| [Get Linked Workspaces For Organization](linked-workspaces/get-linked-workspaces-for-organization.md) | GET | `/restapi/v2/linkedworkspaces` | `getLinkedWorkspacesForOrganization` | `ZohoAnalytics.metadata.read` | 200 |
+| [Get Linked Workspaces For Master Workspace](linked-workspaces/get-linked-workspaces-for-master-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `getLinkedWorkspacesForMasterWorkspace` | `ZohoAnalytics.metadata.read` | 200 |
+| [Get Linkable Workspaces](linked-workspaces/get-linkable-workspaces.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable` | `getLinkableWorkspaces` | `ZohoAnalytics.metadata.read` | 200 |
+| [Get Workspace Linking Compatibility](linked-workspaces/get-workspace-linking-compatibility.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility` | `getWorkspaceLinkingCompatibility` | `ZohoAnalytics.metadata.read` | 200 |
+| [Link Workspaces](linked-workspaces/link-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `linkWorkspaces` | `ZohoAnalytics.modeling.create` | 204 |
+| [Sync Linked Workspaces](linked-workspaces/sync-linked-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `syncLinkedWorkspaces` | `ZohoAnalytics.modeling.create` | 204 |
+| [Get Linked Workspace Sync Details](linked-workspaces/get-linked-workspace-sync-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `getLinkedWorkspaceSyncDetails` | `ZohoAnalytics.metadata.read` | 200 |
+| [Unlink Workspaces](linked-workspaces/unlink-workspaces.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `unlinkWorkspaces` | `ZohoAnalytics.modeling.delete` | 204 |
+| [Get Workspace Backups](workspace-backup-and-restore/get-workspace-backups.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups` | `getWorkspaceBackups` | `ZohoAnalytics.metadata.read` | 200 |
+| [Backup Workspace Now](workspace-backup-and-restore/backup-workspace-now.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups` | `backupWorkspaceNow` | `ZohoAnalytics.metadata.create` | 200 |
+| [Download Workspace Backup](workspace-backup-and-restore/download-workspace-backup.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download` | `downloadWorkspaceBackup` | `ZohoAnalytics.metadata.read` | 200 |
+| [Restore Workspace from Backup](workspace-backup-and-restore/restore-workspace-from-backup.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore` | `restoreWorkspaceFromBackup` | `ZohoAnalytics.metadata.create` | 200 |
+| [Get Workspace Backup Status](workspace-backup-and-restore/get-workspace-backup-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status` | `getWorkspaceBackupStatus` | `ZohoAnalytics.metadata.read` | 200 |
+| [Get Workspace Restore Status](workspace-backup-and-restore/get-workspace-restore-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status` | `getWorkspaceRestoreStatus` | `ZohoAnalytics.metadata.read` | 200 |
 
 # Related
 

@@ -24,7 +24,7 @@ sources:
     title: Permission Required rows and Permission Model sections of every document
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 

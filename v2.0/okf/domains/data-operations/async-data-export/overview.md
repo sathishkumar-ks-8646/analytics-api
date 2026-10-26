@@ -34,10 +34,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -171,7 +171,7 @@ These are the limits that apply with **default settings**. A request that exceed
 | Limitation | Value | Enforced by |
 |------------|-------|-------------|
 | **Simultaneous export jobs** | **5** per organization. A job counts against the limit while it is queued or running. | `8132` |
-| **Export job retention** | **72 hours** from the moment the job is **created** — not from when it completes. After that the job record and the exported file are removed, and both [Get Export Job Details](get-export-job-details.md) and [Download Exported Data](download-exported-data.md) behave as though the job never existed. | `expiryTime` in the response, then `8120` / `jobCode` `1005` |
+| **Export job retention** | **1 hour** from the moment the job **completes** (`jobCode` `1004`) — not from when it was created. After that the job record and the exported file are removed together, and both [Get Export Job Details](get-export-job-details.md) and [Download Exported Data](download-exported-data.md) behave as though the job never existed. | `expiryTime` in the response, then `8120` / `jobCode` `1005` |
 | **Job visibility** | An export job can be polled and downloaded **only by the user who created it**. An Account Admin cannot collect another user's job. | `8124` |
 | **SQL query length** | **100,000** characters for `sqlQuery`. | `8507` |
 | **SQL query result rows** | **800,000** rows. A row limit is appended to the query automatically. | Truncated silently |
@@ -194,7 +194,7 @@ These are the limits that apply with **default settings**. A request that exceed
 | **`image` is only valid for chart views** | Any other view type fails with `8014`, and a SQL query export can never produce an image. |
 | **A SQL query export is always a flat sheet** | `image` is unavailable, and the dashboard-only page-setup attributes have nothing to act on. |
 
-> **Poll and download promptly, then persist.** Because the whole job — record and file — lives for 72 hours from creation, an integration that needs a durable copy must download inside that window and store the file itself. Nothing is recoverable afterwards.
+> **Poll and download promptly, then persist.** Because the whole job — record and file — lives for only **one hour after the job completes**, an integration that needs a durable copy must download inside that window and store the file itself. Nothing is recoverable afterwards, and the window is short enough that a nightly or hourly collector will routinely miss it.
 
 ---
 
@@ -208,7 +208,7 @@ These are the limits that apply with **default settings**. A request that exceed
 | `1002` | `JOB IN PROGRESS` | The job is being processed. | Wait a few seconds and poll again. |
 | `1003` | `ERROR OCCURRED` | The job stopped because of an error. | Stop polling. The job will never complete; create a new one. |
 | `1004` | `JOB COMPLETED` | The file is ready. | Read `downloadUrl` and `expiryTime`, then call [Download Exported Data](download-exported-data.md). |
-| `1005` | `JOB NOT FOUND` | No job exists for this ID — it was never created, or it has passed its 72-hour retention. | Stop polling. Verify the job ID. |
+| `1005` | `JOB NOT FOUND` | No job exists for this ID — it was never created, or it has passed its one-hour post-completion retention. | Stop polling. Verify the job ID. |
 
 `1003` and `1005` are terminal, exactly like `1004`. Only `1001` and `1002` justify another poll.
 
@@ -233,7 +233,7 @@ Rules and constraints:
 - If the endpoint cannot be reached while the request is being validated, the create call fails with [`8126`](../../../foundations/error-codes.md#error-8126) and no job is created.
 - Your endpoint should answer with a 2xx status. A non-2xx response is recorded as a delivery failure.
 - **Delivery is attempted once.** There is no retry, and a failed callback does not affect the job — the file is still there to download.
-- The callback is a **notification, not a guarantee**. Keep [Get Export Job Details](get-export-job-details.md) as the fallback, and remember the 72-hour window.
+- The callback is a **notification, not a guarantee**. Keep [Get Export Job Details](get-export-job-details.md) as the fallback, and remember that the one-hour retention window starts the moment the job completes — a callback your endpoint fails to process is an hour of budget already spent.
 
 ---
 
@@ -439,7 +439,7 @@ Sending `password` changes **how** the file is delivered, not only whether it is
 
 - **HTTP status and job status are independent.** A failed job is reported as `200` / `success` / `jobCode` `1003`. An integration that only inspects HTTP codes will treat a failed export as a success and then get [`8123`](../../../foundations/error-codes.md#error-8123) from the download.
 - **Two terminal codes look like progress and are not.** `1003` and `1005` never change. Polling either forever is the most common mistake with this pipeline.
-- **`expiryTime` counts from creation.** The window shrinks while the job runs, so a slow job leaves less time to collect. Read `expiryTime` rather than adding 72 hours to the moment you saw `1004`.
+- **`expiryTime` counts from completion, and the window is one hour.** Download as soon as you observe `jobCode` `1004`; do not queue the collection for later. Read `expiryTime` rather than assuming any fixed duration.
 - **`expiryTime` is epoch milliseconds in a **string**.** So is `jobId`, and so is `jobCode`. Nothing in `data` is a JSON number.
 - **The response says nothing about the export itself.** No format, no row count, no size. Keep your own record of what the job was for.
 - **Prefer `callbackUrl` when you can host an endpoint.** It carries the same fields, removes the poll entirely, and fires on failure too.
@@ -657,9 +657,9 @@ Defaults: `leftHeader` `1`, `centerHeader` `0`, `rightHeader` `2`, `leftFooter` 
 | [8014](../../../foundations/error-codes.md#error-8014) | 400 | APIIMAGERESPONSENOTPOSSIBLE — image was requested for a view that is not a chart. |
 | [8015](../../../foundations/error-codes.md#error-8015) | 400 | APIEXPORTCOLUMNNOTPRESENT — A name in selectedColumns does not match any column in the view. |
 | [8017](../../../foundations/error-codes.md#error-8017) | 400 | INVALIDIMAGEFORMAT — imageFormat is not png, jpg, or jpeg. |
-| [8077](../../../foundations/error-codes.md#error-8077) | 400 | EMPTYJSONCONFIGURATION — CONFIG was not sent, or was sent empty. |
+| [8077](../../../foundations/error-codes.md#error-8077) | 400 | EMPTY_JSON_CONFIGURATION - CONFIG is present but empty. |
 | [8078](../../../foundations/error-codes.md#error-8078) | 400 | EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent blank. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. |
 | [8088](../../../foundations/error-codes.md#error-8088) | 400 | SECURITYCONTROLSFEATUREDISABLED — Export is disabled for the organization. |
 | [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
 | [8120](../../../foundations/error-codes.md#error-8120) | 404 | EXPORTJOBNOTFOUND — No export job exists for the given ID (HTTP 404). |

@@ -3,7 +3,7 @@
   "info": {
     "title": "Zoho Analytics API",
     "version": "v2",
-    "description": "APIs that return information about the organisations, resource usage, subscription plan, and workspace or view identity lookups available to the authenticated user. These are read-only metadata APIs and do not modify any data."
+    "description": "APIs that return information about the organisations, resource usage, subscription plan, and workspace or view identity lookups available to the authenticated user, and that read and update the organisation-wide and per-workspace access restriction settings."
   },
   "servers": [
     {
@@ -14,6 +14,10 @@
     {
       "name": "Org Info & Settings",
       "description": "APIs for retrieving organisation information, resource usage, subscription details, and workspace or view metadata."
+    },
+    {
+      "name": "Security Controls",
+      "description": "APIs for reading and updating the access restriction settings of an organisation and of an individual workspace - sharing, private links, public views, export and email."
     }
   ],
   "paths": {
@@ -633,6 +637,631 @@
           }
         }
       }
+    },
+    "/restapi/v2/security-controls/access-restrictions": {
+      "get": {
+        "operationId": "getOrgAccessRestrictions",
+        "summary": "Get Org Access Restrictions",
+        "description": "Returns the organisation's access restriction settings: the master switch and the five sections. Feeds Update Org Access Restrictions and supplies the values to copy when overriding a workspace.",
+        "tags": [
+          "Security Controls"
+        ],
+        "x-zenesis-title": "Get Org Access Restrictions",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get org access restrictions request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrgAccessRestrictionsResponse"
+                },
+                "examples": {
+                  "okRestrictionsEnabled": {
+                    "description": "OK Restrictions enabled private",
+                    "summary": "OK — Restrictions enabled, private links disabled, domain restrictions on sharing and email.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get org access restrictions",
+                      "data": {
+                        "accessRestrictionEnabled": true,
+                        "shareViews": {
+                          "domainRestrictionEnabled": true,
+                          "trustedDomains": [
+                            "example.com",
+                            "partner.example.org"
+                          ]
+                        },
+                        "privateLinks": {
+                          "enabled": false,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "publicViews": {
+                          "enabled": true,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "exportViews": {
+                          "enabled": true
+                        },
+                        "emailViews": {
+                          "enabled": true,
+                          "domainRestrictionEnabled": true,
+                          "trustedDomains": [
+                            "example.com"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "okOrganisationThat": {
+                    "description": "OK Organisation that has",
+                    "summary": "OK — Organisation that has never configured access restrictions.",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get org access restrictions",
+                      "data": {
+                        "accessRestrictionEnabled": false,
+                        "shareViews": {
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "privateLinks": {
+                          "enabled": true,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "publicViews": {
+                          "enabled": true,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "exportViews": {
+                          "enabled": true
+                        },
+                        "emailViews": {
+                          "enabled": true,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateOrgAccessRestrictions",
+        "summary": "Update Org Access Restrictions",
+        "description": "Switches the organisation's access restrictions on or off and updates any of the five sections. Returns no body. Read the current state first with Get Org Access Restrictions.",
+        "tags": [
+          "Security Controls"
+        ],
+        "x-zenesis-title": "Update Org Access Restrictions",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/UpdateOrgAccessRestrictionsConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "switchAccessRestrictions": {
+                  "description": "Switch access restrictions on",
+                  "summary": "Switch access restrictions on, change nothing else.",
+                  "value": {
+                    "CONFIG": {
+                      "accessRestrictionEnabled": true
+                    }
+                  }
+                },
+                "configureSeveralSections": {
+                  "description": "Configure several sections at",
+                  "summary": "Configure several sections at once.",
+                  "value": {
+                    "CONFIG": {
+                      "shareViews": {
+                        "domainRestrictionEnabled": true,
+                        "trustedDomains": [
+                          "example.com",
+                          "partner.example.org"
+                        ]
+                      },
+                      "privateLinks": {
+                        "enabled": false
+                      },
+                      "exportViews": {
+                        "enabled": true
+                      },
+                      "emailViews": {
+                        "enabled": true,
+                        "domainRestrictionEnabled": true,
+                        "trustedDomains": [
+                          "example.com"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully completed. No response body is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation."
+              },
+              {
+                "name": "8077",
+                "description": "EMPTY_JSON_CONFIGURATION - CONFIG is present but empty.",
+                "resolution": "Send a JSON object in CONFIG."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG is not valid JSON, or it contains neither accessRestrictionEnabled nor a non-empty section.",
+                "resolution": "Send valid JSON with at least one attribute to change."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8192",
+                "description": "TRUSTED_DOMAINS_WITHOUT_DOMAIN_RESTRICTION - trustedDomains was sent for a section whose domain restriction is off or is being switched off.",
+                "resolution": "Send domainRestrictionEnabled: true with the list, or send domainRestrictionEnabled: false with trustedDomains: [] to clear it."
+              },
+              {
+                "name": "8193",
+                "description": "TRUSTED_DOMAINS_EMPTY - The domain restriction is on, or being switched on, but the section has no trusted domains.",
+                "resolution": "Send at least one domain in trustedDomains, or switch the restriction off."
+              },
+              {
+                "name": "8194",
+                "description": "DOMAIN_RESTRICTION_NOT_ALLOWED_WHEN_DISABLED - Domain attributes were sent for privateLinks, publicViews or emailViews while that feature is disabled or is being disabled.",
+                "resolution": "Enable the feature in the same request, or remove the domain attributes."
+              },
+              {
+                "name": "8195",
+                "description": "EMAIL_NOT_ALLOWED_WHEN_EXPORT_DISABLED - emailViews was sent while export is disabled or is being disabled, and email views would stay enabled.",
+                "resolution": "Enable export in the same request, or send emailViews: {\"enabled\": false} when disabling export."
+              },
+              {
+                "name": "8196",
+                "description": "ACCESS_RESTRICTION_DISABLED - Access restriction is off for the organisation and the request carries sections without turning it on, including accessRestrictionEnabled: false sent with sections while it is already off.",
+                "resolution": "Include accessRestrictionEnabled: true in the same request."
+              },
+              {
+                "name": "8200",
+                "description": "SECTIONS_NOT_ALLOWED_WHEN_DISABLING_ACCESS_RESTRICTION - accessRestrictionEnabled: false was sent together with a non-empty section.",
+                "resolution": "Send accessRestrictionEnabled: false on its own."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.update."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
+    },
+    "/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions": {
+      "get": {
+        "operationId": "getWorkspaceAccessRestrictions",
+        "summary": "Get Workspace Access Restrictions",
+        "description": "Returns the access restriction settings in effect for one workspace and whether they come from the organisation or from the workspace. Feeds Update Workspace Access Restrictions.",
+        "tags": [
+          "Security Controls"
+        ],
+        "x-zenesis-title": "Get Workspace Access Restrictions",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the get workspace access restrictions request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkspaceAccessRestrictionsResponse"
+                },
+                "examples": {
+                  "okWorkspaceThat": {
+                    "description": "OK Workspace that follows",
+                    "summary": "OK — Workspace that follows the organisation (configurationSource is ORG).",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace access restrictions",
+                      "data": {
+                        "accessRestrictionEnabled": true,
+                        "configurationSource": "ORG",
+                        "shareViews": {
+                          "domainRestrictionEnabled": true,
+                          "trustedDomains": [
+                            "example.com",
+                            "partner.example.org"
+                          ]
+                        },
+                        "privateLinks": {
+                          "enabled": false,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "publicViews": {
+                          "enabled": true,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "exportViews": {
+                          "enabled": true
+                        },
+                        "emailViews": {
+                          "enabled": true,
+                          "domainRestrictionEnabled": true,
+                          "trustedDomains": [
+                            "example.com"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "okWorkspaceWith": {
+                    "description": "OK Workspace with its",
+                    "summary": "OK — Workspace with its own settings (configurationSource is WORKSPACE).",
+                    "value": {
+                      "status": "success",
+                      "summary": "Get workspace access restrictions",
+                      "data": {
+                        "accessRestrictionEnabled": true,
+                        "configurationSource": "WORKSPACE",
+                        "shareViews": {
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "privateLinks": {
+                          "enabled": true,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "publicViews": {
+                          "enabled": false,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        },
+                        "exportViews": {
+                          "enabled": false
+                        },
+                        "emailViews": {
+                          "enabled": false,
+                          "domainRestrictionEnabled": false,
+                          "trustedDomains": []
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not exist in the organisation named in ZANALYTICS-ORGID.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches the organisation that owns it."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateWorkspaceAccessRestrictions",
+        "summary": "Update Workspace Access Restrictions",
+        "description": "Switches one workspace between following the organisation and having its own settings, and updates the workspace's own sections. Returns no body. Read the current state first with Get Workspace Access Restrictions, and read Organisation and Workspace Settings Lifecycle before the first override.",
+        "tags": [
+          "Security Controls"
+        ],
+        "x-zenesis-title": "Update Workspace Access Restrictions",
+        "security": [
+          {
+            "iam-oauth2-schema": [
+              "ZohoAnalytics.metadata.update"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/org-id"
+          },
+          {
+            "$ref": "#/components/parameters/workspace-id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "CONFIG"
+                ],
+                "properties": {
+                  "CONFIG": {
+                    "$ref": "#/components/schemas/UpdateWorkspaceAccessRestrictionsConfig"
+                  }
+                }
+              },
+              "encoding": {
+                "CONFIG": {
+                  "contentType": "application/json"
+                }
+              },
+              "examples": {
+                "giveTheWorkspace": {
+                  "description": "Give the workspace its",
+                  "summary": "Give the workspace its own settings, naming the sections explicitly.",
+                  "value": {
+                    "CONFIG": {
+                      "useOrganizationSettings": false,
+                      "shareViews": {
+                        "domainRestrictionEnabled": true,
+                        "trustedDomains": [
+                          "example.com",
+                          "partner.example.org"
+                        ]
+                      },
+                      "privateLinks": {
+                        "enabled": false
+                      },
+                      "publicViews": {
+                        "enabled": false
+                      },
+                      "exportViews": {
+                        "enabled": true
+                      },
+                      "emailViews": {
+                        "enabled": true,
+                        "domainRestrictionEnabled": true,
+                        "trustedDomains": [
+                          "example.com"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "updateOneSection": {
+                  "description": "Update one section on",
+                  "summary": "Update one section on a workspace that already has its own settings.",
+                  "value": {
+                    "CONFIG": {
+                      "exportViews": {
+                        "enabled": false
+                      },
+                      "emailViews": {
+                        "enabled": false
+                      }
+                    }
+                  }
+                },
+                "returnTheWorkspace": {
+                  "description": "Return the workspace to",
+                  "summary": "Return the workspace to the organisation's settings.",
+                  "value": {
+                    "CONFIG": {
+                      "useOrganizationSettings": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully completed. No response body is returned.",
+            "x-zenesis-statuscodes": [
+              {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+                "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation."
+              },
+              {
+                "name": "7387",
+                "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not exist in the organisation named in ZANALYTICS-ORGID.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches the organisation that owns it."
+              },
+              {
+                "name": "8077",
+                "description": "EMPTY_JSON_CONFIGURATION - CONFIG is present but empty.",
+                "resolution": "Send a JSON object in CONFIG."
+              },
+              {
+                "name": "8080",
+                "description": "INVALID_JSON_CONFIGURATION - CONFIG is not valid JSON, or the workspace follows the organisation and the request has neither useOrganizationSettings nor a non-empty section.",
+                "resolution": "Send valid JSON with at least one attribute to change."
+              },
+              {
+                "name": "8083",
+                "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+                "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+              },
+              {
+                "name": "8084",
+                "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+                "resolution": "Use the orgId returned by the organisation listing API."
+              },
+              {
+                "name": "8192",
+                "description": "TRUSTED_DOMAINS_WITHOUT_DOMAIN_RESTRICTION - trustedDomains was sent for a section whose domain restriction is off or is being switched off.",
+                "resolution": "Send domainRestrictionEnabled: true with the list, or send domainRestrictionEnabled: false with trustedDomains: [] to clear it."
+              },
+              {
+                "name": "8193",
+                "description": "TRUSTED_DOMAINS_EMPTY - The domain restriction is on, or being switched on, but the section has no trusted domains.",
+                "resolution": "Send at least one domain in trustedDomains, or switch the restriction off."
+              },
+              {
+                "name": "8194",
+                "description": "DOMAIN_RESTRICTION_NOT_ALLOWED_WHEN_DISABLED - Domain attributes were sent for privateLinks, publicViews or emailViews while that feature is disabled or is being disabled.",
+                "resolution": "Enable the feature in the same request, or remove the domain attributes."
+              },
+              {
+                "name": "8195",
+                "description": "EMAIL_NOT_ALLOWED_WHEN_EXPORT_DISABLED - emailViews was sent while export is disabled or is being disabled, and email views would stay enabled.",
+                "resolution": "Enable export in the same request, or send emailViews: {\"enabled\": false} when disabling export."
+              },
+              {
+                "name": "8197",
+                "description": "ORG_ACCESS_RESTRICTION_NOT_ENABLED - The organisation's accessRestrictionEnabled is false.",
+                "resolution": "Enable access restrictions for the organisation with Update Org Access Restrictions, then retry."
+              },
+              {
+                "name": "8198",
+                "description": "SECTIONS_NOT_ALLOWED_WHEN_APPLYING_ORG_SETTINGS - useOrganizationSettings: true was sent together with a non-empty section.",
+                "resolution": "Send useOrganizationSettings: true on its own."
+              },
+              {
+                "name": "8199",
+                "description": "WORKSPACE_SETTINGS_NOT_ENABLED - The workspace follows the organisation, and the request would update it without useOrganizationSettings: false.",
+                "resolution": "Send useOrganizationSettings: false in the same request to give the workspace its own settings."
+              },
+              {
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.update."
+              }
+            ]
+          },
+          "4XX": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
+          },
+          "500": {
+            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -645,6 +1274,15 @@
           "type": "string"
         },
         "description": "ID of the organisation on which the operation has to be performed. The organisation ID can be obtained using the Get Organizations API."
+      },
+      "workspace-id": {
+        "name": "workspace-id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the workspace."
       }
     },
     "securitySchemes": {
@@ -660,7 +1298,8 @@
               "ZohoAnalytics.metadata.all": "Full access to metadata in Zoho Analytics.",
               "ZohoAnalytics.usermanagement.read": "Read user management data in Zoho Analytics.",
               "ZohoAnalytics.usermanagement.all": "Full access to user management in Zoho Analytics.",
-              "ZohoAnalytics.fullaccess.all": "Full access to all Zoho Analytics features."
+              "ZohoAnalytics.fullaccess.all": "Full access to all Zoho Analytics features.",
+              "ZohoAnalytics.metadata.update": "Update security controls resources"
             }
           }
         }
@@ -1095,6 +1734,318 @@
                 "$ref": "#/components/schemas/MetaViewDetails"
               }
             }
+          }
+        }
+      },
+      "GetOrgAccessRestrictionsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Localised operation summary. \"Get org access restrictions\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "accessRestrictionEnabled": {
+                "type": "boolean",
+                "description": "The master switch. Always present. false for an organisation that has never configured access restrictions. When false, none of the settings below are enforced."
+              },
+              "shareViews": {
+                "type": "object",
+                "properties": {
+                  "domainRestrictionEnabled": {
+                    "type": "boolean",
+                    "description": "true when views can be shared only to users from trustedDomains. Always present."
+                  },
+                  "trustedDomains": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Trusted domains for sharing. Always present; [] when none. Returned even when domainRestrictionEnabled is false."
+                  }
+                },
+                "description": "Sharing restriction. Always present."
+              },
+              "privateLinks": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "true when private links can be generated. Always present."
+                  },
+                  "domainRestrictionEnabled": {
+                    "type": "boolean",
+                    "description": "true when private links admit only users from trustedDomains. Always present."
+                  },
+                  "trustedDomains": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Trusted domains for private links. Always present; [] when none."
+                  }
+                },
+                "description": "Private link settings. Always present."
+              },
+              "publicViews": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "true when views can be made public. Always present."
+                  },
+                  "domainRestrictionEnabled": {
+                    "type": "boolean",
+                    "description": "true when public views admit only users from trustedDomains. Always present."
+                  },
+                  "trustedDomains": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Trusted domains for public views. Always present; [] when none."
+                  }
+                },
+                "description": "Public view settings. Always present."
+              },
+              "exportViews": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "true when views and data can be exported. Always present."
+                  }
+                },
+                "description": "Export settings. Always present."
+              },
+              "emailViews": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "true when views can be emailed. Always present. Reports false after export has been disabled."
+                  },
+                  "domainRestrictionEnabled": {
+                    "type": "boolean",
+                    "description": "true when emails can go only to trustedDomains. Always present."
+                  },
+                  "trustedDomains": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Trusted domains for email. Always present; [] when none."
+                  }
+                },
+                "description": "Email view settings. Always present."
+              }
+            },
+            "description": "Response payload wrapper."
+          }
+        },
+        "title": "GetOrgAccessRestrictionsResponse"
+      },
+      "AccessRestrictionShareViews": {
+        "type": "object",
+        "title": "AccessRestrictionShareViews",
+        "description": "Sharing restriction. See shareViews Fields.",
+        "properties": {
+          "domainRestrictionEnabled": {
+            "type": "boolean",
+            "description": "true allows sharing of views in this workspace only to users from trustedDomains. Turning it on requires at least one trusted domain, sent now or already stored for the workspace (8193)."
+          },
+          "trustedDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Complete list of trusted domains, 0-100 entries, each a domain such as example.com. Replaces the workspace's stored list; the organisation's list is never copied or merged. See How Section Updates Are Validated for 8192 and 8193."
+          }
+        }
+      },
+      "AccessRestrictionPrivateLinks": {
+        "type": "object",
+        "title": "AccessRestrictionPrivateLinks",
+        "description": "Private link settings. See privateLinks Fields.",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "false stops private links from being generated in this workspace. Domain attributes cannot be changed while private links are disabled (8194), except to switch the restriction off and clear the list in the same request."
+          },
+          "domainRestrictionEnabled": {
+            "type": "boolean",
+            "description": "true makes private links prompt for login and admit only users from trustedDomains. Same list requirements as in shareViews."
+          },
+          "trustedDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Complete list of trusted domains, 0-100 entries. Replaces the workspace's stored list."
+          }
+        }
+      },
+      "AccessRestrictionPublicViews": {
+        "type": "object",
+        "title": "AccessRestrictionPublicViews",
+        "description": "Public view settings. See publicViews Fields.",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "false stops views in this workspace from being made public. Domain attributes cannot be changed while public views are disabled (8194), except to switch the restriction off and clear the list in the same request."
+          },
+          "domainRestrictionEnabled": {
+            "type": "boolean",
+            "description": "true makes public views prompt for login and admit only users from trustedDomains. Same list requirements as in shareViews."
+          },
+          "trustedDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Complete list of trusted domains, 0-100 entries. Replaces the workspace's stored list."
+          }
+        }
+      },
+      "AccessRestrictionExportViews": {
+        "type": "object",
+        "title": "AccessRestrictionExportViews",
+        "description": "Export settings. Setting enabled to false also disables email views. See exportViews Fields.",
+        "required": [
+          "enabled"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "false disables exporting of views and data in this workspace and disables email views. true re-enables export but does not re-enable email views. exportViews has no other attribute, so an empty exportViews object is rejected."
+          }
+        }
+      },
+      "AccessRestrictionEmailViews": {
+        "type": "object",
+        "title": "AccessRestrictionEmailViews",
+        "description": "Email view settings. Present at all while export is disabled → 8195. See emailViews Fields.",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "false stops views in this workspace from being emailed. Cannot be true in the same request that disables export (8195)."
+          },
+          "domainRestrictionEnabled": {
+            "type": "boolean",
+            "description": "true limits email recipients to trustedDomains. Same list requirements as in shareViews."
+          },
+          "trustedDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Complete list of trusted domains, 0-100 entries. Replaces the workspace's stored list."
+          }
+        }
+      },
+      "UpdateOrgAccessRestrictionsConfig": {
+        "type": "object",
+        "title": "UpdateOrgAccessRestrictionsConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "properties": {
+          "accessRestrictionEnabled": {
+            "type": "boolean",
+            "description": "Master switch for the organisation. false stops enforcement everywhere, for the organisation and every workspace, without deleting any setting. Cannot be combined with sections when set to false (8200). While the switch is off, sections are accepted only if this attribute is true in the same request (8196)."
+          },
+          "shareViews": {
+            "$ref": "#/components/schemas/AccessRestrictionShareViews"
+          },
+          "privateLinks": {
+            "$ref": "#/components/schemas/AccessRestrictionPrivateLinks"
+          },
+          "publicViews": {
+            "$ref": "#/components/schemas/AccessRestrictionPublicViews"
+          },
+          "exportViews": {
+            "$ref": "#/components/schemas/AccessRestrictionExportViews"
+          },
+          "emailViews": {
+            "$ref": "#/components/schemas/AccessRestrictionEmailViews"
+          }
+        }
+      },
+      "GetWorkspaceAccessRestrictionsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "\"success\" on a successful call, \"failure\" on error."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Localised operation summary. \"Get workspace access restrictions\" for this API."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "accessRestrictionEnabled": {
+                "type": "boolean",
+                "description": "The organisation's master switch, not a workspace setting. Always present. When false, nothing below is enforced."
+              },
+              "configurationSource": {
+                "type": "string",
+                "description": "Where the values below come from. Always present. See configurationSource Values."
+              },
+              "shareViews": {
+                "type": "object",
+                "description": "Sharing restriction in effect. Always present. Fields as in Get Org Access Restrictions."
+              },
+              "privateLinks": {
+                "type": "object",
+                "description": "Private link settings in effect. Always present."
+              },
+              "publicViews": {
+                "type": "object",
+                "description": "Public view settings in effect. Always present."
+              },
+              "exportViews": {
+                "type": "object",
+                "description": "Export settings in effect. Always present."
+              },
+              "emailViews": {
+                "type": "object",
+                "description": "Email view settings in effect. Always present."
+              }
+            },
+            "description": "Response payload wrapper."
+          }
+        },
+        "title": "GetWorkspaceAccessRestrictionsResponse"
+      },
+      "UpdateWorkspaceAccessRestrictionsConfig": {
+        "type": "object",
+        "title": "UpdateWorkspaceAccessRestrictionsConfig",
+        "description": "JSONObject that holds the configuration for this request.",
+        "properties": {
+          "useOrganizationSettings": {
+            "type": "boolean",
+            "description": "false gives the workspace its own settings; true makes it follow the organisation. When omitted, the workspace's current mode is kept - which means omitting it on a workspace that follows the organisation is the same as sending true (8199 if sections are present). true cannot be combined with sections (8198). Setting true keeps the workspace's own values but ignores them."
+          },
+          "shareViews": {
+            "$ref": "#/components/schemas/AccessRestrictionShareViews"
+          },
+          "privateLinks": {
+            "$ref": "#/components/schemas/AccessRestrictionPrivateLinks"
+          },
+          "publicViews": {
+            "$ref": "#/components/schemas/AccessRestrictionPublicViews"
+          },
+          "exportViews": {
+            "$ref": "#/components/schemas/AccessRestrictionExportViews"
+          },
+          "emailViews": {
+            "$ref": "#/components/schemas/AccessRestrictionEmailViews"
           }
         }
       }

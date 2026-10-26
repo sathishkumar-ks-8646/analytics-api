@@ -33,7 +33,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -147,12 +147,12 @@ So a white-labelled deployment embeds views by calling the standard `analyticsap
 |---|---|---|
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
-| [7138](../../../foundations/error-codes.md#error-7138) | 400 | baseTableName does not resolve to a table in this workspace. |
+| [7138](../../../foundations/error-codes.md#error-7138) | 400 | METAOBJECTNOTPRESENT — A tableName in vudColumns / drillColumns is not a table involved in this view. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
 | [8023](../../../foundations/error-codes.md#error-8023) | 403 | OEMOPERATIONNOTALLOWED — The organization/workspace is not enabled for Embedded Analytics. |
 | [8054](../../../foundations/error-codes.md#error-8054) | 400 | INVALIDFILTERCRITERIA — criteria could not be parsed. |
-| [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
+| [8060](../../../foundations/error-codes.md#error-8060) | 400 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. |
 | [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint. |
 | [8154](../../../foundations/error-codes.md#error-8154) | 400 | COLUMNNOTPRESENTINTABLE — A column in vudColumns / drillColumns (or in criteria) does not exist in the given table. |

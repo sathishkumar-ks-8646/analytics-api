@@ -1,7 +1,7 @@
 ---
 type: API Endpoint
 title: Read Report Metadata
-description: "Returns the stored definition of a chart, pivot or summary view."
+description: "Returns a summary of the stored definition of a chart, pivot or summary view."
 resource: "https://analyticsapi.zoho.com/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata"
 tags:
   - zoho-analytics
@@ -25,12 +25,13 @@ api:
   success_status: 200
   response_content_types:
     - application/json
-  permission_required: Design Modify on the report. A read-only shared user cannot call this endpoint.
+  permission_required: "The report's owner, or a user holding Design Modify on the report: Account Admin, Organization Admin, Workspace Owner, Workspace Admin, or a shared / group / Custom Role user granted edit rights. A read-only shared user cannot call this endpoint."
   error_codes:
     - 7103
     - 7104
     - 7106
     - 7301
+    - 7309
     - 7319
     - 8021
     - 8535
@@ -45,10 +46,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-13T08:58:58Z
+    last_modified: 2026-10-20T17:34:40Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -56,15 +57,10 @@ status: stable
 
 **GET `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata`** - Read Report Metadata (Reports (Analysis Views) / Reports & Dashboards).
 
-Returns the stored definition of a chart, pivot or summary view.
+Returns a summary of the stored definition of a chart, pivot or summary view. The `<report-id>` comes
+from [Create Report](create-report.md) (`data.viewId`) or from the workspace's view list.
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
-
-From the OpenAPI specification:
-
-Returns the stored definition of a chart, pivot or summary view.
-
-Permission required: Design Modify on the report. A read-only shared user cannot call this endpoint.
 
 # Endpoint
 
@@ -75,11 +71,10 @@ Permission required: Design Modify on the report. A read-only shared user cannot
 | URL | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` |
 | Base URL | `https://analyticsapi.zoho.com` (data-center specific, see [Data centers](../../../foundations/data-centers.md)) |
 | OAuth scope | [`ZohoAnalytics.modeling.read`](../../../foundations/oauth-scopes.md#zohoanalyticsmodelingread) |
-| ZANALYTICS-ORGID header | **Required** |
-| Permission required | Design Modify on the report. A read-only shared user cannot call this endpoint. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
+| ZANALYTICS-ORGID header | **Required** - Organisation ID of the workspace. |
+| Permission required | The report's owner, or a user holding Design Modify on the report: Account Admin, Organization Admin, Workspace Owner, Workspace Admin, or a shared / group / Custom Role user granted edit rights. A read-only shared user cannot call this endpoint. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
-| Custom domain | Not permitted. |
 | OpenAPI | [`reports-dashboards-grouped-api.json`](../../../references/openapi/reports-dashboards-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1reports~1{view-id}~1metadata/get`; response schema `GetReportMetadataResponse` |
 
 # Request
@@ -121,16 +116,32 @@ HTTP `200` with content type `application/json`. JSON responses use the standard
 | `status` | String | `"success"` on a successful call, `"failure"` on error. |
 | `summary` | String | Localised operation summary. `"Get analysis view metadata"` for this API. |
 | `data` | JSONObject | Response payload wrapper. |
-| `data.reportConfig` | JSONObject | The report's stored definition, shaped like the create CONFIG but **not directly reusable** — see [Round-tripping a report](overview.md#round-tripping-a-report). |
-| `reportConfig.title` | String | Report name. |
-| `reportConfig.description` | String | Free-text description; empty string when none was set. |
-| `reportConfig.reportType` | String | `chart`, `pivot` or `summary`. |
-| `reportConfig.chartType` | String | Chart family (e.g. `line`). Present for `chart` reports. |
-| `reportConfig.baseTableName` | String | Display name of the table the report is built on. |
-| `reportConfig.isAxisMerge` | Boolean | Whether multiple Y axes are merged onto one scale. |
-| `reportConfig.axisColumns` | JSONArray | The drop-field configuration. Same entry shape as the request — see [`axisColumns`](create-report.md#axiscolumns). |
-| `reportConfig.filters` | JSONArray | Static filters. See [`filters`](create-report.md#filters). Present only when the report has them. |
-| `reportConfig.userFilters` | JSONArray | User filters. See [`userFilters`](create-report.md#userfilters). Present only when the report has them. |
+| `data.reportConfig` | JSONObject | The stored definition. **Always present** on success. |
+| `data.reportConfig.title` | String | Report name. **Always present.** |
+| `data.reportConfig.description` | String | Report description. **Absent** when no description is stored. |
+| `data.reportConfig.reportType` | String | `chart`, `pivot`, `summary`, or `widget` for widget views. **Always present.** |
+| `data.reportConfig.chartType` | String | Chart reports only, and only when the stored chart maps to a name — the *Returned on read* column of [`chartType` Values](overview.md#charttype-values). |
+| `data.reportConfig.baseTableName` | String | Display name of the base table. **Always present.** |
+| `data.reportConfig.isAxisMerge` | Boolean | Present when stored — always for charts created through [Create Report](create-report.md). |
+| `data.reportConfig.axisColumns` | JSONArray | Present when the report has axis columns. |
+| `axisColumns[].type` | String | Lowercase shelf name — see [Values that change across a round trip](overview.md#values-that-change-across-a-round-trip). **Absent** for widget views. |
+| `axisColumns[].columnName` | String | Column display name. For a distinct-count or variance column, the **source** column's name. |
+| `axisColumns[].tableName` | String | Table display name. **Always present**, even when omitted on write. |
+| `axisColumns[].operation` | String | See [Axis Operations on Read](overview.md#axis-operations-on-read). |
+| `data.reportConfig.mergeAxisInfo` | JSONArray | Charts with `isAxisMerge: true` only. One merge object, repeated — see [`mergeAxisInfo` on Read](overview.md#mergeaxisinfo-on-read). |
+| `data.reportConfig.filters` | JSONArray | Present when the report has static filters. |
+| `filters[].tableName` | String | Table display name. |
+| `filters[].columnName` | String | Column display name. |
+| `filters[].operation` | String | See [Values that change across a round trip](overview.md#values-that-change-across-a-round-trip). |
+| `filters[].filterType` | String | See [Values that change across a round trip](overview.md#values-that-change-across-a-round-trip). |
+| `filters[].values` | JSONArray of String | The stored display text split on commas. |
+| `filters[].exclude` | Boolean | Whether the filter excludes its values. |
+| `data.reportConfig.userFilters` | JSONArray | Present when the report has user filters. |
+| `userFilters[].tableName` | String | Table display name. |
+| `userFilters[].columnName` | String | Column display name. |
+| `userFilters[].operation` | String | See [Values that change across a round trip](overview.md#values-that-change-across-a-round-trip). |
+
+No other key is returned.
 
 ## Notes from the OpenAPI specification
 
@@ -142,6 +153,8 @@ Axis **type** values are returned in lowercase (**xaxis**, **yaxis**, **coloraxi
 
 ## Sample Requests
 
+**Case 1 — Read a chart's definition**
+
 ```http
 GET /restapi/v2/workspaces/466206000000071000/reports/466206000000105001/metadata HTTP/1.1
 Host: analyticsapi.zoho.com
@@ -149,45 +162,63 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 ZANALYTICS-ORGID: 700000123456
 ```
 
+**Case 2 — Read a table ID instead of a report ID (rejected)**
+
+```http
+GET /restapi/v2/workspaces/466206000000071000/reports/466206000000071023/metadata HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
+```
+
 ## Sample Responses
 
-**HTTP 200 OK**
+**HTTP 200 OK — Chart with a static filter and a user filter (Case 1)**
 
 ```json
 {
-  "status": "success",
-  "summary": "Get analysis view metadata",
-  "data": {
-    "reportConfig": {
-      "title": "Sales Trend",
-      "description": "Monthly trend, excluding returns",
-      "reportType": "chart",
-      "chartType": "line",
-      "baseTableName": "Sales",
-      "isAxisMerge": false,
-      "axisColumns": [
-        { "type": "xaxis", "columnName": "Order Date", "tableName": "Sales", "operation": "monthyear" },
-        { "type": "yaxis", "columnName": "Sales",      "tableName": "Sales", "operation": "sum" }
-      ],
-      "filters": [
-        {
-          "tableName": "Sales",
-          "columnName": "Status",
-          "operation": "actual",
-          "filterType": "individualvalues",
-          "values": ["Returned"],
-          "exclude": true
+    "status": "success",
+    "summary": "Get analysis view metadata",
+    "data": {
+        "reportConfig": {
+            "title": "Sales Trend",
+            "description": "Monthly trend, excluding returns",
+            "reportType": "chart",
+            "chartType": "line",
+            "baseTableName": "Sales",
+            "isAxisMerge": false,
+            "axisColumns": [
+                {"type": "xaxis", "columnName": "Order Date", "tableName": "Sales", "operation": "absmonth"},
+                {"type": "yaxis", "columnName": "Sales", "tableName": "Sales", "operation": "sum"}
+            ],
+            "filters": [
+                {
+                    "tableName": "Sales",
+                    "columnName": "Status",
+                    "operation": "actual",
+                    "filterType": "individualvalues",
+                    "values": ["Returned"],
+                    "exclude": true
+                }
+            ],
+            "userFilters": [
+                {"tableName": "Sales", "columnName": "Product Category", "operation": "actual"}
+            ]
         }
-      ],
-      "userFilters": [
-        {
-          "tableName": "Sales",
-          "columnName": "Product Category",
-          "operation": "actual"
-        }
-      ]
     }
-  }
+}
+```
+
+**HTTP 400 Bad Request — The ID is not a report (Case 2)**
+
+```json
+{
+    "status": "failure",
+    "summary": "INVALID_VIEW_TYPE_IN_REQUEST",
+    "data": {
+        "errorCode": 8021,
+        "errorMessage": "Invalid view type found in the request."
+    }
 }
 ```
 
@@ -197,28 +228,14 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 
 # Notes & Behaviour
 
-> **The response is not a round-trippable CONFIG.** It is a *summary* of the stored definition, and it
-> omits most of what Update accepts. In particular, `userFilters` entries come back with only
-> `tableName`, `columnName` and `operation` — the widget type, criteria shape, values, default
-> selections, exclusion flag and listing behaviour are all absent. Feeding this response straight back
-> into [Update Report](update-report.md) will **rebuild every user filter with default behaviour** and
-> drop all per-column formatting, sorting and window functions. See
-> [Round-tripping a report](overview.md#round-tripping-a-report) for the full list of what is lost and what
-> changes value on the way out.
-
-What is and is not returned:
-
-| Section | Returned | Not returned |
-|---|---|---|
-| Top level | `title`, `description`, `reportType`, `chartType`¹, `baseTableName`, `isAxisMerge`, `mergeAxisInfo` | `folderId`, `settings`, `drillActionConfig`, `modifiedPaths` |
-| `axisColumns[]` | `type`, `columnName`, `tableName`, `operation` | `displayName`, `sort`, `rangeSize`, `windowFunction`, `format`, `geoRole` |
-| `filters[]` | `tableName`, `columnName`, `operation`, `filterType`, `values`, `exclude` | `wildcard`, `rankingColumn`, `rankingColumnDateSubType`, `additionalDetails` |
-| `userFilters[]` | `tableName`, `columnName`, `operation` | everything else |
-
-¹ `chartType` is present only when the stored chart and sub-chart types map back to a known name; it is
-omitted otherwise.
-
-Calling this endpoint on a table, query table, dashboard or any non-analysis view raises **8021**.
+| Aspect | Detail |
+|--------|--------|
+| **Lossy summary** | The response omits every write-only field and normalises many values. It is **not** an Update payload — see [Round-tripping a Report](overview.md#round-tripping-a-report). |
+| **Merged-axis charts** | `mergeAxisInfo` is returned in read form, not write form — see [`mergeAxisInfo` on Read](overview.md#mergeaxisinfo-on-read). |
+| **Read-only** | Safe to repeat; nothing is changed. |
+| **Client Portal / White Label** | Not available on Client Portal / White Label domains. Call the standard API host. |
+| **Responses are extensible** | Ignore unrecognised keys rather than validating against a closed schema. |
+| **Dependency chain** | [Create Report](create-report.md) → `data.viewId` (or the workspace's view list) → `<report-id>` → Read Report Metadata → `reportConfig` for inspection. |
 
 # Error Codes
 
@@ -227,13 +244,14 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | Code | HTTP | Reason | Solution |
 |---|---|---|---|
 | [7005](../../../foundations/error-codes.md#error-7005) | 500 | Unexpected error on the Zoho Analytics server while processing an otherwise valid request. Not caused by the request payload. | Retry after a short interval. If the error persists, contact Zoho Analytics support quoting the error code and the time of the request. |
-| [7103](../../../foundations/error-codes.md#error-7103) | 404 | Workspace not found. | Verify `<workspace-id>`. |
-| [7104](../../../foundations/error-codes.md#error-7104) | 404 | The report does not exist or has been deleted. | Verify `<report-id>`. |
-| [7106](../../../foundations/error-codes.md#error-7106) | 404 | The report does not exist or has been deleted. | Verify `<report-id>`. |
-| [7301](../../../foundations/error-codes.md#error-7301) | 403 | The caller lacks Design Modify permission on the report. | Grant edit access. |
-| [7319](../../../foundations/error-codes.md#error-7319) | 400 | The report belongs to a different workspace. | Make the two path IDs consistent. |
-| [8021](../../../foundations/error-codes.md#error-8021) | 400 | The target is not a chart, pivot or summary view. | Use a report ID, not a table or dashboard. |
-| [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid or expired OAuth token. | Refresh with scope `ZohoAnalytics.modeling.read`. |
+| [7103](../../../foundations/error-codes.md#error-7103) | 404 | `META_OBJECT_NOT_PRESENT` — Workspace not found. | Verify `<workspace-id>` and that the `ZANALYTICS-ORGID` header matches it. |
+| [7104](../../../foundations/error-codes.md#error-7104) | 404 | `META_OBJECT_NOT_PRESENT` — The report does not exist. | Verify `<report-id>`. |
+| [7106](../../../foundations/error-codes.md#error-7106) | 404 | `META_OBJECT_NOT_PRESENT` — The report has been deleted. | Verify `<report-id>`. |
+| [7301](../../../foundations/error-codes.md#error-7301) | 403 | `SECURITY_NOT_PERMITTED` — The caller is not the owner and lacks Design Modify permission on the report. | Grant the caller edit access to the report. |
+| [7309](../../../foundations/error-codes.md#error-7309) | 400 | `SECURITY_NEEDS_LOGIN` — `Authorization` header absent. | Send `Authorization: Zoho-oauthtoken <token>`. |
+| [7319](../../../foundations/error-codes.md#error-7319) | 400 | `OBJID_NOT_BELONGS_TO_DB` — The report belongs to a different workspace. | Make `<workspace-id>` and `<report-id>` consistent. |
+| [8021](../../../foundations/error-codes.md#error-8021) | 400 | `INVALID_VIEW_TYPE_IN_REQUEST` — The target is a table, query table or dashboard, not a report. | Use a report ID. |
+| [8535](../../../foundations/error-codes.md#error-8535) | 401 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.modeling.read`. |
 
 # Related
 

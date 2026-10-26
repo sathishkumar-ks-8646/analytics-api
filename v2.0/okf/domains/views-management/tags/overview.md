@@ -61,7 +61,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -453,7 +453,7 @@ Colours observed in real workspaces include `#e72d35`, `#f5a623`, `#55acee`, and
 | [7104](../../../foundations/error-codes.md#error-7104) | 404 | The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7390](../../../foundations/error-codes.md#error-7390) | 400 | WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. |
 | [8083](../../../foundations/error-codes.md#error-8083) | 400 | The ZANALYTICS-ORGID header is missing from a request that requires it. |
 | [8174](../../../foundations/error-codes.md#error-8174) | 403 | DUPLICATETAGNAMEFOUND — A tag with this name already exists in the workspace. |
 | [8179](../../../foundations/error-codes.md#error-8179) | 403 | DONTHAVEPERMISSIONTOCREATETAGS — The caller is not an Account Admin, Organization Admin, or Workspace Admin. |
@@ -462,7 +462,7 @@ Colours observed in real workspaces include `#e72d35`, `#f5a623`, `#55acee`, and
 | [8182](../../../foundations/error-codes.md#error-8182) | 403 | resetSort: true and sortOrder cannot be used together. |
 | [8184](../../../foundations/error-codes.md#error-8184) | 403 | VIEWORTAGNOTPRESENTINDBTOTAG — The tag does not exist in this workspace. |
 | [8185](../../../foundations/error-codes.md#error-8185) | 400 | CANNOTDELETEORUPDATETAG — The update matched no row. |
-| [8187](../../../foundations/error-codes.md#error-8187) | 400 | TAGNOTPRESENTINDB — The tag does not exist in this workspace. |
+| [8187](../../../foundations/error-codes.md#error-8187) | 400 | ADVFILTER_EXPRESSION_ORDER_CHANGE - Criteria indexes in wildcard.expression are out of order. |
 | [8201](../../../foundations/error-codes.md#error-8201) | 400 | INVALIDCONFIGURATIONREMOVEVIEWSLINKEDWITHTAG — viewIds is empty or absent and dissociateAll is not true. |
 | [8202](../../../foundations/error-codes.md#error-8202) | 400 | INVALIDCONFIGURATIONREMOVETAGSFORVIEW — tagIds is empty or absent and dissociateAll is not true. |
 | [8504](../../../foundations/error-codes.md#error-8504) | 400 | LESSTHANMINOCCURANCE — CONFIG was not sent. |

@@ -48,7 +48,7 @@ sources:
     author: team:zoho-analytics-api-docs
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -80,13 +80,13 @@ Scopes are requested during the OAuth authorization step (see [Authentication](a
 | [`ZohoAnalytics.data.delete`](#zohoanalyticsdatadelete) | Delete data from Zoho Analytics. | 1 |
 | [`ZohoAnalytics.data.all`](#zohoanalyticsdataall) | Full access to data in Zoho Analytics. | 0 |
 | [`ZohoAnalytics.modeling.read`](#zohoanalyticsmodelingread) | Read modeling objects in Zoho Analytics. | 4 |
-| [`ZohoAnalytics.modeling.create`](#zohoanalyticsmodelingcreate) | Create modeling objects in Zoho Analytics. | 27 |
-| [`ZohoAnalytics.modeling.update`](#zohoanalyticsmodelingupdate) | Update modeling objects in Zoho Analytics. | 23 |
-| [`ZohoAnalytics.modeling.delete`](#zohoanalyticsmodelingdelete) | Delete modeling objects in Zoho Analytics. | 15 |
+| [`ZohoAnalytics.modeling.create`](#zohoanalyticsmodelingcreate) | Create modeling objects in Zoho Analytics. | 31 |
+| [`ZohoAnalytics.modeling.update`](#zohoanalyticsmodelingupdate) | Update modeling objects in Zoho Analytics. | 25 |
+| [`ZohoAnalytics.modeling.delete`](#zohoanalyticsmodelingdelete) | Delete modeling objects in Zoho Analytics. | 17 |
 | [`ZohoAnalytics.modeling.all`](#zohoanalyticsmodelingall) | Full access to modeling objects in Zoho Analytics. | 0 |
-| [`ZohoAnalytics.metadata.read`](#zohoanalyticsmetadataread) | Read metadata from Zoho Analytics. | 36 |
-| [`ZohoAnalytics.metadata.create`](#zohoanalyticsmetadatacreate) | Create metadata in Zoho Analytics. | 2 |
-| [`ZohoAnalytics.metadata.update`](#zohoanalyticsmetadataupdate) | Update metadata in Zoho Analytics. | 9 |
+| [`ZohoAnalytics.metadata.read`](#zohoanalyticsmetadataread) | Read metadata from Zoho Analytics. | 52 |
+| [`ZohoAnalytics.metadata.create`](#zohoanalyticsmetadatacreate) | Create metadata in Zoho Analytics. | 4 |
+| [`ZohoAnalytics.metadata.update`](#zohoanalyticsmetadataupdate) | Update metadata in Zoho Analytics. | 11 |
 | [`ZohoAnalytics.metadata.delete`](#zohoanalyticsmetadatadelete) | Delete metadata from Zoho Analytics. | 0 |
 | [`ZohoAnalytics.metadata.all`](#zohoanalyticsmetadataall) | Full access to metadata in Zoho Analytics. | 0 |
 | [`ZohoAnalytics.share.read`](#zohoanalyticsshareread) | Read shared items in Zoho Analytics. | 7 |
@@ -177,6 +177,8 @@ Create modeling objects in Zoho Analytics.
 | [Create Workspace](../domains/workspace-management/workspace-operations/create-workspace.md) | POST | `/restapi/v2/workspaces` |
 | [Copy Workspace](../domains/workspace-management/workspace-operations/copy-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}` |
 | [Create Folder](../domains/workspace-management/workspace-folders/create-folder.md) | POST | `/restapi/v2/workspaces/{workspace-id}/folders` |
+| [Link Workspaces](../domains/workspace-management/linked-workspaces/link-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` |
+| [Sync Linked Workspaces](../domains/workspace-management/linked-workspaces/sync-linked-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` |
 | [Create Table](../domains/data-modeling-and-schema/table-and-schema/create-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tables` |
 | [Add Column](../domains/data-modeling-and-schema/columns/add-column.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns` |
 | [Create Query Table](../domains/data-modeling-and-schema/query-tables/create-query-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/querytables` |
@@ -197,6 +199,8 @@ Create modeling objects in Zoho Analytics.
 | [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` |
 | [Create Email Schedule](../domains/schedules-and-alerts/email-schedules/create-email-schedule.md) | POST | `/restapi/v2/workspaces/{workspace-id}/emailschedules` |
 | [Trigger Email Schedule](../domains/schedules-and-alerts/email-schedules/trigger-email-schedule.md) | POST | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` |
+| [Create Alert](../domains/schedules-and-alerts/data-alerts/create-alert.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` |
+| [Run Alert](../domains/schedules-and-alerts/data-alerts/run-alert.md) | POST | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute` |
 | [Create AutoML Analysis](../domains/dsml/automl/create-auto-ml-analysis.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis` |
 | [Create AutoML Analysis Deployment](../domains/dsml/automl/create-auto-ml-analysis-deployment.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments` |
 | [Run AutoML Analysis](../domains/dsml/automl/run-auto-ml-analysis.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}/execute` |
@@ -231,6 +235,8 @@ Update modeling objects in Zoho Analytics.
 | [Update Dashboard](../domains/reports-and-dashboards/dashboards/update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` |
 | [Update Email Schedule](../domains/schedules-and-alerts/email-schedules/update-email-schedule.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` |
 | [Change Email Schedule Status](../domains/schedules-and-alerts/email-schedules/change-email-schedule-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status` |
+| [Update Alert](../domains/schedules-and-alerts/data-alerts/update-alert.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` |
+| [Change Alert Status](../domains/schedules-and-alerts/data-alerts/change-alert-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/alerts/status` |
 
 ## ZohoAnalytics.modeling.delete
 
@@ -240,6 +246,7 @@ Delete modeling objects in Zoho Analytics.
 |---|---|---|
 | [Delete Workspace](../domains/workspace-management/workspace-operations/delete-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}` |
 | [Delete Folder](../domains/workspace-management/workspace-folders/delete-folder.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}` |
+| [Unlink Workspaces](../domains/workspace-management/linked-workspaces/unlink-workspaces.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` |
 | [Delete Column](../domains/data-modeling-and-schema/columns/delete-column.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}` |
 | [Delete Custom Formula](../domains/data-modeling-and-schema/formula-columns/delete-formula-column.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas/{formula-id}` |
 | [Delete Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/delete-aggregate-formula.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas/{formula-id}` |
@@ -250,6 +257,7 @@ Delete modeling objects in Zoho Analytics.
 | [Remove Tag From Multiple Views](../domains/views-management/tags/remove-tag-from-views.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` |
 | [Remove Multiple Tags From View](../domains/views-management/tags/remove-tags-from-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` |
 | [Delete Email Schedule](../domains/schedules-and-alerts/email-schedules/delete-email-schedule.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` |
+| [Delete Alerts](../domains/schedules-and-alerts/data-alerts/delete-alerts.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/alerts` |
 | [Delete AutoML Analysis](../domains/dsml/automl/delete-auto-ml-analysis.md) | DELETE | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}` |
 | [Delete AutoML Analysis Model](../domains/dsml/automl/delete-auto-ml-analysis-model.md) | DELETE | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}` |
 | [Delete AutoML Analysis Model Deployment](../domains/dsml/automl/delete-auto-ml-analysis-model-deployment.md) | DELETE | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}` |
@@ -268,6 +276,8 @@ Read metadata from Zoho Analytics.
 |---|---|---|
 | [Get Org List](../domains/organization-management/org-info-and-settings/get-organizations.md) | GET | `/restapi/v2/orgs` |
 | [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md) | GET | `/restapi/v2/metadetails` |
+| [Get Org Access Restrictions](../domains/organization-management/security-controls/get-org-access-restrictions.md) | GET | `/restapi/v2/security-controls/access-restrictions` |
+| [Get Workspace Access Restrictions](../domains/organization-management/security-controls/get-workspace-access-restrictions.md) | GET | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` |
 | [Export as Template](../domains/workspace-management/workspace-operations/export-as-template.md) | GET | `/restapi/v2/workspaces/{workspace-id}/template/data` |
 | [Get All Workspace List](../domains/workspace-management/workspace-operations/get-all-workspaces.md) | GET | `/restapi/v2/workspaces` |
 | [Get Owned Workspace List](../domains/workspace-management/workspace-operations/get-owned-workspaces.md) | GET | `/restapi/v2/workspaces/owned` |
@@ -275,6 +285,15 @@ Read metadata from Zoho Analytics.
 | [Get Workspace Secret Key](../domains/workspace-management/workspace-operations/get-workspace-secret-key.md) | GET | `/restapi/v2/workspaces/{workspace-id}/secretkey` |
 | [Get Workspace Info](../domains/workspace-management/workspace-operations/get-workspace-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}` |
 | [Get Folder List](../domains/workspace-management/workspace-folders/get-folders.md) | GET | `/restapi/v2/workspaces/{workspace-id}/folders` |
+| [Get Linked Workspaces For Organization](../domains/workspace-management/linked-workspaces/get-linked-workspaces-for-organization.md) | GET | `/restapi/v2/linkedworkspaces` |
+| [Get Linked Workspaces For Master Workspace](../domains/workspace-management/linked-workspaces/get-linked-workspaces-for-master-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` |
+| [Get Linkable Workspaces](../domains/workspace-management/linked-workspaces/get-linkable-workspaces.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable` |
+| [Get Workspace Linking Compatibility](../domains/workspace-management/linked-workspaces/get-workspace-linking-compatibility.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility` |
+| [Get Linked Workspace Sync Details](../domains/workspace-management/linked-workspaces/get-linked-workspace-sync-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` |
+| [Get Workspace Backups](../domains/workspace-management/workspace-backup-and-restore/get-workspace-backups.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups` |
+| [Download Workspace Backup](../domains/workspace-management/workspace-backup-and-restore/download-workspace-backup.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download` |
+| [Get Workspace Backup Status](../domains/workspace-management/workspace-backup-and-restore/get-workspace-backup-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status` |
+| [Get Workspace Restore Status](../domains/workspace-management/workspace-backup-and-restore/get-workspace-restore-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status` |
 | [Get Table Metadata](../domains/data-modeling-and-schema/table-and-schema/get-table-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/metadata` |
 | [Get Column Dependents](../domains/data-modeling-and-schema/columns/get-column-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/dependents` |
 | [Get Query Tables](../domains/data-modeling-and-schema/query-tables/get-query-tables.md) | GET | `/restapi/v2/workspaces/{workspace-id}/querytables` |
@@ -298,6 +317,11 @@ Read metadata from Zoho Analytics.
 | [Get Owned Dashboards](../domains/reports-and-dashboards/dashboards/get-owned-dashboards.md) | GET | `/restapi/v2/dashboards/owned` |
 | [Get Shared Dashboards](../domains/reports-and-dashboards/dashboards/get-shared-dashboards.md) | GET | `/restapi/v2/dashboards/shared` |
 | [Get Email Schedules](../domains/schedules-and-alerts/email-schedules/get-email-schedules.md) | GET | `/restapi/v2/workspaces/{workspace-id}/emailschedules` |
+| [Get Alerts In Workspace](../domains/schedules-and-alerts/data-alerts/get-alerts-in-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts` |
+| [Get Alerts In View](../domains/schedules-and-alerts/data-alerts/get-alerts-in-view.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` |
+| [Get View Metadata For Alert](../domains/schedules-and-alerts/data-alerts/get-view-metadata-for-alert.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata` |
+| [Get Alert Configuration](../domains/schedules-and-alerts/data-alerts/get-alert-configuration.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` |
+| [Get Alert Events](../domains/schedules-and-alerts/data-alerts/get-alert-events.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events` |
 | [Get AutoML Analysis In Org](../domains/dsml/automl/get-auto-ml-analysis-in-org.md) | GET | `/restapi/v2/automl/analysis` |
 | [Get AutoML Analysis In Workspace](../domains/dsml/automl/get-auto-ml-analysis-in-workspace.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis` |
 | [Get AutoML Analysis Details](../domains/dsml/automl/get-auto-ml-analysis-details.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}` |
@@ -309,6 +333,8 @@ Create metadata in Zoho Analytics.
 
 | Operation | Method | Path |
 |---|---|---|
+| [Backup Workspace Now](../domains/workspace-management/workspace-backup-and-restore/backup-workspace-now.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups` |
+| [Restore Workspace from Backup](../domains/workspace-management/workspace-backup-and-restore/restore-workspace-from-backup.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore` |
 | [Sync Data](../domains/data-operations/data-sync-and-connectivity/sync-datasource.md) | POST | `/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}/sync` |
 | [Refetch Data](../domains/data-operations/data-sync-and-connectivity/refetch-datasource.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/sync` |
 
@@ -318,6 +344,8 @@ Update metadata in Zoho Analytics.
 
 | Operation | Method | Path |
 |---|---|---|
+| [Update Org Access Restrictions](../domains/organization-management/security-controls/update-org-access-restrictions.md) | PUT | `/restapi/v2/security-controls/access-restrictions` |
+| [Update Workspace Access Restrictions](../domains/organization-management/security-controls/update-workspace-access-restrictions.md) | PUT | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` |
 | [Add Default Workspace](../domains/workspace-management/workspace-preferences/add-default-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/default` |
 | [Remove Default Workspace](../domains/workspace-management/workspace-preferences/remove-default-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/default` |
 | [Add Favourite Workspace](../domains/workspace-management/workspace-preferences/add-favorite-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/favorite` |

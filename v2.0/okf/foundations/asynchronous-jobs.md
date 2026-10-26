@@ -19,13 +19,13 @@ sources:
     title: Asynchronous & Batch Data Import - group overview
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
 # Summary
 
-Large data movements run as **jobs** under the `/restapi/v2/bulk/...` prefix. A creation call validates the request, returns a `jobId` immediately, and the work happens in the background. You then either **poll** the job-details endpoint or receive an **HTTP POST callback**, and for exports you finally **download** the file. Synchronous alternatives exist for small payloads (see [Synchronous Data Export](../domains/data-operations/sync-data-export/overview.md) and [Synchronous Data Import](../domains/data-operations/sync-data-import/overview.md)).
+Large data movements run as **jobs** under the `/restapi/v2/bulk/...` prefix. A creation call validates the request, returns a `jobId` immediately, and the work happens in the background. You then either **poll** the job-details endpoint or receive an **HTTP POST callback**, and for exports you finally **download** the file. Synchronous alternatives exist (see [Synchronous Data Export](../domains/data-operations/sync-data-export/overview.md) and [Synchronous Data Import](../domains/data-operations/sync-data-import/overview.md)), but for export the choice is **not** a matter of payload size or convenience: the Export Data API is restricted, and tables with more than one million rows, tables and views from live-connect workspaces, and dashboard and query-table view types must use the asynchronous export. The synchronous call rejects them with `8133`.
 
 # Lifecycle
 
@@ -66,7 +66,7 @@ Get job details ──► jobCode 1001 / 1002  → wait, poll again
 - Poll every few seconds with modest backoff; jobs for small views finish in seconds, large exports can take minutes.
 - Downloading before completion is an **error, not a wait**: `8121` while queued, `8122` while running.
 - Only the **creator** of a job can poll or download it; anyone else, including an Account Admin, receives `8124`.
-- Export jobs and their files are retained for **72 hours from creation**; afterwards the job answers `1005` or `8120`.
+- Export jobs and their files are retained for **1 hour from job completion**; afterwards the job answers `1005` or `8120`. Import job summaries use the same one-hour-after-completion retention.
 - At most **5 export jobs** may be queued or running per organization (`8132`).
 
 # callbackUrl

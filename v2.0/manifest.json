@@ -18,6 +18,14 @@
             "slug": "org-info-and-settings",
             "title": "Organization Info & Settings"
           }
+        },
+        {
+          "md": "SECURITY_CONTROLS",
+          "tag": "Security Controls",
+          "okf": {
+            "slug": "security-controls",
+            "title": "Security Controls"
+          }
         }
       ],
       "okf": {
@@ -27,7 +35,7 @@
       "postman": {
         "emoji": "🏢",
         "title": "Organization Management",
-        "covers": "Org list, resource usage, subscription, name → ID lookup"
+        "covers": "Org list, resource usage, subscription, name → ID lookup, access restrictions"
       }
     },
     {
@@ -112,6 +120,22 @@
             "slug": "domain-and-white-label",
             "title": "Domain & White Label Access"
           }
+        },
+        {
+          "md": "LINKED_WORKSPACES",
+          "tag": "Linked Workspaces",
+          "okf": {
+            "slug": "linked-workspaces",
+            "title": "Linked Workspaces"
+          }
+        },
+        {
+          "md": "WORKSPACE_BACKUP_AND_RESTORE",
+          "tag": "Workspace Backup & Restore",
+          "okf": {
+            "slug": "workspace-backup-and-restore",
+            "title": "Workspace Backup & Restore"
+          }
         }
       ],
       "okf": {
@@ -121,7 +145,7 @@
       "postman": {
         "emoji": "🗂️",
         "title": "Workspace Management",
-        "covers": "Workspace lifecycle, folders, preferences, white-label access"
+        "covers": "Workspace lifecycle, folders, preferences, white-label access, linked workspaces, backup and restore"
       }
     },
     {
@@ -402,6 +426,14 @@
             "slug": "email-schedules",
             "title": "Email Schedules"
           }
+        },
+        {
+          "md": "DATA_ALERTS",
+          "tag": "Data Alerts",
+          "okf": {
+            "slug": "data-alerts",
+            "title": "Data Alerts"
+          }
         }
       ],
       "okf": {
@@ -411,7 +443,7 @@
       "postman": {
         "emoji": "⏰",
         "title": "Schedules & Alerts",
-        "covers": "Recurring email delivery of reports and dashboards"
+        "covers": "Recurring email delivery of reports and dashboards, data alerts"
       }
     },
     {

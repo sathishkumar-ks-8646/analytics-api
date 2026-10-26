@@ -25,7 +25,15 @@ Obtain a CSV, JSON, XML, XLS, PDF, HTML or image file for any view, including da
 
 # When to Use the Synchronous Export Instead
 
-[Export Data from a View](/domains/data-operations/sync-data-export/export-data-view.md) returns the file in one call and is simpler for tables and reports under one million rows and under 100 MB. It rejects dashboards, query tables, live-connect views and very large tables with `8133`.
+[Export Data from a View](/domains/data-operations/sync-data-export/export-data-view.md) returns the file in one call, and is the right choice for any view it is permitted to serve.
+
+The Export Data API is **restricted** for the resources below; for these, the asynchronous export is mandatory, not merely preferable, and the synchronous call rejects them with `8133`:
+
+- Tables having more than one million rows.
+- Tables and Views from live connect workspaces.
+- Dashboard and Query Table view types.
+
+The synchronous response is additionally capped at 100 MB (`7830`).
 
 # Prerequisites
 
@@ -41,7 +49,7 @@ Obtain a CSV, JSON, XML, XLS, PDF, HTML or image file for any view, including da
    - Optionally add `"callbackUrl":"https://your-host/notify"` to be notified instead of polling.
    - Keep `data.jobId`.
 2. **Wait for completion.** Poll [Get Export Job Details](/domains/data-operations/async-data-export/get-export-job-details.md) every few seconds until `jobCode` is `1004` (done) or `1003` (failed). `1001`/`1002` mean keep waiting. With a callback, the same fields arrive as an HTTP POST.
-3. **Download.** Follow `data.downloadUrl` or call [Download Exported Data](/domains/data-operations/async-data-export/download-exported-data.md). The response body is the file. Do this before `expiryTime` and within 72 hours of job creation.
+3. **Download.** Follow `data.downloadUrl` or call [Download Exported Data](/domains/data-operations/async-data-export/download-exported-data.md). The response body is the file. Do this before `expiryTime`: the job record and the file are removed **one hour after the job completes**, so collect the file as soon as `jobCode` reaches `1004`.
 
 # Limits
 

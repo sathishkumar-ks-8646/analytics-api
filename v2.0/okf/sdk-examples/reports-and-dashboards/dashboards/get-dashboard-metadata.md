@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-13T08:58:58Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: endpoint-doc
     resource: "/domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md"
     title: Endpoint reference - Read Dashboard Metadata
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -77,12 +77,11 @@ namespace ZohoAnalyticsTest
 
         public void GetDashboardMetadata(IAnalyticsClient ac)
         {
-            long dashboardId = 35130000001055801;
-            // Omit CONFIG to return every section; include names exactly one of all, layout, themes, settings
-            Dictionary<string, object> config = new Dictionary<string, object>{{"include","layout"}};
-            IDashboardAPI dashboard = ac.GetDashboardInstance(orgId, workspaceId, dashboardId);
-            JsonElement dashboardConfig = dashboard.GetMetadata(config);
-            Console.WriteLine(dashboardConfig);
+            long dashboardId = 35130000001055801L;
+            Dictionary<string, object> config = JsonSerializer.Deserialize<Dictionary<string, object>>("{\"include\":\"layout\"}");
+            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);
+            JsonElement result = workspace.GetDashboardMetadata(dashboardId, config);
+            Console.WriteLine(result);
         }
 
         static void Main(string[] args)
@@ -117,13 +116,17 @@ var (
 )
 
 func GetDashboardMetadata(ac ZAnalytics.Client) {
-    dashboardId := "35130000001055801"
-    // Omit CONFIG to return every section; include names exactly one of all, layout, themes, settings
-    config := map[string]interface{}{"include": "layout"}
-    dashboard := ZAnalytics.GetDashboardInstance(&ac, orgId, workspaceId, dashboardId)
-    dashboardConfig, exception := dashboard.GetMetadata(config)
-    if exception != nil { fmt.Println(exception.ErrorMessage); return }
-    fmt.Println(dashboardConfig)
+    dashboardid := "35130000001055801"
+    config := map[string]interface{}{
+        "include": "layout",
+    }
+    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)
+    result, exception := workspace.GetDashboardMetadata(dashboardid, config)
+    if exception != nil {
+        fmt.Println(exception.ErrorMessage)
+        return
+    }
+    fmt.Println(result)
 }
 
 func main() {
@@ -157,12 +160,10 @@ public class Test {
 
     public void getDashboardMetadata(AnalyticsClient ac) throws Exception {
         long dashboardId = 35130000001055801l;
-        // Omit CONFIG to return every section; include names exactly one of all, layout, themes, settings
-        JSONObject config = new JSONObject();
-        config.put("include", "layout");
-        DashboardAPI dashboard = ac.getDashboardInstance(orgId, workspaceId, dashboardId);
-        JSONObject dashboardConfig = dashboard.getMetadata(config);
-        System.out.println(dashboardConfig);
+        JSONObject config = new JSONObject("{\"include\":\"layout\"}");
+        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+        JSONObject result = workspace.getDashboardMetadata(dashboardId, config);
+        System.out.println(result);
     }
 }
 ```
@@ -177,17 +178,19 @@ class Test {
     public $ac;
     public $org_id = "55522777";
     public $workspace_id = "35130000001055707";
+
     function __construct() {
         $this->ac = new AnalyticsClient("1000.xxxxxxx", "xxxxxxx", "1000.xxxxxxx.xxxxxxx");
     }
 
     function getDashboardMetadata() {
         $dashboard_id = "35130000001055801";
-        // Omit CONFIG to return every section; include names exactly one of all, layout, themes, settings
-        $config = ["include" => "layout"];
-        $dashboard = $this->ac->getDashboardInstance($this->org_id, $this->workspace_id, $dashboard_id);
-        $dashboard_config = $dashboard->getMetadata($config);
-        print_r($dashboard_config);
+        $config = array(
+            "include" => "layout"
+        );
+        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);
+        $response = $workspace->getDashboardMetadata($dashboard_id, $config);
+        print_r($response);
     }
 }
 
@@ -208,18 +211,19 @@ class Config:
     ORGID = "55522777"
     WORKSPACEID = "35130000001055707"
 
-class sample:
+class Sample:
     ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)
 
     def get_dashboard_metadata(self, ac):
         dashboard_id = "35130000001055801"
-        # Omit CONFIG to return every section; include names exactly one of all, layout, themes, settings
-        config = {"include": "layout"}
-        dashboard = ac.get_dashboard_instance(Config.ORGID, Config.WORKSPACEID, dashboard_id)
-        dashboard_config = dashboard.get_metadata(config)
-        print(dashboard_config)
+        config = {
+            "include": "layout"
+        }
+        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)
+        result = workspace.get_dashboard_metadata(dashboard_id, config)
+        print(result)
 
-obj = sample()
+obj = Sample()
 obj.get_dashboard_metadata(obj.ac)
 ```
 
@@ -231,11 +235,12 @@ var ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');
 var orgId = '55522777';
 var workspaceId = '35130000001055707';
 
-var dashboardId = '35130000001055801';
-// Omit CONFIG to return every section; include names exactly one of all, layout, themes, settings
-var config = { include: 'layout' };
-var dashboard = ac.getDashboardInstance(orgId, workspaceId, dashboardId);
-dashboard.getMetadata(config).then((dashboardConfig) => { console.log(dashboardConfig); }).catch((error) => { console.log(error); });
+var dashboardId = "35130000001055801";
+var config = {
+    "include": "layout"
+};
+var workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+workspace.getDashboardMetadata(dashboardId, config).then((result) => { console.log(result); }).catch((error) => { console.log(error); });
 ```
 
 ## Ruby
@@ -259,11 +264,12 @@ class Sample
 
   def get_dashboard_metadata
     dashboard_id = "35130000001055801"
-    # Omit CONFIG to return every section; include names exactly one of all, layout, themes, settings
-    config = { "include" => "layout" }
-    dashboard = @ac.get_dashboard_instance(Config::ORGID, Config::WORKSPACEID, dashboard_id)
-    dashboard_config = dashboard.get_metadata(config)
-    puts dashboard_config
+    config = {
+      "include" => "layout"
+    }
+    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)
+    result = workspace.get_dashboard_metadata(dashboard_id, config)
+    puts result
   end
 end
 

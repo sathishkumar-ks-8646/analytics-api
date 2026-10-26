@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -113,7 +113,7 @@ HTTP `200` with content type `application/json`. JSON responses use the standard
 | `data.jobCode` | String | Current state as a numeric code **in a string**: `"1001"`, `"1002"`, `"1003"`, `"1004"`, or `"1005"`. See [Job Codes and Polling](overview.md#job-codes-and-polling). |
 | `data.jobStatus` | String | Human-readable form of `jobCode`: `JOB NOT INITIATED`, `JOB IN PROGRESS`, `ERROR OCCURRED`, `JOB COMPLETED`, or `JOB NOT FOUND`. Intended for display; branch on `jobCode`. |
 | `data.downloadUrl` | String | Fully-qualified URL of [Download Exported Data](download-exported-data.md) for this job. **Present only when `jobCode` is `"1004"`.** |
-| `data.expiryTime` | String | Epoch time in **milliseconds**, as a string, at which the job and its file are removed. Set to 72 hours after the job was **created**. **Present only when `jobCode` is `"1004"`.** |
+| `data.expiryTime` | String | Epoch time in **milliseconds**, as a string, at which the job and its file are removed. Set to **1 hour after the job completed**. **Present only when `jobCode` is `"1004"`.** |
 
 # Examples
 
@@ -229,7 +229,7 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 | **A failed job is still a successful request** | `jobCode` `1003` comes back with HTTP `200` and `status: "success"`. Never infer job health from the HTTP status. |
 | **`1005` is returned, not raised** | If a job has expired or its ID was never valid *but the ID is well-formed*, the response is `200` with `jobCode` `1005`. A structurally unresolvable job produces `8120` instead. Handle both. |
 | **`downloadUrl` and `expiryTime` are conditional** | They exist only alongside `jobCode` `1004`. Test for the keys. |
-| **`expiryTime` is anchored to creation, not completion** | A job created at 09:00 and finishing at 09:40 still expires 72 hours after 09:00. A long-running job therefore leaves a shorter collection window. |
+| **`expiryTime` is anchored to completion, not creation** | A job created at 09:00 and finishing at 09:40 expires at 10:40. How long the job spent queued or running does not extend or shorten the collection window — it is always one hour from `jobCode` `1004`. |
 | **This API does not distinguish the two creation APIs** | A view export and a SQL query export produce identical response shapes. Track which is which yourself. |
 | **It reveals nothing about the export content** | No row count, no file size, no format. If you need those, record the CONFIG you sent. |
 | **Polling is cheap but not free** | Poll every few seconds rather than in a tight loop; use `callbackUrl` when you control an endpoint. |
@@ -243,7 +243,7 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | Code | HTTP | Reason | Solution |
 |---|---|---|---|
 | [7005](../../../foundations/error-codes.md#error-7005) | 500 | Unexpected error on the Zoho Analytics server while processing an otherwise valid request. Not caused by the request payload. | Retry after a short interval. If the error persists, contact Zoho Analytics support quoting the error code and the time of the request. |
-| [8120](../../../foundations/error-codes.md#error-8120) | 404 | `EXPORT_JOB_NOT_FOUND` — No export job exists for the given ID (HTTP 404). | Verify the `jobId` returned by the create call, and that the job has not passed its 72-hour retention. |
+| [8120](../../../foundations/error-codes.md#error-8120) | 404 | `EXPORT_JOB_NOT_FOUND` — No export job exists for the given ID (HTTP 404). | Verify the `jobId` returned by the create call, and that the job has not passed its one-hour post-completion retention. |
 | [8124](../../../foundations/error-codes.md#error-8124) | 403 | `EXPORT_JOB_ACCESS_DENIED` — The caller did not create this job (HTTP 403). | Poll with the same user that created the job. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | `INVALID_OAUTHTOKEN` — Invalid or expired OAuth token. | Provide a valid token carrying `ZohoAnalytics.data.read`. |
 

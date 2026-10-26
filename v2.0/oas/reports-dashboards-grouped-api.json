@@ -27,7 +27,7 @@
           "Reports"
         ],
         "summary": "Create Report",
-        "description": "Builds a new chart, pivot or summary view on an existing table and returns its view ID.\n\nPermission required: Workspace Admin / Organization Admin, or a shared or group user holding Create Report permission on the base table.\n\n**Notes**\n\n> Note:\n>\n> This API is not available on white-label / custom domains. Call the standard REST host for your data centre (**analyticsapi.zoho.com**, **analyticsapi.zoho.eu**, ...).\n\n> Note:\n>\n> Axis **type** values are returned in lowercase (**xaxis**, **yaxis**, **coloraxis**, **textaxis**, **groupby**, **tooltip**, **latlng**) whatever casing was sent; all of those are accepted on write. A **tooltip** column may be returned as **group**, which Create and Update reject with 8509.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8504 | baseTableName is absent, or the CONFIG parameter itself is missing. | Send CONFIG with baseTableName. |\n| 7138 | baseTableName does not resolve to a table in this workspace. | Use the exact table display name. |\n| 7016 | title is empty or whitespace-only. | Supply a non-empty title. |\n| 7111 | A view with this title already exists in the workspace. | Choose a unique title. |\n| 8507 | title exceeds 100 characters, description exceeds 250, or an axis displayName exceeds 250. | Shorten the value. |\n| 8252 | reportType is absent or null. | Supply chart, pivot or summary. |\n| 8092 | reportType resolves to a view kind that cannot be saved standalone. | Use chart, pivot or summary. |\n| 8144 | chartType is not a recognised chart name. | See Appendix A. |\n| 8147 | settings was supplied for a non-pivot report. | Remove settings, or change reportType to pivot. |\n| 7362 | folderId does not exist in the workspace. | Supply a valid folder ID or omit the key. |\n| 8051 | A required field is missing — title, reportType, axisColumns, or a mandatory key inside an axis/filter object. | Add the missing field. |\n| 8050 | A value is invalid — unknown columnName, an operation incompatible with the column, a null axisColumns. | Check column names and operations. |\n| 8052 | More than 1000 entries in axisColumns, filters or userFilters. | Reduce the array size. |\n| 8170 | An axis type is not valid for the chosen reportType. | See Appendix B. |\n| 7701 | A chart report has no X-axis or no Y-axis column. | Add at least one of each. |\n| 7703 | A colorAxis column is present alongside more than one Y-axis column. | Drop the colour axis, or reduce to one Y axis. |\n| 7727 | More than 15 Y-axis columns on a chart. | Reduce to 15 or fewer. |\n| 8021 | The pivot or summary structure is invalid — no data column in a pivot, too many data or groupBy columns, or a column in a position its type cannot occupy. On Update, also raised when reportType does not match the stored view's type. | Review the axis configuration. |\n| 8166 | The operation is incompatible with the column's data type. | See Appendix C. |\n| 8167 | The filterType is not valid for the column type + operation combination. | See Appendix D. |\n| 8168 | A values entry does not match the expected format for the filterType. | See Appendix E. |\n| 8191 | An invalid date value was supplied to a date filter. | Use the documented date formats. |\n| 8057 | The column named in windowFunction.baseField cannot be used as a base field here. | Choose a different reference column. |\n| 8059 | The tableName is not part of the workspace or is not joined to the base table. | Use a table reachable through the join graph. |\n| 8162 | rangeSize was supplied as a string, or on an operation that does not support ranges. | Send a JSON number, and only with range grouping. |\n| 8516 | rangeSize was supplied as an array. | Send a plain number. |\n| 8250 | compType is not applicable to the column category — e.g. slider on a dimension, singleSelect on a measure. | Match the widget to the column type. |\n| 8253 | A mandatory userFilters key is missing, typically compType or filterType. | Add the missing key. |\n| 8008 | behaviour was supplied on a daterange or relative user filter. | Remove behaviour. |\n| 8254 | A geoRole value is wrong for the column type. | latitude/longitude for numeric columns; place roles for text columns. |\n| 8255 | geoRole was supplied on a column that cannot be geocoded. | Remove geoRole, or use a geocodable column. |\n| 8256 | More than one geo operation on the same axis. | Keep one geo column per axis. |\n| 8257 | A numeric geo column coexists with a categorical geo column. | Use one or the other. |\n| 8258 | A categorical geo column was placed on an axis other than X. | Move it to xAxis. |\n| 8509 | An enumerated or pattern-constrained value does not match — reportType: \"Chart\" (must be lowercase), type: \"sizeAxis\" (must be sizeaxis), sort: \"descending\", a wildcard expression without parentheses. | Use the exact accepted values. |\n| 8517 | A field has the wrong JSON data type — exclude: \"yes\", isAxisMerge: \"maybe\", compType: 123. | Use real JSON booleans and strings. |\n| 8534 | CONFIG is malformed, or a key has the wrong structural type — axisColumns as {}, mergeAxisInfo as an object, values as a bare string. | Arrays must be [], objects {}. |\n| 8542 | An unknown key is present in CONFIG, or a windowFunction is mis-configured. | Remove the key; check windowFunction.type against the list. |\n| 7005 | A null element inside axisColumns or filters. | Ensure every array element is a JSON object. |\n| 7301 | The caller lacks Create Report permission on the workspace. | Grant the permission. |\n| 8535 | Invalid or expired OAuth token. | Refresh with scope ZohoAnalytics.modeling.create. |",
+        "description": "Builds a new chart, pivot or summary view on an existing table and returns its view ID. Use the returned viewId as <report-id> in Read Report Metadata and Update Report.\n\n**Notes**\n\n> Note:\n>\n> This API is not available on white-label / custom domains. Call the standard REST host for your data centre (**analyticsapi.zoho.com**, **analyticsapi.zoho.eu**, ...).\n\n> Note:\n>\n> Axis **type** values are returned in lowercase (**xaxis**, **yaxis**, **coloraxis**, **textaxis**, **groupby**, **tooltip**, **latlng**) whatever casing was sent; all of those are accepted on write. A **tooltip** column may be returned as **group**, which Create and Update reject with 8509.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7016 | OBJECT_NAME_EMPTY - title is empty or whitespace-only. | Supply a non-empty title. |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7111 | META_DBOBJECT_NAME_DUPLICATED - An object with this title already exists in the workspace. | Choose a title not used by any table, report or dashboard in the workspace. |\n| 7137 | NOT_A_TABLE - baseTableName names an object that is not a table or query table. | Use a table or query table. |\n| 7138 | META_OBJECT_NOT_PRESENT - baseTableName does not match a table in this workspace (matching is case-sensitive). | Use the exact table display name. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller cannot read the base table, or lacks Create Report permission on the workspace. | Call as a user with Create Report permission and read access to the base table. |\n| 7309 | SECURITY_NEEDS_LOGIN - Authorization header absent. | Send Authorization: Zoho-oauthtoken . |\n| 7324 | PERMISSION_DENIED_FOR_DOMAINUSER - A Custom Role user's role does not grant Create Report on the base table. | Grant Create Report in the role. |\n| 7362 | NO_SUCH_FOLDER_IN_DB - folderId does not exist in the workspace. | Supply a folder ID of this workspace, or omit folderId. |\n| 7701 | DROP_X_Y - The chart's shelves do not form a drawable chart; typically no X-axis or no Y-axis column. | Add the missing shelf. |\n| 7703 | REMOVE_CLR_FIELD - Multiple Y-axis columns in a shelf combination that does not support them, typically with a colorAxis column or with no X-axis column. | Drop the colour axis, add an X axis, or reduce to one Y axis. |\n| 7705 | DROP_SUMMARY - A summary report has no groupBy and no summarize column. | Add at least one. |\n| 7706 | DROP_PIVOT - A pivot report has no row, column or data column. | Add at least one. |\n| 7725 | ILLEGAL_COLUMN - The caller is not permitted to access a column used in the report. | Share the column with the caller, or remove it. |\n| 7727 | Y_EXCEED_LIMIT - More than 15 Y-axis columns on a chart. | Reduce to 15 or fewer. |\n| 8008 | UNKNOWN_PARAMETER - behaviour was supplied on a slider, dateRange or relative user filter. | Remove behaviour from that user filter. |\n| 8050 | INVALID_VALUE - A value is invalid: an unknown column name; an explicit null for any key; an empty columnName; a mergeAxisInfo rule violation; mergeAxisInfo without isAxisMerge: true; isallval: false with no values; an invalid user-filter operation or filterType; exclude: true on a range-picker user filter. | Check names and values against this document. |\n| 8051 | VALUE_NOT_PRESENT - A mandatory key is missing: title, reportType, axisColumns, an axis type or operation, a filter's filterType, values, exclude or operation, windowFunction.type, baseFieldPosition, movingCalculation or one of its keys, a wildcard object, mergeAxisInfo[].axisIndex; or the four-key base-field lookup found no matching entry. | Add the missing key. |\n| 8052 | COLUMN_COUNT_EXCEEDED - More than 1000 entries in axisColumns, filters or userFilters. | Reduce the array size. |\n| 8053 | AGGREGATE_COLUMN_INVALID_FIELD - In a pivot or summary report, an aggregate formula column is placed on row, column or groupBy. | Place it on data or summarize. |\n| 8055 | NUMERIC_RANKING_COLUMN - rankingColumn names a Numeric column. | Use a Text or Date column. |\n| 8056 | NOT_ALLOWED - pctoftotal on an average, stddev, variance, dc or distinctcount column, or on an aggregate formula. | Choose another window function type. |\n| 8057 | NOT_ALLOWED_BASEFIELD - windowFunction.baseField is not a dimension entry of axisColumns. | Add the base field to axisColumns as a dimension. |\n| 8058 | BASEFIELD_INVALID_AXIS - windowFunction.baseField sits on a different shelf from baseFieldPosition. | Correct baseFieldPosition. |\n| 8059 | UNRELATED_TABLE - A tableName is not a table joined to the base table. | Use a table reachable from the base table. |\n| 8144 | INVALID_GRAPH_TYPE - chartType is not a value from chartType Values. | Use an accepted chart type, or omit chartType. |\n| 8162 | RANGE_SIZE_NOT_SUPPORTED_FOR_THIS_OPERATION - rangeSize was supplied on an operation other than range. | Use rangeSize only with operation: \"range\". |\n| 8164 | FILTER_COLUMN_DATATYPE_MISMATCH - A numeric individualvalues filter value is not a valid number for the column. | Send the exact stored numeric value. |\n| 8166 | INVALID OPERATION FOR THE COLUMN - The operation is not valid for the column's category and shelf; or a defaultFilterValues entry is invalid. | See Axis Operation Values and Static Filter Operation and Type Values. |\n| 8167 | INVALID FILTER TYPE FOR THE GIVEN OPERATION - The filterType is not valid for the column category and operation. | See Static Filter Operation and Type Values. |\n| 8168 | INVALID CRITERIA FORMAT FOR THE COLUMN - A values entry does not match the format for its filterType. | See Filter Value Formats. |\n| 8169 | INVALID WINDOW TYPE FOR THE COLUMN - windowFunction.type or movingCalculation.calculation is not a valid value. | See Window Function Type Values. |\n| 8170 | INVALID AXIS TYPE FOR THE REPORT - An axis type is not valid for the chosen reportType. | See Axis Type Values. |\n| 8179 | ADVFILTER_EXPRESSION_NO_CRITERIAS - wildcard.criteria is empty. | Supply 1-15 criteria. |\n| 8187 | ADVFILTER_EXPRESSION_ORDER_CHANGE - Criteria indexes in wildcard.expression are out of order. | Reference criteria as 1, 2, 3 … in order. |\n| 8188 | ADVFILTER_EXPRESSION_LENGTH_MISMATCH - The number of indexes in wildcard.expression differs from the number of criteria. | Reference every criterion exactly once. |\n| 8201 | DUPL_DISPLAY_NAME - Another report with the same title is being created at the same moment. | Retry with a unique title. |\n| 8250 | INVALID_UF_COMP_TYPE - compType is not valid for the column category or operation. | See User Filter Rules by Column. |\n| 8251 | INCORRECT_DATE_VALUE - A date in a date-range static filter could not be parsed. | Use the date formats in Filter Value Formats. |\n| 8253 | REQUIRED PARAM IS MISSING - A required key is missing: windowFunction.baseField, user-filter compType, or user-filter filterType where User Filter Rules by Column marks it required. | Add the key. |\n| 8254 | INVALID_VALUE_FOR_ATTRIBUTE_FOR_COLUMN - latitude / longitude on a text column, or a place role on a numeric column. | See Geo Role Values. |\n| 8255 | INVALID_KEY_GIVEN - operation: \"geo\" on a column type that cannot be geocoded. | Use a Plain Text, Number, Positive Number, Decimal Number or Geo column. |\n| 8256 | GEO_COL_COUNT_EXCEEDED - More than one text geo column on X, or more than one numeric geo column on one axis. | Keep one geo column per axis. |\n| 8257 | GEO_COL_COUNT_EXCEEDED_CATEGORICAL - A text geo column on X coexists with a numeric geo column on Y. | Use one or the other. |\n| 8258 | GEO_COL_CATEGORY_ONLY_X - A text geo column was placed on a shelf other than X. | Move it to xAxis. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - CONFIG is missing, or baseTableName is absent. | Send CONFIG with baseTableName. |\n| 8507 | MORE_THAN_MAX_LENGTH - A string exceeds its limit: title 100, description 250, chartType 50, axis displayName 250, columnName 1000, axis tableName 100, windowFunction object 1000, serialised values / defaultFilterValues array 1000. | Shorten the value. |\n| 8509 | PATTERN_NOT_MATCHED - A value does not match its pattern: reportType: \"Chart\", type: \"sizeAxis\", sort: \"descending\", a chartType with a hyphen, compType: \"multiselect\", a wildcard expression without parentheses, a wildcard operation in lowercase. | Use the exact accepted values. |\n| 8516 | UNABLE_TO_PARSE_DATA_TYPE - A numeric value could not be parsed, for example rangeSize sent as an array. | Send a plain number. |\n| 8517 | DATATYPE_NOT_MATCHED - A value has the wrong JSON type: exclude: \"yes\", isAxisMerge: 1, folderId: \"abc\". | Use JSON booleans, numbers and strings as documented. |\n| 8534 | JSON_PARSE_ERROR - CONFIG is not valid JSON, or a key has the wrong structure (axisColumns as {}, values as a string, mergeAxisInfo as an object). | Arrays must be [], objects {}. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |\n| 8542 | EXTRA_KEY_FOUND_IN_JSON - A key not listed in this document is present. | Remove the key. |\n| 8544 | OUT_OF_RANGE - An integer is outside its range: percentileVal outside 0-100, a mergeAxisInfo index outside 0-100. | Use a value inside the range. |\n| 8547 | ARRAY_SIZE_OUT_OF_RANGE - More than 15 entries in wildcard.criteria. | Reduce the array size. |\n| 14037 | DISABLED_COLUMNS_USED - A disabled column is used in the report. | Enable the column, or remove it. |",
         "operationId": "createReport",
         "parameters": [
           {
@@ -368,7 +368,7 @@
           "Reports"
         ],
         "summary": "Update Report",
-        "description": "Rebuilds an existing report from a fresh CONFIG.\n\nPermission required: Design Modify on the report — the owner, a Workspace Admin, an Organization Admin, or a shared or group user granted edit rights.\n\n**Notes**\n\n> Note:\n>\n> This is a workspace-scoped API. The **ZANALYTICS-ORGID** header carrying the organization ID that owns the workspace is mandatory.\n\n> Note:\n>\n> This API is not available on white-label / custom domains. Call the standard REST host for your data centre (**analyticsapi.zoho.com**, **analyticsapi.zoho.eu**, ...).\n\n> Note:\n>\n> This API returns no response body on success - only HTTP 204 No Content. Only failure responses carry a JSON error payload.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7104 | The report does not exist, has been deleted, or the caller cannot edit it. | Verify and the caller's permission. |\n| 7106 | The report does not exist, has been deleted, or the caller cannot edit it. | Verify and the caller's permission. |\n| 8021 | reportType does not match the stored view's type, or the target is not an analysis view at all. | Send the report's actual type. |\n| 8145 | folderId was supplied. | Remove folderId — reports cannot be moved through this endpoint. |\n| 8542 | baseTableName, drillActionConfig, modifiedPaths or any other key outside the Update schema is present. | Remove the key. |\n| 7301 | The caller lacks Design Modify permission on the report. | Grant edit access. |\n| 8535 | Invalid or expired OAuth token. | Refresh with scope ZohoAnalytics.modeling.update. |\n| 8504 | baseTableName is absent, or the CONFIG parameter itself is missing. | Send CONFIG with baseTableName. |\n| 7138 | baseTableName does not resolve to a table in this workspace. | Use the exact table display name. |\n| 7016 | title is empty or whitespace-only. | Supply a non-empty title. |\n| 7111 | A view with this title already exists in the workspace. | Choose a unique title. |\n| 8507 | title exceeds 100 characters, description exceeds 250, or an axis displayName exceeds 250. | Shorten the value. |\n| 8252 | reportType is absent or null. | Supply chart, pivot or summary. |\n| 8092 | reportType resolves to a view kind that cannot be saved standalone. | Use chart, pivot or summary. |\n| 8144 | chartType is not a recognised chart name. | See Appendix A. |\n| 8147 | settings was supplied for a non-pivot report. | Remove settings, or change reportType to pivot. |\n| 7362 | folderId does not exist in the workspace. | Supply a valid folder ID or omit the key. |\n| 8051 | A required field is missing — title, reportType, axisColumns, or a mandatory key inside an axis/filter object. | Add the missing field. |\n| 8050 | A value is invalid — unknown columnName, an operation incompatible with the column, a null axisColumns. | Check column names and operations. |\n| 8052 | More than 1000 entries in axisColumns, filters or userFilters. | Reduce the array size. |\n| 8170 | An axis type is not valid for the chosen reportType. | See Appendix B. |\n| 7701 | A chart report has no X-axis or no Y-axis column. | Add at least one of each. |\n| 7703 | A colorAxis column is present alongside more than one Y-axis column. | Drop the colour axis, or reduce to one Y axis. |\n| 7727 | More than 15 Y-axis columns on a chart. | Reduce to 15 or fewer. |\n| 8166 | The operation is incompatible with the column's data type. | See Appendix C. |\n| 8167 | The filterType is not valid for the column type + operation combination. | See Appendix D. |\n| 8168 | A values entry does not match the expected format for the filterType. | See Appendix E. |\n| 8191 | An invalid date value was supplied to a date filter. | Use the documented date formats. |\n| 8057 | The column named in windowFunction.baseField cannot be used as a base field here. | Choose a different reference column. |\n| 8059 | The tableName is not part of the workspace or is not joined to the base table. | Use a table reachable through the join graph. |\n| 8162 | rangeSize was supplied as a string, or on an operation that does not support ranges. | Send a JSON number, and only with range grouping. |\n| 8516 | rangeSize was supplied as an array. | Send a plain number. |\n| 8250 | compType is not applicable to the column category — e.g. slider on a dimension, singleSelect on a measure. | Match the widget to the column type. |\n| 8253 | A mandatory userFilters key is missing, typically compType or filterType. | Add the missing key. |\n| 8008 | behaviour was supplied on a daterange or relative user filter. | Remove behaviour. |\n| 8254 | A geoRole value is wrong for the column type. | latitude/longitude for numeric columns; place roles for text columns. |\n| 8255 | geoRole was supplied on a column that cannot be geocoded. | Remove geoRole, or use a geocodable column. |\n| 8256 | More than one geo operation on the same axis. | Keep one geo column per axis. |\n| 8257 | A numeric geo column coexists with a categorical geo column. | Use one or the other. |\n| 8258 | A categorical geo column was placed on an axis other than X. | Move it to xAxis. |\n| 8509 | An enumerated or pattern-constrained value does not match — reportType: \"Chart\" (must be lowercase), type: \"sizeAxis\" (must be sizeaxis), sort: \"descending\", a wildcard expression without parentheses. | Use the exact accepted values. |\n| 8517 | A field has the wrong JSON data type — exclude: \"yes\", isAxisMerge: \"maybe\", compType: 123. | Use real JSON booleans and strings. |\n| 8534 | CONFIG is malformed, or a key has the wrong structural type — axisColumns as {}, mergeAxisInfo as an object, values as a bare string. | Arrays must be [], objects {}. |\n| 7005 | A null element inside axisColumns or filters. | Ensure every array element is a JSON object. |",
+        "description": "Rebuilds an existing report from a fresh CONFIG and returns no body. The <report-id> comes from Create Report (data.viewId) or from the workspace's view list.\n\n**Notes**\n\n> Note:\n>\n> This API is not available on white-label / custom domains. Call the standard REST host for your data centre (**analyticsapi.zoho.com**, **analyticsapi.zoho.eu**, ...).\n\n> Note:\n>\n> This API returns no response body on success - only HTTP 204 No Content. Only failure responses carry a JSON error payload.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7016 | OBJECT_NAME_EMPTY - title is empty or whitespace-only. | Supply a non-empty title. |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7106 | META_OBJECT_NOT_PRESENT - The report does not exist or has been deleted. | Verify . |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not the report's owner, an Account Admin, an Organization Admin, the Workspace Owner or a Workspace Admin. | Call as one of those users. |\n| 7309 | SECURITY_NEEDS_LOGIN - Authorization header absent. | Send Authorization: Zoho-oauthtoken . |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The report belongs to a different workspace. | Make and consistent. |\n| 7701 | DROP_X_Y - The chart's shelves do not form a drawable chart; typically no X-axis or no Y-axis column. | Add the missing shelf. |\n| 7703 | REMOVE_CLR_FIELD - Multiple Y-axis columns in a shelf combination that does not support them, typically with a colorAxis column or with no X-axis column. | Drop the colour axis, add an X axis, or reduce to one Y axis. |\n| 7705 | DROP_SUMMARY - A summary report has no groupBy and no summarize column. | Add at least one. |\n| 7706 | DROP_PIVOT - A pivot report has no row, column or data column. | Add at least one. |\n| 7725 | ILLEGAL_COLUMN - The caller is not permitted to access a column used in the report. | Share the column with the caller, or remove it. |\n| 7727 | Y_EXCEED_LIMIT - More than 15 Y-axis columns on a chart. | Reduce to 15 or fewer. |\n| 8008 | UNKNOWN_PARAMETER - behaviour was supplied on a slider, dateRange or relative user filter. | Remove behaviour from that user filter. |\n| 8021 | INVALID_VIEW_TYPE_IN_REQUEST - reportType does not match the stored report's type, or the target is not a report. | Send the report's actual reportType. |\n| 8050 | INVALID_VALUE - A value is invalid: an unknown column name; an explicit null for any key; an empty columnName; a mergeAxisInfo rule violation; mergeAxisInfo without isAxisMerge: true; isallval: false with no values; an invalid user-filter operation or filterType; exclude: true on a range-picker user filter. | Check names and values against this document. |\n| 8051 | VALUE_NOT_PRESENT - A mandatory key is missing: title, reportType, axisColumns, an axis type or operation, a filter's filterType, values, exclude or operation, windowFunction.type, baseFieldPosition, movingCalculation or one of its keys, a wildcard object, mergeAxisInfo[].axisIndex; or the four-key base-field lookup found no matching entry. | Add the missing key. |\n| 8052 | COLUMN_COUNT_EXCEEDED - More than 1000 entries in axisColumns, filters or userFilters. | Reduce the array size. |\n| 8053 | AGGREGATE_COLUMN_INVALID_FIELD - In a pivot or summary report, an aggregate formula column is placed on row, column or groupBy. | Place it on data or summarize. |\n| 8055 | NUMERIC_RANKING_COLUMN - rankingColumn names a Numeric column. | Use a Text or Date column. |\n| 8056 | NOT_ALLOWED - pctoftotal on an average, stddev, variance, dc or distinctcount column, or on an aggregate formula. | Choose another window function type. |\n| 8057 | NOT_ALLOWED_BASEFIELD - windowFunction.baseField is not a dimension entry of axisColumns. | Add the base field to axisColumns as a dimension. |\n| 8058 | BASEFIELD_INVALID_AXIS - windowFunction.baseField sits on a different shelf from baseFieldPosition. | Correct baseFieldPosition. |\n| 8059 | UNRELATED_TABLE - A tableName is not a table joined to the base table. | Use a table reachable from the base table. |\n| 8144 | INVALID_GRAPH_TYPE - chartType is not a value from chartType Values. | Use an accepted chart type, or omit chartType. |\n| 8145 | FOLDERID_CANNOT_BE_UPDATED - folderId was supplied. | Remove folderId. |\n| 8162 | RANGE_SIZE_NOT_SUPPORTED_FOR_THIS_OPERATION - rangeSize was supplied on an operation other than range. | Use rangeSize only with operation: \"range\". |\n| 8164 | FILTER_COLUMN_DATATYPE_MISMATCH - A numeric individualvalues filter value is not a valid number for the column. | Send the exact stored numeric value. |\n| 8166 | INVALID OPERATION FOR THE COLUMN - The operation is not valid for the column's category and shelf; or a defaultFilterValues entry is invalid. | See Axis Operation Values and Static Filter Operation and Type Values. |\n| 8167 | INVALID FILTER TYPE FOR THE GIVEN OPERATION - The filterType is not valid for the column category and operation. | See Static Filter Operation and Type Values. |\n| 8168 | INVALID CRITERIA FORMAT FOR THE COLUMN - A values entry does not match the format for its filterType. | See Filter Value Formats. |\n| 8169 | INVALID WINDOW TYPE FOR THE COLUMN - windowFunction.type or movingCalculation.calculation is not a valid value. | See Window Function Type Values. |\n| 8170 | INVALID AXIS TYPE FOR THE REPORT - An axis type is not valid for the chosen reportType. | See Axis Type Values. |\n| 8179 | ADVFILTER_EXPRESSION_NO_CRITERIAS - wildcard.criteria is empty. | Supply 1-15 criteria. |\n| 8187 | ADVFILTER_EXPRESSION_ORDER_CHANGE - Criteria indexes in wildcard.expression are out of order. | Reference criteria as 1, 2, 3 … in order. |\n| 8188 | ADVFILTER_EXPRESSION_LENGTH_MISMATCH - The number of indexes in wildcard.expression differs from the number of criteria. | Reference every criterion exactly once. |\n| 8192 | ADVFILTER_UPDATE_HANDLING - A filters entry uses filterType: \"wildcard\". | Wildcard filters can only be set at create time. |\n| 8250 | INVALID_UF_COMP_TYPE - compType is not valid for the column category or operation. | See User Filter Rules by Column. |\n| 8251 | INCORRECT_DATE_VALUE - A date in a date-range static filter could not be parsed. | Use the date formats in Filter Value Formats. |\n| 8253 | REQUIRED PARAM IS MISSING - A required key is missing: windowFunction.baseField, user-filter compType, or user-filter filterType where User Filter Rules by Column marks it required. | Add the key. |\n| 8254 | INVALID_VALUE_FOR_ATTRIBUTE_FOR_COLUMN - latitude / longitude on a text column, or a place role on a numeric column. | See Geo Role Values. |\n| 8255 | INVALID_KEY_GIVEN - operation: \"geo\" on a column type that cannot be geocoded. | Use a Plain Text, Number, Positive Number, Decimal Number or Geo column. |\n| 8256 | GEO_COL_COUNT_EXCEEDED - More than one text geo column on X, or more than one numeric geo column on one axis. | Keep one geo column per axis. |\n| 8257 | GEO_COL_COUNT_EXCEEDED_CATEGORICAL - A text geo column on X coexists with a numeric geo column on Y. | Use one or the other. |\n| 8258 | GEO_COL_CATEGORY_ONLY_X - A text geo column was placed on a shelf other than X. | Move it to xAxis. |\n| 8507 | MORE_THAN_MAX_LENGTH - A string exceeds its limit: title 100, description 250, chartType 50, axis displayName 250, columnName 1000, axis tableName 100, windowFunction object 1000, serialised values / defaultFilterValues array 1000. | Shorten the value. |\n| 8509 | PATTERN_NOT_MATCHED - A value does not match its pattern: reportType: \"Chart\", type: \"sizeAxis\", sort: \"descending\", a chartType with a hyphen, compType: \"multiselect\", a wildcard expression without parentheses, a wildcard operation in lowercase. | Use the exact accepted values. |\n| 8516 | UNABLE_TO_PARSE_DATA_TYPE - A numeric value could not be parsed, for example rangeSize sent as an array. | Send a plain number. |\n| 8517 | DATATYPE_NOT_MATCHED - A value has the wrong JSON type: exclude: \"yes\", isAxisMerge: 1, folderId: \"abc\". | Use JSON booleans, numbers and strings as documented. |\n| 8534 | JSON_PARSE_ERROR - CONFIG is not valid JSON, or a key has the wrong structure (axisColumns as {}, values as a string, mergeAxisInfo as an object). | Arrays must be [], objects {}. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |\n| 8542 | EXTRA_KEY_FOUND_IN_JSON - baseTableName or any other key outside the Update schema is present. | Remove the key. |\n| 8544 | OUT_OF_RANGE - An integer is outside its range: percentileVal outside 0-100, a mergeAxisInfo index outside 0-100. | Use a value inside the range. |\n| 8547 | ARRAY_SIZE_OUT_OF_RANGE - More than 15 entries in wildcard.criteria. | Reduce the array size. |\n| 14037 | DISABLED_COLUMNS_USED - A disabled column is used in the report. | Enable the column, or remove it. |",
         "operationId": "updateReport",
         "parameters": [
           {
@@ -504,7 +504,7 @@
           "Reports"
         ],
         "summary": "Read Report Metadata",
-        "description": "Returns the stored definition of a chart, pivot or summary view.\n\nPermission required: Design Modify on the report. A read-only shared user cannot call this endpoint.\n\n**Notes**\n\n> Note:\n>\n> This is a workspace-scoped API. The **ZANALYTICS-ORGID** header carrying the organization ID that owns the workspace is mandatory.\n\n> Note:\n>\n> This API is not available on white-label / custom domains. Call the standard REST host for your data centre (**analyticsapi.zoho.com**, **analyticsapi.zoho.eu**, ...).\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7104 | The report does not exist or has been deleted. | Verify . |\n| 7106 | The report does not exist or has been deleted. | Verify . |\n| 7319 | The report belongs to a different workspace. | Make the two path IDs consistent. |\n| 8021 | The target is not a chart, pivot or summary view. | Use a report ID, not a table or dashboard. |\n| 7301 | The caller lacks Design Modify permission on the report. | Grant edit access. |\n| 8535 | Invalid or expired OAuth token. | Refresh with scope ZohoAnalytics.modeling.read. |",
+        "description": "Returns a summary of the stored definition of a chart, pivot or summary view. The <report-id> comes from Create Report (data.viewId) or from the workspace's view list.\n\n**Notes**\n\n> Note:\n>\n> This is a workspace-scoped API. The **ZANALYTICS-ORGID** header carrying the organization ID that owns the workspace is mandatory.\n\n> Note:\n>\n> This API is not available on white-label / custom domains. Call the standard REST host for your data centre (**analyticsapi.zoho.com**, **analyticsapi.zoho.eu**, ...).\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | META_OBJECT_NOT_PRESENT - The report does not exist. | Verify . |\n| 7106 | META_OBJECT_NOT_PRESENT - The report has been deleted. | Verify . |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not the owner and lacks Design Modify permission on the report. | Grant the caller edit access to the report. |\n| 7309 | SECURITY_NEEDS_LOGIN - Authorization header absent. | Send Authorization: Zoho-oauthtoken . |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The report belongs to a different workspace. | Make and consistent. |\n| 8021 | INVALID_VIEW_TYPE_IN_REQUEST - The target is a table, query table or dashboard, not a report. | Use a report ID. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.read. |",
         "operationId": "getReportMetadata",
         "parameters": [
           {
@@ -2819,254 +2819,6 @@
           ]
         ]
       },
-      "ViewSettings": {
-        "type": "object",
-        "title": "ViewSettings",
-        "description": "JSONObject holding the layout and theme settings of a pivot report. Supplying it for a chart or summary raises 8147. Maximum serialized size 10 KB.",
-        "properties": {
-          "layout": {
-            "$ref": "#/components/schemas/ViewSettingsLayout"
-          },
-          "themes": {
-            "$ref": "#/components/schemas/ViewSettingsThemes"
-          }
-        },
-        "examples": [
-          {
-            "layout": {
-              "defaultWidth": 143
-            },
-            "themes": {
-              "themeType": 4,
-              "themeFontSize": 14,
-              "themeRowSpacing": 2
-            }
-          }
-        ]
-      },
-      "ViewSettingsLayout": {
-        "type": "object",
-        "title": "ViewSettingsLayout",
-        "description": "JSONObject controlling the column layout of the view.",
-        "properties": {
-          "defaultWidth": {
-            "type": "integer",
-            "description": "Default column width in pixels, applied to pivot and summary tables.",
-            "minimum": 1,
-            "maximum": 1000,
-            "examples": [
-              143
-            ]
-          }
-        }
-      },
-      "ViewSettingsThemes": {
-        "type": "object",
-        "title": "ViewSettingsThemes",
-        "description": "JSONObject controlling the visual theme of the view.",
-        "properties": {
-          "themeType": {
-            "type": "integer",
-            "description": "Index of the preset theme style applied to the view.",
-            "minimum": 1,
-            "maximum": 7,
-            "examples": [
-              4
-            ]
-          },
-          "themeColor": {
-            "type": "string",
-            "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
-            "description": "Theme colour, #RRGGBB or #RGB."
-          },
-          "themeFontSize": {
-            "type": "integer",
-            "description": "Base font size of the view in points.",
-            "minimum": 5,
-            "maximum": 24,
-            "examples": [
-              14
-            ]
-          },
-          "themeRowSpacing": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 3,
-            "description": "Row spacing."
-          },
-          "compactIndent": {
-            "type": "integer",
-            "description": "Row indentation depth applied in compact mode.",
-            "minimum": 0,
-            "maximum": 3,
-            "examples": [
-              2
-            ]
-          },
-          "fontColor": {
-            "type": "string",
-            "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
-            "description": "Font colour, #RRGGBB or #RGB."
-          }
-        }
-      },
-      "DrillActionConfig": {
-        "type": "object",
-        "title": "DrillActionConfig",
-        "description": "JSONObject configuring up to 10 custom drill-through actions. Accepted on Create only; rejected on Update with 8542.",
-        "properties": {
-          "drillActionsConfig": {
-            "$ref": "#/components/schemas/DrillActions"
-          }
-        }
-      },
-      "DrillActions": {
-        "type": "array",
-        "title": "DrillActions",
-        "description": "JSONArray of drill action items. A maximum of 10 actions is allowed.",
-        "maxItems": 10,
-        "items": {
-          "$ref": "#/components/schemas/DrillAction"
-        },
-        "examples": [
-          [
-            {
-              "id": "1001",
-              "name": "View Order Details",
-              "urlString": "https://crm.example.com/orders?id={{OrderID}}",
-              "methodType": "GET"
-            }
-          ]
-        ]
-      },
-      "DrillAction": {
-        "type": "object",
-        "title": "DrillAction",
-        "description": "One drill-through action invoked from a data point in the view.",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the action, as a long integer or a hyphenated long-integer string.",
-            "examples": [
-              "1001"
-            ]
-          },
-          "name": {
-            "type": "string",
-            "description": "Display name of the action.",
-            "maxLength": 50,
-            "examples": [
-              "View Order Details"
-            ]
-          },
-          "urlString": {
-            "type": "string",
-            "description": "Target URL invoked when the action fires.",
-            "maxLength": 2000,
-            "examples": [
-              "https://crm.example.com/orders?id={{OrderID}}"
-            ]
-          },
-          "methodType": {
-            "type": "string",
-            "description": "HTTP method used to call the target URL.",
-            "enum": [
-              "GET",
-              "POST",
-              "PUT",
-              "DELETE"
-            ]
-          },
-          "headers": {
-            "$ref": "#/components/schemas/DrillActionKeyValues"
-          },
-          "params": {
-            "$ref": "#/components/schemas/DrillActionKeyValues"
-          },
-          "formData": {
-            "$ref": "#/components/schemas/DrillActionKeyValues"
-          },
-          "body": {
-            "type": "string",
-            "description": "Raw request body sent with the action.",
-            "maxLength": 50000,
-            "examples": [
-              "{\"orderId\": \"{{OrderID}}\"}"
-            ]
-          },
-          "bodyType": {
-            "type": "string",
-            "description": "Format of the request body.",
-            "enum": [
-              "raw",
-              "form",
-              "none"
-            ]
-          }
-        }
-      },
-      "DrillActionKeyValues": {
-        "type": "array",
-        "title": "DrillActionKeyValues",
-        "description": "JSONArray of key-value entries used for the headers, query parameters or form body of a drill action. Maximum serialized size 5 KB.",
-        "items": {
-          "$ref": "#/components/schemas/DrillActionKeyValue"
-        },
-        "examples": [
-          [
-            {
-              "key": "Content-Type",
-              "value": "application/json",
-              "type": "static"
-            }
-          ]
-        ]
-      },
-      "DrillActionKeyValue": {
-        "type": "object",
-        "title": "DrillActionKeyValue",
-        "description": "One key-value entry of a drill action.",
-        "properties": {
-          "key": {
-            "type": "string",
-            "description": "Name of the entry.",
-            "examples": [
-              "Content-Type"
-            ]
-          },
-          "value": {
-            "type": "string",
-            "description": "Value of the entry. Column placeholders in the format {{ColumnName}} are substituted at click time.",
-            "examples": [
-              "application/json"
-            ]
-          },
-          "type": {
-            "type": "string",
-            "description": "Whether the value is a literal or resolved from the clicked data point.",
-            "examples": [
-              "static"
-            ]
-          }
-        }
-      },
-      "ModifiedPaths": {
-        "type": "object",
-        "title": "ModifiedPaths",
-        "description": "JSONObject with the configuration path as key and the change marker as value, used to signal which parts of the configuration were touched. Maximum serialized size 10 KB.",
-        "properties": {
-          "<config_path>": {
-            "type": "string",
-            "description": "Marker for the change applied at that path. NOTE: the key should be a path within the report configuration."
-          }
-        },
-        "examples": [
-          {
-            "axisColumns": "modified",
-            "settings.themes": "modified"
-          }
-        ]
-      },
       "CreateReportConfig": {
         "type": "object",
         "title": "CreateReportConfig",
@@ -3246,15 +2998,6 @@
           },
           "userFilters": {
             "$ref": "#/components/schemas/UserFilters"
-          },
-          "settings": {
-            "$ref": "#/components/schemas/ViewSettings"
-          },
-          "drillActionConfig": {
-            "$ref": "#/components/schemas/DrillActionConfig"
-          },
-          "modifiedPaths": {
-            "$ref": "#/components/schemas/ModifiedPaths"
           }
         },
         "required": [
@@ -3452,19 +3195,6 @@
           },
           "userFilters": {
             "$ref": "#/components/schemas/UserFilters"
-          },
-          "settings": {
-            "$ref": "#/components/schemas/ViewSettings"
-          },
-          "folderId": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Accepted by the schema, but the report cannot be moved: supplying it raises 8145. Omit it."
-          },
-          "objId": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Inert: the server always uses the report ID from the URL."
           }
         },
         "required": [
@@ -3861,451 +3591,6 @@
             "columnName": "Order Date",
             "tableName": "Sales",
             "operation": "monthyear"
-          }
-        ]
-      },
-      "DashboardSummary": {
-        "type": "object",
-        "title": "DashboardSummary",
-        "description": "Summary of one dashboard as returned by the listing APIs.",
-        "properties": {
-          "viewId": {
-            "type": "string",
-            "description": "ID of the dashboard. Returned as a string even though the underlying value is a long integer.",
-            "examples": [
-              "466206000000105001"
-            ]
-          },
-          "viewName": {
-            "type": "string",
-            "description": "Display name of the dashboard.",
-            "examples": [
-              "Executive Sales Dashboard"
-            ]
-          },
-          "viewDesc": {
-            "type": "string",
-            "description": "Description of the dashboard. An empty string when none is set.",
-            "examples": [
-              "High-level sales KPIs for the executive team"
-            ]
-          },
-          "viewType": {
-            "type": "string",
-            "description": "Type of the view. Always Dashboard for entries returned by these APIs.",
-            "examples": [
-              "Dashboard"
-            ]
-          },
-          "parentViewId": {
-            "type": "string",
-            "description": "ID of the parent view, if there is one. An empty string otherwise.",
-            "examples": [
-              ""
-            ]
-          },
-          "folderId": {
-            "type": "string",
-            "description": "ID of the folder that contains the dashboard.",
-            "examples": [
-              "466206000000071005"
-            ]
-          },
-          "createdTime": {
-            "type": "string",
-            "description": "Creation timestamp of the dashboard, in epoch milliseconds.",
-            "examples": [
-              "1719820800000"
-            ]
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Email address of the user who created the dashboard.",
-            "examples": [
-              "alice@example.com"
-            ]
-          },
-          "lastModifiedTime": {
-            "type": "string",
-            "description": "Timestamp of the last modification, in epoch milliseconds.",
-            "examples": [
-              "1722499200000"
-            ]
-          },
-          "lastModifiedBy": {
-            "type": "string",
-            "description": "Email address of the user who last modified the dashboard.",
-            "examples": [
-              "alice@example.com"
-            ]
-          },
-          "isFavorite": {
-            "type": "boolean",
-            "description": "Indicates whether the requesting user has marked the dashboard as a favorite.",
-            "enum": [
-              true,
-              false
-            ]
-          },
-          "sharedBy": {
-            "type": "string",
-            "description": "Email address of the user who shared the dashboard. Populated for shared entries and an empty string for owned entries.",
-            "examples": [
-              "bob@example.com"
-            ]
-          },
-          "workspaceId": {
-            "type": "string",
-            "description": "ID of the workspace that contains the dashboard. Use it as the workspace ID in the workspace-scoped dashboard APIs.",
-            "examples": [
-              "466206000000071000"
-            ]
-          },
-          "orgId": {
-            "type": "string",
-            "description": "ID of the organization the workspace belongs to. It corresponds to the ZANALYTICS-ORGID header value.",
-            "examples": [
-              "700000123456"
-            ]
-          }
-        },
-        "examples": [
-          {
-            "viewId": "466206000000105001",
-            "viewName": "Executive Sales Dashboard",
-            "viewDesc": "High-level sales KPIs for the executive team",
-            "viewType": "Dashboard",
-            "parentViewId": "",
-            "folderId": "466206000000071005",
-            "createdTime": "1719820800000",
-            "createdBy": "alice@example.com",
-            "lastModifiedTime": "1722499200000",
-            "lastModifiedBy": "alice@example.com",
-            "isFavorite": true,
-            "sharedBy": "",
-            "workspaceId": "466206000000071000",
-            "orgId": "700000123456"
-          }
-        ]
-      },
-      "DashboardSummaries": {
-        "type": "array",
-        "title": "DashboardSummaries",
-        "description": "JSONArray of dashboard summaries.",
-        "items": {
-          "$ref": "#/components/schemas/DashboardSummary"
-        },
-        "examples": [
-          [
-            {
-              "viewId": "466206000000105001",
-              "viewName": "Executive Sales Dashboard",
-              "viewDesc": "High-level sales KPIs for the executive team",
-              "viewType": "Dashboard",
-              "parentViewId": "",
-              "folderId": "466206000000071005",
-              "createdTime": "1719820800000",
-              "createdBy": "alice@example.com",
-              "lastModifiedTime": "1722499200000",
-              "lastModifiedBy": "alice@example.com",
-              "isFavorite": true,
-              "sharedBy": "",
-              "workspaceId": "466206000000071000",
-              "orgId": "700000123456"
-            },
-            {
-              "viewId": "466206000000108003",
-              "viewName": "Marketing Campaign Overview",
-              "viewDesc": "",
-              "viewType": "Dashboard",
-              "parentViewId": "",
-              "folderId": "466206000000071000",
-              "createdTime": "1720080000000",
-              "createdBy": "alice@example.com",
-              "lastModifiedTime": "1720080000000",
-              "lastModifiedBy": "alice@example.com",
-              "isFavorite": false,
-              "sharedBy": "",
-              "workspaceId": "466206000000071000",
-              "orgId": "700000123456"
-            }
-          ]
-        ]
-      },
-      "GetDashboardsResponse": {
-        "type": "object",
-        "title": "GetDashboardsResponse",
-        "description": "Response listing every dashboard accessible to the authenticated user, split into owned and shared.",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Result of the request.",
-            "enum": [
-              "success",
-              "failure"
-            ],
-            "x-enumDescriptions": {
-              "success": "Request succeeded",
-              "failure": "Request failed"
-            }
-          },
-          "summary": {
-            "type": "string",
-            "description": "Human readable message describing the result.",
-            "examples": [
-              "Get all dashboards"
-            ]
-          },
-          "data": {
-            "$ref": "#/components/schemas/GetDashboardsResponseData"
-          }
-        },
-        "examples": [
-          {
-            "status": "success",
-            "summary": "Get all dashboards",
-            "data": {
-              "ownedViews": [
-                {
-                  "viewId": "466206000000105001",
-                  "viewName": "Executive Sales Dashboard",
-                  "viewDesc": "High-level sales KPIs for the executive team",
-                  "viewType": "Dashboard",
-                  "parentViewId": "",
-                  "folderId": "466206000000071005",
-                  "createdTime": "1719820800000",
-                  "createdBy": "alice@example.com",
-                  "lastModifiedTime": "1722499200000",
-                  "lastModifiedBy": "alice@example.com",
-                  "isFavorite": true,
-                  "sharedBy": "",
-                  "workspaceId": "466206000000071000",
-                  "orgId": "700000123456"
-                },
-                {
-                  "viewId": "466206000000108003",
-                  "viewName": "Marketing Campaign Overview",
-                  "viewDesc": "",
-                  "viewType": "Dashboard",
-                  "parentViewId": "",
-                  "folderId": "466206000000071000",
-                  "createdTime": "1720080000000",
-                  "createdBy": "alice@example.com",
-                  "lastModifiedTime": "1720080000000",
-                  "lastModifiedBy": "alice@example.com",
-                  "isFavorite": false,
-                  "sharedBy": "",
-                  "workspaceId": "466206000000071000",
-                  "orgId": "700000123456"
-                }
-              ],
-              "sharedViews": [
-                {
-                  "viewId": "466206000000200010",
-                  "viewName": "Finance Overview",
-                  "viewDesc": "Finance team quarterly dashboard",
-                  "viewType": "Dashboard",
-                  "parentViewId": "",
-                  "folderId": "466206000000190001",
-                  "createdTime": "1718640000000",
-                  "createdBy": "bob@example.com",
-                  "lastModifiedTime": "1721001600000",
-                  "lastModifiedBy": "bob@example.com",
-                  "isFavorite": false,
-                  "sharedBy": "bob@example.com",
-                  "workspaceId": "466206000000190000",
-                  "orgId": "700000123456"
-                }
-              ]
-            }
-          }
-        ]
-      },
-      "GetDashboardsResponseData": {
-        "type": "object",
-        "title": "GetDashboardsResponseData",
-        "description": "The two dashboard lists returned by Get All Dashboards.",
-        "properties": {
-          "ownedViews": {
-            "$ref": "#/components/schemas/DashboardSummaries"
-          },
-          "sharedViews": {
-            "$ref": "#/components/schemas/DashboardSummaries"
-          }
-        },
-        "examples": [
-          {
-            "ownedViews": [
-              {
-                "viewId": "466206000000105001",
-                "viewName": "Executive Sales Dashboard",
-                "viewDesc": "High-level sales KPIs for the executive team",
-                "viewType": "Dashboard",
-                "parentViewId": "",
-                "folderId": "466206000000071005",
-                "createdTime": "1719820800000",
-                "createdBy": "alice@example.com",
-                "lastModifiedTime": "1722499200000",
-                "lastModifiedBy": "alice@example.com",
-                "isFavorite": true,
-                "sharedBy": "",
-                "workspaceId": "466206000000071000",
-                "orgId": "700000123456"
-              },
-              {
-                "viewId": "466206000000108003",
-                "viewName": "Marketing Campaign Overview",
-                "viewDesc": "",
-                "viewType": "Dashboard",
-                "parentViewId": "",
-                "folderId": "466206000000071000",
-                "createdTime": "1720080000000",
-                "createdBy": "alice@example.com",
-                "lastModifiedTime": "1720080000000",
-                "lastModifiedBy": "alice@example.com",
-                "isFavorite": false,
-                "sharedBy": "",
-                "workspaceId": "466206000000071000",
-                "orgId": "700000123456"
-              }
-            ],
-            "sharedViews": [
-              {
-                "viewId": "466206000000200010",
-                "viewName": "Finance Overview",
-                "viewDesc": "Finance team quarterly dashboard",
-                "viewType": "Dashboard",
-                "parentViewId": "",
-                "folderId": "466206000000190001",
-                "createdTime": "1718640000000",
-                "createdBy": "bob@example.com",
-                "lastModifiedTime": "1721001600000",
-                "lastModifiedBy": "bob@example.com",
-                "isFavorite": false,
-                "sharedBy": "bob@example.com",
-                "workspaceId": "466206000000190000",
-                "orgId": "700000123456"
-              }
-            ]
-          }
-        ]
-      },
-      "GetDashboardListResponse": {
-        "type": "object",
-        "title": "GetDashboardListResponse",
-        "description": "Response carrying a single list of dashboards - owned only or shared only, depending on the endpoint.",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Result of the request.",
-            "enum": [
-              "success",
-              "failure"
-            ],
-            "x-enumDescriptions": {
-              "success": "Request succeeded",
-              "failure": "Request failed"
-            }
-          },
-          "summary": {
-            "type": "string",
-            "description": "Human readable message describing the result.",
-            "examples": [
-              "Get owned dashboards"
-            ]
-          },
-          "data": {
-            "$ref": "#/components/schemas/GetDashboardListResponseData"
-          }
-        },
-        "examples": [
-          {
-            "status": "success",
-            "summary": "Get owned dashboards",
-            "data": {
-              "views": [
-                {
-                  "viewId": "466206000000105001",
-                  "viewName": "Executive Sales Dashboard",
-                  "viewDesc": "High-level sales KPIs for the executive team",
-                  "viewType": "Dashboard",
-                  "parentViewId": "",
-                  "folderId": "466206000000071005",
-                  "createdTime": "1719820800000",
-                  "createdBy": "alice@example.com",
-                  "lastModifiedTime": "1722499200000",
-                  "lastModifiedBy": "alice@example.com",
-                  "isFavorite": true,
-                  "sharedBy": "",
-                  "workspaceId": "466206000000071000",
-                  "orgId": "700000123456"
-                },
-                {
-                  "viewId": "466206000000305020",
-                  "viewName": "HR Headcount Overview",
-                  "viewDesc": "",
-                  "viewType": "Dashboard",
-                  "parentViewId": "",
-                  "folderId": "466206000000300000",
-                  "createdTime": "1716912000000",
-                  "createdBy": "admin@example.com",
-                  "lastModifiedTime": "1720339200000",
-                  "lastModifiedBy": "admin@example.com",
-                  "isFavorite": false,
-                  "sharedBy": "",
-                  "workspaceId": "466206000000300000",
-                  "orgId": "700000998877"
-                }
-              ]
-            }
-          }
-        ]
-      },
-      "GetDashboardListResponseData": {
-        "type": "object",
-        "title": "GetDashboardListResponseData",
-        "description": "The dashboard list returned by Get Owned Dashboards and Get Shared Dashboards.",
-        "properties": {
-          "views": {
-            "$ref": "#/components/schemas/DashboardSummaries"
-          }
-        },
-        "examples": [
-          {
-            "views": [
-              {
-                "viewId": "466206000000105001",
-                "viewName": "Executive Sales Dashboard",
-                "viewDesc": "High-level sales KPIs for the executive team",
-                "viewType": "Dashboard",
-                "parentViewId": "",
-                "folderId": "466206000000071005",
-                "createdTime": "1719820800000",
-                "createdBy": "alice@example.com",
-                "lastModifiedTime": "1722499200000",
-                "lastModifiedBy": "alice@example.com",
-                "isFavorite": true,
-                "sharedBy": "",
-                "workspaceId": "466206000000071000",
-                "orgId": "700000123456"
-              },
-              {
-                "viewId": "466206000000305020",
-                "viewName": "HR Headcount Overview",
-                "viewDesc": "",
-                "viewType": "Dashboard",
-                "parentViewId": "",
-                "folderId": "466206000000300000",
-                "createdTime": "1716912000000",
-                "createdBy": "admin@example.com",
-                "lastModifiedTime": "1720339200000",
-                "lastModifiedBy": "admin@example.com",
-                "isFavorite": false,
-                "sharedBy": "",
-                "workspaceId": "466206000000300000",
-                "orgId": "700000998877"
-              }
-            ]
           }
         ]
       },
@@ -6165,6 +5450,451 @@
               "operation": "actual"
             }
           ]
+        ]
+      },
+      "DashboardSummaries": {
+        "type": "array",
+        "title": "DashboardSummaries",
+        "description": "JSONArray of dashboard summaries.",
+        "items": {
+          "$ref": "#/components/schemas/DashboardSummary"
+        },
+        "examples": [
+          [
+            {
+              "viewId": "466206000000105001",
+              "viewName": "Executive Sales Dashboard",
+              "viewDesc": "High-level sales KPIs for the executive team",
+              "viewType": "Dashboard",
+              "parentViewId": "",
+              "folderId": "466206000000071005",
+              "createdTime": "1719820800000",
+              "createdBy": "alice@example.com",
+              "lastModifiedTime": "1722499200000",
+              "lastModifiedBy": "alice@example.com",
+              "isFavorite": true,
+              "sharedBy": "",
+              "workspaceId": "466206000000071000",
+              "orgId": "700000123456"
+            },
+            {
+              "viewId": "466206000000108003",
+              "viewName": "Marketing Campaign Overview",
+              "viewDesc": "",
+              "viewType": "Dashboard",
+              "parentViewId": "",
+              "folderId": "466206000000071000",
+              "createdTime": "1720080000000",
+              "createdBy": "alice@example.com",
+              "lastModifiedTime": "1720080000000",
+              "lastModifiedBy": "alice@example.com",
+              "isFavorite": false,
+              "sharedBy": "",
+              "workspaceId": "466206000000071000",
+              "orgId": "700000123456"
+            }
+          ]
+        ]
+      },
+      "DashboardSummary": {
+        "type": "object",
+        "title": "DashboardSummary",
+        "description": "Summary of one dashboard as returned by the listing APIs.",
+        "properties": {
+          "viewId": {
+            "type": "string",
+            "description": "ID of the dashboard. Returned as a string even though the underlying value is a long integer.",
+            "examples": [
+              "466206000000105001"
+            ]
+          },
+          "viewName": {
+            "type": "string",
+            "description": "Display name of the dashboard.",
+            "examples": [
+              "Executive Sales Dashboard"
+            ]
+          },
+          "viewDesc": {
+            "type": "string",
+            "description": "Description of the dashboard. An empty string when none is set.",
+            "examples": [
+              "High-level sales KPIs for the executive team"
+            ]
+          },
+          "viewType": {
+            "type": "string",
+            "description": "Type of the view. Always Dashboard for entries returned by these APIs.",
+            "examples": [
+              "Dashboard"
+            ]
+          },
+          "parentViewId": {
+            "type": "string",
+            "description": "ID of the parent view, if there is one. An empty string otherwise.",
+            "examples": [
+              ""
+            ]
+          },
+          "folderId": {
+            "type": "string",
+            "description": "ID of the folder that contains the dashboard.",
+            "examples": [
+              "466206000000071005"
+            ]
+          },
+          "createdTime": {
+            "type": "string",
+            "description": "Creation timestamp of the dashboard, in epoch milliseconds.",
+            "examples": [
+              "1719820800000"
+            ]
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Email address of the user who created the dashboard.",
+            "examples": [
+              "alice@example.com"
+            ]
+          },
+          "lastModifiedTime": {
+            "type": "string",
+            "description": "Timestamp of the last modification, in epoch milliseconds.",
+            "examples": [
+              "1722499200000"
+            ]
+          },
+          "lastModifiedBy": {
+            "type": "string",
+            "description": "Email address of the user who last modified the dashboard.",
+            "examples": [
+              "alice@example.com"
+            ]
+          },
+          "isFavorite": {
+            "type": "boolean",
+            "description": "Indicates whether the requesting user has marked the dashboard as a favorite.",
+            "enum": [
+              true,
+              false
+            ]
+          },
+          "sharedBy": {
+            "type": "string",
+            "description": "Email address of the user who shared the dashboard. Populated for shared entries and an empty string for owned entries.",
+            "examples": [
+              "bob@example.com"
+            ]
+          },
+          "workspaceId": {
+            "type": "string",
+            "description": "ID of the workspace that contains the dashboard. Use it as the workspace ID in the workspace-scoped dashboard APIs.",
+            "examples": [
+              "466206000000071000"
+            ]
+          },
+          "orgId": {
+            "type": "string",
+            "description": "ID of the organization the workspace belongs to. It corresponds to the ZANALYTICS-ORGID header value.",
+            "examples": [
+              "700000123456"
+            ]
+          }
+        },
+        "examples": [
+          {
+            "viewId": "466206000000105001",
+            "viewName": "Executive Sales Dashboard",
+            "viewDesc": "High-level sales KPIs for the executive team",
+            "viewType": "Dashboard",
+            "parentViewId": "",
+            "folderId": "466206000000071005",
+            "createdTime": "1719820800000",
+            "createdBy": "alice@example.com",
+            "lastModifiedTime": "1722499200000",
+            "lastModifiedBy": "alice@example.com",
+            "isFavorite": true,
+            "sharedBy": "",
+            "workspaceId": "466206000000071000",
+            "orgId": "700000123456"
+          }
+        ]
+      },
+      "GetDashboardListResponse": {
+        "type": "object",
+        "title": "GetDashboardListResponse",
+        "description": "Response carrying a single list of dashboards - owned only or shared only, depending on the endpoint.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Result of the request.",
+            "enum": [
+              "success",
+              "failure"
+            ],
+            "x-enumDescriptions": {
+              "success": "Request succeeded",
+              "failure": "Request failed"
+            }
+          },
+          "summary": {
+            "type": "string",
+            "description": "Human readable message describing the result.",
+            "examples": [
+              "Get owned dashboards"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetDashboardListResponseData"
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Get owned dashboards",
+            "data": {
+              "views": [
+                {
+                  "viewId": "466206000000105001",
+                  "viewName": "Executive Sales Dashboard",
+                  "viewDesc": "High-level sales KPIs for the executive team",
+                  "viewType": "Dashboard",
+                  "parentViewId": "",
+                  "folderId": "466206000000071005",
+                  "createdTime": "1719820800000",
+                  "createdBy": "alice@example.com",
+                  "lastModifiedTime": "1722499200000",
+                  "lastModifiedBy": "alice@example.com",
+                  "isFavorite": true,
+                  "sharedBy": "",
+                  "workspaceId": "466206000000071000",
+                  "orgId": "700000123456"
+                },
+                {
+                  "viewId": "466206000000305020",
+                  "viewName": "HR Headcount Overview",
+                  "viewDesc": "",
+                  "viewType": "Dashboard",
+                  "parentViewId": "",
+                  "folderId": "466206000000300000",
+                  "createdTime": "1716912000000",
+                  "createdBy": "admin@example.com",
+                  "lastModifiedTime": "1720339200000",
+                  "lastModifiedBy": "admin@example.com",
+                  "isFavorite": false,
+                  "sharedBy": "",
+                  "workspaceId": "466206000000300000",
+                  "orgId": "700000998877"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "GetDashboardListResponseData": {
+        "type": "object",
+        "title": "GetDashboardListResponseData",
+        "description": "The dashboard list returned by Get Owned Dashboards and Get Shared Dashboards.",
+        "properties": {
+          "views": {
+            "$ref": "#/components/schemas/DashboardSummaries"
+          }
+        },
+        "examples": [
+          {
+            "views": [
+              {
+                "viewId": "466206000000105001",
+                "viewName": "Executive Sales Dashboard",
+                "viewDesc": "High-level sales KPIs for the executive team",
+                "viewType": "Dashboard",
+                "parentViewId": "",
+                "folderId": "466206000000071005",
+                "createdTime": "1719820800000",
+                "createdBy": "alice@example.com",
+                "lastModifiedTime": "1722499200000",
+                "lastModifiedBy": "alice@example.com",
+                "isFavorite": true,
+                "sharedBy": "",
+                "workspaceId": "466206000000071000",
+                "orgId": "700000123456"
+              },
+              {
+                "viewId": "466206000000305020",
+                "viewName": "HR Headcount Overview",
+                "viewDesc": "",
+                "viewType": "Dashboard",
+                "parentViewId": "",
+                "folderId": "466206000000300000",
+                "createdTime": "1716912000000",
+                "createdBy": "admin@example.com",
+                "lastModifiedTime": "1720339200000",
+                "lastModifiedBy": "admin@example.com",
+                "isFavorite": false,
+                "sharedBy": "",
+                "workspaceId": "466206000000300000",
+                "orgId": "700000998877"
+              }
+            ]
+          }
+        ]
+      },
+      "GetDashboardsResponse": {
+        "type": "object",
+        "title": "GetDashboardsResponse",
+        "description": "Response listing every dashboard accessible to the authenticated user, split into owned and shared.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Result of the request.",
+            "enum": [
+              "success",
+              "failure"
+            ],
+            "x-enumDescriptions": {
+              "success": "Request succeeded",
+              "failure": "Request failed"
+            }
+          },
+          "summary": {
+            "type": "string",
+            "description": "Human readable message describing the result.",
+            "examples": [
+              "Get all dashboards"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetDashboardsResponseData"
+          }
+        },
+        "examples": [
+          {
+            "status": "success",
+            "summary": "Get all dashboards",
+            "data": {
+              "ownedViews": [
+                {
+                  "viewId": "466206000000105001",
+                  "viewName": "Executive Sales Dashboard",
+                  "viewDesc": "High-level sales KPIs for the executive team",
+                  "viewType": "Dashboard",
+                  "parentViewId": "",
+                  "folderId": "466206000000071005",
+                  "createdTime": "1719820800000",
+                  "createdBy": "alice@example.com",
+                  "lastModifiedTime": "1722499200000",
+                  "lastModifiedBy": "alice@example.com",
+                  "isFavorite": true,
+                  "sharedBy": "",
+                  "workspaceId": "466206000000071000",
+                  "orgId": "700000123456"
+                },
+                {
+                  "viewId": "466206000000108003",
+                  "viewName": "Marketing Campaign Overview",
+                  "viewDesc": "",
+                  "viewType": "Dashboard",
+                  "parentViewId": "",
+                  "folderId": "466206000000071000",
+                  "createdTime": "1720080000000",
+                  "createdBy": "alice@example.com",
+                  "lastModifiedTime": "1720080000000",
+                  "lastModifiedBy": "alice@example.com",
+                  "isFavorite": false,
+                  "sharedBy": "",
+                  "workspaceId": "466206000000071000",
+                  "orgId": "700000123456"
+                }
+              ],
+              "sharedViews": [
+                {
+                  "viewId": "466206000000200010",
+                  "viewName": "Finance Overview",
+                  "viewDesc": "Finance team quarterly dashboard",
+                  "viewType": "Dashboard",
+                  "parentViewId": "",
+                  "folderId": "466206000000190001",
+                  "createdTime": "1718640000000",
+                  "createdBy": "bob@example.com",
+                  "lastModifiedTime": "1721001600000",
+                  "lastModifiedBy": "bob@example.com",
+                  "isFavorite": false,
+                  "sharedBy": "bob@example.com",
+                  "workspaceId": "466206000000190000",
+                  "orgId": "700000123456"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "GetDashboardsResponseData": {
+        "type": "object",
+        "title": "GetDashboardsResponseData",
+        "description": "The two dashboard lists returned by Get All Dashboards.",
+        "properties": {
+          "ownedViews": {
+            "$ref": "#/components/schemas/DashboardSummaries"
+          },
+          "sharedViews": {
+            "$ref": "#/components/schemas/DashboardSummaries"
+          }
+        },
+        "examples": [
+          {
+            "ownedViews": [
+              {
+                "viewId": "466206000000105001",
+                "viewName": "Executive Sales Dashboard",
+                "viewDesc": "High-level sales KPIs for the executive team",
+                "viewType": "Dashboard",
+                "parentViewId": "",
+                "folderId": "466206000000071005",
+                "createdTime": "1719820800000",
+                "createdBy": "alice@example.com",
+                "lastModifiedTime": "1722499200000",
+                "lastModifiedBy": "alice@example.com",
+                "isFavorite": true,
+                "sharedBy": "",
+                "workspaceId": "466206000000071000",
+                "orgId": "700000123456"
+              },
+              {
+                "viewId": "466206000000108003",
+                "viewName": "Marketing Campaign Overview",
+                "viewDesc": "",
+                "viewType": "Dashboard",
+                "parentViewId": "",
+                "folderId": "466206000000071000",
+                "createdTime": "1720080000000",
+                "createdBy": "alice@example.com",
+                "lastModifiedTime": "1720080000000",
+                "lastModifiedBy": "alice@example.com",
+                "isFavorite": false,
+                "sharedBy": "",
+                "workspaceId": "466206000000071000",
+                "orgId": "700000123456"
+              }
+            ],
+            "sharedViews": [
+              {
+                "viewId": "466206000000200010",
+                "viewName": "Finance Overview",
+                "viewDesc": "Finance team quarterly dashboard",
+                "viewType": "Dashboard",
+                "parentViewId": "",
+                "folderId": "466206000000190001",
+                "createdTime": "1718640000000",
+                "createdBy": "bob@example.com",
+                "lastModifiedTime": "1721001600000",
+                "lastModifiedBy": "bob@example.com",
+                "isFavorite": false,
+                "sharedBy": "bob@example.com",
+                "workspaceId": "466206000000190000",
+                "orgId": "700000123456"
+              }
+            ]
+          }
         ]
       }
     }

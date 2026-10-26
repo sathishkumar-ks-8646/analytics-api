@@ -61,7 +61,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -228,7 +228,7 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
 | [7413](../../../foundations/error-codes.md#error-7413) | 400 | TABLENAME is missing or null. |
 | [8058](../../../foundations/error-codes.md#error-8058) | 400 | The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist. |
-| [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
+| [8060](../../../foundations/error-codes.md#error-8060) | 400 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. |
 | [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
 | [8062](../../../foundations/error-codes.md#error-8062) | 400 | ADDROWREQUESTSTILLINPROGRESS — Another row-write request for this table is still being processed. |
 | [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |

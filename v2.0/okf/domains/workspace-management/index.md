@@ -1,6 +1,6 @@
 # Workspace Management
 
-* [Workspace Management](overview.md) - API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, and folder management.
+* [Workspace Management](overview.md) - API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, folder management, linked workspaces, and backup and restore.
 
 # Subdirectories
 
@@ -8,3 +8,5 @@
 * [Workspace Folders](workspace-folders/index.md) - APIs that manage the folders of a workspace, covering the creation, renaming, deletion, nesting and reordering of folders, the movement of views between folders, and the selection of the default folder.
 * [Workspace Preferences](workspace-preferences/index.md) - APIs that manage the workspace preferences of a user, covering the default workspace that opens on login and the favourite workspaces starred for quick access.
 * [Domain & White Label Access](domain-and-white-label/index.md) - APIs that control whether a workspace is reachable through the White Label or Client Portal domain of the organization.
+* [Linked Workspaces](linked-workspaces/index.md) - APIs for listing, linking, syncing and unlinking client workspaces against a master workspace, and for checking which workspaces can be linked.
+* [Workspace Backup & Restore](workspace-backup-and-restore/index.md) - APIs for listing and triggering workspace backups, downloading a backup, restoring a workspace from one, and tracking the status of either job.

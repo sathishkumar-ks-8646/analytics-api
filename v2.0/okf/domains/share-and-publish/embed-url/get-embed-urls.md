@@ -40,7 +40,7 @@ api:
     note: "This endpoint is documented in the markdown reference only; it is absent from the OpenAPI files."
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 

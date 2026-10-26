@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: endpoint-doc
     resource: "/domains/workspace-management/workspace-operations/get-workspace-details.md"
     title: Endpoint reference - Get Workspace Info
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -167,8 +167,7 @@ public class Test {
         public $workspace_id = "35130000001055707";
         function __construct() { $this->ac = new AnalyticsClient($this->client_id, $this->client_secret, $this->refresh_token); }
         function getWorkspaceDetails() {
-            $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);
-            $response = $workspace->getDetails();
+            $response = $this->ac->getWorkspaceDetails($this->workspace_id);
             print_r($response);
         }
     }

@@ -1875,6 +1875,1301 @@
       "x-migration": "HTML restatement of `description`. Retire it."
     },
     {
+      "target": "$.paths['/restapi/v2/linkedworkspaces'].get.responses['200'].content['application/json'].examples.okOneMaster",
+      "update": {
+        "description": "OK One master with"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/linkedworkspaces'].get.responses['200'].content['application/json'].examples.okOneMaster",
+      "update": {
+        "summary": "OK — One master with two clients in a single client organisation."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/linkedworkspaces'].get.responses['200'].content['application/json'].examples.okOrganisationWith",
+      "update": {
+        "description": "OK Organisation with no"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/linkedworkspaces'].get.responses['200'].content['application/json'].examples.okOrganisationWith",
+      "update": {
+        "summary": "OK — Organisation with no linked workspaces."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/linkedworkspaces'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin of the organisation in ZANALYTICS-ORGID, or the request arrived through a Client Portal / White Label domain.",
+            "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use the standard API host."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/linkedworkspaces'].get",
+      "update": {
+        "description": "Returns every master↔client link in the organisation named by ZANALYTICS-ORGID, grouped one entry per master workspace. This is the broadest discovery call, and the usual way to find a sandboxId."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/linkedworkspaces'].get",
+      "update": {
+        "x-zenesis-title": "Get Linked Workspaces For Organization"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].get.responses['200'].content['application/json'].examples.okTwoClient",
+      "update": {
+        "description": "OK Two client workspaces"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].get.responses['200'].content['application/json'].examples.okTwoClient",
+      "update": {
+        "summary": "OK — Two client workspaces across two client organisations."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].get.responses['200'].content['application/json'].examples.okFailurePaired",
+      "update": {
+        "description": "OK Failure paired with"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].get.responses['200'].content['application/json'].examples.okFailurePaired",
+      "update": {
+        "summary": "OK — Failure paired with Case 2: the workspace has no links."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain.",
+            "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use the standard API host."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].get",
+      "update": {
+        "description": "Returns the links of a single master workspace, in the same shape as one entry of Get Linked Workspaces For Organization - but as a single object, not an array."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].get",
+      "update": {
+        "x-zenesis-title": "Get Linked Workspaces For Master Workspace"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].post.requestBody.content['application/x-www-form-urlencoded'].examples.linkOneClient",
+      "update": {
+        "description": "Link one client workspace"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].post.requestBody.content['application/x-www-form-urlencoded'].examples.linkOneClient",
+      "update": {
+        "summary": "Link one client workspace."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].post.requestBody.content['application/x-www-form-urlencoded'].examples.linkSeveralWorkspaces",
+      "update": {
+        "description": "Link several workspaces across"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].post.requestBody.content['application/x-www-form-urlencoded'].examples.linkSeveralWorkspaces",
+      "update": {
+        "summary": "Link several workspaces across two client organisations."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].post.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - The master workspace or one of the candidate workspaces was not found.",
+            "resolution": "Verify <workspace-id> and every clients[].workspaceIds entry."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or one of the organisations named in clients[].orgId; or the request arrived through a Client Portal / White Label domain.",
+            "resolution": "Authenticate as an administrator of every organisation in the payload, from the standard API host."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - One or more workspaceIds do not belong to the orgId they were listed under.",
+            "resolution": "Group each workspace under the organisation that owns it."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use the standard API host."
+          },
+          {
+            "name": "8077",
+            "description": "EMPTY_JSON_CONFIGURATION - CONFIG carries no clients array.",
+            "resolution": "Send {\"clients\":[{\"orgId\":…,\"workspaceIds\":[…]}]}."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON.",
+            "resolution": "Send a valid, URL-encoded JSON object."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8246",
+            "description": "INVALID_MASTER_WORKSPACE_MAPPING - <workspace-id> is itself linked as a client of another master.",
+            "resolution": "Use a workspace that is not already a client."
+          },
+          {
+            "name": "8247",
+            "description": "LINK_WORKSPACES_INCOMPATIBLE_WORKSPACES - At least one candidate failed the compatibility check. Nothing was linked.",
+            "resolution": "Read data.incompatibleWorkspaces, resolve the conflicts or drop those workspaces, and resend."
+          },
+          {
+            "name": "8504",
+            "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound.",
+            "resolution": "Send CONFIG with between 1 and 100 organisation entries."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].post",
+      "update": {
+        "description": "Links one or more client workspaces to a master. The request is validated for compatibility first and, if every candidate passes, the initial design push is scheduled. Candidates already linked to this master are skipped silently."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].post",
+      "update": {
+        "x-zenesis-title": "Link Workspaces"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].delete.requestBody.content['application/x-www-form-urlencoded'].examples.unlinkEveryClient",
+      "update": {
+        "description": "Unlink every client of"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].delete.requestBody.content['application/x-www-form-urlencoded'].examples.unlinkEveryClient",
+      "update": {
+        "summary": "Unlink every client of the master."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].delete.requestBody.content['application/x-www-form-urlencoded'].examples.unlinkTwoNamed",
+      "update": {
+        "description": "Unlink two named sandboxes"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].delete.requestBody.content['application/x-www-form-urlencoded'].examples.unlinkTwoNamed",
+      "update": {
+        "summary": "Unlink two named sandboxes."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - The master workspace was not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain.",
+            "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use the standard API host."
+          },
+          {
+            "name": "8078",
+            "description": "EMPTY_JSON_ATTRIBUTE_FOUND - scope was sent with an empty value.",
+            "resolution": "Send ALL or SELECTED."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG.",
+            "resolution": "Add scope."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON.",
+            "resolution": "Send a valid, URL-encoded JSON object."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8119",
+            "description": "INVALID_VALUE_FOR_ATTRIBUTE - scope is not exactly ALL or SELECTED.",
+            "resolution": "Send upper-case ALL or SELECTED."
+          },
+          {
+            "name": "8248",
+            "description": "SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more sandboxIds are not linked to this master. The message names them.",
+            "resolution": "Use sandbox IDs from Get Linked Workspaces For Master Workspace."
+          },
+          {
+            "name": "8249",
+            "description": "INVALID_CONFIGURATION_REMOVE_LINKED_WORKSPACES - sandboxIds was supplied with scope: \"ALL\", or omitted with scope: \"SELECTED\".",
+            "resolution": "Send {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"sandboxIds\":[…]}."
+          },
+          {
+            "name": "8504",
+            "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or sandboxIds is outside its 1-100 bound.",
+            "resolution": "Send CONFIG as a URL-encoded form body on the DELETE request."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].delete",
+      "update": {
+        "description": "Removes links between a master workspace and its clients, either all of them or a named set. The client workspaces themselves survive - only the mapping, and the design relationship it carries, is removed."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces'].delete",
+      "update": {
+        "x-zenesis-title": "Unlink Workspaces"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable'].get.responses['200'].content['application/json'].examples.okCandidatesIn",
+      "update": {
+        "description": "OK Candidates in two"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable'].get.responses['200'].content['application/json'].examples.okCandidatesIn",
+      "update": {
+        "summary": "OK — Candidates in two organisations."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable'].get.responses['200'].content['application/json'].examples.okNoCandidates",
+      "update": {
+        "description": "OK No candidates available"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable'].get.responses['200'].content['application/json'].examples.okNoCandidates",
+      "update": {
+        "summary": "OK — No candidates available."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain.",
+            "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use the standard API host."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable'].get",
+      "update": {
+        "description": "Returns, grouped by organisation, the workspaces the caller may offer as link candidates for a given master. This is the only source of the workspaceIds that Link Workspaces accepts."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable'].get",
+      "update": {
+        "x-zenesis-title": "Get Linkable Workspaces"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get.parameters[2].examples.checkOneCandidate",
+      "update": {
+        "description": "Check one candidate workspace"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get.parameters[2].examples.checkOneCandidate",
+      "update": {
+        "summary": "Check one candidate workspace."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get.parameters[2].examples.checkSeveralWorkspaces",
+      "update": {
+        "description": "Check several workspaces across"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get.parameters[2].examples.checkSeveralWorkspaces",
+      "update": {
+        "summary": "Check several workspaces across two organisations."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get.responses['200'].content['application/json'].examples.okOneCompatible",
+      "update": {
+        "description": "OK One compatible workspace"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get.responses['200'].content['application/json'].examples.okOneCompatible",
+      "update": {
+        "summary": "OK — One compatible workspace and one with entity conflicts."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get.responses['200'].content['application/json'].examples.okAWorkspace",
+      "update": {
+        "description": "OK A workspace blocked"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get.responses['200'].content['application/json'].examples.okAWorkspace",
+      "update": {
+        "summary": "OK — A workspace blocked for a workspace-level reason: entities is null."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - The master workspace or one of the candidate workspaces was not found.",
+            "resolution": "Verify <workspace-id> and every clients[].workspaceIds entry."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or one of the organisations named in clients[].orgId; or the request arrived through a Client Portal / White Label domain.",
+            "resolution": "Authenticate as an administrator of every organisation in the payload, from the standard API host."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - One or more workspaceIds do not belong to the orgId they were listed under.",
+            "resolution": "Group each workspace under the organisation that actually owns it, as reported by Get Linkable Workspaces."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use the standard API host."
+          },
+          {
+            "name": "8077",
+            "description": "EMPTY_JSON_CONFIGURATION - CONFIG carries no clients array.",
+            "resolution": "Send {\"clients\":[{\"orgId\":…,\"workspaceIds\":[…]}]}."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON.",
+            "resolution": "Send a valid, URL-encoded JSON object."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8246",
+            "description": "INVALID_MASTER_WORKSPACE_MAPPING - <workspace-id> is itself linked as a client of another master.",
+            "resolution": "Use a workspace that is not already a client; a workspace cannot be both."
+          },
+          {
+            "name": "8504",
+            "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound.",
+            "resolution": "Send CONFIG with between 1 and 100 organisation entries."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get",
+      "update": {
+        "description": "Runs the full linking validation against a set of candidate client workspaces without linking anything, and returns a per-workspace verdict with the conflicting entities broken out. Link Workspaces runs exactly this check internally and refuses the whole request if any candidate fails, so calling this first is how you avoid an all-or-nothing rejection."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility'].get",
+      "update": {
+        "x-zenesis-title": "Get Workspace Linking Compatibility"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].post.requestBody.content['application/x-www-form-urlencoded'].examples.syncEveryLinked",
+      "update": {
+        "description": "Sync every linked workspace"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].post.requestBody.content['application/x-www-form-urlencoded'].examples.syncEveryLinked",
+      "update": {
+        "summary": "Sync every linked workspace."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].post.requestBody.content['application/x-www-form-urlencoded'].examples.syncTwoNamed",
+      "update": {
+        "description": "Sync two named sandboxes"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].post.requestBody.content['application/x-www-form-urlencoded'].examples.syncTwoNamed",
+      "update": {
+        "summary": "Sync two named sandboxes, one fully and one with selected views."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].post.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - The master workspace was not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7104",
+            "description": "META_OBJECT_NOT_PRESENT - A masterViewIds entry does not exist.",
+            "resolution": "Verify every view ID via Get View List against the master workspace."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or the organisation owning a workspace named in masterViewIds; or the request arrived through a Client Portal / White Label domain.",
+            "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use the standard API host."
+          },
+          {
+            "name": "8077",
+            "description": "EMPTY_JSON_CONFIGURATION - CONFIG is empty.",
+            "resolution": "Send at least {\"scope\":\"ALL\"}."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG.",
+            "resolution": "Add the top-level scope."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON.",
+            "resolution": "Send a valid, URL-encoded JSON object."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8119",
+            "description": "INVALID_VALUE_FOR_ATTRIBUTE - The top-level scope is not exactly ALL or SELECTED.",
+            "resolution": "Send upper-case ALL or SELECTED."
+          },
+          {
+            "name": "8246",
+            "description": "INVALID_MASTER_WORKSPACE_MAPPING - <workspace-id> is itself linked as a client of another master.",
+            "resolution": "Sync from the real master."
+          },
+          {
+            "name": "8248",
+            "description": "SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more clients[].sandboxId values are not linked to this master. The message names them.",
+            "resolution": "Use sandbox IDs from Get Linked Workspaces For Master Workspace."
+          },
+          {
+            "name": "8250",
+            "description": "INVALID_CONFIGURATION_SYNC_SCOPE_LINKED_WORKSPACES - clients was supplied with scope: \"ALL\", omitted with scope: \"SELECTED\", or resolved to nothing to sync.",
+            "resolution": "Send {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"clients\":[…]}."
+          },
+          {
+            "name": "8251",
+            "description": "INVALID_CONFIGURATION_SYNC_CLIENT_SCOPE_LINKED_WORKSPACES - A clients[] entry is missing sandboxId, carries a scope other than ALL / SELECTED, supplies masterViewIds with scope: \"ALL\", or omits them with scope: \"SELECTED\".",
+            "resolution": "Give each entry a sandboxId plus either {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"masterViewIds\":[…]}."
+          },
+          {
+            "name": "8504",
+            "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound.",
+            "resolution": "Send CONFIG with a valid JSON object."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].post",
+      "update": {
+        "description": "Pushes the master workspace's design to its linked clients. The request either syncs every link, or names the sandboxes to sync and - per sandbox - either everything or a specific list of master-workspace views."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].post",
+      "update": {
+        "x-zenesis-title": "Sync Linked Workspaces"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].get.parameters[2].examples.twoNamedSandboxes",
+      "update": {
+        "description": "Two named sandboxes"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].get.parameters[2].examples.twoNamedSandboxes",
+      "update": {
+        "summary": "Two named sandboxes."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].get.responses['200'].content['application/json'].examples.okOneSandbox",
+      "update": {
+        "description": "OK One sandbox with"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].get.responses['200'].content['application/json'].examples.okOneSandbox",
+      "update": {
+        "summary": "OK — One sandbox with a partially successful last sync and pending work."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].get.responses['200'].content['application/json'].examples.okALink",
+      "update": {
+        "description": "OK A link that"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].get.responses['200'].content['application/json'].examples.okALink",
+      "update": {
+        "summary": "OK — A link that has never synced."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - The master workspace was not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain.",
+            "resolution": "Authenticate as an organisation administrator and call from the standard API host."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use the standard API host."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object.",
+            "resolution": "Send a valid, URL-encoded JSON object, or omit CONFIG entirely."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8248",
+            "description": "SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more sandboxIds are not linked to this master. The message names them.",
+            "resolution": "Use sandbox IDs from Get Linked Workspaces For Master Workspace."
+          },
+          {
+            "name": "8504",
+            "description": "LESS_THAN_MIN_OCCURANCE - CONFIG was sent without sandboxIds, or with more than 100 entries.",
+            "resolution": "Omit CONFIG to fetch everything, or send 1-100 sandbox IDs."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].get",
+      "update": {
+        "description": "Returns, per linked sandbox, what the last sync did entity by entity and what is still waiting to be pushed. This is the only API that reports sync outcomes at entity granularity."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync'].get",
+      "update": {
+        "x-zenesis-title": "Get Linked Workspace Sync Details"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].get.responses['200'].content['application/json'].examples.okTwoBackups",
+      "update": {
+        "description": "OK Two backups the"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].get.responses['200'].content['application/json'].examples.okTwoBackups",
+      "update": {
+        "summary": "OK — Two backups, the newest still downloadable, no failed backup."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].get.responses['200'].content['application/json'].examples.okWorkspaceWith",
+      "update": {
+        "description": "OK Workspace with no"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].get.responses['200'].content['application/json'].examples.okWorkspaceWith",
+      "update": {
+        "summary": "OK — Workspace with no backup information."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6025",
+            "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+            "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+            "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+            "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+          },
+          {
+            "name": "8084",
+            "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+            "resolution": "Use the orgId returned by the organisation listing API."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].get",
+      "update": {
+        "description": "Returns the workspace's backup settings and the list of its retained backups. Supplies the backupId values used by every other API in this document."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].get",
+      "update": {
+        "x-zenesis-title": "Get Workspace Backups"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].post.requestBody.content['application/x-www-form-urlencoded'].examples.structureOnlyBackup",
+      "update": {
+        "description": "Structure only backup"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].post.requestBody.content['application/x-www-form-urlencoded'].examples.structureOnlyBackup",
+      "update": {
+        "summary": "Structure-only backup."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].post.responses['200'].content['application/json'].examples.okBackupQueued",
+      "update": {
+        "description": "OK Backup queued"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].post.responses['200'].content['application/json'].examples.okBackupQueued",
+      "update": {
+        "summary": "OK — Backup queued."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6025",
+            "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+            "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+            "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - CONFIG is present but is not valid JSON.",
+            "resolution": "Send a valid JSON object, or omit CONFIG."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+            "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+          },
+          {
+            "name": "8084",
+            "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+            "resolution": "Use the orgId returned by the organisation listing API."
+          },
+          {
+            "name": "8251",
+            "description": "INVALID_BACKUP_MODE - backupMode is not an allowed value.",
+            "resolution": "Use STRUCTURE or STRUCTURE_AND_DATA."
+          },
+          {
+            "name": "8253",
+            "description": "RESTORE_ALREADY_IN_PROGRESS - A restore is running for this workspace.",
+            "resolution": "Wait for the restore to finish (Get Workspace Restore Status), then retry."
+          },
+          {
+            "name": "8255",
+            "description": "CONNECTOR_SYNC_IN_PROGRESS - A connector sync is running for this workspace.",
+            "resolution": "Wait for the sync to complete, then retry."
+          },
+          {
+            "name": "8257",
+            "description": "BACKUP_ALREADY_IN_PROGRESS - A backup is already running for this workspace.",
+            "resolution": "Wait for it to complete (Get Workspace Backup Status), then retry if you still need another."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].post",
+      "update": {
+        "description": "Queues an immediate backup of the workspace. Returns at once with the new backupId; the backup itself runs in the background. Poll Get Workspace Backup Status until it finishes."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups'].post",
+      "update": {
+        "x-zenesis-title": "Backup Workspace Now"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6025",
+            "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+            "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+            "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+            "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+          },
+          {
+            "name": "8084",
+            "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+            "resolution": "Use the orgId returned by the organisation listing API."
+          },
+          {
+            "name": "8245",
+            "description": "BACKUP_NOT_FOUND - The backup does not exist, or does not belong to this workspace.",
+            "resolution": "Take the backupId from Get Workspace Backups for the same workspace."
+          },
+          {
+            "name": "8246",
+            "description": "BACKUP_NOT_READY - The backup is not SUCCESS, or has no stored file.",
+            "resolution": "Poll Get Workspace Backup Status until SUCCESS; a FAILED or DELETED backup cannot be downloaded."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download'].get",
+      "update": {
+        "description": "Downloads a completed backup as a .wsbkp file. The response is the file itself, not a JSON envelope."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download'].get",
+      "update": {
+        "x-zenesis-title": "Download Workspace Backup"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore'].post.requestBody.content['application/x-www-form-urlencoded'].examples.restoreEverythingThe",
+      "update": {
+        "description": "Restore everything the backup"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore'].post.requestBody.content['application/x-www-form-urlencoded'].examples.restoreEverythingThe",
+      "update": {
+        "summary": "Restore everything the backup holds."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore'].post.requestBody.content['application/x-www-form-urlencoded'].examples.restoreOnlyThe",
+      "update": {
+        "description": "Restore only the structure"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore'].post.requestBody.content['application/x-www-form-urlencoded'].examples.restoreOnlyThe",
+      "update": {
+        "summary": "Restore only the structure from a full backup."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore'].post.responses['200'].content['application/json'].examples.okRestoreQueued",
+      "update": {
+        "description": "OK Restore queued"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore'].post.responses['200'].content['application/json'].examples.okRestoreQueued",
+      "update": {
+        "summary": "OK — Restore queued."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6025",
+            "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+            "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+            "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+          },
+          {
+            "name": "8077",
+            "description": "EMPTY_JSON_CONFIGURATION - CONFIG is present but empty.",
+            "resolution": "Send CONFIG={\"confirmRestore\":true}."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - CONFIG is present but is not valid JSON.",
+            "resolution": "Send a valid JSON object."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+            "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+          },
+          {
+            "name": "8084",
+            "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+            "resolution": "Use the orgId returned by the organisation listing API."
+          },
+          {
+            "name": "8245",
+            "description": "BACKUP_NOT_FOUND - The backup does not exist, or does not belong to this workspace.",
+            "resolution": "Take the backupId from Get Workspace Backups for the same workspace."
+          },
+          {
+            "name": "8246",
+            "description": "BACKUP_NOT_READY - The backup is not in a state that can be restored (for example IN_PROGRESS).",
+            "resolution": "Poll Get Workspace Backup Status until SUCCESS, then retry."
+          },
+          {
+            "name": "8247",
+            "description": "BACKUP_NOT_RESTORABLE - The backup is DELETED or FAILED.",
+            "resolution": "Choose a backup with isReadyToDownload: true, or take a new one."
+          },
+          {
+            "name": "8248",
+            "description": "BACKUP_EXPIRED - The backup is older than the restore window, or its stored file has expired.",
+            "resolution": "Take a new backup; an expired one cannot be restored."
+          },
+          {
+            "name": "8249",
+            "description": "CONFIRM_RESTORE_REQUIRED - confirmRestore is not true.",
+            "resolution": "Send \"confirmRestore\": true in CONFIG."
+          },
+          {
+            "name": "8253",
+            "description": "RESTORE_ALREADY_IN_PROGRESS - A restore is running for this workspace.",
+            "resolution": "Wait for it to finish (Get Workspace Restore Status), then retry if still needed."
+          },
+          {
+            "name": "8254",
+            "description": "INVALID_RESTORE_MODE_BACKUP - STRUCTURE_AND_DATA was requested from a STRUCTURE-only backup.",
+            "resolution": "Omit restoreMode, or send STRUCTURE."
+          },
+          {
+            "name": "8257",
+            "description": "BACKUP_ALREADY_IN_PROGRESS - A backup is running for this workspace.",
+            "resolution": "Wait for it to complete (Get Workspace Backup Status), then retry."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore'].post",
+      "update": {
+        "description": "Queues a restore of the workspace from one of its own backups. Returns at once with a restoreId; the restore runs in the background. Poll Get Workspace Restore Status with the restoreId."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore'].post",
+      "update": {
+        "x-zenesis-title": "Restore Workspace from Backup"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status'].get.responses['200'].content['application/json'].examples.okBackupCompleted",
+      "update": {
+        "description": "OK Backup completed"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status'].get.responses['200'].content['application/json'].examples.okBackupCompleted",
+      "update": {
+        "summary": "OK — Backup completed."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6025",
+            "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+            "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+            "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+            "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+          },
+          {
+            "name": "8084",
+            "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+            "resolution": "Use the orgId returned by the organisation listing API."
+          },
+          {
+            "name": "8245",
+            "description": "BACKUP_NOT_FOUND - The backup does not exist, does not belong to this workspace, or is in an unrecognised state.",
+            "resolution": "Take the backupId from Get Workspace Backups for the same workspace."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status'].get",
+      "update": {
+        "description": "Returns the current status of one backup. Use it to poll a backup started with Backup Workspace Now, and to check a backup before downloading or restoring it."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status'].get",
+      "update": {
+        "x-zenesis-title": "Get Workspace Backup Status"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status'].get.responses['200'].content['application/json'].examples.okRestoreStill",
+      "update": {
+        "description": "OK Restore still running"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status'].get.responses['200'].content['application/json'].examples.okRestoreStill",
+      "update": {
+        "summary": "OK — Restore still running."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6025",
+            "description": "BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup.",
+            "resolution": "Upgrade the plan, or do not call the backup APIs for this organisation."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain.",
+            "resolution": "Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty.",
+            "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+          },
+          {
+            "name": "8084",
+            "description": "ORGID_NOT_EXIST - No organisation exists with the given ID.",
+            "resolution": "Use the orgId returned by the organisation listing API."
+          },
+          {
+            "name": "8256",
+            "description": "RESTORE_NOT_FOUND - The restore does not exist, or does not belong to this workspace.",
+            "resolution": "Use the restoreId returned by Restore Workspace from Backup for the same workspace."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status'].get",
+      "update": {
+        "description": "Returns the current status of one restore. Use it to poll a restore started with Restore Workspace from Backup."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status'].get",
+      "update": {
+        "x-zenesis-title": "Get Workspace Restore Status"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
       "target": "$.components.schemas.CreateWorkspaceConfig.examples",
       "remove": true,
       "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
@@ -1991,6 +3286,96 @@
     },
     {
       "target": "$.components.schemas.MoveViewsToFolderConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetLinkedWorkspacesForOrganizationResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetLinkedWorkspacesForMasterWorkspaceResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetLinkableWorkspacesResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.LinkedWorkspaceClients.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetWorkspaceLinkingCompatibilityConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetWorkspaceLinkingCompatibilityResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.LinkWorkspacesConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.SyncLinkedWorkspacesConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetLinkedWorkspaceSyncDetailsConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetLinkedWorkspaceSyncDetailsResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.UnlinkWorkspacesConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetWorkspaceBackupsResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.BackupWorkspaceNowConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.BackupWorkspaceNowResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.RestoreWorkspaceFromBackupConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.RestoreWorkspaceFromBackupResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetWorkspaceBackupStatusResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetWorkspaceRestoreStatusResponse.examples",
       "remove": true,
       "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
     }

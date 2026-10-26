@@ -29,7 +29,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -91,7 +91,7 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | [7397](../../../foundations/error-codes.md#error-7397) | 400 | The view is not a table. |
 | [8116](../../../foundations/error-codes.md#error-8116) | 400 | Auto analysis has already been completed for this table and analyseAgain was not set to true. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [14037](../../../foundations/error-codes.md#error-14037) | 400 | The column is disabled in its Query Table definition and cannot be used for analysis. |
+| [14037](../../../foundations/error-codes.md#error-14037) | 400 | DISABLED_COLUMNS_USED - A disabled column is used in the report. |
 
 # Related
 

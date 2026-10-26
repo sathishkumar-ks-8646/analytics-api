@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-13T08:58:58Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: endpoint-doc
     resource: "/domains/reports-and-dashboards/reports/update-report.md"
     title: Endpoint reference - Update Report
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -65,6 +65,7 @@ curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/35130000001055707/repo
 ```csharp
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using ZohoAnalytics;
 
 namespace ZohoAnalyticsTest
@@ -74,19 +75,12 @@ namespace ZohoAnalyticsTest
         long orgId = 55522777;
         long workspaceId = 35130000001055707;
 
-        public void UpdateVisual(IAnalyticsClient ac)
+        public void UpdateReport(IAnalyticsClient ac)
         {
-            long viewId = 35130000001055901;
-            string title = "Sales Trend by Region";
-            // Allowed values for reportType: "chart", "pivot", "summary"
-            string reportType = "chart";
-            // Allowed values for chartType: see the supported chart types reference
-            string chartType = "line";
-            List<Dictionary<string, object>> axisColumns = new List<Dictionary<string, object>>();
-            axisColumns.Add(new Dictionary<string, object>{{"type","xAxis"},{"columnName","Date"},{"operation","year"}});
-            axisColumns.Add(new Dictionary<string, object>{{"type","yAxis"},{"columnName","Sales"},{"operation","sum"}});
-            IViewAPI view = ac.GetViewInstance(orgId, workspaceId, viewId);
-            view.UpdateView(title, reportType, chartType, axisColumns, null, null);
+            long viewId = 35130000001055901L;
+            Dictionary<string, object> config = JsonSerializer.Deserialize<Dictionary<string, object>>("{\"title\":\"Sales Trend by Region\",\"reportType\":\"chart\",\"chartType\":\"line\",\"axisColumns\":[{\"type\":\"xAxis\",\"columnName\":\"Date\",\"operation\":\"year\"},{\"type\":\"yAxis\",\"columnName\":\"Sales\",\"operation\":\"sum\"}]}");
+            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);
+            workspace.UpdateReport(viewId, config);
             Console.WriteLine("success");
         }
 
@@ -97,7 +91,7 @@ namespace ZohoAnalyticsTest
             string refreshToken = "1000.xxxxxxx.xxxxxxx";
             IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
             Program obj = new Program();
-            obj.UpdateVisual(ac);
+            obj.UpdateReport(ac);
         }
     }
 }
@@ -121,25 +115,37 @@ var (
     workspaceId = "35130000001055707"
 )
 
-func UpdateVisual(ac ZAnalytics.Client) {
-    viewId := "35130000001055901"
-    title := "Sales Trend by Region"
-    // Allowed values for reportType: "chart", "pivot", "summary"
-    reportType := "chart"
-    // Allowed values for chartType: see the supported chart types reference
-    chartType := "line"
-    xAxis := map[string]interface{}{"type": "xAxis", "columnName": "Date", "operation": "year"}
-    yAxis := map[string]interface{}{"type": "yAxis", "columnName": "Sales", "operation": "sum"}
-    axisColumns := []map[string]interface{}{xAxis, yAxis}
-    view := ZAnalytics.GetViewInstance(&ac, orgId, workspaceId, viewId)
-    exception := view.UpdateView(title, reportType, chartType, axisColumns, nil, nil)
-    if exception != nil { fmt.Println(exception.ErrorMessage); return }
-    fmt.Println("Success")
+func UpdateReport(ac ZAnalytics.Client) {
+    viewid := "35130000001055901"
+    config := map[string]interface{}{
+        "title": "Sales Trend by Region",
+        "reportType": "chart",
+        "chartType": "line",
+        "axisColumns": []interface{}{
+            map[string]interface{}{
+                "type": "xAxis",
+                "columnName": "Date",
+                "operation": "year",
+            },
+            map[string]interface{}{
+                "type": "yAxis",
+                "columnName": "Sales",
+                "operation": "sum",
+            },
+        },
+    }
+    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)
+    exception := workspace.UpdateReport(viewid, config)
+    if exception != nil {
+        fmt.Println(exception.ErrorMessage)
+        return
+    }
+    fmt.Println("success")
 }
 
 func main() {
     ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)
-    UpdateVisual(ac)
+    UpdateReport(ac)
 }
 ```
 
@@ -160,32 +166,17 @@ public class Test {
         Test tObj = new Test();
         AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
         try {
-            tObj.updateVisual(ac);
+            tObj.updateReport(ac);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void updateVisual(AnalyticsClient ac) throws Exception {
+    public void updateReport(AnalyticsClient ac) throws Exception {
         long viewId = 35130000001055901l;
-        String title = "Sales Trend by Region";
-        // Allowed values for reportType: "chart", "pivot", "summary"
-        String reportType = "chart";
-        // Allowed values for chartType: see the supported chart types reference
-        String chartType = "line";
-        JSONObject xAxis = new JSONObject();
-        xAxis.put("type", "xAxis");
-        xAxis.put("columnName", "Date");
-        xAxis.put("operation", "year");
-        JSONObject yAxis = new JSONObject();
-        yAxis.put("type", "yAxis");
-        yAxis.put("columnName", "Sales");
-        yAxis.put("operation", "sum");
-        JSONArray axisColumns = new JSONArray();
-        axisColumns.put(xAxis);
-        axisColumns.put(yAxis);
-        ViewAPI view = ac.getViewInstance(orgId, workspaceId, viewId);
-        view.updateView(title, reportType, chartType, axisColumns, null, null);
+        JSONObject config = new JSONObject("{\"title\":\"Sales Trend by Region\",\"reportType\":\"chart\",\"chartType\":\"line\",\"axisColumns\":[{\"type\":\"xAxis\",\"columnName\":\"Date\",\"operation\":\"year\"},{\"type\":\"yAxis\",\"columnName\":\"Sales\",\"operation\":\"sum\"}]}");
+        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+        workspace.updateReport(viewId, config);
         System.out.println("success");
     }
 }
@@ -201,28 +192,38 @@ class Test {
     public $ac;
     public $org_id = "55522777";
     public $workspace_id = "35130000001055707";
+
     function __construct() {
         $this->ac = new AnalyticsClient("1000.xxxxxxx", "xxxxxxx", "1000.xxxxxxx.xxxxxxx");
     }
 
-    function updateVisual() {
+    function updateReport() {
         $view_id = "35130000001055901";
-        $title = "Sales Trend by Region";
-        // Allowed values for $report_type: "chart", "pivot", "summary"
-        $report_type = "chart";
-        // Allowed values for $chart_type: see the supported chart types reference
-        $chart_type = "line";
-        $x_axis = ["type" => "xAxis", "columnName" => "Date", "operation" => "year"];
-        $y_axis = ["type" => "yAxis", "columnName" => "Sales", "operation" => "sum"];
-        $axis_columns = [$x_axis, $y_axis];
-        $view = $this->ac->getViewInstance($this->org_id, $this->workspace_id, $view_id);
-        $view->updateView($title, $report_type, $chart_type, $axis_columns);
+        $config = array(
+            "title" => "Sales Trend by Region",
+            "reportType" => "chart",
+            "chartType" => "line",
+            "axisColumns" => array(
+                array(
+                    "type" => "xAxis",
+                    "columnName" => "Date",
+                    "operation" => "year"
+                ),
+                array(
+                    "type" => "yAxis",
+                    "columnName" => "Sales",
+                    "operation" => "sum"
+                )
+            )
+        );
+        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);
+        $workspace->updateReport($view_id, $config);
         echo "success";
     }
 }
 
 $obj = new Test();
-$obj->updateVisual();
+$obj->updateReport();
 ?>
 ```
 
@@ -238,25 +239,34 @@ class Config:
     ORGID = "55522777"
     WORKSPACEID = "35130000001055707"
 
-class sample:
+class Sample:
     ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)
 
-    def update_visual(self, ac):
+    def update_report(self, ac):
         view_id = "35130000001055901"
-        title = "Sales Trend by Region"
-        # Allowed values for report_type: "chart", "pivot", "summary"
-        report_type = "chart"
-        # Allowed values for chart_type: see the supported chart types reference
-        chart_type = "line"
-        xAxis = {"type": "xAxis", "columnName": "Date", "operation": "year"}
-        yAxis = {"type": "yAxis", "columnName": "Sales", "operation": "sum"}
-        axis_columns = [xAxis, yAxis]
-        view = ac.get_view_instance(Config.ORGID, Config.WORKSPACEID, view_id)
-        view.update_view(title, report_type, chart_type, axis_columns)
+        config = {
+            "title": "Sales Trend by Region",
+            "reportType": "chart",
+            "chartType": "line",
+            "axisColumns": [
+                {
+                    "type": "xAxis",
+                    "columnName": "Date",
+                    "operation": "year"
+                },
+                {
+                    "type": "yAxis",
+                    "columnName": "Sales",
+                    "operation": "sum"
+                }
+            ]
+        }
+        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)
+        workspace.update_report(view_id, config)
         print("success")
 
-obj = sample()
-obj.update_visual(obj.ac)
+obj = Sample()
+obj.update_report(obj.ac)
 ```
 
 ## Node.js
@@ -267,17 +277,26 @@ var ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');
 var orgId = '55522777';
 var workspaceId = '35130000001055707';
 
-var viewId = '35130000001055901';
-var title = 'Sales Trend by Region';
-// Allowed values for reportType: "chart", "pivot", "summary"
-var reportType = 'chart';
-// Allowed values for chartType: see the supported chart types reference
-var chartType = 'line';
-var xAxis = { type: 'xAxis', columnName: 'Date', operation: 'year' };
-var yAxis = { type: 'yAxis', columnName: 'Sales', operation: 'sum' };
-var axisColumns = [xAxis, yAxis];
-var view = ac.getViewInstance(orgId, workspaceId, viewId);
-view.updateView(title, reportType, chartType, axisColumns).then(() => { console.log('success'); }).catch((error) => { console.log(error); });
+var viewId = "35130000001055901";
+var config = {
+    "title": "Sales Trend by Region",
+    "reportType": "chart",
+    "chartType": "line",
+    "axisColumns": [
+        {
+            "type": "xAxis",
+            "columnName": "Date",
+            "operation": "year"
+        },
+        {
+            "type": "yAxis",
+            "columnName": "Sales",
+            "operation": "sum"
+        }
+    ]
+};
+var workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+workspace.updateReport(viewId, config).then(() => { console.log("success"); }).catch((error) => { console.log(error); });
 ```
 
 ## Ruby
@@ -299,24 +318,33 @@ class Sample
     }).build
   end
 
-  def update_visual
+  def update_report
     view_id = "35130000001055901"
-    title = "Sales Trend by Region"
-    # Allowed values for report_type: "chart", "pivot", "summary"
-    report_type = "chart"
-    # Allowed values for chart_type: see the supported chart types reference
-    chart_type = "line"
-    xAxis = { "type" => "xAxis", "columnName" => "Date", "operation" => "year" }
-    yAxis = { "type" => "yAxis", "columnName" => "Sales", "operation" => "sum" }
-    axis_columns = [xAxis, yAxis]
-    view = @ac.get_view_instance(Config::ORGID, Config::WORKSPACEID, view_id)
-    view.update_view(title, report_type, chart_type, axis_columns)
+    config = {
+      "title" => "Sales Trend by Region",
+      "reportType" => "chart",
+      "chartType" => "line",
+      "axisColumns" => [
+        {
+          "type" => "xAxis",
+          "columnName" => "Date",
+          "operation" => "year"
+        },
+        {
+          "type" => "yAxis",
+          "columnName" => "Sales",
+          "operation" => "sum"
+        }
+      ]
+    }
+    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)
+    workspace.update_report(view_id, config)
     puts "success"
   end
 end
 
 obj = Sample.new
-obj.update_visual
+obj.update_report
 ```
 
 ## Deluge (Zoho scripting)

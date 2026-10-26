@@ -1,14 +1,14 @@
 ---
 type: API Catalog
 title: Endpoint catalog
-description: "All 182 Zoho Analytics REST API v2 endpoints in one table: method, path, operation ID, group, OAuth scope, success status and organization-header requirement."
+description: "All 210 Zoho Analytics REST API v2 endpoints in one table: method, path, operation ID, group, OAuth scope, success status and organization-header requirement."
 tags:
   - zoho-analytics
   - rest-api-v2
   - catalog
   - endpoints
   - index
-endpoint_count: 182
+endpoint_count: 210
 base_url: https://analyticsapi.zoho.com
 machine_readable: "/references/endpoint-catalog.json"
 sources:
@@ -16,7 +16,7 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
@@ -26,7 +26,7 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
@@ -36,7 +36,7 @@ sources:
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
@@ -46,7 +46,7 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-13T08:58:58Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
@@ -56,7 +56,7 @@ sources:
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: openapi-spec
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
@@ -65,6 +65,9 @@ sources:
   - id: group-org-info-and-settings
     resource: "/domains/organization-management/org-info-and-settings/overview.md"
     title: Organization Info & Settings - group overview
+  - id: group-security-controls
+    resource: "/domains/organization-management/security-controls/overview.md"
+    title: Security Controls - group overview
   - id: group-org-users
     resource: "/domains/users-and-groups/org-users/overview.md"
     title: Organization Users - group overview
@@ -89,6 +92,12 @@ sources:
   - id: group-domain-and-white-label
     resource: "/domains/workspace-management/domain-and-white-label/overview.md"
     title: Domain & White Label Access - group overview
+  - id: group-linked-workspaces
+    resource: "/domains/workspace-management/linked-workspaces/overview.md"
+    title: Linked Workspaces - group overview
+  - id: group-workspace-backup-and-restore
+    resource: "/domains/workspace-management/workspace-backup-and-restore/overview.md"
+    title: Workspace Backup & Restore - group overview
   - id: group-table-and-schema
     resource: "/domains/data-modeling-and-schema/table-and-schema/overview.md"
     title: Table & Schema - group overview
@@ -164,12 +173,15 @@ sources:
   - id: group-email-schedules
     resource: "/domains/schedules-and-alerts/email-schedules/overview.md"
     title: Email Schedules - group overview
+  - id: group-data-alerts
+    resource: "/domains/schedules-and-alerts/data-alerts/overview.md"
+    title: Data Alerts - group overview
   - id: group-automl
     resource: "/domains/dsml/automl/overview.md"
     title: AutoML - group overview
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -185,6 +197,10 @@ Base URL: `https://analyticsapi.zoho.com` (or the data-center equivalent, see [D
 | [Get Resource Details](domains/organization-management/org-info-and-settings/get-resource-details.md) | GET | `/restapi/v2/resources` | `getResourceDetails` | [Organization Info & Settings](domains/organization-management/org-info-and-settings/overview.md) | `ZohoAnalytics.usermanagement.read` | 200 | required |
 | [Get Subscription Details](domains/organization-management/org-info-and-settings/get-subscription-details.md) | GET | `/restapi/v2/subscription` | `getSubscriptionDetails` | [Organization Info & Settings](domains/organization-management/org-info-and-settings/overview.md) | `ZohoAnalytics.usermanagement.read` | 200 | required |
 | [Get Meta Details From Name](domains/organization-management/org-info-and-settings/get-meta-details.md) | GET | `/restapi/v2/metadetails` | `getMetaDetails` | [Organization Info & Settings](domains/organization-management/org-info-and-settings/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Get Org Access Restrictions](domains/organization-management/security-controls/get-org-access-restrictions.md) | GET | `/restapi/v2/security-controls/access-restrictions` | `getOrgAccessRestrictions` | [Security Controls](domains/organization-management/security-controls/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Update Org Access Restrictions](domains/organization-management/security-controls/update-org-access-restrictions.md) | PUT | `/restapi/v2/security-controls/access-restrictions` | `updateOrgAccessRestrictions` | [Security Controls](domains/organization-management/security-controls/overview.md) | `ZohoAnalytics.metadata.update` | 204 | required |
+| [Get Workspace Access Restrictions](domains/organization-management/security-controls/get-workspace-access-restrictions.md) | GET | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `getWorkspaceAccessRestrictions` | [Security Controls](domains/organization-management/security-controls/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Update Workspace Access Restrictions](domains/organization-management/security-controls/update-workspace-access-restrictions.md) | PUT | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `updateWorkspaceAccessRestrictions` | [Security Controls](domains/organization-management/security-controls/overview.md) | `ZohoAnalytics.metadata.update` | 204 | required |
 | [Get Users](domains/users-and-groups/org-users/get-users.md) | GET | `/restapi/v2/users` | `getUsers` | [Organization Users](domains/users-and-groups/org-users/overview.md) | `ZohoAnalytics.usermanagement.read` | 200 | required |
 | [Add Users](domains/users-and-groups/org-users/add-users.md) | POST | `/restapi/v2/users` | `addUsers` | [Organization Users](domains/users-and-groups/org-users/overview.md) | `ZohoAnalytics.usermanagement.create` | 204 | required |
 | [Remove Users](domains/users-and-groups/org-users/remove-users.md) | DELETE | `/restapi/v2/users` | `removeUsers` | [Organization Users](domains/users-and-groups/org-users/overview.md) | `ZohoAnalytics.usermanagement.delete` | 204 | required |
@@ -235,6 +251,20 @@ Base URL: `https://analyticsapi.zoho.com` (or the data-center equivalent, see [D
 | [Remove Favourite Workspace](domains/workspace-management/workspace-preferences/remove-favorite-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/favorite` | `removeFavoriteWorkspace` | [Workspace Preferences](domains/workspace-management/workspace-preferences/overview.md) | `ZohoAnalytics.metadata.update` | 204 | required |
 | [Enable Workspace for Domain Access](domains/workspace-management/domain-and-white-label/enable-domain-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `enableDomainWorkspace` | [Domain & White Label Access](domains/workspace-management/domain-and-white-label/overview.md) | `ZohoAnalytics.metadata.update` | 204 | required |
 | [Disable Workspace for Domain Access](domains/workspace-management/domain-and-white-label/disable-domain-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `disableDomainWorkspace` | [Domain & White Label Access](domains/workspace-management/domain-and-white-label/overview.md) | `ZohoAnalytics.metadata.update` | 204 | required |
+| [Get Linked Workspaces For Organization](domains/workspace-management/linked-workspaces/get-linked-workspaces-for-organization.md) | GET | `/restapi/v2/linkedworkspaces` | `getLinkedWorkspacesForOrganization` | [Linked Workspaces](domains/workspace-management/linked-workspaces/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Get Linked Workspaces For Master Workspace](domains/workspace-management/linked-workspaces/get-linked-workspaces-for-master-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `getLinkedWorkspacesForMasterWorkspace` | [Linked Workspaces](domains/workspace-management/linked-workspaces/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Get Linkable Workspaces](domains/workspace-management/linked-workspaces/get-linkable-workspaces.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable` | `getLinkableWorkspaces` | [Linked Workspaces](domains/workspace-management/linked-workspaces/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Get Workspace Linking Compatibility](domains/workspace-management/linked-workspaces/get-workspace-linking-compatibility.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility` | `getWorkspaceLinkingCompatibility` | [Linked Workspaces](domains/workspace-management/linked-workspaces/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Link Workspaces](domains/workspace-management/linked-workspaces/link-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `linkWorkspaces` | [Linked Workspaces](domains/workspace-management/linked-workspaces/overview.md) | `ZohoAnalytics.modeling.create` | 204 | required |
+| [Sync Linked Workspaces](domains/workspace-management/linked-workspaces/sync-linked-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `syncLinkedWorkspaces` | [Linked Workspaces](domains/workspace-management/linked-workspaces/overview.md) | `ZohoAnalytics.modeling.create` | 204 | required |
+| [Get Linked Workspace Sync Details](domains/workspace-management/linked-workspaces/get-linked-workspace-sync-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `getLinkedWorkspaceSyncDetails` | [Linked Workspaces](domains/workspace-management/linked-workspaces/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Unlink Workspaces](domains/workspace-management/linked-workspaces/unlink-workspaces.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `unlinkWorkspaces` | [Linked Workspaces](domains/workspace-management/linked-workspaces/overview.md) | `ZohoAnalytics.modeling.delete` | 204 | required |
+| [Get Workspace Backups](domains/workspace-management/workspace-backup-and-restore/get-workspace-backups.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups` | `getWorkspaceBackups` | [Workspace Backup & Restore](domains/workspace-management/workspace-backup-and-restore/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Backup Workspace Now](domains/workspace-management/workspace-backup-and-restore/backup-workspace-now.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups` | `backupWorkspaceNow` | [Workspace Backup & Restore](domains/workspace-management/workspace-backup-and-restore/overview.md) | `ZohoAnalytics.metadata.create` | 200 | required |
+| [Download Workspace Backup](domains/workspace-management/workspace-backup-and-restore/download-workspace-backup.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download` | `downloadWorkspaceBackup` | [Workspace Backup & Restore](domains/workspace-management/workspace-backup-and-restore/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Restore Workspace from Backup](domains/workspace-management/workspace-backup-and-restore/restore-workspace-from-backup.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore` | `restoreWorkspaceFromBackup` | [Workspace Backup & Restore](domains/workspace-management/workspace-backup-and-restore/overview.md) | `ZohoAnalytics.metadata.create` | 200 | required |
+| [Get Workspace Backup Status](domains/workspace-management/workspace-backup-and-restore/get-workspace-backup-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status` | `getWorkspaceBackupStatus` | [Workspace Backup & Restore](domains/workspace-management/workspace-backup-and-restore/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Get Workspace Restore Status](domains/workspace-management/workspace-backup-and-restore/get-workspace-restore-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status` | `getWorkspaceRestoreStatus` | [Workspace Backup & Restore](domains/workspace-management/workspace-backup-and-restore/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
 | [Create Table](domains/data-modeling-and-schema/table-and-schema/create-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tables` | `createTable` | [Table & Schema](domains/data-modeling-and-schema/table-and-schema/overview.md) | `ZohoAnalytics.modeling.create` | 200 | required |
 | [Get Table Metadata](domains/data-modeling-and-schema/table-and-schema/get-table-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/metadata` | `getTableMetadata` | [Table & Schema](domains/data-modeling-and-schema/table-and-schema/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
 | [Add Column](domains/data-modeling-and-schema/columns/add-column.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns` | `addColumn` | [Columns](domains/data-modeling-and-schema/columns/overview.md) | `ZohoAnalytics.modeling.create` | 200 | required |
@@ -352,6 +382,16 @@ Base URL: `https://analyticsapi.zoho.com` (or the data-center equivalent, see [D
 | [Delete Email Schedule](domains/schedules-and-alerts/email-schedules/delete-email-schedule.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `deleteEmailSchedule` | [Email Schedules](domains/schedules-and-alerts/email-schedules/overview.md) | `ZohoAnalytics.modeling.delete` | 204 | required |
 | [Change Email Schedule Status](domains/schedules-and-alerts/email-schedules/change-email-schedule-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status` | `changeEmailScheduleStatus` | [Email Schedules](domains/schedules-and-alerts/email-schedules/overview.md) | `ZohoAnalytics.modeling.update` | 204 | required |
 | [Trigger Email Schedule](domains/schedules-and-alerts/email-schedules/trigger-email-schedule.md) | POST | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `triggerEmailSchedule` | [Email Schedules](domains/schedules-and-alerts/email-schedules/overview.md) | `ZohoAnalytics.modeling.create` | 204 | required |
+| [Get Alerts In Workspace](domains/schedules-and-alerts/data-alerts/get-alerts-in-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts` | `getAlertsInWorkspace` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Get Alerts In View](domains/schedules-and-alerts/data-alerts/get-alerts-in-view.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` | `getAlertsInView` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Get View Metadata For Alert](domains/schedules-and-alerts/data-alerts/get-view-metadata-for-alert.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata` | `getViewMetadataForAlert` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Get Alert Configuration](domains/schedules-and-alerts/data-alerts/get-alert-configuration.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` | `getAlertConfiguration` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
+| [Create Alert](domains/schedules-and-alerts/data-alerts/create-alert.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` | `createAlert` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.modeling.create` | 200 | required |
+| [Update Alert](domains/schedules-and-alerts/data-alerts/update-alert.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` | `updateAlert` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.modeling.update` | 204 | required |
+| [Delete Alerts](domains/schedules-and-alerts/data-alerts/delete-alerts.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/alerts` | `deleteAlerts` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.modeling.delete` | 204 | required |
+| [Change Alert Status](domains/schedules-and-alerts/data-alerts/change-alert-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/alerts/status` | `changeAlertStatus` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.modeling.update` | 204 | required |
+| [Run Alert](domains/schedules-and-alerts/data-alerts/run-alert.md) | POST | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute` | `runAlert` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.modeling.create` | 204 | required |
+| [Get Alert Events](domains/schedules-and-alerts/data-alerts/get-alert-events.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events` | `getAlertEvents` | [Data Alerts](domains/schedules-and-alerts/data-alerts/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
 | [Get AutoML Analysis In Org](domains/dsml/automl/get-auto-ml-analysis-in-org.md) | GET | `/restapi/v2/automl/analysis` | `getAutoMLAnalysisInOrg` | [AutoML](domains/dsml/automl/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
 | [Get AutoML Analysis In Workspace](domains/dsml/automl/get-auto-ml-analysis-in-workspace.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis` | `getAutoMLAnalysisInWorkspace` | [AutoML](domains/dsml/automl/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |
 | [Get AutoML Analysis Details](domains/dsml/automl/get-auto-ml-analysis-details.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}` | `getAutoMLAnalysisDetails` | [AutoML](domains/dsml/automl/overview.md) | `ZohoAnalytics.metadata.read` | 200 | required |

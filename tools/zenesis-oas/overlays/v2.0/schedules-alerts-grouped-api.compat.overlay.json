@@ -618,6 +618,1065 @@
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
     },
     {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].get.responses['200'].content['application/json'].examples.okOneAlert",
+      "update": {
+        "description": "OK One alert that"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].get.responses['200'].content['application/json'].examples.okOneAlert",
+      "update": {
+        "summary": "OK — One alert that has run, one that never has."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].get.responses['200'].content['application/json'].examples.okWorkspaceWith",
+      "update": {
+        "description": "OK Workspace with no"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].get.responses['200'].content['application/json'].examples.okWorkspaceWith",
+      "update": {
+        "summary": "OK — Workspace with no alerts."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is neither a Workspace Admin nor a custom-role user with Manage Data Alerts, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as an admin or a user with Manage Data Alerts, and call from the standard API host unless the workspace is bound to your custom domain."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].get",
+      "update": {
+        "description": "Returns every alert defined anywhere in the workspace, with its name, the view it watches, its enabled state, audit stamps, and the outcome of its last run. This is the broadest discovery call for <alert-id>."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].get",
+      "update": {
+        "x-zenesis-title": "Get Alerts In Workspace"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].delete.requestBody.content['application/x-www-form-urlencoded'].examples.deleteTwoAlerts",
+      "update": {
+        "description": "Delete two alerts"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].delete.requestBody.content['application/x-www-form-urlencoded'].examples.deleteTwoAlerts",
+      "update": {
+        "summary": "Delete two alerts."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].delete.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller may not act on at least one of the listed alerts, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as the DB Owner, or list only alerts you own, from the standard API host."
+          },
+          {
+            "name": "7319",
+            "description": "OBJID_NOT_BELONGS_TO_DB - At least one alert's view does not belong to the workspace in the URL.",
+            "resolution": "Delete alerts from the workspace that owns them."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8078",
+            "description": "EMPTY_JSON_ATTRIBUTE_FOUND - alertIds was sent with an empty value.",
+            "resolution": "Send an array of id strings, or omit the call."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - alertIds is missing from CONFIG.",
+            "resolution": "Add alertIds."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - An alertIds entry is not a JSON string.",
+            "resolution": "Quote every id: [\"137687000010815003\"]."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8504",
+            "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent.",
+            "resolution": "Send CONFIG as a URL-encoded form body on the DELETE request."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.delete."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].delete",
+      "update": {
+        "description": "Deletes one or more alerts in a workspace. Every id is validated before anything is removed, so the call is all-or-nothing."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts'].delete",
+      "update": {
+        "x-zenesis-title": "Delete Alerts"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].get.responses['200'].content['application/json'].examples.okOneAlert",
+      "update": {
+        "description": "OK One alert on"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].get.responses['200'].content['application/json'].examples.okOneAlert",
+      "update": {
+        "summary": "OK — One alert on the requested view."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].get.responses['200'].content['application/json'].examples.okViewWith",
+      "update": {
+        "description": "OK View with no"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].get.responses['200'].content['application/json'].examples.okViewWith",
+      "update": {
+        "summary": "OK — View with no alerts."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7104",
+            "description": "META_OBJECT_NOT_PRESENT - View not found.",
+            "resolution": "Verify <view-id> via Get View List."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host."
+          },
+          {
+            "name": "7319",
+            "description": "OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL.",
+            "resolution": "Make <workspace-id> and <view-id> consistent."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].get",
+      "update": {
+        "description": "Returns the alerts configured on one report. The response entries are identical in shape to Get Alerts In Workspace, narrowed to a single <view-id>."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].get",
+      "update": {
+        "x-zenesis-title": "Get Alerts In View"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.minimalValidAlert",
+      "update": {
+        "description": "Minimal valid alert one"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.minimalValidAlert",
+      "update": {
+        "summary": "Minimal valid alert: one rule, one channel, daily schedule."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.threeRulesCombined",
+      "update": {
+        "description": "Three rules combined by"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.threeRulesCombined",
+      "update": {
+        "summary": "Three rules combined by a custom conditionExpression, with an inline report attachment."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.thresholdRuleAnd",
+      "update": {
+        "description": "Threshold rule and column"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.thresholdRuleAnd",
+      "update": {
+        "summary": "Threshold rule and column-vs-column rule, hourly schedule, in-app notification."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.anomalyAlertNo",
+      "update": {
+        "description": "Anomaly alert no viewColumnIndex"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.anomalyAlertNo",
+      "update": {
+        "summary": "Anomaly alert: no viewColumnIndex, every rule carries anomaly."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.pivotReportSub",
+      "update": {
+        "description": "Pivot report sub total"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.pivotReportSub",
+      "update": {
+        "summary": "Pivot report, sub-total slice: summaryType and rowAxis are both required."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.multiSelectDimensional",
+      "update": {
+        "description": "Multi select dimensional rule"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.multiSelectDimensional",
+      "update": {
+        "summary": "Multi-select dimensional rule, a date rule, and a no-value rule across three channels."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.yearlyByWeekday",
+      "update": {
+        "description": "Yearly by weekday schedule"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.requestBody.content['application/x-www-form-urlencoded'].examples.yearlyByWeekday",
+      "update": {
+        "summary": "Yearly \"by weekday\" schedule, every 2 years, delivered to a webhook."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.responses['200'].content['application/json'].examples.okAlertCreated",
+      "update": {
+        "description": "OK Alert created"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.responses['200'].content['application/json'].examples.okAlertCreated",
+      "update": {
+        "summary": "OK — Alert created."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7104",
+            "description": "META_OBJECT_NOT_PRESENT - View not found.",
+            "resolution": "Verify <view-id> via Get View List."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host."
+          },
+          {
+            "name": "7319",
+            "description": "OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL.",
+            "resolution": "Make <workspace-id> and <view-id> consistent."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8078",
+            "description": "EMPTY_JSON_ATTRIBUTE_FOUND - A mandatory CONFIG attribute was sent with an empty value.",
+            "resolution": "Give the named attribute a non-empty value."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - A mandatory attribute is missing: alertName, scheduleDetails, rules, summaryType on a Pivot view, conditionExpression with more than one rule, or attachmentType when includeReport is true.",
+            "resolution": "Add the named attribute."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - An attribute that must be a JSON string was sent as another type, typically viewColumnIndex, rowAxis, columnAxis or a values entry sent as a bare number.",
+            "resolution": "Quote numeric identifiers and rule values: \"viewColumnIndex\": \"2\", \"values\": [\"1000\"]."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8119",
+            "description": "INVALID_VALUE_FOR_ATTRIBUTE - A value is outside its permitted set: an operator or type not in the column's allowedOperators / allowedRuleTypes, an unknown summaryType or messageType, an attachmentType other than inline / attachment, or a scheduleDetails number out of range (hour, minute, interval, weekDays, monthDays, months, weekOfMonth, dayOfWeek).",
+            "resolution": "Take operators and rule types from Get View Metadata For Alert and keep schedule numbers within the ranges in scheduleDetails Fields."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION - The view carries a restricted Data Warning system tag and the alert attaches the report to an e-mail. HTTP 409.",
+            "resolution": "Resolve the data warning, or resend with \"validateSystemTags\": false."
+          },
+          {
+            "name": "8245",
+            "description": "INVALID_VIEW_TYPE_FOR_OPERATION - The view is not a Chart, Pivot Table or Summary View.",
+            "resolution": "Create the alert on a supported report type."
+          },
+          {
+            "name": "8504",
+            "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or a templated attribute is below its minimum occurrence.",
+            "resolution": "Send CONFIG as a URL-encoded form parameter containing a valid JSON object."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post",
+      "update": {
+        "description": "Creates an alert on the specified report and returns its id. The view must be a Chart (AnalysisView), Pivot or SummaryView; the alert is created live, with its schedule registered immediately."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts'].post",
+      "update": {
+        "x-zenesis-title": "Create Alert"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata'].get.responses['200'].content['application/json'].examples.okChartWith",
+      "update": {
+        "description": "OK Chart with a"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata'].get.responses['200'].content['application/json'].examples.okChartWith",
+      "update": {
+        "summary": "OK — Chart with a dimension column, a measure column carrying two thresholds, and one anomaly."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata'].get.responses['200'].content['application/json'].examples.okChartWith2",
+      "update": {
+        "description": "OK Chart with no"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata'].get.responses['200'].content['application/json'].examples.okChartWith2",
+      "update": {
+        "summary": "OK — Chart with no thresholds and no anomalies."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7104",
+            "description": "META_OBJECT_NOT_PRESENT - View not found.",
+            "resolution": "Verify <view-id> via Get View List."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host."
+          },
+          {
+            "name": "7319",
+            "description": "OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL.",
+            "resolution": "Make <workspace-id> and <view-id> consistent."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8245",
+            "description": "INVALID_VIEW_TYPE_FOR_OPERATION - The view is not a Chart, Pivot Table or Summary View.",
+            "resolution": "Alerts are supported only on those three report types; pick a different view."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata'].get",
+      "update": {
+        "description": "Returns everything needed to construct a rule for a report: its alertable columns with their viewColumnIndex, the operator and rule-type catalogues each column permits, the chart thresholds on each column, and the view-level anomaly definitions. This is the only source of viewColumnIndex - call it before every Create Alert or Update Alert."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata'].get",
+      "update": {
+        "x-zenesis-title": "Get View Metadata For Alert"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].get.responses['200'].content['application/json'].examples.okDailyE",
+      "update": {
+        "description": "OK Daily e mail"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].get.responses['200'].content['application/json'].examples.okDailyE",
+      "update": {
+        "summary": "OK — Daily e-mail alert with one constant rule and two mapped workflows."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].get.responses['200'].content['application/json'].examples.okAnomalyAlert",
+      "update": {
+        "description": "OK Anomaly alert note"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].get.responses['200'].content['application/json'].examples.okAnomalyAlert",
+      "update": {
+        "summary": "OK — Anomaly alert: note that viewColumnIndex is absent from the rule."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host."
+          },
+          {
+            "name": "7319",
+            "description": "OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL.",
+            "resolution": "Make <workspace-id> and <alert-id> consistent."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].get",
+      "update": {
+        "description": "Returns one alert's complete configuration in exactly the CONFIG shape that Create Alert and Update Alert accept, so the response can be edited and posted straight back. This is the intended starting point for any edit."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].get",
+      "update": {
+        "x-zenesis-title": "Get Alert Configuration"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].put.requestBody.content['application/x-www-form-urlencoded'].examples.minimalUpdateNew",
+      "update": {
+        "description": "Minimal update new name"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].put.requestBody.content['application/x-www-form-urlencoded'].examples.minimalUpdateNew",
+      "update": {
+        "summary": "Minimal update: new name, new schedule, same single rule."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].put.requestBody.content['application/x-www-form-urlencoded'].examples.reAssertingA",
+      "update": {
+        "description": "Re asserting a mapped"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].put.requestBody.content['application/x-www-form-urlencoded'].examples.reAssertingA",
+      "update": {
+        "summary": "Re-asserting a mapped workflow and a mapped Flow action."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].put.requestBody.content['application/x-www-form-urlencoded'].examples.monthlyScheduleMoved",
+      "update": {
+        "description": "Monthly schedule moved to"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].put.requestBody.content['application/x-www-form-urlencoded'].examples.monthlyScheduleMoved",
+      "update": {
+        "summary": "Monthly schedule moved to \"the last Friday of every third month\"."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].put.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host."
+          },
+          {
+            "name": "7319",
+            "description": "OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL.",
+            "resolution": "Make <workspace-id> and <alert-id> consistent."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8245",
+            "description": "INVALID_VIEW_TYPE_FOR_OPERATION - The alert's view is no longer a Chart, Pivot Table or Summary View.",
+            "resolution": "The report has been converted to an unsupported type; recreate the alert elsewhere."
+          },
+          {
+            "name": "8504",
+            "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent.",
+            "resolution": "Send CONFIG as a URL-encoded form parameter containing a valid JSON object."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.update."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].put",
+      "update": {
+        "description": "Replaces an existing alert's configuration. The CONFIG body is the same shape as Create Alert and is treated as a full replacement - not a patch. It is also the only API that accepts the Zoho Flow mapping attributes."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}'].put",
+      "update": {
+        "x-zenesis-title": "Update Alert"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/status'].put.requestBody.content['application/x-www-form-urlencoded'].examples.pauseTwoAlerts",
+      "update": {
+        "description": "Pause two alerts"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/status'].put.requestBody.content['application/x-www-form-urlencoded'].examples.pauseTwoAlerts",
+      "update": {
+        "summary": "Pause two alerts."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/status'].put.requestBody.content['application/x-www-form-urlencoded'].examples.resumeASingle",
+      "update": {
+        "description": "Resume a single alert"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/status'].put.requestBody.content['application/x-www-form-urlencoded'].examples.resumeASingle",
+      "update": {
+        "summary": "Resume a single alert."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/status'].put.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller may not act on at least one of the listed alerts, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as the DB Owner, or list only alerts you own, from the standard API host."
+          },
+          {
+            "name": "7319",
+            "description": "OBJID_NOT_BELONGS_TO_DB - At least one alert's view does not belong to the workspace in the URL.",
+            "resolution": "Change status from the workspace that owns the alerts."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8078",
+            "description": "EMPTY_JSON_ATTRIBUTE_FOUND - alertIds or enabled was sent with an empty value.",
+            "resolution": "Provide a non-empty value for both attributes."
+          },
+          {
+            "name": "8079",
+            "description": "ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - alertIds or enabled is missing from CONFIG.",
+            "resolution": "Add the missing attribute."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - enabled is not a boolean, or an alertIds entry is not a JSON string.",
+            "resolution": "Send \"enabled\": true / false and quote every id."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8504",
+            "description": "LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent.",
+            "resolution": "Send CONFIG as a URL-encoded form parameter containing a valid JSON object."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.update."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/status'].put",
+      "update": {
+        "description": "Enables (resumes) or pauses one or more alerts without altering their configuration. One request sets one state for every id it lists."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/status'].put",
+      "update": {
+        "x-zenesis-title": "Change Alert Status"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute'].post.requestBody.content['application/x-www-form-urlencoded'].examples.runAReport",
+      "update": {
+        "description": "Run a report attaching"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute'].post.requestBody.content['application/x-www-form-urlencoded'].examples.runAReport",
+      "update": {
+        "summary": "Run a report-attaching alert past a Data Warning tag."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute'].post.responses['204']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "6079",
+            "description": "ALERT_NOTSUPPORTED - The organisation's plan allows no alert schedules.",
+            "resolution": "Upgrade the plan, or add alert-schedule add-ons."
+          },
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host."
+          },
+          {
+            "name": "7319",
+            "description": "OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL.",
+            "resolution": "Make <workspace-id> and <alert-id> consistent."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object.",
+            "resolution": "Send a valid, URL-encoded JSON object, or omit CONFIG entirely."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8241",
+            "description": "SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION - The alert attaches a report from a view carrying a restricted Data Warning tag. HTTP 409.",
+            "resolution": "Resolve the data warning, or resend with \"validateSystemTags\": false."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute'].post",
+      "update": {
+        "description": "Queues an off-schedule evaluation of one alert. The alert is evaluated against live data and, if its condition is met, every configured channel delivers for real. There is no dry-run mode."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute'].post",
+      "update": {
+        "x-zenesis-title": "Run Alert"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events'].get.parameters[3].examples.aDateRange",
+      "update": {
+        "description": "A date range an"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events'].get.parameters[3].examples.aDateRange",
+      "update": {
+        "summary": "A date range, an outcome filter and a smaller page."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events'].get.responses['200'].content['application/json'].examples.okMixedOutcomes",
+      "update": {
+        "description": "OK Mixed outcomes more"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events'].get.responses['200'].content['application/json'].examples.okMixedOutcomes",
+      "update": {
+        "summary": "OK — Mixed outcomes, more pages available."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events'].get.responses['200'].content['application/json'].examples.okNoEvents",
+      "update": {
+        "description": "OK No events matched"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events'].get.responses['200'].content['application/json'].examples.okNoEvents",
+      "update": {
+        "summary": "OK — No events matched the filters."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7103",
+            "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+            "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+          },
+          {
+            "name": "7301",
+            "description": "SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to.",
+            "resolution": "Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host."
+          },
+          {
+            "name": "7319",
+            "description": "OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL.",
+            "resolution": "Make <workspace-id> and <alert-id> consistent."
+          },
+          {
+            "name": "7387",
+            "description": "DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID.",
+            "resolution": "Send the organisation id that owns the workspace."
+          },
+          {
+            "name": "8060",
+            "description": "DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned.",
+            "resolution": "Use a domain you have purchased from Zoho Analytics, or the standard API host."
+          },
+          {
+            "name": "8080",
+            "description": "INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object.",
+            "resolution": "Send a valid, URL-encoded JSON object, or omit CONFIG entirely."
+          },
+          {
+            "name": "8083",
+            "description": "ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing.",
+            "resolution": "Add the ZANALYTICS-ORGID request header."
+          },
+          {
+            "name": "8119",
+            "description": "INVALID_VALUE_FOR_ATTRIBUTE - fromDate is later than toDate, or a status entry is not one of triggered, notTriggered, error, or pageNo / recordsPerPage is outside its declared range.",
+            "resolution": "Correct the range, the filter values, or the paging numbers."
+          },
+          {
+            "name": "8535",
+            "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events'].get",
+      "update": {
+        "description": "Returns the audit trail of one alert's evaluations - when each ran, and whether it triggered, did not trigger, or failed. This is the only machine-readable source of an alert's outcome, and the only paginated API in this family."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events'].get",
+      "update": {
+        "x-zenesis-title": "Get Alert Events"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
       "target": "$.components.schemas.ChangeEmailScheduleStatusConfig.properties.operation",
       "update": {
         "x-zenesis-enums-desc": [
@@ -699,6 +1758,74 @@
           "October",
           "November",
           "December"
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
+    },
+    {
+      "target": "$.components.schemas.AlertScheduleDetails.properties.calendarFrequency",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "Every N hours, around the clock.",
+          "Every N days at a fixed time.",
+          "Every N weeks on the selected weekDays.",
+          "Every N months, on a date or an Nth weekday.",
+          "Every N years, in the selected months."
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
+    },
+    {
+      "target": "$.components.schemas.AlertEmail.properties.attachmentType",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "The report is rendered inside the e-mail body.",
+          "The report is sent as a file attachment."
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
+    },
+    {
+      "target": "$.components.schemas.AlertWebhook.properties.method",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "Invoke the webhook with an HTTP GET.",
+          "Invoke the webhook with an HTTP POST. The default.",
+          "Invoke the webhook with an HTTP PUT.",
+          "Invoke the webhook with an HTTP PATCH.",
+          "Invoke the webhook with an HTTP DELETE."
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
+    },
+    {
+      "target": "$.components.schemas.AlertAnomaly.properties.comboType",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "Consider only the N most significant anomalies.",
+          "Consider every detected anomaly."
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
+    },
+    {
+      "target": "$.components.schemas.AlertRules.properties.type",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "Compare the column against a literal value.",
+          "Compare the column against another NUMBER column of the same view.",
+          "Compare the column against a chart threshold (T1, T2, …)."
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
+    },
+    {
+      "target": "$.components.schemas.CreateAlertConfig.properties.summaryType",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "Evaluate the rules against the report's data rows.",
+          "Evaluate against sub-total rows.",
+          "Evaluate against the single grand-total row."
         ]
       },
       "x-migration": "Positional array. Read x-enumDescriptions instead."
@@ -790,6 +1917,111 @@
     },
     {
       "target": "$.components.schemas.UpdateEmailScheduleResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetAlertsInWorkspaceResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetAlertsInViewResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetViewMetadataForAlertResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetAlertConfigurationResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.AlertScheduleDetails.properties.calendarFrequency['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.AlertScheduleDetails.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.AlertEmail.properties.attachmentType['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.AlertEmail.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.AlertWebhook.properties.method['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.AlertAnomaly.properties.comboType['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.AlertRules.properties.type['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.AlertRules.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.CreateAlertConfig.properties.summaryType['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.CreateAlertConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.CreateAlertResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.UpdateAlertConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.DeleteAlertsConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.ChangeAlertStatusConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.RunAlertConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetAlertEventsConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetAlertEventsResponse.examples",
       "remove": true,
       "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
     }

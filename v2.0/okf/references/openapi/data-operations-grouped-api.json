@@ -3476,7 +3476,7 @@
               {
                 "name": "8120",
                 "description": "EXPORTJOBNOTFOUND — No export job exists for the given ID (HTTP 404).",
-                "resolution": "Verify the jobId returned by the create call, and that the job has not passed its 72-hour retention."
+                "resolution": "Verify the jobId returned by the create call, and that the job has not passed its one-hour post-completion retention."
               },
               {
                 "name": "8124",
@@ -3543,7 +3543,7 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "8120",
-                "description": "EXPORTJOBNOTFOUND — No export job exists for the given ID, or it has passed its 72-hour retention (HTTP 404).",
+                "description": "EXPORTJOBNOTFOUND — No export job exists for the given ID, or it has passed its one-hour post-completion retention (HTTP 404).",
                 "resolution": "Verify the jobId; if it has expired, create a new job."
               },
               {
@@ -4887,7 +4887,7 @@
               },
               "expiryTime": {
                 "type": "string",
-                "description": "Epoch time in milliseconds at which the export job and its file are removed. Set to 72 hours after the job was created - not after it completed. Returned only after the job has completed.",
+                "description": "Epoch time in milliseconds at which the export job and its file are removed. Set to one hour after the job completed - not after it was created. Returned only after the job has completed.",
                 "examples": [
                   "1623765872891"
                 ]

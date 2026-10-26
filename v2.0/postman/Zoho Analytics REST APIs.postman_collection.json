@@ -2,7 +2,7 @@
  "info": {
   "_postman_id": "996b8ab6-b50c-436d-896f-b936936e48cd",
   "name": "Zoho Analytics REST APIs",
-  "description": "# Zoho Analytics REST API v2\n\n**185 API requests** · **10 domains** · **35 sections** · OpenAPI 3.1 accurate\n\nThe official Postman collection for the [Zoho Analytics](https://www.zoho.com/analytics/)  \nREST API v2 — every public endpoint, grouped exactly the way the API reference is grouped, with  \na ready-to-send `CONFIG` example on each request.\n\nGenerated from the two sources of truth:  \n[<b>analytics-oas</b>](https://github.com/zoho/analytics-oas) (OpenAPI 3.1 specifications) and the  \n[<b>analytics-okf</b>](https://github.com/zoho/analytics-okf) knowledge bundle (endpoint catalog, permissions and workflow playbooks).\n\n---\n\n## 🚀 Quick start\n\n| Step | Action |\n| --- | --- |\n| 1 | **Fork** this collection and import the **`Zoho Analytics REST Variables`** environment shipped with it. |\n| 2 | Fill `client-id`, `client-secret`, `accounts-domain`, `analytics-domain` for your data centre. |\n| 3 | Run **🔐 Authentication › Generate Tokens** — the token variables populate themselves. |\n| 4 | Run **🏢 Organization Management › Get Org List** and copy `orgId` into `organization-id`. |\n| 5 | Run **🏢 Organization Management › Get Meta Details From Name** to turn a workspace or view _name_ into the `workspace-id` / `view-id` every other request needs. |\n\n> Steps 4–5 are the **Bootstrap** playbook. Nothing else works until `organization-id` is set. \n  \n\n---\n\n## 🧭 What's inside\n\n| Domain | APIs | Sections |\n| --- | --- | --- |\n| **Organization Management** | 4 | 1 |\n| **Users & Groups** | 26 | 4 |\n| **Workspace Management** | 24 | 4 |\n| **Data Modeling & Schema** | 33 | 7 |\n| **Data Operations** | 20 | 6 |\n| **Views Management** | 27 | 5 |\n| **Reports & Dashboards** | 9 | 2 |\n| **Share & Publish** | 22 | 4 |\n| **Schedules & Alerts** | 6 | 1 |\n| **Data Science & Machine Learning** | 11 | 1 |\n\nEvery folder carries its own documentation: the sub-sections it contains, a table of its APIs  \nwith method, path and OAuth scope, and the multi-call **workflows** those APIs take part in.\n\n---\n\n## 🧩 Five conventions that apply everywhere\n\n|  |  |\n| --- | --- |\n| **Base URL** | `https://{{analytics-domain}}/restapi/v2/…` — always HTTPS, always region-specific. |\n| **Authorization** | `Bearer {{access-token}}`, set once at collection level. Zoho's own docs write the same header as `Zoho-oauthtoken` followed by the token; both schemes are accepted. |\n| **`ZANALYTICS-ORGID`** | Required by almost every endpoint — each request says so. Missing it returns error `8083`. |\n| **`CONFIG`** | One JSON object carries every optional argument. `GET` → URL-encoded **query** parameter (a collection pre-request script encodes it for you). `POST`/`PUT`/`DELETE` → **form field**. Imports → **multipart** field. |\n| **Response envelope** | `{ \"status\": \"success\", \"summary\": \"…\", \"data\": { … } }`. Write operations often answer **`204 No Content`** with no body — that is success. Failures return `{ \"status\": \"failure\", \"summary\": …, \"data\": { \"errorCode\": …, \"errorMessage\": … } }`. |\n\n---\n\n## 🧪 Workflows\n\nMost real integrations are a _sequence_ of calls. These playbooks are documented on the folders  \nthat own them:\n\n| Playbook | Call sequence |\n| --- | --- |\n| **Bootstrap: from access token to workspace and view IDs** | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Embed a view for many tenants with per-tenant row filters** | Mint a URL per tenant → Re-mint before expiry → Audit → Revoke |\n| **Export a view, dashboard or SQL result asynchronously** | Create the job → Wait for completion → Download |\n| **Load data into a table (small, large and very large files)** | Build CONFIG → Send the request → Read the result → Verify |\n| **Add users to an organization and a workspace, and set their roles** | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Schedule a recurring email delivery of a report or dashboard** | Create → Test → List and inspect → Pause or resume → Update → Delete |\n| **Share views with users or groups, with row and column restrictions** | (Optional) Create a group → Share → Inspect → Change → Revoke |\n| **Train an AutoML model, deploy it and score a table** | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |\n\n---\n\n## 🌍 Data centres\n\nSet both variables to the same region. Tokens are **not** portable across regions.\n\n| Region | `analytics-domain` | `accounts-domain` |\n| --- | --- | --- |\n| United States | `analyticsapi.zoho.com` | `accounts.zoho.com` |\n| Europe | `analyticsapi.zoho.eu` | `accounts.zoho.eu` |\n| India | `analyticsapi.zoho.in` | `accounts.zoho.in` |\n| Australia | `analyticsapi.zoho.com.au` | `accounts.zoho.com.au` |\n| Japan | `analyticsapi.zoho.jp` | `accounts.zoho.jp` |\n| China | `analyticsapi.zoho.com.cn` | `accounts.zoho.com.cn` |\n| Canada | `analyticsapi.zohocloud.ca` | `accounts.zohocloud.ca` |\n| Saudi Arabia | `analyticsapi.zoho.sa` | `accounts.zoho.sa` |\n\n---\n\n## 🔢 Variables\n\nThis collection ships **no collection-level variables** — they would shadow your own. Instead an  \nenvironment is shipped alongside it:\n\n> **`Zoho Analytics REST Variables`** — import it, select it in the environment dropdown, and  \nfill in `analytics-domain`, `accounts-domain`, `client-id` and `client-secret`. \n  \n\nCredentials and `organization-id` are **enabled** out of the box. The identifier variables  \n(`workspace-id`, `view-id`, `column-id`, `job-id`, `dest-organization-id`, …) ship  \n**disabled** — tick the one a request needs and paste the ID. **2️⃣ v2** lists every variable,  \nwhat it is for, and the API that returns it.\n\n---\n\n## ⚙️ Working with async jobs\n\nLarge imports and exports run as **jobs**. Create the job, keep the `jobId`, then poll  \n**Get Import Job Details** / **Get Export Job Details** until `jobCode` reports completion, and  \nfinally **Download Exported Data**. Supply a `callbackUrl` in `CONFIG` to be notified instead of  \npolling. See the workflow notes in **🔄 Data Operations**.\n\n---\n\n## 📚 Further reading\n\n- [API reference ↗](https://www.zoho.com/analytics/api/v2/introduction.html)\n    \n- [OpenAPI specifications ↗](https://github.com/zoho/analytics-oas)\n    \n- [Common error codes ↗](https://www.zoho.com/analytics/api/v2/common-error-codes.html)\n    \n- [API units, limits &amp; pricing ↗](https://www.zoho.com/analytics/api/v2/api-limits-pricing.html)\n    \n- [Client SDKs ↗](https://www.zoho.com/analytics/api/v2/client-library.html) — Java, C#, Python, PHP, Go, Node.js, Ruby",
+  "description": "# Zoho Analytics REST API v2\n\n**213 API requests** · **10 domains** · **39 sections** · OpenAPI 3.1 accurate\n\nThe official Postman collection for the [Zoho Analytics](https://www.zoho.com/analytics/)  \nREST API v2 — every public endpoint, grouped exactly the way the API reference is grouped, with  \na ready-to-send `CONFIG` example on each request.\n\nGenerated from the two sources of truth:  \n[<b>analytics-oas</b>](https://github.com/zoho/analytics-oas) (OpenAPI 3.1 specifications) and the  \n[<b>analytics-okf</b>](https://github.com/zoho/analytics-okf) knowledge bundle (endpoint catalog, permissions and workflow playbooks).\n\n---\n\n## 🚀 Quick start\n\n| Step | Action |\n| --- | --- |\n| 1 | **Fork** this collection and import the **`Zoho Analytics REST Variables`** environment shipped with it. |\n| 2 | Fill `client-id`, `client-secret`, `accounts-domain`, `analytics-domain` for your data centre. |\n| 3 | Run **🔐 Authentication › Generate Tokens** — the token variables populate themselves. |\n| 4 | Run **🏢 Organization Management › Get Org List** and copy `orgId` into `organization-id`. |\n| 5 | Run **🏢 Organization Management › Get Meta Details From Name** to turn a workspace or view _name_ into the `workspace-id` / `view-id` every other request needs. |\n\n> Steps 4–5 are the **Bootstrap** playbook. Nothing else works until `organization-id` is set. \n  \n\n---\n\n## 🧭 What's inside\n\n| Domain | APIs | Sections |\n| --- | --- | --- |\n| **Organization Management** | 8 | 2 |\n| **Users & Groups** | 26 | 4 |\n| **Workspace Management** | 38 | 6 |\n| **Data Modeling & Schema** | 33 | 7 |\n| **Data Operations** | 20 | 6 |\n| **Views Management** | 27 | 5 |\n| **Reports & Dashboards** | 9 | 2 |\n| **Share & Publish** | 22 | 4 |\n| **Schedules & Alerts** | 16 | 2 |\n| **Data Science & Machine Learning** | 11 | 1 |\n\nEvery folder carries its own documentation: the sub-sections it contains, a table of its APIs  \nwith method, path and OAuth scope, and the multi-call **workflows** those APIs take part in.\n\n---\n\n## 🧩 Five conventions that apply everywhere\n\n|  |  |\n| --- | --- |\n| **Base URL** | `https://{{analytics-domain}}/restapi/v2/…` — always HTTPS, always region-specific. |\n| **Authorization** | `Bearer {{access-token}}`, set once at collection level. Zoho's own docs write the same header as `Zoho-oauthtoken` followed by the token; both schemes are accepted. |\n| **`ZANALYTICS-ORGID`** | Required by almost every endpoint — each request says so. Missing it returns error `8083`. |\n| **`CONFIG`** | One JSON object carries every optional argument. `GET` → URL-encoded **query** parameter (a collection pre-request script encodes it for you). `POST`/`PUT`/`DELETE` → **form field**. Imports → **multipart** field. |\n| **Response envelope** | `{ \"status\": \"success\", \"summary\": \"…\", \"data\": { … } }`. Write operations often answer **`204 No Content`** with no body — that is success. Failures return `{ \"status\": \"failure\", \"summary\": …, \"data\": { \"errorCode\": …, \"errorMessage\": … } }`. |\n\n---\n\n## 🧪 Workflows\n\nMost real integrations are a _sequence_ of calls. These playbooks are documented on the folders  \nthat own them:\n\n| Playbook | Call sequence |\n| --- | --- |\n| **Bootstrap: from access token to workspace and view IDs** | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Embed a view for many tenants with per-tenant row filters** | Mint a URL per tenant → Re-mint before expiry → Audit → Revoke |\n| **Export a view, dashboard or SQL result asynchronously** | Create the job → Wait for completion → Download |\n| **Load data into a table (small, large and very large files)** | Build CONFIG → Send the request → Read the result → Verify |\n| **Add users to an organization and a workspace, and set their roles** | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Schedule a recurring email delivery of a report or dashboard** | Create → Test → List and inspect → Pause or resume → Update → Delete |\n| **Share views with users or groups, with row and column restrictions** | (Optional) Create a group → Share → Inspect → Change → Revoke |\n| **Train an AutoML model, deploy it and score a table** | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |\n\n---\n\n## 🌍 Data centres\n\nSet both variables to the same region. Tokens are **not** portable across regions.\n\n| Region | `analytics-domain` | `accounts-domain` |\n| --- | --- | --- |\n| United States | `analyticsapi.zoho.com` | `accounts.zoho.com` |\n| Europe | `analyticsapi.zoho.eu` | `accounts.zoho.eu` |\n| India | `analyticsapi.zoho.in` | `accounts.zoho.in` |\n| Australia | `analyticsapi.zoho.com.au` | `accounts.zoho.com.au` |\n| Japan | `analyticsapi.zoho.jp` | `accounts.zoho.jp` |\n| China | `analyticsapi.zoho.com.cn` | `accounts.zoho.com.cn` |\n| Canada | `analyticsapi.zohocloud.ca` | `accounts.zohocloud.ca` |\n| Saudi Arabia | `analyticsapi.zoho.sa` | `accounts.zoho.sa` |\n\n---\n\n## 🔢 Variables\n\nThis collection ships **no collection-level variables** — they would shadow your own. Instead an  \nenvironment is shipped alongside it:\n\n> **`Zoho Analytics REST Variables`** — import it, select it in the environment dropdown, and  \nfill in `analytics-domain`, `accounts-domain`, `client-id` and `client-secret`. \n  \n\nCredentials and `organization-id` are **enabled** out of the box. The identifier variables  \n(`workspace-id`, `view-id`, `column-id`, `job-id`, `dest-organization-id`, …) ship  \n**disabled** — tick the one a request needs and paste the ID. **2️⃣ v2** lists every variable,  \nwhat it is for, and the API that returns it.\n\n---\n\n## ⚙️ Working with async jobs\n\nLarge imports and exports run as **jobs**. Create the job, keep the `jobId`, then poll  \n**Get Import Job Details** / **Get Export Job Details** until `jobCode` reports completion, and  \nfinally **Download Exported Data**. Supply a `callbackUrl` in `CONFIG` to be notified instead of  \npolling. See the workflow notes in **🔄 Data Operations**.\n\n---\n\n## 📚 Further reading\n\n- [API reference ↗](https://www.zoho.com/analytics/api/v2/introduction.html)\n    \n- [OpenAPI specifications ↗](https://github.com/zoho/analytics-oas)\n    \n- [Common error codes ↗](https://www.zoho.com/analytics/api/v2/common-error-codes.html)\n    \n- [API units, limits &amp; pricing ↗](https://www.zoho.com/analytics/api/v2/api-limits-pricing.html)\n    \n- [Client SDKs ↗](https://www.zoho.com/analytics/api/v2/client-library.html) — Java, C#, Python, PHP, Go, Node.js, Ruby",
   "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
  },
  "item": [
@@ -320,9 +320,153 @@
         }
        ],
        "description": "## Organization Info & Settings\n\nThese APIs provide information about the organisations, resource usage, subscription plan, and workspace/view identity lookups available to the authenticated user. They are read-only metadata APIs and do not modify any data.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Org List** | `GET` | `/restapi/v2/orgs` | `metadata.read` |\n| 2 | **Get Resource Details** | `GET` | `/restapi/v2/resources` | `usermanagement.read` |\n| 3 | **Get Subscription Details** | `GET` | `/restapi/v2/subscription` | `usermanagement.read` |\n| 4 | **Get Meta Details From Name** | `GET` | `/restapi/v2/metadetails` | `metadata.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`\n- **Add users to an organization and a workspace, and set their roles** — Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step.  \n  `Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard`\n- **Schedule a recurring email delivery of a report or dashboard** — Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely.  \n  `Create → Test → List and inspect → Pause or resume → Update → Delete`"
+      },
+      {
+       "name": "Security Controls",
+       "item": [
+        {
+         "name": "Get Org Access Restrictions",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/security-controls/access-restrictions",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "security-controls",
+            "access-restrictions"
+           ]
+          },
+          "description": "Returns the organisation's access restriction settings: the master switch and the five sections.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/security-controls/access-restrictions` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins and custom-role users are refused (7301).\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/org-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Update Org Access Restrictions",
+         "request": {
+          "method": "PUT",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"accessRestrictionEnabled\": true\n}",
+             "type": "text",
+             "description": "Switch access restrictions on, change nothing else."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/security-controls/access-restrictions",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "security-controls",
+            "access-restrictions"
+           ]
+          },
+          "description": "Switches the organisation's access restrictions on or off and updates any of the five sections.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `PUT /restapi/v2/security-controls/access-restrictions` |\n| **OAuth scope** | `ZohoAnalytics.metadata.update` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins and custom-role users are refused (7301).\n\n**Other ready-made CONFIG examples:** *Configure several sections at* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/org-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Workspace Access Restrictions",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/security-controls/workspaces/{{workspace-id}}/access-restrictions",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "security-controls",
+            "workspaces",
+            "{{workspace-id}}",
+            "access-restrictions"
+           ]
+          },
+          "description": "Returns the access restriction settings in effect for one workspace and whether they come from the organisation or from the workspace.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins of the workspace and custom-role users are refused (7301).\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/org-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Update Workspace Access Restrictions",
+         "request": {
+          "method": "PUT",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"useOrganizationSettings\": false,\n  \"shareViews\": {\n    \"domainRestrictionEnabled\": true,\n    \"trustedDomains\": [\n      \"example.com\",\n      \"partner.example.org\"\n    ]\n  },\n  \"privateLinks\": {\n    \"enabled\": false\n  },\n  \"publicViews\": {\n    \"enabled\": false\n  },\n  \"exportViews\": {\n    \"enabled\": true\n  },\n  \"emailViews\": {\n    \"enabled\": true,\n    \"domainRestrictionEnabled\": true,\n    \"trustedDomains\": [\n      \"example.com\"\n    ]\n  }\n}",
+             "type": "text",
+             "description": "Give the workspace its own settings, naming the sections explicitly."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/security-controls/workspaces/{{workspace-id}}/access-restrictions",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "security-controls",
+            "workspaces",
+            "{{workspace-id}}",
+            "access-restrictions"
+           ]
+          },
+          "description": "Switches one workspace between following the organisation and having its own settings, and updates the workspace's own sections.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `PUT /restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` |\n| **OAuth scope** | `ZohoAnalytics.metadata.update` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins of the workspace and custom-role users are refused (7301). The organisation's accessRestrictionEnabled must be true (8197).\n\n**Other ready-made CONFIG examples:** *Update one section on*, *Return the workspace to* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/org-management-grouped-api.json)"
+         },
+         "response": []
+        }
+       ],
+       "description": "## Security Controls\n\nThis section covers the V2 **Access Restriction** REST APIs of Zoho Analytics — the APIs that read and update the organisation-level and workspace-level controls governing who may receive shared views, whether private links, public views, exports and emailed views are allowed, and which email domains are trusted for each.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Org Access Restrictions** | `GET` | `/restapi/v2/security-controls/access-restrictions` | `metadata.read` |\n| 2 | **Update Org Access Restrictions** | `PUT` | `/restapi/v2/security-controls/access-restrictions` | `metadata.update` |\n| 3 | **Get Workspace Access Restrictions** | `GET` | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `metadata.read` |\n| 4 | **Update Workspace Access Restrictions** | `PUT` | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `metadata.update` |"
       }
      ],
-     "description": "# 🏢 Organization Management\n\nAPIs that return information about the organisations, resource usage, subscription plan, and workspace or view identity lookups available to the authenticated user.\n\n> **4 APIs** in **1 sections** · scopes `metadata.*`, `usermanagement.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Organization Info & Settings** | 4 | APIs for retrieving organisation information, resource usage, subscription details, and workspace or view metadata. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Add users to an organization and a workspace, and set their roles**<br/>Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step. | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Schedule a recurring email delivery of a report or dashboard**<br/>Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely. | Create → Test → List and inspect → Pause or resume → Update → Delete |"
+     "description": "# 🏢 Organization Management\n\nAPIs that return information about the organisations, resource usage, subscription plan, and workspace or view identity lookups available to the authenticated user, and that read and update the organisation-wide and per-workspace access restriction settings.\n\n> **8 APIs** in **2 sections** · scopes `metadata.*`, `usermanagement.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Organization Info & Settings** | 4 | APIs for retrieving organisation information, resource usage, subscription details, and workspace or view metadata. |\n| **Security Controls** | 4 | APIs for reading and updating the access restriction settings of an organisation and of an individual workspace - sharing, private links, public views, export and email. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Add users to an organization and a workspace, and set their roles**<br/>Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step. | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Schedule a recurring email delivery of a report or dashboard**<br/>Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely. | Create → Test → List and inspect → Pause or resume → Update → Delete |"
     },
     {
      "name": "👥 Users & Groups",
@@ -2141,9 +2285,507 @@
         }
        ],
        "description": "## Domain & White Label Access\n\nThese APIs control whether a specific workspace is accessible through the organisation's **White Label / Client Portal** domain. When enabled, the workspace (and its shared views) becomes reachable by users who log in via the configured custom portal domain URL (e.g., `https://reports.clientbrand.com`). When disabled, the workspace is hidden from the portal domain — portal users can no longer access it through the custom domain URL.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Enable Workspace for Domain Access** | `POST` | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `metadata.update` |\n| 2 | **Disable Workspace for Domain Access** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `metadata.update` |"
+      },
+      {
+       "name": "Linked Workspaces",
+       "item": [
+        {
+         "name": "Get Linked Workspaces For Organization",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/linkedworkspaces",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "linkedworkspaces"
+           ]
+          },
+          "description": "Returns every master↔client link in the organisation named by ZANALYTICS-ORGID, grouped one entry per master workspace.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/linkedworkspaces` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID. Individual links are additionally filtered to those whose master and client organisations the caller administers.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Linked Workspaces For Master Workspace",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/linkedworkspaces",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "linkedworkspaces"
+           ]
+          },
+          "description": "Returns the links of a single master workspace, in the same shape as one entry of Get Linked Workspaces For Organization - but as a single object, not an array.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/linkedworkspaces` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>. Individual client entries are further filtered to organisations the caller administers.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Linkable Workspaces",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/linkedworkspaces/linkable",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "linkedworkspaces",
+            "linkable"
+           ]
+          },
+          "description": "Returns, grouped by organisation, the workspaces the caller may offer as link candidates for a given master.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>. Candidates are drawn only from organisations the caller administers.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Workspace Linking Compatibility",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/linkedworkspaces/compatibility?CONFIG={\"clients\": [{\"orgId\": 700000654321, \"workspaceIds\": [\"466206000000071000\"]}]}",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "linkedworkspaces",
+            "compatibility"
+           ],
+           "query": [
+            {
+             "key": "CONFIG",
+             "value": "{\"clients\": [{\"orgId\": 700000654321, \"workspaceIds\": [\"466206000000071000\"]}]}",
+             "description": "Configuration for this request."
+            }
+           ]
+          },
+          "description": "Runs the full linking validation against a set of candidate client workspaces without linking anything, and returns a per-workspace verdict with the conflicting entities broken out.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Query parameter · **mandatory** |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID, of the organisation that owns <workspace-id>, and of every organisation named in clients[].orgId.\n\n**Other ready-made CONFIG examples:** *Check several workspaces across* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Link Workspaces",
+         "request": {
+          "method": "POST",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"clients\": [\n    {\n      \"orgId\": 700000654321,\n      \"workspaceIds\": [\n        \"466206000000071000\"\n      ]\n    }\n  ]\n}",
+             "type": "text",
+             "description": "Link one client workspace."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/linkedworkspaces",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "linkedworkspaces"
+           ]
+          },
+          "description": "Links one or more client workspaces to a master.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST /restapi/v2/workspaces/{workspace-id}/linkedworkspaces` |\n| **OAuth scope** | `ZohoAnalytics.modeling.create` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID, of the organisation that owns <workspace-id>, and of every organisation named in clients[].orgId.\n\n**Other ready-made CONFIG examples:** *Link several workspaces across* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Sync Linked Workspaces",
+         "request": {
+          "method": "POST",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"scope\": \"ALL\"\n}",
+             "type": "text",
+             "description": "Sync every linked workspace."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/linkedworkspaces/sync",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "linkedworkspaces",
+            "sync"
+           ]
+          },
+          "description": "Pushes the master workspace's design to its linked clients.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST /restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` |\n| **OAuth scope** | `ZohoAnalytics.modeling.create` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>. When masterViewIds is used, the caller must additionally administer the organisation owning each listed view's workspace.\n\n**Other ready-made CONFIG examples:** *Sync two named sandboxes* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Linked Workspace Sync Details",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/linkedworkspaces/sync",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "linkedworkspaces",
+            "sync"
+           ],
+           "query": [
+            {
+             "key": "CONFIG",
+             "value": "{\"sandboxIds\": [\"137687000012345001\", \"137687000012345002\"]}",
+             "description": "Configuration for this request.",
+             "disabled": true
+            }
+           ]
+          },
+          "description": "Returns, per linked sandbox, what the last sync did entity by entity and what is still waiting to be pushed.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Query parameter · optional |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Unlink Workspaces",
+         "request": {
+          "method": "DELETE",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"scope\": \"ALL\"\n}",
+             "type": "text",
+             "description": "Unlink every client of the master."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/linkedworkspaces",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "linkedworkspaces"
+           ]
+          },
+          "description": "Removes links between a master workspace and its clients, either all of them or a named set.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `DELETE /restapi/v2/workspaces/{workspace-id}/linkedworkspaces` |\n| **OAuth scope** | `ZohoAnalytics.modeling.delete` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID and of the organisation that owns <workspace-id>.\n\n**Other ready-made CONFIG examples:** *Unlink two named sandboxes* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        }
+       ],
+       "description": "## Linked Workspaces\n\nThis section covers the V2 **Linked Workspace** REST APIs of Zoho Analytics — the APIs that discover which workspaces can be linked to a master, check them for compatibility, link and unlink them, push the master's design down to them, and report what each push did.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Linked Workspaces For Organization** | `GET` | `/restapi/v2/linkedworkspaces` | `metadata.read` |\n| 2 | **Get Linked Workspaces For Master Workspace** | `GET` | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `metadata.read` |\n| 3 | **Get Linkable Workspaces** | `GET` | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable` | `metadata.read` |\n| 4 | **Get Workspace Linking Compatibility** | `GET` | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility` | `metadata.read` |\n| 5 | **Link Workspaces** | `POST` | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `modeling.create` |\n| 6 | **Sync Linked Workspaces** | `POST` | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `modeling.create` |\n| 7 | **Get Linked Workspace Sync Details** | `GET` | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `metadata.read` |\n| 8 | **Unlink Workspaces** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `modeling.delete` |"
+      },
+      {
+       "name": "Workspace Backup & Restore",
+       "item": [
+        {
+         "name": "Get Workspace Backups",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/backups",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "backups"
+           ]
+          },
+          "description": "Returns the workspace's backup settings and the list of its retained backups.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/backups` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Backup Workspace Now",
+         "request": {
+          "method": "POST",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"backupMode\": \"STRUCTURE\"\n}",
+             "type": "text",
+             "description": "Structure-only backup."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/backups",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "backups"
+           ]
+          },
+          "description": "Queues an immediate backup of the workspace.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST /restapi/v2/workspaces/{workspace-id}/backups` |\n| **OAuth scope** | `ZohoAnalytics.metadata.create` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · optional |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Download Workspace Backup",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/backups/{{backup-id}}/download",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "backups",
+            "{{backup-id}}",
+            "download"
+           ]
+          },
+          "description": "Downloads a completed backup as a .wsbkp file.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Restore Workspace from Backup",
+         "request": {
+          "method": "POST",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"confirmRestore\": true\n}",
+             "type": "text",
+             "description": "Restore everything the backup holds."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/backups/{{backup-id}}/restore",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "backups",
+            "{{backup-id}}",
+            "restore"
+           ]
+          },
+          "description": "Queues a restore of the workspace from one of its own backups.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST /restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore` |\n| **OAuth scope** | `ZohoAnalytics.metadata.create` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).\n\n**Other ready-made CONFIG examples:** *Restore only the structure* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Workspace Backup Status",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/backups/{{backup-id}}/status",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "backups",
+            "{{backup-id}}",
+            "status"
+           ]
+          },
+          "description": "Returns the current status of one backup.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Workspace Restore Status",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/restores/{{restore-id}}/status",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "restores",
+            "{{restore-id}}",
+            "status"
+           ]
+          },
+          "description": "Returns the current status of one restore.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (7301).\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/workspace-management-grouped-api.json)"
+         },
+         "response": []
+        }
+       ],
+       "description": "## Workspace Backup & Restore\n\nThis section covers the V2 **Workspace Backup and Restore** REST APIs of Zoho Analytics — the APIs that list a workspace's backups, start a backup on demand, track its progress, download a backup file, restore the workspace from a backup, and track the restore.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Workspace Backups** | `GET` | `/restapi/v2/workspaces/{workspace-id}/backups` | `metadata.read` |\n| 2 | **Backup Workspace Now** | `POST` | `/restapi/v2/workspaces/{workspace-id}/backups` | `metadata.create` |\n| 3 | **Download Workspace Backup** | `GET` | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download` | `metadata.read` |\n| 4 | **Restore Workspace from Backup** | `POST` | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore` | `metadata.create` |\n| 5 | **Get Workspace Backup Status** | `GET` | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status` | `metadata.read` |\n| 6 | **Get Workspace Restore Status** | `GET` | `/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status` | `metadata.read` |"
       }
      ],
-     "description": "# 🗂️ Workspace Management\n\nAPI for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, and folder management.\n\n> **24 APIs** in **4 sections** · scopes `metadata.*`, `modeling.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Workspace Operations** | 10 | APIs that manage the lifecycle and the metadata of workspaces, covering the creation, copying, renaming, deletion and inspection of a workspace. |\n| **Workspace Folders** | 8 | APIs that manage the folders of a workspace, covering the creation, renaming, deletion, nesting and reordering of folders, the movement of views between folders, and the selection of the default folder. |\n| **Workspace Preferences** | 4 | APIs that manage the workspace preferences of a user, covering the default workspace that opens on login and the favourite workspaces starred for quick access. |\n| **Domain & White Label Access** | 2 | APIs that control whether a workspace is reachable through the White Label or Client Portal domain of the organization. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |"
+     "description": "# 🗂️ Workspace Management\n\nAPI for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, folder management, linked workspaces, and backup and restore.\n\n> **38 APIs** in **6 sections** · scopes `metadata.*`, `modeling.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Workspace Operations** | 10 | APIs that manage the lifecycle and the metadata of workspaces, covering the creation, copying, renaming, deletion and inspection of a workspace. |\n| **Workspace Folders** | 8 | APIs that manage the folders of a workspace, covering the creation, renaming, deletion, nesting and reordering of folders, the movement of views between folders, and the selection of the default folder. |\n| **Workspace Preferences** | 4 | APIs that manage the workspace preferences of a user, covering the default workspace that opens on login and the favourite workspaces starred for quick access. |\n| **Domain & White Label Access** | 2 | APIs that control whether a workspace is reachable through the White Label or Client Portal domain of the organization. |\n| **Linked Workspaces** | 8 | APIs for listing, linking, syncing and unlinking client workspaces against a master workspace, and for checking which workspaces can be linked. |\n| **Workspace Backup & Restore** | 6 | APIs for listing and triggering workspace backups, downloading a backup, restoring a workspace from one, and tracking the status of either job. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |"
     },
     {
      "name": "🧱 Data Modeling & Schema",
@@ -5407,7 +6049,7 @@
             "reports"
            ]
           },
-          "description": "Builds a new chart, pivot or summary view on an existing table and returns its view ID.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST /restapi/v2/workspaces/{workspace-id}/reports` |\n| **OAuth scope** | `ZohoAnalytics.modeling.create` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `200` |\n\n**Who can call it** — Workspace Admin / Organization Admin, or a shared or group user holding Create Report permission on the base table.\n\n**Other ready-made CONFIG examples:** *Chart with a static filter and a user filter*, *Pivot with a theme*, *Summary report*, *Running total with a window function*, *Map chart with geo roles*, *Wildcard filter* — see the API reference.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/modeling-api/create-report.html)"
+          "description": "Builds a new chart, pivot or summary view on an existing table and returns its view ID.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST /restapi/v2/workspaces/{workspace-id}/reports` |\n| **OAuth scope** | `ZohoAnalytics.modeling.create` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `200` |\n\n**Who can call it** — Account Admin, Organization Admin, Workspace Owner or Workspace Admin; a Custom Role user whose role grants Create Report on the base table; or a shared / group user holding Create Report permission. The caller must additionally be able to read the base table and every column the report uses. See Permission Model.\n\n**Other ready-made CONFIG examples:** *Chart with a static filter and a user filter*, *Pivot with a theme*, *Summary report*, *Running total with a window function*, *Map chart with geo roles*, *Wildcard filter* — see the API reference.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/modeling-api/create-report.html)"
          },
          "response": []
         },
@@ -5438,7 +6080,7 @@
             "metadata"
            ]
           },
-          "description": "Returns the stored definition of a chart, pivot or summary view.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` |\n| **OAuth scope** | `ZohoAnalytics.modeling.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — Design Modify on the report. A read-only shared user cannot call this endpoint.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/reports-dashboards-grouped-api.json)"
+          "description": "Returns a summary of the stored definition of a chart, pivot or summary view.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` |\n| **OAuth scope** | `ZohoAnalytics.modeling.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The report's owner, or a user holding Design Modify on the report: Account Admin, Organization Admin, Workspace Owner, Workspace Admin, or a shared / group / Custom Role user granted edit rights. A read-only shared user cannot call this endpoint.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/reports-dashboards-grouped-api.json)"
          },
          "response": []
         },
@@ -5479,12 +6121,12 @@
             "{{view-id}}"
            ]
           },
-          "description": "Rebuilds an existing report from a fresh CONFIG.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `PUT /restapi/v2/workspaces/{workspace-id}/reports/{view-id}` |\n| **OAuth scope** | `ZohoAnalytics.modeling.update` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — Design Modify on the report — the owner, a Workspace Admin, an Organization Admin, or a shared or group user granted edit rights.\n\n**Other ready-made CONFIG examples:** *Widen a filter, keeping everything else**\n\nNote that `userFilters` has to be re-sent in full even though it is unchanged; omitting it would delete it.\n\n```\nCONFIG={\n  \"reportType\": \"chart\",\n  \"chartType\": \"line\",\n  \"description\": \"Monthly trend, excluding returns\",\n  \"axisColumns\": [\n    { \"type\": \"xAxis\", \"columnName\": \"Order Date\", \"operation\": \"monthyear\" },\n    { \"type\": \"yAxis\", \"columnName\": \"Sales\", \"operation\": \"sum\" }\n  ],\n  \"filters\": [\n    { \"columnName\": \"Status\", \"operation\": \"actual\", \"filterType\": \"individualvalues\",\n      \"values\": [\"Returned\", \"Cancelled\"], \"exclude\": true }\n  ],\n  \"userFilters\": [\n    { \"columnName\": \"Product Category\", \"operation\": \"actual\",\n      \"compType\": \"multiSelect\", \"filterType\": \"individualvalues\", \"isallval\": true }\n  ]\n}\n```\n\n**Case 3 — Strip all filters off a report* — see the API reference.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/modeling-api/update-report.html)"
+          "description": "Rebuilds an existing report from a fresh CONFIG and returns no body.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `PUT /restapi/v2/workspaces/{workspace-id}/reports/{view-id}` |\n| **OAuth scope** | `ZohoAnalytics.modeling.update` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The report's owner, an Account Admin, an Organization Admin, the Workspace Owner or a Workspace Admin. Any other caller — including a shared, group or Custom Role user holding Design Modify — is rejected with 7301. The caller must also be able to read the base table.\n\n**Other ready-made CONFIG examples:** *Widen a filter, keeping everything else**\n\nNote that `userFilters` has to be re-sent in full even though it is unchanged; omitting it would delete it.\n\n```\nCONFIG={\n  \"reportType\": \"chart\",\n  \"chartType\": \"line\",\n  \"description\": \"Monthly trend, excluding returns\",\n  \"axisColumns\": [\n    { \"type\": \"xAxis\", \"columnName\": \"Order Date\", \"operation\": \"monthyear\" },\n    { \"type\": \"yAxis\", \"columnName\": \"Sales\", \"operation\": \"sum\" }\n  ],\n  \"filters\": [\n    { \"columnName\": \"Status\", \"operation\": \"actual\", \"filterType\": \"individualvalues\",\n      \"values\": [\"Returned\", \"Cancelled\"], \"exclude\": true }\n  ],\n  \"userFilters\": [\n    { \"columnName\": \"Product Category\", \"operation\": \"actual\",\n      \"compType\": \"multiSelect\", \"filterType\": \"individualvalues\", \"isallval\": true }\n  ]\n}\n```\n\n**Case 3 — Strip all filters off a report* — see the API reference.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/modeling-api/update-report.html)"
          },
          "response": []
         }
        ],
-       "description": "## Reports (Analysis Views)\n\nA **report** (also called a *visual*, an *analysis view*, or simply a *view* in API responses and error messages — the four terms are interchangeable) is a saved visualisation built on top of a table. Zoho Analytics exposes three report families through this API:\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Create Report** | `POST` | `/restapi/v2/workspaces/{workspace-id}/reports` | `modeling.create` |\n| 2 | **Read Report Metadata** | `GET` | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` | `modeling.read` |\n| 3 | **Update Report** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}` | `modeling.update` |"
+       "description": "## Reports (Analysis Views)\n\nThis section covers the V2 **Report** REST APIs of Zoho Analytics — the APIs that create a chart, pivot or summary view on a table, read back its stored definition, and rebuild it from a new definition.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Create Report** | `POST` | `/restapi/v2/workspaces/{workspace-id}/reports` | `modeling.create` |\n| 2 | **Read Report Metadata** | `GET` | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` | `modeling.read` |\n| 3 | **Update Report** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}` | `modeling.update` |"
       },
       {
        "name": "Dashboards",
@@ -6746,9 +7388,382 @@
         }
        ],
        "description": "## Email Schedules\n\nThis section covers the V2 **Email Schedule** REST APIs of Zoho Analytics — the APIs that create, list, update, enable/disable, trigger, and delete recurring email deliveries of views (tables, charts, pivots, summaries, dashboards, query tables) to a set of recipients.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Email Schedules** | `GET` | `/restapi/v2/workspaces/{workspace-id}/emailschedules` | `metadata.read` |\n| 2 | **Create Email Schedule** | `POST` | `/restapi/v2/workspaces/{workspace-id}/emailschedules` | `modeling.create` |\n| 3 | **Update Email Schedule** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `modeling.update` |\n| 4 | **Delete Email Schedule** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `modeling.delete` |\n| 5 | **Change Email Schedule Status** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status` | `modeling.update` |\n| 6 | **Trigger Email Schedule** | `POST` | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `modeling.create` |\n\n### Workflows that use these APIs\n\n- **Schedule a recurring email delivery of a report or dashboard** — Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely.  \n  `Create → Test → List and inspect → Pause or resume → Update → Delete`"
+      },
+      {
+       "name": "Data Alerts",
+       "item": [
+        {
+         "name": "Get Alerts In Workspace",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/alerts",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "alerts"
+           ]
+          },
+          "description": "Returns every alert defined anywhere in the workspace, with its name, the view it watches, its enabled state, audit stamps, and the outcome of its last run.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/alerts` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or a custom-role user whose role has the Manage Data Alerts permission on this workspace. The check is workspace-wide — see Permission Model.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Alerts In View",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/views/{{view-id}}/alerts",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "views",
+            "{{view-id}}",
+            "alerts"
+           ]
+          },
+          "description": "Returns the alerts configured on one report.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the view's workspace, or hold the CREATEALERT (Manage Data Alerts) permission on that specific view. Stricter than Get Alerts In Workspace.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get View Metadata For Alert",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/views/{{view-id}}/alerts/metadata",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "views",
+            "{{view-id}}",
+            "alerts",
+            "metadata"
+           ]
+          },
+          "description": "Returns everything needed to construct a rule for a report: its alertable columns with their viewColumnIndex, the operator and rule-type catalogues each column permits, the chart thresholds on each column, and the view-level anomaly definitions.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the view's workspace, or hold the CREATEALERT (Manage Data Alerts) permission on that specific view.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Alert Configuration",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/alerts/{{alert-id}}",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "alerts",
+            "{{alert-id}}"
+           ]
+          },
+          "description": "Returns one alert's complete configuration in exactly the CONFIG shape that Create Alert and Update Alert accept, so the response can be edited and posted straight back.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns this alert. The alert must belong to <workspace-id>.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Create Alert",
+         "request": {
+          "method": "POST",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"alertName\": \"Sales Drop Alert\",\n  \"scheduleDetails\": {\n    \"calendarFrequency\": \"daily\",\n    \"hour\": 9,\n    \"minute\": 0\n  },\n  \"email\": {\n    \"notifyAdmins\": true,\n    \"subject\": \"Sales dropped below threshold\",\n    \"message\": \"Please review the report.\"\n  },\n  \"rules\": [\n    {\n      \"operator\": \"lt\",\n      \"viewColumnIndex\": \"2\",\n      \"type\": \"constant\",\n      \"values\": [\n        \"1000\"\n      ]\n    }\n  ]\n}",
+             "type": "text",
+             "description": "Minimal valid alert: one rule, one channel, daily schedule."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/views/{{view-id}}/alerts",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "views",
+            "{{view-id}}",
+            "alerts"
+           ]
+          },
+          "description": "Creates an alert on the specified report and returns its id.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST /restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` |\n| **OAuth scope** | `ZohoAnalytics.modeling.create` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the view's workspace, or hold the CREATEALERT (Manage Data Alerts) permission on that specific view.\n\n**Other ready-made CONFIG examples:** *Three rules combined by*, *Threshold rule and column*, *Anomaly alert no viewColumnIndex*, *Pivot report sub total*, *Multi select dimensional rule*, *Yearly by weekday schedule* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Update Alert",
+         "request": {
+          "method": "PUT",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"alertName\": \"Sales Drop Alert (weekly)\",\n  \"scheduleDetails\": {\n    \"calendarFrequency\": \"weekly\",\n    \"hour\": 9,\n    \"minute\": 30,\n    \"weekDays\": [\n      6\n    ],\n    \"timeZone\": \"Asia/Kolkata\"\n  },\n  \"email\": {\n    \"notifyAdmins\": true,\n    \"emailIds\": [\n      \"finance@example.com\"\n    ],\n    \"subject\": \"Weekly sales monitor\",\n    \"message\": \"Weekly alert summary.\"\n  },\n  \"rules\": [\n    {\n      \"operator\": \"lt\",\n      \"viewColumnIndex\": \"2\",\n      \"type\": \"constant\",\n      \"values\": [\n        \"1000\"\n      ]\n    }\n  ]\n}",
+             "type": "text",
+             "description": "Minimal update: new name, new schedule, same single rule."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/alerts/{{alert-id}}",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "alerts",
+            "{{alert-id}}"
+           ]
+          },
+          "description": "Replaces an existing alert's configuration.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `PUT /restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` |\n| **OAuth scope** | `ZohoAnalytics.modeling.update` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns this alert.\n\n**Other ready-made CONFIG examples:** *Re asserting a mapped*, *Monthly schedule moved to* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Delete Alerts",
+         "request": {
+          "method": "DELETE",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"alertIds\": [\n    \"137687000010815003\",\n    \"137687000010815005\"\n  ]\n}",
+             "type": "text",
+             "description": "Delete two alerts."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/alerts",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "alerts"
+           ]
+          },
+          "description": "Deletes one or more alerts in a workspace.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `DELETE /restapi/v2/workspaces/{workspace-id}/alerts` |\n| **OAuth scope** | `ZohoAnalytics.modeling.delete` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns every alert listed. The check runs per id.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Change Alert Status",
+         "request": {
+          "method": "PUT",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"alertIds\": [\n    \"137687000010815003\",\n    \"137687000010815005\"\n  ],\n  \"enabled\": false\n}",
+             "type": "text",
+             "description": "Pause two alerts."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/alerts/status",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "alerts",
+            "status"
+           ]
+          },
+          "description": "Enables (resumes) or pauses one or more alerts without altering their configuration.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `PUT /restapi/v2/workspaces/{workspace-id}/alerts/status` |\n| **OAuth scope** | `ZohoAnalytics.modeling.update` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns every alert listed. The check runs per id.\n\n**Other ready-made CONFIG examples:** *Resume a single alert* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Run Alert",
+         "request": {
+          "method": "POST",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "body": {
+           "mode": "urlencoded",
+           "urlencoded": [
+            {
+             "key": "CONFIG",
+             "value": "{\n  \"validateSystemTags\": false\n}",
+             "type": "text",
+             "description": "Run a report-attaching alert past a Data Warning tag."
+            }
+           ]
+          },
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/alerts/{{alert-id}}/execute",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "alerts",
+            "{{alert-id}}",
+            "execute"
+           ]
+          },
+          "description": "Queues an off-schedule evaluation of one alert.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `POST /restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute` |\n| **OAuth scope** | `ZohoAnalytics.modeling.create` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · optional |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns this alert.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Alert Events",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Get it from **Get Org List**."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/{{workspace-id}}/alerts/{{alert-id}}/events",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "workspaces",
+            "{{workspace-id}}",
+            "alerts",
+            "{{alert-id}}",
+            "events"
+           ],
+           "query": [
+            {
+             "key": "CONFIG",
+             "value": "{\"fromDate\": \"2026-05-01 00:00:00\", \"toDate\": \"2026-05-31 23:59:59\", \"status\": [\"triggered\", \"error\"], \"pageNo\": 1, \"recordsPerPage\": 50}",
+             "description": "Configuration for this request.",
+             "disabled": true
+            }
+           ]
+          },
+          "description": "Returns the audit trail of one alert's evaluations - when each ran, and whether it triggered, did not trigger, or failed.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Query parameter · optional |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, or a custom-role user with the Manage Data Alerts permission who either has all-alerts access or owns this alert.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/schedules-alerts-grouped-api.json)"
+         },
+         "response": []
+        }
+       ],
+       "description": "## Data Alerts\n\nThis section covers the V2 **Data Alert** REST APIs of Zoho Analytics — the APIs that discover what a report can be alerted on, create and edit alerts, enable/pause and delete them, run one on demand, and read the audit trail of every evaluation.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Alerts In Workspace** | `GET` | `/restapi/v2/workspaces/{workspace-id}/alerts` | `metadata.read` |\n| 2 | **Get Alerts In View** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` | `metadata.read` |\n| 3 | **Get View Metadata For Alert** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata` | `metadata.read` |\n| 4 | **Get Alert Configuration** | `GET` | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` | `metadata.read` |\n| 5 | **Create Alert** | `POST` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` | `modeling.create` |\n| 6 | **Update Alert** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` | `modeling.update` |\n| 7 | **Delete Alerts** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/alerts` | `modeling.delete` |\n| 8 | **Change Alert Status** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/alerts/status` | `modeling.update` |\n| 9 | **Run Alert** | `POST` | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute` | `modeling.create` |\n| 10 | **Get Alert Events** | `GET` | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events` | `metadata.read` |"
       }
      ],
-     "description": "# ⏰ Schedules & Alerts\n\nAPI for Schedules & Alerts in Zoho Analytics — covering creation, management, and triggering of email schedules.\n\n> **6 APIs** in **1 sections** · scopes `modeling.*`, `metadata.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Email Schedules** | 6 | APIs for creating, updating, triggering, and deleting email schedules, and retrieving schedule details. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Schedule a recurring email delivery of a report or dashboard**<br/>Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely. | Create → Test → List and inspect → Pause or resume → Update → Delete |"
+     "description": "# ⏰ Schedules & Alerts\n\nAPI for Schedules & Alerts in Zoho Analytics — covering creation, management, and triggering of email schedules, and the full lifecycle of data alerts on a view.\n\n> **16 APIs** in **2 sections** · scopes `modeling.*`, `metadata.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Email Schedules** | 6 | APIs for creating, updating, triggering, and deleting email schedules, and retrieving schedule details. |\n| **Data Alerts** | 10 | APIs for creating, listing, updating, running and deleting data alerts on a view, changing their status and reading their event history. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Schedule a recurring email delivery of a report or dashboard**<br/>Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely. | Create → Test → List and inspect → Pause or resume → Update → Delete |"
     },
     {
      "name": "🤖 Data Science & Machine Learning",
@@ -7148,7 +8163,7 @@
      "description": "# 🤖 Data Science & Machine Learning\n\nAPI for DSML (Data Science & Machine Learning) in Zoho Analytics — covering AutoML analysis creation, execution, deployments, and what-if analysis.\n\n> **11 APIs** in **1 sections** · scopes `modeling.*`, `metadata.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **AutoML** | 11 | APIs for creating, running, deploying, and managing AutoML analyses and models. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Train an AutoML model, deploy it and score a table**<br/>The end-to-end AutoML sequence - create an analysis on a training table, wait for models to train, deploy the best model, run predictions into an output table, and clean up. | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |"
     }
    ],
-   "description": "# Zoho Analytics REST API v2\n\n**182 APIs** · **10 domains** · **35 sections** · generated from OpenAPI 3.1\n\nEverything under this folder is **version 2** of the Zoho Analytics REST API — every public  \nendpoint, grouped exactly the way the API reference is grouped, with a ready-to-send `CONFIG`  \nexample on each request.\n\nBuilt from the two sources of truth:  \n[<b>analytics-oas</b>](https://github.com/zoho/analytics-oas) (OpenAPI 3.1 specifications) and the  \n[<b>analytics-okf</b>](https://github.com/zoho/analytics-okf) knowledge bundle (endpoint catalog, permissions and workflow playbooks).\n\n> Authenticate first using the **🔐 Authentication** folder at the root of this collection.  \nEvery request below assumes a valid access token. \n  \n\n---\n\n## 🚀 Start here\n\n| Step | Action | Gives you |\n| --- | --- | --- |\n| 1 | Import and select the **`Zoho Analytics REST Variables`** environment | Every variable these requests read |\n| 2 | **🏢 Organization Management › Get Org List** | `orgId` → set `organization-id` |\n| 3 | **🏢 Organization Management › Get Meta Details From Name** | `workspaceId`, `viewId` from plain names — **enable** those two variables first |\n| 4 | Any endpoint in the domain you need | — |\n\nNothing else works until `organization-id` is set — it is the `ZANALYTICS-ORGID` header that  \nalmost every v2 endpoint requires. Identifier variables such as `workspace-id` and `view-id`  \nship **disabled**; tick the one you need in the environment editor before running a request.\n\n---\n\n## 🧭 What's inside\n\n| Domain | APIs | Sections | Covers |\n| --- | --- | --- | --- |\n| **🏢 Organization Management** | 4 | 1 | Org list, resource usage, subscription, name → ID lookup |\n| **👥 Users & Groups** | 26 | 4 | Org users, custom roles, workspace users and admins, groups |\n| **🗂️ Workspace Management** | 24 | 4 | Workspace lifecycle, folders, preferences, white-label access |\n| **🧱 Data Modeling & Schema** | 33 | 7 | Tables, columns, lookups, query tables, formulas, variables |\n| **🔄 Data Operations** | 20 | 6 | Rows, sync/async/batch import, sync/async export, datasource sync |\n| **📋 Views Management** | 27 | 5 | View lifecycle, favourites, tags, trash, auto analysis |\n| **📊 Reports & Dashboards** | 9 | 2 | Analysis views and dashboards — create, read, update |\n| **🔗 Share & Publish** | 22 | 4 | Sharing, public/private URLs, embed URLs, slideshows |\n| **⏰ Schedules & Alerts** | 6 | 1 | Recurring email delivery of reports and dashboards |\n| **🤖 Data Science & Machine Learning** | 11 | 1 | AutoML analyses, models, deployments, what-if |\n\nEach domain folder documents its own sections, lists every API with method, path and OAuth  \nscope, and names the multi-call **workflows** those APIs take part in.\n\n---\n\n## 🧩 Conventions shared by every v2 call\n\n|  |  |\n| --- | --- |\n| **Base URL** | `https://{{analytics-domain}}/restapi/v2/...` — always HTTPS, always the API host of your data centre. |\n| **`ZANALYTICS-ORGID`** | Required by almost every endpoint; each request's documentation says which. Missing it returns error `8083`. |\n| **`CONFIG`** | A single JSON object carries every optional argument. `GET` → URL-encoded **query** parameter (a collection pre-request script encodes it for you). `POST` / `PUT` / `DELETE` → **form field**. Imports → **multipart** field. |\n| **Identifiers** | Opaque numeric strings. Never construct one — read it from a listing API. See the variables table below. |\n| **Success envelope** | `{ \"status\": \"success\", \"summary\": \"...\", \"data\": { ... } }`. Many write operations answer **`204 No Content`** with no body — that is success. |\n| **Failure envelope** | `{ \"status\": \"failure\", \"summary\": \"...\", \"data\": { \"errorCode\": ..., \"errorMessage\": \"...\" } }`. HTTP status maps to the error code; see [Common error codes](https://www.zoho.com/analytics/api/v2/common-error-codes.html). |\n\n---\n\n## 🧪 Workflows\n\nMost real integrations are a _sequence_ of v2 calls. Each playbook is documented on the domain  \nfolder that owns it:\n\n| Playbook | Domain | Call sequence |\n| --- | --- | --- |\n| **Bootstrap: access token → workspace and view IDs** | 🏢 Organization Management | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs |\n| **Load data into a table (small, large, very large)** | 🔄 Data Operations | Build CONFIG → Send the request → Read the result → Verify |\n| **Export a view, dashboard or SQL result asynchronously** | 🔄 Data Operations | Create the job → Wait for completion → Download |\n| **Add users to an org and a workspace, set their roles** | 👥 Users & Groups | Add to the organization → Set the org role → Add to a workspace → Give access to views → Change role or status → Offboard |\n| **Share views with row and column restrictions** | 🔗 Share & Publish | (Optional) Create a group → Share → Inspect → Change → Revoke |\n| **Embed a view for many tenants with per-tenant filters** | 🔗 Share & Publish | Mint a URL per tenant → Re-mint before expiry → Audit → Revoke |\n| **Schedule a recurring email delivery** | ⏰ Schedules & Alerts | Create → Test → List and inspect → Pause or resume → Update → Delete |\n| **Train an AutoML model, deploy it and score a table** | 🤖 Data Science & ML | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |\n\n---\n\n## 🔢 Variables these requests expect\n\nEvery request below is parameterised. Import the **`Zoho Analytics REST Variables`**  \nenvironment that ships alongside this collection and select it in the environment dropdown —  \nnothing here reads collection-level variables.\n\n**Always on**\n\n| Variable | Set it to |\n| --- | --- |\n| `analytics-domain` | The API host of your data centre, e.g. `analyticsapi.zoho.com`. See the collection overview for the full list. |\n| `access-token` | Filled in automatically by **🔐 Authentication › Generate Tokens**. |\n| `organization-id` | **Get Org List** → `orgId`. Sent as `ZANALYTICS-ORGID` by almost every request here. |\n\n**Disabled by default — enable the one your request needs**\n\nIdentifier variables ship **unchecked** in the environment so the list stays readable and  \nnothing silently resolves to a placeholder. Tick the box next to a variable, paste the ID, and  \nrun.\n\n| Variable | Enable it for | Read the ID from |\n| --- | --- | --- |\n| `workspace-id` | Nearly every domain below | **Get Meta Details From Name** / **Get All Workspace List** |\n| `view-id` | Rows, exports, sharing, publish, tags, reports | **Get Meta Details From Name** / **Get View List** |\n| `column-id` | 🧱 Columns | **Get Table Metadata** |\n| `folder-id` | 🗂️ Workspace Folders | **Get Folder List** |\n| `querytable-id` | 🧱 Query Tables | **Get Query Tables** |\n| `dashboard-id` | 📊 Dashboards | **Get All Dashboards** |\n| `formula-id` | 🧱 Custom Formula Columns, Aggregate Formulas | **Get Custom Formulas** / **Get Aggregate Formula** |\n| `variable-id` | 🧱 Workspace Variables | **Get Variables** |\n| `group-id` | 👥 Workspace Groups | **Get Group List** |\n| `role-id` | 👥 Custom Roles | **Get Custom Roles** |\n| `tag-id` | 📋 Tags | **Get Tags List** |\n| `slide-id` | 🔗 Slideshow Management | **Get Slide List** |\n| `schedule-id` | ⏰ Email Schedules | **Get Email Schedules** |\n| `datasource-id` | 🔄 Data Sync & Connectivity | **Get Datasources** |\n| `job-id` | 🔄 Async import / export | Returned when the job is created |\n| `analysis-id` | 🤖 AutoML | **Get AutoML Analysis In Workspace** |\n| `model-id` | 🤖 AutoML | **Get AutoML Analysis Details** |\n| `deployment-id` | 🤖 AutoML | **Get Deployments For A Model** |\n| `dest-organization-id` | **Copy Workspace**, **Copy Views**, **Copy Custom Formulas** | **Get Org List** — the _destination_ org |\n\n> **Cross-organization copies.** Those three copy requests carry a **disabled**  \n`ZANALYTICS-DEST-ORGID` header. To copy into another organization you administer, enable both  \nthe header on the request and the `dest-organization-id` environment variable. Leave both off  \nand the copy lands in the organization from `ZANALYTICS-ORGID`. \n  \n\n---\n\n## ⚙️ Working with asynchronous jobs\n\nLarge imports and exports run as **jobs** rather than returning a result inline:\n\n1. Create the job — **Create Import Job…** / **Create Export Job…** — and keep the `jobId`.\n    \n2. Poll **Get Import Job Details** / **Get Export Job Details** until `jobCode` reports  \n    completion, or pass a `callbackUrl` in `CONFIG` and be notified instead of polling.\n    \n3. For exports, finish with **Download Exported Data**.\n    \n\nBatch imports additionally key each chunk so the server can assemble them in order. See  \n**🔄 Data Operations** for the full sequence.\n\n---\n\n## 📚 Further reading\n\n- [API reference ↗](https://www.zoho.com/analytics/api/v2/introduction.html)\n    \n- [OpenAPI specifications ↗](https://github.com/zoho/analytics-oas)\n    \n- [Common error codes ↗](https://www.zoho.com/analytics/api/v2/common-error-codes.html)\n    \n- [API units, limits and pricing ↗](https://www.zoho.com/analytics/api/v2/api-limits-pricing.html)\n    \n- [Client SDKs ↗](https://www.zoho.com/analytics/api/v2/client-library.html) — Java, C#, Python, PHP, Go, Node.js, Ruby"
+   "description": "# Zoho Analytics REST API v2\n\n**210 APIs** · **10 domains** · **39 sections** · generated from OpenAPI 3.1\n\nEverything under this folder is **version 2** of the Zoho Analytics REST API — every public  \nendpoint, grouped exactly the way the API reference is grouped, with a ready-to-send `CONFIG`  \nexample on each request.\n\nBuilt from the two sources of truth:  \n[<b>analytics-oas</b>](https://github.com/zoho/analytics-oas) (OpenAPI 3.1 specifications) and the  \n[<b>analytics-okf</b>](https://github.com/zoho/analytics-okf) knowledge bundle (endpoint catalog, permissions and workflow playbooks).\n\n> Authenticate first using the **🔐 Authentication** folder at the root of this collection.  \nEvery request below assumes a valid access token. \n  \n\n---\n\n## 🚀 Start here\n\n| Step | Action | Gives you |\n| --- | --- | --- |\n| 1 | Import and select the **`Zoho Analytics REST Variables`** environment | Every variable these requests read |\n| 2 | **🏢 Organization Management › Get Org List** | `orgId` → set `organization-id` |\n| 3 | **🏢 Organization Management › Get Meta Details From Name** | `workspaceId`, `viewId` from plain names — **enable** those two variables first |\n| 4 | Any endpoint in the domain you need | — |\n\nNothing else works until `organization-id` is set — it is the `ZANALYTICS-ORGID` header that  \nalmost every v2 endpoint requires. Identifier variables such as `workspace-id` and `view-id`  \nship **disabled**; tick the one you need in the environment editor before running a request.\n\n---\n\n## 🧭 What's inside\n\n| Domain | APIs | Sections | Covers |\n| --- | --- | --- | --- |\n| **🏢 Organization Management** | 8 | 2 | Org list, resource usage, subscription, name → ID lookup, access restrictions |\n| **👥 Users & Groups** | 26 | 4 | Org users, custom roles, workspace users and admins, groups |\n| **🗂️ Workspace Management** | 38 | 6 | Workspace lifecycle, folders, preferences, white-label access, linked workspaces, backup and restore |\n| **🧱 Data Modeling & Schema** | 33 | 7 | Tables, columns, lookups, query tables, formulas, variables |\n| **🔄 Data Operations** | 20 | 6 | Rows, sync/async/batch import, sync/async export, datasource sync |\n| **📋 Views Management** | 27 | 5 | View lifecycle, favourites, tags, trash, auto analysis |\n| **📊 Reports & Dashboards** | 9 | 2 | Analysis views and dashboards — create, read, update |\n| **🔗 Share & Publish** | 22 | 4 | Sharing, public/private URLs, embed URLs, slideshows |\n| **⏰ Schedules & Alerts** | 16 | 2 | Recurring email delivery of reports and dashboards, data alerts |\n| **🤖 Data Science & Machine Learning** | 11 | 1 | AutoML analyses, models, deployments, what-if |\n\nEach domain folder documents its own sections, lists every API with method, path and OAuth  \nscope, and names the multi-call **workflows** those APIs take part in.\n\n---\n\n## 🧩 Conventions shared by every v2 call\n\n|  |  |\n| --- | --- |\n| **Base URL** | `https://{{analytics-domain}}/restapi/v2/...` — always HTTPS, always the API host of your data centre. |\n| **`ZANALYTICS-ORGID`** | Required by almost every endpoint; each request's documentation says which. Missing it returns error `8083`. |\n| **`CONFIG`** | A single JSON object carries every optional argument. `GET` → URL-encoded **query** parameter (a collection pre-request script encodes it for you). `POST` / `PUT` / `DELETE` → **form field**. Imports → **multipart** field. |\n| **Identifiers** | Opaque numeric strings. Never construct one — read it from a listing API. See the variables table below. |\n| **Success envelope** | `{ \"status\": \"success\", \"summary\": \"...\", \"data\": { ... } }`. Many write operations answer **`204 No Content`** with no body — that is success. |\n| **Failure envelope** | `{ \"status\": \"failure\", \"summary\": \"...\", \"data\": { \"errorCode\": ..., \"errorMessage\": \"...\" } }`. HTTP status maps to the error code; see [Common error codes](https://www.zoho.com/analytics/api/v2/common-error-codes.html). |\n\n---\n\n## 🧪 Workflows\n\nMost real integrations are a _sequence_ of v2 calls. Each playbook is documented on the domain  \nfolder that owns it:\n\n| Playbook | Domain | Call sequence |\n| --- | --- | --- |\n| **Bootstrap: access token → workspace and view IDs** | 🏢 Organization Management | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs |\n| **Load data into a table (small, large, very large)** | 🔄 Data Operations | Build CONFIG → Send the request → Read the result → Verify |\n| **Export a view, dashboard or SQL result asynchronously** | 🔄 Data Operations | Create the job → Wait for completion → Download |\n| **Add users to an org and a workspace, set their roles** | 👥 Users & Groups | Add to the organization → Set the org role → Add to a workspace → Give access to views → Change role or status → Offboard |\n| **Share views with row and column restrictions** | 🔗 Share & Publish | (Optional) Create a group → Share → Inspect → Change → Revoke |\n| **Embed a view for many tenants with per-tenant filters** | 🔗 Share & Publish | Mint a URL per tenant → Re-mint before expiry → Audit → Revoke |\n| **Schedule a recurring email delivery** | ⏰ Schedules & Alerts | Create → Test → List and inspect → Pause or resume → Update → Delete |\n| **Train an AutoML model, deploy it and score a table** | 🤖 Data Science & ML | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |\n\n---\n\n## 🔢 Variables these requests expect\n\nEvery request below is parameterised. Import the **`Zoho Analytics REST Variables`**  \nenvironment that ships alongside this collection and select it in the environment dropdown —  \nnothing here reads collection-level variables.\n\n**Always on**\n\n| Variable | Set it to |\n| --- | --- |\n| `analytics-domain` | The API host of your data centre, e.g. `analyticsapi.zoho.com`. See the collection overview for the full list. |\n| `access-token` | Filled in automatically by **🔐 Authentication › Generate Tokens**. |\n| `organization-id` | **Get Org List** → `orgId`. Sent as `ZANALYTICS-ORGID` by almost every request here. |\n\n**Disabled by default — enable the one your request needs**\n\nIdentifier variables ship **unchecked** in the environment so the list stays readable and  \nnothing silently resolves to a placeholder. Tick the box next to a variable, paste the ID, and  \nrun.\n\n| Variable | Enable it for | Read the ID from |\n| --- | --- | --- |\n| `workspace-id` | Nearly every domain below | **Get Meta Details From Name** / **Get All Workspace List** |\n| `view-id` | Rows, exports, sharing, publish, tags, reports | **Get Meta Details From Name** / **Get View List** |\n| `column-id` | 🧱 Columns | **Get Table Metadata** |\n| `folder-id` | 🗂️ Workspace Folders | **Get Folder List** |\n| `querytable-id` | 🧱 Query Tables | **Get Query Tables** |\n| `dashboard-id` | 📊 Dashboards | **Get All Dashboards** |\n| `formula-id` | 🧱 Custom Formula Columns, Aggregate Formulas | **Get Custom Formulas** / **Get Aggregate Formula** |\n| `variable-id` | 🧱 Workspace Variables | **Get Variables** |\n| `group-id` | 👥 Workspace Groups | **Get Group List** |\n| `role-id` | 👥 Custom Roles | **Get Custom Roles** |\n| `tag-id` | 📋 Tags | **Get Tags List** |\n| `slide-id` | 🔗 Slideshow Management | **Get Slide List** |\n| `schedule-id` | ⏰ Email Schedules | **Get Email Schedules** |\n| `datasource-id` | 🔄 Data Sync & Connectivity | **Get Datasources** |\n| `job-id` | 🔄 Async import / export | Returned when the job is created |\n| `analysis-id` | 🤖 AutoML | **Get AutoML Analysis In Workspace** |\n| `model-id` | 🤖 AutoML | **Get AutoML Analysis Details** |\n| `deployment-id` | 🤖 AutoML | **Get Deployments For A Model** |\n| `dest-organization-id` | **Copy Workspace**, **Copy Views**, **Copy Custom Formulas** | **Get Org List** — the _destination_ org |\n\n> **Cross-organization copies.** Those three copy requests carry a **disabled**  \n`ZANALYTICS-DEST-ORGID` header. To copy into another organization you administer, enable both  \nthe header on the request and the `dest-organization-id` environment variable. Leave both off  \nand the copy lands in the organization from `ZANALYTICS-ORGID`. \n  \n\n---\n\n## ⚙️ Working with asynchronous jobs\n\nLarge imports and exports run as **jobs** rather than returning a result inline:\n\n1. Create the job — **Create Import Job…** / **Create Export Job…** — and keep the `jobId`.\n    \n2. Poll **Get Import Job Details** / **Get Export Job Details** until `jobCode` reports  \n    completion, or pass a `callbackUrl` in `CONFIG` and be notified instead of polling.\n    \n3. For exports, finish with **Download Exported Data**.\n    \n\nBatch imports additionally key each chunk so the server can assemble them in order. See  \n**🔄 Data Operations** for the full sequence.\n\n---\n\n## 📚 Further reading\n\n- [API reference ↗](https://www.zoho.com/analytics/api/v2/introduction.html)\n    \n- [OpenAPI specifications ↗](https://github.com/zoho/analytics-oas)\n    \n- [Common error codes ↗](https://www.zoho.com/analytics/api/v2/common-error-codes.html)\n    \n- [API units, limits and pricing ↗](https://www.zoho.com/analytics/api/v2/api-limits-pricing.html)\n    \n- [Client SDKs ↗](https://www.zoho.com/analytics/api/v2/client-library.html) — Java, C#, Python, PHP, Go, Node.js, Ruby"
   }
  ],
  "auth": {

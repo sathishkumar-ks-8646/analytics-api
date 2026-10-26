@@ -298,7 +298,7 @@
       "Php": {
         "snippets": [
           {
-            "code": "<?php\n    require 'AnalyticsClient.php';\n    class Test {\n        public $ac = NULL;\n        public $client_id = \"1000.xxxxxxx\";\n        public $client_secret = \"xxxxxxx\";\n        public $refresh_token = \"1000.xxxxxxx.xxxxxxx\";\n        public $org_id = \"55522777\";\n        public $workspace_id = \"35130000001055707\";\n        function __construct() { $this->ac = new AnalyticsClient($this->client_id, $this->client_secret, $this->refresh_token); }\n        function getWorkspaceDetails() {\n            $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n            $response = $workspace->getDetails();\n            print_r($response);\n        }\n    }\n    $test_obj = new Test();\n    try { $test_obj->getWorkspaceDetails(); }\n    catch(ServerException $se) { echo \"Server exception : \" . $se->getErrorMessage() . \"\\n\"; }\n    catch(Exception $e) { echo \"Exception : \" . $e->getMessage() . \"\\n\"; }\n?>"
+            "code": "<?php\n    require 'AnalyticsClient.php';\n    class Test {\n        public $ac = NULL;\n        public $client_id = \"1000.xxxxxxx\";\n        public $client_secret = \"xxxxxxx\";\n        public $refresh_token = \"1000.xxxxxxx.xxxxxxx\";\n        public $org_id = \"55522777\";\n        public $workspace_id = \"35130000001055707\";\n        function __construct() { $this->ac = new AnalyticsClient($this->client_id, $this->client_secret, $this->refresh_token); }\n        function getWorkspaceDetails() {\n            $response = $this->ac->getWorkspaceDetails($this->workspace_id);\n            print_r($response);\n        }\n    }\n    $test_obj = new Test();\n    try { $test_obj->getWorkspaceDetails(); }\n    catch(ServerException $se) { echo \"Server exception : \" . $se->getErrorMessage() . \"\\n\"; }\n    catch(Exception $e) { echo \"Exception : \" . $e->getMessage() . \"\\n\"; }\n?>"
           }
         ]
       },
@@ -1584,6 +1584,936 @@
         "snippets": [
           {
             "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nconfig = {\"folderId\":\"176702200001018000\",\"viewIds\":[\"1767020000010075002\",\"1767020000010075004\"]};\nparameters = \"CONFIG=\" + zoho.encryption.urlEncode(config.toString());\ninvokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/views/movetofolder\"\n  type :PUT\n  parameters:parameters\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo \"success\";"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/linkedworkspaces": {
+    "get": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/linkedworkspaces\" \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n\n        public void GetLinkedWorkspaces(IAnalyticsClient ac)\n        {\n            IOrgAPI org = ac.GetOrgInstance(orgId);\n            JsonElement result = org.GetLinkedWorkspaces();\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetLinkedWorkspaces(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n)\n\nfunc GetLinkedWorkspaces(ac ZAnalytics.Client) {\n    org := ZAnalytics.GetOrgInstance(&ac, orgId)\n    result, exception := org.GetLinkedWorkspaces()\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetLinkedWorkspaces(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getLinkedWorkspaces(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getLinkedWorkspaces(AnalyticsClient ac) throws Exception {\n        OrgAPI org = ac.getOrgInstance(orgId);\n        JSONArray result = org.getLinkedWorkspaces();\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getLinkedWorkspaces() {\n        $org = $this->ac->getOrgInstance($this->org_id);\n        $response = $org->getLinkedWorkspaces();\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getLinkedWorkspaces();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_linked_workspaces(self, ac):\n        org = ac.get_org_instance(Config.ORGID)\n        result = org.get_linked_workspaces()\n        print(result)\n\nobj = Sample()\nobj.get_linked_workspaces(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\n\nvar org = ac.getOrgInstance(orgId);\norg.getLinkedWorkspaces().then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_linked_workspaces\n    org = @ac.get_org_instance(Config::ORGID)\n    result = org.get_linked_workspaces\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_linked_workspaces"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/linkedworkspaces\"\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces": {
+    "get": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/linkedworkspaces\" \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void GetLinkedWorkspaces(IAnalyticsClient ac)\n        {\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            JsonElement result = workspace.GetLinkedWorkspaces();\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetLinkedWorkspaces(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc GetLinkedWorkspaces(ac ZAnalytics.Client) {\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    result, exception := workspace.GetLinkedWorkspaces()\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetLinkedWorkspaces(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getLinkedWorkspaces(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getLinkedWorkspaces(AnalyticsClient ac) throws Exception {\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        JSONArray result = workspace.getLinkedWorkspaces();\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getLinkedWorkspaces() {\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $response = $workspace->getLinkedWorkspaces();\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getLinkedWorkspaces();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_linked_workspaces(self, ac):\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        result = workspace.get_linked_workspaces()\n        print(result)\n\nobj = Sample()\nobj.get_linked_workspaces(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.getLinkedWorkspaces().then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_linked_workspaces\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    result = workspace.get_linked_workspaces\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_linked_workspaces"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/linkedworkspaces\"\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    },
+    "post": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/linkedworkspaces\" \\\n  -X 'POST' \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>' \\\n  --data-urlencode 'CONFIG={\"clients\":[{\"orgId\":700000654321,\"workspaceIds\":[\"466206000000071000\"]}]}'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void LinkWorkspaces(IAnalyticsClient ac)\n        {\n            List<Dictionary<string, object>> clients = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(\"[{\\\"orgId\\\":700000654321,\\\"workspaceIds\\\":[\\\"466206000000071000\\\"]}]\");\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            workspace.LinkWorkspaces(clients, null);\n            Console.WriteLine(\"success\");\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.LinkWorkspaces(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc LinkWorkspaces(ac ZAnalytics.Client) {\n    clients := []interface{}{\n        map[string]interface{}{\n            \"orgId\": 700000654321,\n            \"workspaceIds\": []string{\"466206000000071000\"},\n        },\n    }\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    exception := workspace.LinkWorkspaces(clients, nil)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(\"success\")\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    LinkWorkspaces(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.linkWorkspaces(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void linkWorkspaces(AnalyticsClient ac) throws Exception {\n        JSONArray clients = new JSONArray(\"[{\\\"orgId\\\":700000654321,\\\"workspaceIds\\\":[\\\"466206000000071000\\\"]}]\");\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        workspace.linkWorkspaces(clients, null);\n        System.out.println(\"success\");\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function linkWorkspaces() {\n        $clients = array(\n            array(\n                \"orgId\" => 700000654321,\n                \"workspaceIds\" => array(\"466206000000071000\")\n            )\n        );\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $workspace->linkWorkspaces($clients);\n        echo \"success\";\n    }\n}\n\n$obj = new Test();\n$obj->linkWorkspaces();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def link_workspaces(self, ac):\n        clients = [\n            {\n                \"orgId\": 700000654321,\n                \"workspaceIds\": [\"466206000000071000\"]\n            }\n        ]\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        workspace.link_workspaces(clients)\n        print(\"success\")\n\nobj = Sample()\nobj.link_workspaces(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar clients = [\n    {\n        \"orgId\": 700000654321,\n        \"workspaceIds\": [\"466206000000071000\"]\n    }\n];\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.linkWorkspaces(clients).then(() => { console.log(\"success\"); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def link_workspaces\n    clients = [\n      {\n        \"orgId\" => 700000654321,\n        \"workspaceIds\" => [\"466206000000071000\"]\n      }\n    ]\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    workspace.link_workspaces(clients)\n    puts \"success\"\n  end\nend\n\nobj = Sample.new\nobj.link_workspaces"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nconfig = {\"clients\": [{\"orgId\": 700000654321, \"workspaceIds\": [\"466206000000071000\"]}]};\nresponse = invokeurl\nparameters = \"CONFIG=\" + zoho.encryption.urlEncode(config.toString());\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/linkedworkspaces\"\n  type :POST\n  parameters:parameters\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    },
+    "delete": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/linkedworkspaces\" \\\n  -X 'DELETE' \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>' \\\n  --data-urlencode 'CONFIG={\"scope\":\"ALL\"}'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void UnlinkWorkspaces(IAnalyticsClient ac)\n        {\n            string scope = \"ALL\";\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            workspace.UnlinkWorkspaces(scope, null);\n            Console.WriteLine(\"success\");\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.UnlinkWorkspaces(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc UnlinkWorkspaces(ac ZAnalytics.Client) {\n    scope := \"ALL\"\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    exception := workspace.UnlinkWorkspaces(scope, nil)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(\"success\")\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    UnlinkWorkspaces(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.unlinkWorkspaces(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void unlinkWorkspaces(AnalyticsClient ac) throws Exception {\n        String scope = \"ALL\";\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        workspace.unlinkWorkspaces(scope, null);\n        System.out.println(\"success\");\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function unlinkWorkspaces() {\n        $scope = \"ALL\";\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $workspace->unlinkWorkspaces($scope);\n        echo \"success\";\n    }\n}\n\n$obj = new Test();\n$obj->unlinkWorkspaces();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def unlink_workspaces(self, ac):\n        scope = \"ALL\"\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        workspace.unlink_workspaces(scope)\n        print(\"success\")\n\nobj = Sample()\nobj.unlink_workspaces(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar scope = \"ALL\";\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.unlinkWorkspaces(scope).then(() => { console.log(\"success\"); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def unlink_workspaces\n    scope = \"ALL\"\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    workspace.unlink_workspaces(scope)\n    puts \"success\"\n  end\nend\n\nobj = Sample.new\nobj.unlink_workspaces"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nconfig = {\"scope\": \"ALL\"};\nresponse = invokeurl\nparameters = \"CONFIG=\" + zoho.encryption.urlEncode(config.toString());\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/linkedworkspaces\"\n  type :DELETE\n  parameters:parameters\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable": {
+    "get": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/linkable\" \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void GetLinkableWorkspaces(IAnalyticsClient ac)\n        {\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            JsonElement result = workspace.GetLinkableWorkspaces();\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetLinkableWorkspaces(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc GetLinkableWorkspaces(ac ZAnalytics.Client) {\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    result, exception := workspace.GetLinkableWorkspaces()\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetLinkableWorkspaces(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getLinkableWorkspaces(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getLinkableWorkspaces(AnalyticsClient ac) throws Exception {\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        JSONArray result = workspace.getLinkableWorkspaces();\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getLinkableWorkspaces() {\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $response = $workspace->getLinkableWorkspaces();\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getLinkableWorkspaces();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_linkable_workspaces(self, ac):\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        result = workspace.get_linkable_workspaces()\n        print(result)\n\nobj = Sample()\nobj.get_linkable_workspaces(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.getLinkableWorkspaces().then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_linkable_workspaces\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    result = workspace.get_linkable_workspaces\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_linkable_workspaces"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/linkedworkspaces/linkable\"\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility": {
+    "get": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/compatibility?CONFIG=%7B%22clients%22%3A%5B%7B%22orgId%22%3A700000654321%2C%22workspaceIds%22%3A%5B%22466206000000071000%22%5D%7D%5D%7D\" \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void GetWorkspaceLinkingCompatibility(IAnalyticsClient ac)\n        {\n            List<Dictionary<string, object>> clients = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(\"[{\\\"orgId\\\":700000654321,\\\"workspaceIds\\\":[\\\"466206000000071000\\\"]}]\");\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            JsonElement result = workspace.GetWorkspaceLinkingCompatibility(clients, null);\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetWorkspaceLinkingCompatibility(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc GetWorkspaceLinkingCompatibility(ac ZAnalytics.Client) {\n    clients := []interface{}{\n        map[string]interface{}{\n            \"orgId\": 700000654321,\n            \"workspaceIds\": []string{\"466206000000071000\"},\n        },\n    }\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    result, exception := workspace.GetWorkspaceLinkingCompatibility(clients, nil)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetWorkspaceLinkingCompatibility(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getWorkspaceLinkingCompatibility(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getWorkspaceLinkingCompatibility(AnalyticsClient ac) throws Exception {\n        JSONArray clients = new JSONArray(\"[{\\\"orgId\\\":700000654321,\\\"workspaceIds\\\":[\\\"466206000000071000\\\"]}]\");\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        JSONArray result = workspace.getWorkspaceLinkingCompatibility(clients, null);\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getWorkspaceLinkingCompatibility() {\n        $clients = array(\n            array(\n                \"orgId\" => 700000654321,\n                \"workspaceIds\" => array(\"466206000000071000\")\n            )\n        );\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $response = $workspace->getWorkspaceLinkingCompatibility($clients);\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getWorkspaceLinkingCompatibility();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_workspace_linking_compatibility(self, ac):\n        clients = [\n            {\n                \"orgId\": 700000654321,\n                \"workspaceIds\": [\"466206000000071000\"]\n            }\n        ]\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        result = workspace.get_workspace_linking_compatibility(clients)\n        print(result)\n\nobj = Sample()\nobj.get_workspace_linking_compatibility(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar clients = [\n    {\n        \"orgId\": 700000654321,\n        \"workspaceIds\": [\"466206000000071000\"]\n    }\n];\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.getWorkspaceLinkingCompatibility(clients).then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_workspace_linking_compatibility\n    clients = [\n      {\n        \"orgId\" => 700000654321,\n        \"workspaceIds\" => [\"466206000000071000\"]\n      }\n    ]\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    result = workspace.get_workspace_linking_compatibility(clients)\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_workspace_linking_compatibility"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nconfig = {\"clients\": [{\"orgId\": 700000654321, \"workspaceIds\": [\"466206000000071000\"]}]};\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/linkedworkspaces/compatibility?CONFIG=\" + zoho.encryption.urlEncode(config.toString())\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync": {
+    "post": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/sync\" \\\n  -X 'POST' \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>' \\\n  --data-urlencode 'CONFIG={\"scope\":\"ALL\"}'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void SyncLinkedWorkspaces(IAnalyticsClient ac)\n        {\n            string scope = \"ALL\";\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            workspace.SyncLinkedWorkspaces(scope, null);\n            Console.WriteLine(\"success\");\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.SyncLinkedWorkspaces(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc SyncLinkedWorkspaces(ac ZAnalytics.Client) {\n    scope := \"ALL\"\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    exception := workspace.SyncLinkedWorkspaces(scope, nil)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(\"success\")\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    SyncLinkedWorkspaces(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.syncLinkedWorkspaces(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void syncLinkedWorkspaces(AnalyticsClient ac) throws Exception {\n        String scope = \"ALL\";\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        workspace.syncLinkedWorkspaces(scope, null);\n        System.out.println(\"success\");\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function syncLinkedWorkspaces() {\n        $scope = \"ALL\";\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $workspace->syncLinkedWorkspaces($scope);\n        echo \"success\";\n    }\n}\n\n$obj = new Test();\n$obj->syncLinkedWorkspaces();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def sync_linked_workspaces(self, ac):\n        scope = \"ALL\"\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        workspace.sync_linked_workspaces(scope)\n        print(\"success\")\n\nobj = Sample()\nobj.sync_linked_workspaces(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar scope = \"ALL\";\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.syncLinkedWorkspaces(scope).then(() => { console.log(\"success\"); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def sync_linked_workspaces\n    scope = \"ALL\"\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    workspace.sync_linked_workspaces(scope)\n    puts \"success\"\n  end\nend\n\nobj = Sample.new\nobj.sync_linked_workspaces"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nconfig = {\"scope\": \"ALL\"};\nresponse = invokeurl\nparameters = \"CONFIG=\" + zoho.encryption.urlEncode(config.toString());\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/linkedworkspaces/sync\"\n  type :POST\n  parameters:parameters\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    },
+    "get": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/sync?CONFIG=%7B%22sandboxIds%22%3A%5B%22137687000012345001%22%2C%22137687000012345002%22%5D%7D\" \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void GetLinkedWorkspaceSyncDetails(IAnalyticsClient ac)\n        {\n            List<long> sandboxIds = new List<long>();\n            sandboxIds.Add(137687000012345001L);\n            sandboxIds.Add(137687000012345002L);\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            JsonElement result = workspace.GetLinkedWorkspaceSyncDetails(sandboxIds, null);\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetLinkedWorkspaceSyncDetails(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc GetLinkedWorkspaceSyncDetails(ac ZAnalytics.Client) {\n    sandboxids := []string{\"137687000012345001\", \"137687000012345002\"}\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    result, exception := workspace.GetLinkedWorkspaceSyncDetails(sandboxids, nil)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetLinkedWorkspaceSyncDetails(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getLinkedWorkspaceSyncDetails(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getLinkedWorkspaceSyncDetails(AnalyticsClient ac) throws Exception {\n        JSONArray sandboxIds = new JSONArray();\n        sandboxIds.put(\"137687000012345001\");\n        sandboxIds.put(\"137687000012345002\");\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        JSONArray result = workspace.getLinkedWorkspaceSyncDetails(sandboxIds, null);\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getLinkedWorkspaceSyncDetails() {\n        $sandbox_ids = array(\"137687000012345001\", \"137687000012345002\");\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $response = $workspace->getLinkedWorkspaceSyncDetails($sandbox_ids);\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getLinkedWorkspaceSyncDetails();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_linked_workspace_sync_details(self, ac):\n        sandbox_ids = [\"137687000012345001\", \"137687000012345002\"]\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        result = workspace.get_linked_workspace_sync_details(sandbox_ids)\n        print(result)\n\nobj = Sample()\nobj.get_linked_workspace_sync_details(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar sandboxIds = [\"137687000012345001\", \"137687000012345002\"];\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.getLinkedWorkspaceSyncDetails(sandboxIds).then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_linked_workspace_sync_details\n    sandbox_ids = [\"137687000012345001\", \"137687000012345002\"]\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    result = workspace.get_linked_workspace_sync_details(sandbox_ids)\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_linked_workspace_sync_details"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nconfig = {\"sandboxIds\": [\"137687000012345001\", \"137687000012345002\"]};\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/linkedworkspaces/sync?CONFIG=\" + zoho.encryption.urlEncode(config.toString())\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/workspaces/{workspace-id}/backups": {
+    "get": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/backups\" \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void GetWorkspaceBackups(IAnalyticsClient ac)\n        {\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            JsonElement result = workspace.GetWorkspaceBackups();\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetWorkspaceBackups(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc GetWorkspaceBackups(ac ZAnalytics.Client) {\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    result, exception := workspace.GetWorkspaceBackups()\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetWorkspaceBackups(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getWorkspaceBackups(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getWorkspaceBackups(AnalyticsClient ac) throws Exception {\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        JSONObject result = workspace.getWorkspaceBackups();\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getWorkspaceBackups() {\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $response = $workspace->getWorkspaceBackups();\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getWorkspaceBackups();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_workspace_backups(self, ac):\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        result = workspace.get_workspace_backups()\n        print(result)\n\nobj = Sample()\nobj.get_workspace_backups(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.getWorkspaceBackups().then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_workspace_backups\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    result = workspace.get_workspace_backups\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_workspace_backups"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/backups\"\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    },
+    "post": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/backups\" \\\n  -X 'POST' \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>' \\\n  --data-urlencode 'CONFIG={\"backupMode\":\"STRUCTURE\"}'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void BackupWorkspaceNow(IAnalyticsClient ac)\n        {\n            Dictionary<string, object> config = JsonSerializer.Deserialize<Dictionary<string, object>>(\"{\\\"backupMode\\\":\\\"STRUCTURE\\\"}\");\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            JsonElement result = workspace.BackupWorkspaceNow(config);\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.BackupWorkspaceNow(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc BackupWorkspaceNow(ac ZAnalytics.Client) {\n    config := map[string]interface{}{\n        \"backupMode\": \"STRUCTURE\",\n    }\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    result, exception := workspace.BackupWorkspaceNow(config)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    BackupWorkspaceNow(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.backupWorkspaceNow(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void backupWorkspaceNow(AnalyticsClient ac) throws Exception {\n        JSONObject config = new JSONObject(\"{\\\"backupMode\\\":\\\"STRUCTURE\\\"}\");\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        JSONObject result = workspace.backupWorkspaceNow(config);\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function backupWorkspaceNow() {\n        $config = array(\n            \"backupMode\" => \"STRUCTURE\"\n        );\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $response = $workspace->backupWorkspaceNow($config);\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->backupWorkspaceNow();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def backup_workspace_now(self, ac):\n        config = {\n            \"backupMode\": \"STRUCTURE\"\n        }\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        result = workspace.backup_workspace_now(config)\n        print(result)\n\nobj = Sample()\nobj.backup_workspace_now(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar config = {\n    \"backupMode\": \"STRUCTURE\"\n};\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.backupWorkspaceNow(config).then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def backup_workspace_now\n    config = {\n      \"backupMode\" => \"STRUCTURE\"\n    }\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    result = workspace.backup_workspace_now(config)\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.backup_workspace_now"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nconfig = {\"backupMode\": \"STRUCTURE\"};\nresponse = invokeurl\nparameters = \"CONFIG=\" + zoho.encryption.urlEncode(config.toString());\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/backups\"\n  type :POST\n  parameters:parameters\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download": {
+    "get": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/backups/<backup-id>/download\" \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void DownloadWorkspaceBackup(IAnalyticsClient ac)\n        {\n            long backupId = 35130000001056701L;\n            string filePath = \"/home/user/workspace-backup.zip\";\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            workspace.DownloadWorkspaceBackup(backupId, filePath, null);\n            Console.WriteLine(\"success\");\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.DownloadWorkspaceBackup(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc DownloadWorkspaceBackup(ac ZAnalytics.Client) {\n    backupid := \"35130000001056701\"\n    filepath := \"/home/user/workspace-backup.zip\"\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    exception := workspace.DownloadWorkspaceBackup(backupid, filepath, nil)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(\"success\")\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    DownloadWorkspaceBackup(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.downloadWorkspaceBackup(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void downloadWorkspaceBackup(AnalyticsClient ac) throws Exception {\n        long backupId = 35130000001056701l;\n        String filePath = \"/home/user/workspace-backup.zip\";\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        workspace.downloadWorkspaceBackup(backupId, filePath, null);\n        System.out.println(\"success\");\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function downloadWorkspaceBackup() {\n        $backup_id = \"35130000001056701\";\n        $file_path = \"/home/user/workspace-backup.zip\";\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $workspace->downloadWorkspaceBackup($backup_id, $file_path);\n        echo \"success\";\n    }\n}\n\n$obj = new Test();\n$obj->downloadWorkspaceBackup();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def download_workspace_backup(self, ac):\n        backup_id = \"35130000001056701\"\n        file_path = \"/home/user/workspace-backup.zip\"\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        workspace.download_workspace_backup(backup_id, file_path)\n        print(\"success\")\n\nobj = Sample()\nobj.download_workspace_backup(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar backupId = \"35130000001056701\";\nvar filePath = \"/home/user/workspace-backup.zip\";\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.downloadWorkspaceBackup(backupId, filePath).then(() => { console.log(\"success\"); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def download_workspace_backup\n    backup_id = \"35130000001056701\"\n    file_path = \"/home/user/workspace-backup.zip\"\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    workspace.download_workspace_backup(backup_id, file_path)\n    puts \"success\"\n  end\nend\n\nobj = Sample.new\nobj.download_workspace_backup"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nbackupId = \"35130000001056601\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/backups/\" + backupId + \"/download\"\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore": {
+    "post": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/backups/<backup-id>/restore\" \\\n  -X 'POST' \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>' \\\n  --data-urlencode 'CONFIG={\"confirmRestore\":true}'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void RestoreWorkspaceFromBackup(IAnalyticsClient ac)\n        {\n            long backupId = 35130000001056701L;\n            bool confirmRestore = true;\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            JsonElement result = workspace.RestoreWorkspaceFromBackup(backupId, confirmRestore, null);\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.RestoreWorkspaceFromBackup(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc RestoreWorkspaceFromBackup(ac ZAnalytics.Client) {\n    backupid := \"35130000001056701\"\n    confirmrestore := true\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    result, exception := workspace.RestoreWorkspaceFromBackup(backupid, confirmrestore, nil)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    RestoreWorkspaceFromBackup(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.restoreWorkspaceFromBackup(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void restoreWorkspaceFromBackup(AnalyticsClient ac) throws Exception {\n        long backupId = 35130000001056701l;\n        boolean confirmRestore = true;\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        JSONObject result = workspace.restoreWorkspaceFromBackup(backupId, confirmRestore, null);\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function restoreWorkspaceFromBackup() {\n        $backup_id = \"35130000001056701\";\n        $confirm_restore = true;\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $response = $workspace->restoreWorkspaceFromBackup($backup_id, $confirm_restore);\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->restoreWorkspaceFromBackup();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def restore_workspace_from_backup(self, ac):\n        backup_id = \"35130000001056701\"\n        confirm_restore = True\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        result = workspace.restore_workspace_from_backup(backup_id, confirm_restore)\n        print(result)\n\nobj = Sample()\nobj.restore_workspace_from_backup(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar backupId = \"35130000001056701\";\nvar confirmRestore = true;\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.restoreWorkspaceFromBackup(backupId, confirmRestore).then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def restore_workspace_from_backup\n    backup_id = \"35130000001056701\"\n    confirm_restore = true\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    result = workspace.restore_workspace_from_backup(backup_id, confirm_restore)\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.restore_workspace_from_backup"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nbackupId = \"35130000001056601\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nconfig = {\"confirmRestore\": true};\nresponse = invokeurl\nparameters = \"CONFIG=\" + zoho.encryption.urlEncode(config.toString());\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/backups/\" + backupId + \"/restore\"\n  type :POST\n  parameters:parameters\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status": {
+    "get": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/backups/<backup-id>/status\" \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void GetWorkspaceBackupStatus(IAnalyticsClient ac)\n        {\n            long backupId = 35130000001056701L;\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            JsonElement result = workspace.GetWorkspaceBackupStatus(backupId);\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetWorkspaceBackupStatus(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc GetWorkspaceBackupStatus(ac ZAnalytics.Client) {\n    backupid := \"35130000001056701\"\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    result, exception := workspace.GetWorkspaceBackupStatus(backupid)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetWorkspaceBackupStatus(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getWorkspaceBackupStatus(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getWorkspaceBackupStatus(AnalyticsClient ac) throws Exception {\n        long backupId = 35130000001056701l;\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        JSONObject result = workspace.getWorkspaceBackupStatus(backupId);\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getWorkspaceBackupStatus() {\n        $backup_id = \"35130000001056701\";\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $response = $workspace->getWorkspaceBackupStatus($backup_id);\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getWorkspaceBackupStatus();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_workspace_backup_status(self, ac):\n        backup_id = \"35130000001056701\"\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        result = workspace.get_workspace_backup_status(backup_id)\n        print(result)\n\nobj = Sample()\nobj.get_workspace_backup_status(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar backupId = \"35130000001056701\";\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.getWorkspaceBackupStatus(backupId).then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_workspace_backup_status\n    backup_id = \"35130000001056701\"\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    result = workspace.get_workspace_backup_status(backup_id)\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_workspace_backup_status"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nbackupId = \"35130000001056601\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/backups/\" + backupId + \"/status\"\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
+          }
+        ]
+      }
+    }
+  },
+  "/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status": {
+    "get": {
+      "Curl": {
+        "snippets": [
+          {
+            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>/restores/<restore-id>/status\" \\\n  -H 'ZANALYTICS-ORGID: <org-id>' \\\n  -H 'Authorization: Zoho-oauthtoken <access_token>'"
+          }
+        ]
+      },
+      "C#": {
+        "snippets": [
+          {
+            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long workspaceId = 35130000001055707;\n\n        public void GetWorkspaceRestoreStatus(IAnalyticsClient ac)\n        {\n            long restoreId = 35130000001056801L;\n            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);\n            JsonElement result = workspace.GetWorkspaceRestoreStatus(restoreId);\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetWorkspaceRestoreStatus(ac);\n        }\n    }\n}"
+          }
+        ]
+      },
+      "Go": {
+        "snippets": [
+          {
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    workspaceId = \"35130000001055707\"\n)\n\nfunc GetWorkspaceRestoreStatus(ac ZAnalytics.Client) {\n    restoreid := \"35130000001056801\"\n    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)\n    result, exception := workspace.GetWorkspaceRestoreStatus(restoreid)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetWorkspaceRestoreStatus(ac)\n}"
+          }
+        ]
+      },
+      "Java": {
+        "snippets": [
+          {
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long workspaceId = 35130000001055707l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getWorkspaceRestoreStatus(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getWorkspaceRestoreStatus(AnalyticsClient ac) throws Exception {\n        long restoreId = 35130000001056801l;\n        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);\n        JSONObject result = workspace.getWorkspaceRestoreStatus(restoreId);\n        System.out.println(result);\n    }\n}"
+          }
+        ]
+      },
+      "Php": {
+        "snippets": [
+          {
+            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $org_id = \"55522777\";\n    public $workspace_id = \"35130000001055707\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getWorkspaceRestoreStatus() {\n        $restore_id = \"35130000001056801\";\n        $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);\n        $response = $workspace->getWorkspaceRestoreStatus($restore_id);\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getWorkspaceRestoreStatus();\n?>"
+          }
+        ]
+      },
+      "Python": {
+        "snippets": [
+          {
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    WORKSPACEID = \"35130000001055707\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_workspace_restore_status(self, ac):\n        restore_id = \"35130000001056801\"\n        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)\n        result = workspace.get_workspace_restore_status(restore_id)\n        print(result)\n\nobj = Sample()\nobj.get_workspace_restore_status(obj.ac)"
+          }
+        ]
+      },
+      "Node": {
+        "snippets": [
+          {
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar orgId = '55522777';\nvar workspaceId = '35130000001055707';\n\nvar restoreId = \"35130000001056801\";\nvar workspace = ac.getWorkspaceInstance(orgId, workspaceId);\nworkspace.getWorkspaceRestoreStatus(restoreId).then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+          }
+        ]
+      },
+      "Ruby": {
+        "snippets": [
+          {
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  WORKSPACEID = \"35130000001055707\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_workspace_restore_status\n    restore_id = \"35130000001056801\"\n    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)\n    result = workspace.get_workspace_restore_status(restore_id)\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_workspace_restore_status"
+          }
+        ]
+      },
+      "Deluge": {
+        "snippets": [
+          {
+            "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nrestoreId = \"35130000001056605\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/restores/\" + restoreId + \"/status\"\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
           }
         ]
       }

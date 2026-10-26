@@ -49,7 +49,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -171,7 +171,7 @@ Groups are the building block for bulk view-level access management. When a view
 | [7282](../../../foundations/error-codes.md#error-7282) | 400 | A group with the same name already exists in this workspace. Group names must be unique per workspace. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7338](../../../foundations/error-codes.md#error-7338) | 400 | The specified <group-id> does not belong to this workspace. |
-| [8060](../../../foundations/error-codes.md#error-8060) | 400 | The specified domainName does not exist. |
+| [8060](../../../foundations/error-codes.md#error-8060) | 400 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. |
 | [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 

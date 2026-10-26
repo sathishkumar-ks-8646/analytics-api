@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-20T17:34:40Z
   - id: endpoint-doc
     resource: "/domains/organization-management/org-info-and-settings/get-organizations.md"
     title: Endpoint reference - Get Org List
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -73,12 +73,9 @@ namespace ZohoAnalyticsTest
 {
     class Program
     {
-        long orgId = 55522777;
-
         public void GetOrganizations(IAnalyticsClient ac)
         {
-            IOrgAPI org = ac.GetOrgInstance(orgId);
-            JsonElement result = org.GetOrganizations();
+            JsonElement result = ac.GetOrgs();
             Console.WriteLine(result);
         }
 
@@ -122,12 +119,10 @@ var(
     clientSecret = "xxxxxxx"
     refreshToken = "1000.xxxxxxx.xxxxxxx"
 
-    orgId = "55522777"
 )
 
 func GetOrganizations(ac ZAnalytics.Client) {
-    org := ZAnalytics.GetOrgInstance(&ac, orgId)
-    result, _ := org.GetOrganizations()
+    result, _ := ac.GetOrgs()
     fmt.Println(result)
 }
 
@@ -144,8 +139,6 @@ import com.zoho.analytics.client.*;
 import org.json.*;
 
 public class Test {
-
-    private long orgId = 55522777l;
 
     public static void main(String args[]) {
         String clientId = "1000.xxxxxxx";
@@ -168,8 +161,7 @@ public class Test {
     }
 
     public void getOrganizations(AnalyticsClient ac) throws Exception {
-        OrgAPI org = ac.getOrgInstance(orgId);
-        JSONArray result = org.getOrganizations();
+        JSONArray result = ac.getOrgs();
         System.out.println(result);
     }
 }
@@ -189,15 +181,12 @@ public class Test {
         public $client_secret = "xxxxxxx";
         public $refresh_token = "1000.xxxxxxx.xxxxxxx";
 
-        public $org_id = "55522777";
-
         function __construct() {
             $this->ac = new AnalyticsClient($this->client_id, $this->client_secret, $this->refresh_token);
         }
 
         function getOrganizations() {
-            $org = $this->ac->getOrgInstance($this->org_id);
-            $response = $org->getOrganizations();
+            $response = $this->ac->getOrgs();
             print_r($response);
         }
     }
@@ -226,15 +215,13 @@ class Config:
     CLIENTID = "1000.xxxxxxx"
     CLIENTSECRET = "xxxxxxx"
     REFRESHTOKEN = "1000.xxxxxxx.xxxxxxx"
-    ORGID = "55522777"
 
 class sample:
 
     ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)
 
     def get_organizations(self, ac):
-        org = ac.get_org_instance(Config.ORGID)
-        result = org.get_organizations()
+        result = ac.get_orgs()
         print(result)
 
 try:
@@ -252,13 +239,10 @@ var analyticsClient = require('./AnalyticsClient');
 var clientId = '1000.xxxxxxx';
 var clientSecret = 'xxxxxxx';
 var refreshToken = '1000.xxxxxxx.xxxxxxx';
-var orgId = '55522777';
 
 var ac = new analyticsClient(clientId, clientSecret, refreshToken);
 
-var org = ac.getOrgInstance(orgId);
-
-org.getOrganizations().then(function (result) {
+ac.getOrgs().then(function (result) {
     console.log(result);
 }).catch(function (err) {
     console.log(err);
@@ -271,7 +255,6 @@ org.getOrganizations().then(function (result) {
 require 'zoho_analytics_client'
 
 class Config
-  ORGID = "55522777"
 end
 
 class Sample
@@ -287,8 +270,7 @@ class Sample
   end
 
   def get_organizations
-    org = @ac.get_org_instance(Config::ORGID)
-    result = org.get_organizations
+    result = @ac.get_orgs
     puts result
   end
 end

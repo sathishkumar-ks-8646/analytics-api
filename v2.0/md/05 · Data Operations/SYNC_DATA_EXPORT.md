@@ -6,7 +6,15 @@ This document covers the **synchronous data export** REST API of Zoho Analytics 
 
 This API returns **the exported file itself** as the response body. There is no job to create, no status to poll, and no download link to follow: when the call returns, the bytes of the CSV, JSON, XML, XLS, PDF, HTML, or image file are already in your hands.
 
-That convenience is also its constraint. Because the file must be produced inside a single request, the API is deliberately restricted to views that can be rendered quickly — see [Limitations](#limitations).
+That convenience is also its constraint. Because the file must be produced inside a single request, the API is **restricted** — and the restriction is a property of the resource, not of how large or slow it happens to be on a given day.
+
+> **Note:** Export Data API is restricted for the resources given below. For these, use the Asynchronous Export APIs instead.
+>
+> - Tables having more than one million rows.
+> - Tables and Views from live connect workspaces.
+> - Dashboard and Query Table view types.
+
+These are rejected with `8133` regardless of format, filter or column selection — see [Limitations](#limitations).
 
 | | Synchronous export (this document) | Asynchronous export |
 |---|---|---|

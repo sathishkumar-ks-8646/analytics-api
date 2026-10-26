@@ -65,7 +65,7 @@ sources:
     last_modified: 2026-10-09T14:14:03Z
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -353,13 +353,13 @@ There is no `domainName` attribute on any AutoML API. Manage AutoML for a white-
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. |
 | [7319](../../../foundations/error-codes.md#error-7319) | 400 | The view does not belong to the specified workspace. |
-| [8050](../../../foundations/error-codes.md#error-8050) | 400 | A value is invalid — unknown columnName, an operation incompatible with the column, a null axisColumns. |
+| [8050](../../../foundations/error-codes.md#error-8050) | 400 | INVALID_VALUE - A value is invalid: an unknown column name; an explicit null for any key; an empty columnName; a mergeAxisInfo rule violation; mergeAxisInfo without isAxisMerge: true; isallval: false with no values; an invalid user-filter operation or filterType; exclude: true on a range-picker user filter. |
 | [8078](../../../foundations/error-codes.md#error-8078) | 400 | EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent blank. |
-| [8079](../../../foundations/error-codes.md#error-8079) | 400 | A required attribute (expression or formulaName) is missing from CONFIG. |
+| [8079](../../../foundations/error-codes.md#error-8079) | 400 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. |
 | [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
 | [8504](../../../foundations/error-codes.md#error-8504) | 400 | LESSTHANMINOCCURANCE — CONFIG was not sent. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [8544](../../../foundations/error-codes.md#error-8544) | 400 | OUTOFRANGE — A schedule value is outside its declared range. |
+| [8544](../../../foundations/error-codes.md#error-8544) | 400 | OUT_OF_RANGE - An integer is outside its range: percentileVal outside 0-100, a mergeAxisInfo index outside 0-100. |
 | [8547](../../../foundations/error-codes.md#error-8547) | 400 | ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries. |
 
 # Related

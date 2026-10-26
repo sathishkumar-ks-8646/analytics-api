@@ -30,7 +30,7 @@
         ],
         "x-zenesis-title": "Create Report",
         "summary": "Create Report",
-        "description": "Builds a new chart, pivot or summary view on an existing table and returns its view ID.\n\nPermission required: Workspace Admin / Organization Admin, or a shared or group user holding Create Report permission on the base table.",
+        "description": "Builds a new chart, pivot or summary view on an existing table and returns its view ID. Use the returned viewId as <report-id> in Read Report Metadata and Update Report.",
         "operationId": "createReport",
         "x-zenesis-sections": {
           "apiRequest": {
@@ -395,209 +395,284 @@
             },
             "x-zenesis-statuscodes": [
               {
-                "name": "8504",
-                "description": "baseTableName is absent, or the CONFIG parameter itself is missing.",
-                "resolution": "Send CONFIG with baseTableName."
-              },
-              {
-                "name": "7138",
-                "description": "baseTableName does not resolve to a table in this workspace.",
-                "resolution": "Use the exact table display name."
-              },
-              {
                 "name": "7016",
-                "description": "title is empty or whitespace-only.",
+                "description": "OBJECT_NAME_EMPTY - title is empty or whitespace-only.",
                 "resolution": "Supply a non-empty title."
               },
               {
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
+              },
+              {
                 "name": "7111",
-                "description": "A view with this title already exists in the workspace.",
-                "resolution": "Choose a unique title."
+                "description": "META_DBOBJECT_NAME_DUPLICATED - An object with this title already exists in the workspace.",
+                "resolution": "Choose a title not used by any table, report or dashboard in the workspace."
               },
               {
-                "name": "8507",
-                "description": "title exceeds 100 characters, description exceeds 250, or an axis displayName exceeds 250.",
-                "resolution": "Shorten the value."
+                "name": "7137",
+                "description": "NOT_A_TABLE - baseTableName names an object that is not a table or query table.",
+                "resolution": "Use a table or query table."
               },
               {
-                "name": "8252",
-                "description": "reportType is absent or null.",
-                "resolution": "Supply chart, pivot or summary."
+                "name": "7138",
+                "description": "META_OBJECT_NOT_PRESENT - baseTableName does not match a table in this workspace (matching is case-sensitive).",
+                "resolution": "Use the exact table display name."
               },
               {
-                "name": "8092",
-                "description": "reportType resolves to a view kind that cannot be saved standalone.",
-                "resolution": "Use chart, pivot or summary."
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller cannot read the base table, or lacks Create Report permission on the workspace.",
+                "resolution": "Call as a user with Create Report permission and read access to the base table."
               },
               {
-                "name": "8144",
-                "description": "chartType is not a recognised chart name.",
-                "resolution": "See Appendix A."
+                "name": "7309",
+                "description": "SECURITY_NEEDS_LOGIN - Authorization header absent.",
+                "resolution": "Send Authorization: Zoho-oauthtoken <token>."
               },
               {
-                "name": "8147",
-                "description": "settings was supplied for a non-pivot report.",
-                "resolution": "Remove settings, or change reportType to pivot."
+                "name": "7324",
+                "description": "PERMISSION_DENIED_FOR_DOMAINUSER - A Custom Role user's role does not grant Create Report on the base table.",
+                "resolution": "Grant Create Report in the role."
               },
               {
                 "name": "7362",
-                "description": "folderId does not exist in the workspace.",
-                "resolution": "Supply a valid folder ID or omit the key."
-              },
-              {
-                "name": "8051",
-                "description": "A required field is missing — title, reportType, axisColumns, or a mandatory key inside an axis/filter object.",
-                "resolution": "Add the missing field."
-              },
-              {
-                "name": "8050",
-                "description": "A value is invalid — unknown columnName, an operation incompatible with the column, a null axisColumns.",
-                "resolution": "Check column names and operations."
-              },
-              {
-                "name": "8052",
-                "description": "More than 1000 entries in axisColumns, filters or userFilters.",
-                "resolution": "Reduce the array size."
-              },
-              {
-                "name": "8170",
-                "description": "An axis type is not valid for the chosen reportType.",
-                "resolution": "See Appendix B."
+                "description": "NO_SUCH_FOLDER_IN_DB - folderId does not exist in the workspace.",
+                "resolution": "Supply a folder ID of this workspace, or omit folderId."
               },
               {
                 "name": "7701",
-                "description": "A chart report has no X-axis or no Y-axis column.",
-                "resolution": "Add at least one of each."
+                "description": "DROP_X_Y - The chart's shelves do not form a drawable chart; typically no X-axis or no Y-axis column.",
+                "resolution": "Add the missing shelf."
               },
               {
                 "name": "7703",
-                "description": "A colorAxis column is present alongside more than one Y-axis column.",
-                "resolution": "Drop the colour axis, or reduce to one Y axis."
+                "description": "REMOVE_CLR_FIELD - Multiple Y-axis columns in a shelf combination that does not support them, typically with a colorAxis column or with no X-axis column.",
+                "resolution": "Drop the colour axis, add an X axis, or reduce to one Y axis."
+              },
+              {
+                "name": "7705",
+                "description": "DROP_SUMMARY - A summary report has no groupBy and no summarize column.",
+                "resolution": "Add at least one."
+              },
+              {
+                "name": "7706",
+                "description": "DROP_PIVOT - A pivot report has no row, column or data column.",
+                "resolution": "Add at least one."
+              },
+              {
+                "name": "7725",
+                "description": "ILLEGAL_COLUMN - The caller is not permitted to access a column used in the report.",
+                "resolution": "Share the column with the caller, or remove it."
               },
               {
                 "name": "7727",
-                "description": "More than 15 Y-axis columns on a chart.",
+                "description": "Y_EXCEED_LIMIT - More than 15 Y-axis columns on a chart.",
                 "resolution": "Reduce to 15 or fewer."
               },
               {
-                "name": "8021",
-                "description": "The pivot or summary structure is invalid — no data column in a pivot, too many data or groupBy columns, or a column in a position its type cannot occupy. On Update, also raised when reportType does not match the stored view's type.",
-                "resolution": "Review the axis configuration."
+                "name": "8008",
+                "description": "UNKNOWN_PARAMETER - behaviour was supplied on a slider, dateRange or relative user filter.",
+                "resolution": "Remove behaviour from that user filter."
               },
               {
-                "name": "8166",
-                "description": "The operation is incompatible with the column's data type.",
-                "resolution": "See Appendix C."
+                "name": "8050",
+                "description": "INVALID_VALUE - A value is invalid: an unknown column name; an explicit null for any key; an empty columnName; a mergeAxisInfo rule violation; mergeAxisInfo without isAxisMerge: true; isallval: false with no values; an invalid user-filter operation or filterType; exclude: true on a range-picker user filter.",
+                "resolution": "Check names and values against this document."
               },
               {
-                "name": "8167",
-                "description": "The filterType is not valid for the column type + operation combination.",
-                "resolution": "See Appendix D."
-              },
-              {
-                "name": "8168",
-                "description": "A values entry does not match the expected format for the filterType.",
-                "resolution": "See Appendix E."
-              },
-              {
-                "name": "8191",
-                "description": "An invalid date value was supplied to a date filter.",
-                "resolution": "Use the documented date formats."
-              },
-              {
-                "name": "8057",
-                "description": "The column named in windowFunction.baseField cannot be used as a base field here.",
-                "resolution": "Choose a different reference column."
-              },
-              {
-                "name": "8059",
-                "description": "The tableName is not part of the workspace or is not joined to the base table.",
-                "resolution": "Use a table reachable through the join graph."
-              },
-              {
-                "name": "8162",
-                "description": "rangeSize was supplied as a string, or on an operation that does not support ranges.",
-                "resolution": "Send a JSON number, and only with range grouping."
-              },
-              {
-                "name": "8516",
-                "description": "rangeSize was supplied as an array.",
-                "resolution": "Send a plain number."
-              },
-              {
-                "name": "8250",
-                "description": "compType is not applicable to the column category — e.g. slider on a dimension, singleSelect on a measure.",
-                "resolution": "Match the widget to the column type."
-              },
-              {
-                "name": "8253",
-                "description": "A mandatory userFilters key is missing, typically compType or filterType.",
+                "name": "8051",
+                "description": "VALUE_NOT_PRESENT - A mandatory key is missing: title, reportType, axisColumns, an axis type or operation, a filter's filterType, values, exclude or operation, windowFunction.type, baseFieldPosition, movingCalculation or one of its keys, a wildcard object, mergeAxisInfo[].axisIndex; or the four-key base-field lookup found no matching entry.",
                 "resolution": "Add the missing key."
               },
               {
-                "name": "8008",
-                "description": "behaviour was supplied on a daterange or relative user filter.",
-                "resolution": "Remove behaviour."
+                "name": "8052",
+                "description": "COLUMN_COUNT_EXCEEDED - More than 1000 entries in axisColumns, filters or userFilters.",
+                "resolution": "Reduce the array size."
+              },
+              {
+                "name": "8053",
+                "description": "AGGREGATE_COLUMN_INVALID_FIELD - In a pivot or summary report, an aggregate formula column is placed on row, column or groupBy.",
+                "resolution": "Place it on data or summarize."
+              },
+              {
+                "name": "8055",
+                "description": "NUMERIC_RANKING_COLUMN - rankingColumn names a Numeric column.",
+                "resolution": "Use a Text or Date column."
+              },
+              {
+                "name": "8056",
+                "description": "NOT_ALLOWED - pctoftotal on an average, stddev, variance, dc or distinctcount column, or on an aggregate formula.",
+                "resolution": "Choose another window function type."
+              },
+              {
+                "name": "8057",
+                "description": "NOT_ALLOWED_BASEFIELD - windowFunction.baseField is not a dimension entry of axisColumns.",
+                "resolution": "Add the base field to axisColumns as a dimension."
+              },
+              {
+                "name": "8058",
+                "description": "BASEFIELD_INVALID_AXIS - windowFunction.baseField sits on a different shelf from baseFieldPosition.",
+                "resolution": "Correct baseFieldPosition."
+              },
+              {
+                "name": "8059",
+                "description": "UNRELATED_TABLE - A tableName is not a table joined to the base table.",
+                "resolution": "Use a table reachable from the base table."
+              },
+              {
+                "name": "8144",
+                "description": "INVALID_GRAPH_TYPE - chartType is not a value from chartType Values.",
+                "resolution": "Use an accepted chart type, or omit chartType."
+              },
+              {
+                "name": "8162",
+                "description": "RANGE_SIZE_NOT_SUPPORTED_FOR_THIS_OPERATION - rangeSize was supplied on an operation other than range.",
+                "resolution": "Use rangeSize only with operation: \"range\"."
+              },
+              {
+                "name": "8164",
+                "description": "FILTER_COLUMN_DATATYPE_MISMATCH - A numeric individualvalues filter value is not a valid number for the column.",
+                "resolution": "Send the exact stored numeric value."
+              },
+              {
+                "name": "8166",
+                "description": "INVALID OPERATION FOR THE COLUMN - The operation is not valid for the column's category and shelf; or a defaultFilterValues entry is invalid.",
+                "resolution": "See Axis Operation Values and Static Filter Operation and Type Values."
+              },
+              {
+                "name": "8167",
+                "description": "INVALID FILTER TYPE FOR THE GIVEN OPERATION - The filterType is not valid for the column category and operation.",
+                "resolution": "See Static Filter Operation and Type Values."
+              },
+              {
+                "name": "8168",
+                "description": "INVALID CRITERIA FORMAT FOR THE COLUMN - A values entry does not match the format for its filterType.",
+                "resolution": "See Filter Value Formats."
+              },
+              {
+                "name": "8169",
+                "description": "INVALID WINDOW TYPE FOR THE COLUMN - windowFunction.type or movingCalculation.calculation is not a valid value.",
+                "resolution": "See Window Function Type Values."
+              },
+              {
+                "name": "8170",
+                "description": "INVALID AXIS TYPE FOR THE REPORT - An axis type is not valid for the chosen reportType.",
+                "resolution": "See Axis Type Values."
+              },
+              {
+                "name": "8179",
+                "description": "ADVFILTER_EXPRESSION_NO_CRITERIAS - wildcard.criteria is empty.",
+                "resolution": "Supply 1-15 criteria."
+              },
+              {
+                "name": "8187",
+                "description": "ADVFILTER_EXPRESSION_ORDER_CHANGE - Criteria indexes in wildcard.expression are out of order.",
+                "resolution": "Reference criteria as 1, 2, 3 … in order."
+              },
+              {
+                "name": "8188",
+                "description": "ADVFILTER_EXPRESSION_LENGTH_MISMATCH - The number of indexes in wildcard.expression differs from the number of criteria.",
+                "resolution": "Reference every criterion exactly once."
+              },
+              {
+                "name": "8201",
+                "description": "DUPL_DISPLAY_NAME - Another report with the same title is being created at the same moment.",
+                "resolution": "Retry with a unique title."
+              },
+              {
+                "name": "8250",
+                "description": "INVALID_UF_COMP_TYPE - compType is not valid for the column category or operation.",
+                "resolution": "See User Filter Rules by Column."
+              },
+              {
+                "name": "8251",
+                "description": "INCORRECT_DATE_VALUE - A date in a date-range static filter could not be parsed.",
+                "resolution": "Use the date formats in Filter Value Formats."
+              },
+              {
+                "name": "8253",
+                "description": "REQUIRED PARAM IS MISSING - A required key is missing: windowFunction.baseField, user-filter compType, or user-filter filterType where User Filter Rules by Column marks it required.",
+                "resolution": "Add the key."
               },
               {
                 "name": "8254",
-                "description": "A geoRole value is wrong for the column type.",
-                "resolution": "latitude/longitude for numeric columns; place roles for text columns."
+                "description": "INVALID_VALUE_FOR_ATTRIBUTE_FOR_COLUMN - latitude / longitude on a text column, or a place role on a numeric column.",
+                "resolution": "See Geo Role Values."
               },
               {
                 "name": "8255",
-                "description": "geoRole was supplied on a column that cannot be geocoded.",
-                "resolution": "Remove geoRole, or use a geocodable column."
+                "description": "INVALID_KEY_GIVEN - operation: \"geo\" on a column type that cannot be geocoded.",
+                "resolution": "Use a Plain Text, Number, Positive Number, Decimal Number or Geo column."
               },
               {
                 "name": "8256",
-                "description": "More than one geo operation on the same axis.",
+                "description": "GEO_COL_COUNT_EXCEEDED - More than one text geo column on X, or more than one numeric geo column on one axis.",
                 "resolution": "Keep one geo column per axis."
               },
               {
                 "name": "8257",
-                "description": "A numeric geo column coexists with a categorical geo column.",
+                "description": "GEO_COL_COUNT_EXCEEDED_CATEGORICAL - A text geo column on X coexists with a numeric geo column on Y.",
                 "resolution": "Use one or the other."
               },
               {
                 "name": "8258",
-                "description": "A categorical geo column was placed on an axis other than X.",
+                "description": "GEO_COL_CATEGORY_ONLY_X - A text geo column was placed on a shelf other than X.",
                 "resolution": "Move it to xAxis."
               },
               {
+                "name": "8504",
+                "description": "LESS_THAN_MIN_OCCURANCE - CONFIG is missing, or baseTableName is absent.",
+                "resolution": "Send CONFIG with baseTableName."
+              },
+              {
+                "name": "8507",
+                "description": "MORE_THAN_MAX_LENGTH - A string exceeds its limit: title 100, description 250, chartType 50, axis displayName 250, columnName 1000, axis tableName 100, windowFunction object 1000, serialised values / defaultFilterValues array 1000.",
+                "resolution": "Shorten the value."
+              },
+              {
                 "name": "8509",
-                "description": "An enumerated or pattern-constrained value does not match — reportType: \"Chart\" (must be lowercase), type: \"sizeAxis\" (must be sizeaxis), sort: \"descending\", a wildcard expression without parentheses.",
+                "description": "PATTERN_NOT_MATCHED - A value does not match its pattern: reportType: \"Chart\", type: \"sizeAxis\", sort: \"descending\", a chartType with a hyphen, compType: \"multiselect\", a wildcard expression without parentheses, a wildcard operation in lowercase.",
                 "resolution": "Use the exact accepted values."
               },
               {
+                "name": "8516",
+                "description": "UNABLE_TO_PARSE_DATA_TYPE - A numeric value could not be parsed, for example rangeSize sent as an array.",
+                "resolution": "Send a plain number."
+              },
+              {
                 "name": "8517",
-                "description": "A field has the wrong JSON data type — exclude: \"yes\", isAxisMerge: \"maybe\", compType: 123.",
-                "resolution": "Use real JSON booleans and strings."
+                "description": "DATATYPE_NOT_MATCHED - A value has the wrong JSON type: exclude: \"yes\", isAxisMerge: 1, folderId: \"abc\".",
+                "resolution": "Use JSON booleans, numbers and strings as documented."
               },
               {
                 "name": "8534",
-                "description": "CONFIG is malformed, or a key has the wrong structural type — axisColumns as {}, mergeAxisInfo as an object, values as a bare string.",
+                "description": "JSON_PARSE_ERROR - CONFIG is not valid JSON, or a key has the wrong structure (axisColumns as {}, values as a string, mergeAxisInfo as an object).",
                 "resolution": "Arrays must be [], objects {}."
               },
               {
-                "name": "8542",
-                "description": "An unknown key is present in CONFIG, or a windowFunction is mis-configured.",
-                "resolution": "Remove the key; check windowFunction.type against the list."
-              },
-              {
-                "name": "7005",
-                "description": "A null element inside axisColumns or filters.",
-                "resolution": "Ensure every array element is a JSON object."
-              },
-              {
-                "name": "7301",
-                "description": "The caller lacks Create Report permission on the workspace.",
-                "resolution": "Grant the permission."
-              },
-              {
                 "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Refresh with scope ZohoAnalytics.modeling.create."
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.create."
+              },
+              {
+                "name": "8542",
+                "description": "EXTRA_KEY_FOUND_IN_JSON - A key not listed in this document is present.",
+                "resolution": "Remove the key."
+              },
+              {
+                "name": "8544",
+                "description": "OUT_OF_RANGE - An integer is outside its range: percentileVal outside 0-100, a mergeAxisInfo index outside 0-100.",
+                "resolution": "Use a value inside the range."
+              },
+              {
+                "name": "8547",
+                "description": "ARRAY_SIZE_OUT_OF_RANGE - More than 15 entries in wildcard.criteria.",
+                "resolution": "Reduce the array size."
+              },
+              {
+                "name": "14037",
+                "description": "DISABLED_COLUMNS_USED - A disabled column is used in the report.",
+                "resolution": "Enable the column, or remove it."
               }
             ]
           },
@@ -617,7 +692,7 @@
         ],
         "x-zenesis-title": "Update Report",
         "summary": "Update Report",
-        "description": "Rebuilds an existing report from a fresh CONFIG.\n\nPermission required: Design Modify on the report — the owner, a Workspace Admin, an Organization Admin, or a shared or group user granted edit rights.",
+        "description": "Rebuilds an existing report from a fresh CONFIG and returns no body. The <report-id> comes from Create Report (data.viewId) or from the workspace's view list.",
         "operationId": "updateReport",
         "x-zenesis-sections": {
           "apiInfo": {
@@ -789,224 +864,274 @@
             "description": "The analysis view was updated successfully. No response body is returned.",
             "x-zenesis-statuscodes": [
               {
-                "name": "7104",
-                "description": "The report does not exist, has been deleted, or the caller cannot edit it.",
-                "resolution": "Verify <report-id> and the caller's permission."
-              },
-              {
-                "name": "7106",
-                "description": "The report does not exist, has been deleted, or the caller cannot edit it.",
-                "resolution": "Verify <report-id> and the caller's permission."
-              },
-              {
-                "name": "8021",
-                "description": "reportType does not match the stored view's type, or the target is not an analysis view at all.",
-                "resolution": "Send the report's actual type."
-              },
-              {
-                "name": "8145",
-                "description": "folderId was supplied.",
-                "resolution": "Remove folderId — reports cannot be moved through this endpoint."
-              },
-              {
-                "name": "8542",
-                "description": "baseTableName, drillActionConfig, modifiedPaths or any other key outside the Update schema is present.",
-                "resolution": "Remove the key."
-              },
-              {
-                "name": "7301",
-                "description": "The caller lacks Design Modify permission on the report.",
-                "resolution": "Grant edit access."
-              },
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Refresh with scope ZohoAnalytics.modeling.update."
-              },
-              {
-                "name": "8504",
-                "description": "baseTableName is absent, or the CONFIG parameter itself is missing.",
-                "resolution": "Send CONFIG with baseTableName."
-              },
-              {
-                "name": "7138",
-                "description": "baseTableName does not resolve to a table in this workspace.",
-                "resolution": "Use the exact table display name."
-              },
-              {
                 "name": "7016",
-                "description": "title is empty or whitespace-only.",
+                "description": "OBJECT_NAME_EMPTY - title is empty or whitespace-only.",
                 "resolution": "Supply a non-empty title."
               },
               {
-                "name": "7111",
-                "description": "A view with this title already exists in the workspace.",
-                "resolution": "Choose a unique title."
+                "name": "7103",
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
               },
               {
-                "name": "8507",
-                "description": "title exceeds 100 characters, description exceeds 250, or an axis displayName exceeds 250.",
-                "resolution": "Shorten the value."
+                "name": "7106",
+                "description": "META_OBJECT_NOT_PRESENT - The report does not exist or has been deleted.",
+                "resolution": "Verify <report-id>."
               },
               {
-                "name": "8252",
-                "description": "reportType is absent or null.",
-                "resolution": "Supply chart, pivot or summary."
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not the report's owner, an Account Admin, an Organization Admin, the Workspace Owner or a Workspace Admin.",
+                "resolution": "Call as one of those users."
               },
               {
-                "name": "8092",
-                "description": "reportType resolves to a view kind that cannot be saved standalone.",
-                "resolution": "Use chart, pivot or summary."
+                "name": "7309",
+                "description": "SECURITY_NEEDS_LOGIN - Authorization header absent.",
+                "resolution": "Send Authorization: Zoho-oauthtoken <token>."
               },
               {
-                "name": "8144",
-                "description": "chartType is not a recognised chart name.",
-                "resolution": "See Appendix A."
-              },
-              {
-                "name": "8147",
-                "description": "settings was supplied for a non-pivot report.",
-                "resolution": "Remove settings, or change reportType to pivot."
-              },
-              {
-                "name": "7362",
-                "description": "folderId does not exist in the workspace.",
-                "resolution": "Supply a valid folder ID or omit the key."
-              },
-              {
-                "name": "8051",
-                "description": "A required field is missing — title, reportType, axisColumns, or a mandatory key inside an axis/filter object.",
-                "resolution": "Add the missing field."
-              },
-              {
-                "name": "8050",
-                "description": "A value is invalid — unknown columnName, an operation incompatible with the column, a null axisColumns.",
-                "resolution": "Check column names and operations."
-              },
-              {
-                "name": "8052",
-                "description": "More than 1000 entries in axisColumns, filters or userFilters.",
-                "resolution": "Reduce the array size."
-              },
-              {
-                "name": "8170",
-                "description": "An axis type is not valid for the chosen reportType.",
-                "resolution": "See Appendix B."
+                "name": "7319",
+                "description": "OBJID_NOT_BELONGS_TO_DB - The report belongs to a different workspace.",
+                "resolution": "Make <workspace-id> and <report-id> consistent."
               },
               {
                 "name": "7701",
-                "description": "A chart report has no X-axis or no Y-axis column.",
-                "resolution": "Add at least one of each."
+                "description": "DROP_X_Y - The chart's shelves do not form a drawable chart; typically no X-axis or no Y-axis column.",
+                "resolution": "Add the missing shelf."
               },
               {
                 "name": "7703",
-                "description": "A colorAxis column is present alongside more than one Y-axis column.",
-                "resolution": "Drop the colour axis, or reduce to one Y axis."
+                "description": "REMOVE_CLR_FIELD - Multiple Y-axis columns in a shelf combination that does not support them, typically with a colorAxis column or with no X-axis column.",
+                "resolution": "Drop the colour axis, add an X axis, or reduce to one Y axis."
+              },
+              {
+                "name": "7705",
+                "description": "DROP_SUMMARY - A summary report has no groupBy and no summarize column.",
+                "resolution": "Add at least one."
+              },
+              {
+                "name": "7706",
+                "description": "DROP_PIVOT - A pivot report has no row, column or data column.",
+                "resolution": "Add at least one."
+              },
+              {
+                "name": "7725",
+                "description": "ILLEGAL_COLUMN - The caller is not permitted to access a column used in the report.",
+                "resolution": "Share the column with the caller, or remove it."
               },
               {
                 "name": "7727",
-                "description": "More than 15 Y-axis columns on a chart.",
+                "description": "Y_EXCEED_LIMIT - More than 15 Y-axis columns on a chart.",
                 "resolution": "Reduce to 15 or fewer."
               },
               {
-                "name": "8166",
-                "description": "The operation is incompatible with the column's data type.",
-                "resolution": "See Appendix C."
+                "name": "8008",
+                "description": "UNKNOWN_PARAMETER - behaviour was supplied on a slider, dateRange or relative user filter.",
+                "resolution": "Remove behaviour from that user filter."
               },
               {
-                "name": "8167",
-                "description": "The filterType is not valid for the column type + operation combination.",
-                "resolution": "See Appendix D."
+                "name": "8021",
+                "description": "INVALID_VIEW_TYPE_IN_REQUEST - reportType does not match the stored report's type, or the target is not a report.",
+                "resolution": "Send the report's actual reportType."
               },
               {
-                "name": "8168",
-                "description": "A values entry does not match the expected format for the filterType.",
-                "resolution": "See Appendix E."
+                "name": "8050",
+                "description": "INVALID_VALUE - A value is invalid: an unknown column name; an explicit null for any key; an empty columnName; a mergeAxisInfo rule violation; mergeAxisInfo without isAxisMerge: true; isallval: false with no values; an invalid user-filter operation or filterType; exclude: true on a range-picker user filter.",
+                "resolution": "Check names and values against this document."
               },
               {
-                "name": "8191",
-                "description": "An invalid date value was supplied to a date filter.",
-                "resolution": "Use the documented date formats."
-              },
-              {
-                "name": "8057",
-                "description": "The column named in windowFunction.baseField cannot be used as a base field here.",
-                "resolution": "Choose a different reference column."
-              },
-              {
-                "name": "8059",
-                "description": "The tableName is not part of the workspace or is not joined to the base table.",
-                "resolution": "Use a table reachable through the join graph."
-              },
-              {
-                "name": "8162",
-                "description": "rangeSize was supplied as a string, or on an operation that does not support ranges.",
-                "resolution": "Send a JSON number, and only with range grouping."
-              },
-              {
-                "name": "8516",
-                "description": "rangeSize was supplied as an array.",
-                "resolution": "Send a plain number."
-              },
-              {
-                "name": "8250",
-                "description": "compType is not applicable to the column category — e.g. slider on a dimension, singleSelect on a measure.",
-                "resolution": "Match the widget to the column type."
-              },
-              {
-                "name": "8253",
-                "description": "A mandatory userFilters key is missing, typically compType or filterType.",
+                "name": "8051",
+                "description": "VALUE_NOT_PRESENT - A mandatory key is missing: title, reportType, axisColumns, an axis type or operation, a filter's filterType, values, exclude or operation, windowFunction.type, baseFieldPosition, movingCalculation or one of its keys, a wildcard object, mergeAxisInfo[].axisIndex; or the four-key base-field lookup found no matching entry.",
                 "resolution": "Add the missing key."
               },
               {
-                "name": "8008",
-                "description": "behaviour was supplied on a daterange or relative user filter.",
-                "resolution": "Remove behaviour."
+                "name": "8052",
+                "description": "COLUMN_COUNT_EXCEEDED - More than 1000 entries in axisColumns, filters or userFilters.",
+                "resolution": "Reduce the array size."
+              },
+              {
+                "name": "8053",
+                "description": "AGGREGATE_COLUMN_INVALID_FIELD - In a pivot or summary report, an aggregate formula column is placed on row, column or groupBy.",
+                "resolution": "Place it on data or summarize."
+              },
+              {
+                "name": "8055",
+                "description": "NUMERIC_RANKING_COLUMN - rankingColumn names a Numeric column.",
+                "resolution": "Use a Text or Date column."
+              },
+              {
+                "name": "8056",
+                "description": "NOT_ALLOWED - pctoftotal on an average, stddev, variance, dc or distinctcount column, or on an aggregate formula.",
+                "resolution": "Choose another window function type."
+              },
+              {
+                "name": "8057",
+                "description": "NOT_ALLOWED_BASEFIELD - windowFunction.baseField is not a dimension entry of axisColumns.",
+                "resolution": "Add the base field to axisColumns as a dimension."
+              },
+              {
+                "name": "8058",
+                "description": "BASEFIELD_INVALID_AXIS - windowFunction.baseField sits on a different shelf from baseFieldPosition.",
+                "resolution": "Correct baseFieldPosition."
+              },
+              {
+                "name": "8059",
+                "description": "UNRELATED_TABLE - A tableName is not a table joined to the base table.",
+                "resolution": "Use a table reachable from the base table."
+              },
+              {
+                "name": "8144",
+                "description": "INVALID_GRAPH_TYPE - chartType is not a value from chartType Values.",
+                "resolution": "Use an accepted chart type, or omit chartType."
+              },
+              {
+                "name": "8145",
+                "description": "FOLDERID_CANNOT_BE_UPDATED - folderId was supplied.",
+                "resolution": "Remove folderId."
+              },
+              {
+                "name": "8162",
+                "description": "RANGE_SIZE_NOT_SUPPORTED_FOR_THIS_OPERATION - rangeSize was supplied on an operation other than range.",
+                "resolution": "Use rangeSize only with operation: \"range\"."
+              },
+              {
+                "name": "8164",
+                "description": "FILTER_COLUMN_DATATYPE_MISMATCH - A numeric individualvalues filter value is not a valid number for the column.",
+                "resolution": "Send the exact stored numeric value."
+              },
+              {
+                "name": "8166",
+                "description": "INVALID OPERATION FOR THE COLUMN - The operation is not valid for the column's category and shelf; or a defaultFilterValues entry is invalid.",
+                "resolution": "See Axis Operation Values and Static Filter Operation and Type Values."
+              },
+              {
+                "name": "8167",
+                "description": "INVALID FILTER TYPE FOR THE GIVEN OPERATION - The filterType is not valid for the column category and operation.",
+                "resolution": "See Static Filter Operation and Type Values."
+              },
+              {
+                "name": "8168",
+                "description": "INVALID CRITERIA FORMAT FOR THE COLUMN - A values entry does not match the format for its filterType.",
+                "resolution": "See Filter Value Formats."
+              },
+              {
+                "name": "8169",
+                "description": "INVALID WINDOW TYPE FOR THE COLUMN - windowFunction.type or movingCalculation.calculation is not a valid value.",
+                "resolution": "See Window Function Type Values."
+              },
+              {
+                "name": "8170",
+                "description": "INVALID AXIS TYPE FOR THE REPORT - An axis type is not valid for the chosen reportType.",
+                "resolution": "See Axis Type Values."
+              },
+              {
+                "name": "8179",
+                "description": "ADVFILTER_EXPRESSION_NO_CRITERIAS - wildcard.criteria is empty.",
+                "resolution": "Supply 1-15 criteria."
+              },
+              {
+                "name": "8187",
+                "description": "ADVFILTER_EXPRESSION_ORDER_CHANGE - Criteria indexes in wildcard.expression are out of order.",
+                "resolution": "Reference criteria as 1, 2, 3 … in order."
+              },
+              {
+                "name": "8188",
+                "description": "ADVFILTER_EXPRESSION_LENGTH_MISMATCH - The number of indexes in wildcard.expression differs from the number of criteria.",
+                "resolution": "Reference every criterion exactly once."
+              },
+              {
+                "name": "8192",
+                "description": "ADVFILTER_UPDATE_HANDLING - A filters entry uses filterType: \"wildcard\".",
+                "resolution": "Wildcard filters can only be set at create time."
+              },
+              {
+                "name": "8250",
+                "description": "INVALID_UF_COMP_TYPE - compType is not valid for the column category or operation.",
+                "resolution": "See User Filter Rules by Column."
+              },
+              {
+                "name": "8251",
+                "description": "INCORRECT_DATE_VALUE - A date in a date-range static filter could not be parsed.",
+                "resolution": "Use the date formats in Filter Value Formats."
+              },
+              {
+                "name": "8253",
+                "description": "REQUIRED PARAM IS MISSING - A required key is missing: windowFunction.baseField, user-filter compType, or user-filter filterType where User Filter Rules by Column marks it required.",
+                "resolution": "Add the key."
               },
               {
                 "name": "8254",
-                "description": "A geoRole value is wrong for the column type.",
-                "resolution": "latitude/longitude for numeric columns; place roles for text columns."
+                "description": "INVALID_VALUE_FOR_ATTRIBUTE_FOR_COLUMN - latitude / longitude on a text column, or a place role on a numeric column.",
+                "resolution": "See Geo Role Values."
               },
               {
                 "name": "8255",
-                "description": "geoRole was supplied on a column that cannot be geocoded.",
-                "resolution": "Remove geoRole, or use a geocodable column."
+                "description": "INVALID_KEY_GIVEN - operation: \"geo\" on a column type that cannot be geocoded.",
+                "resolution": "Use a Plain Text, Number, Positive Number, Decimal Number or Geo column."
               },
               {
                 "name": "8256",
-                "description": "More than one geo operation on the same axis.",
+                "description": "GEO_COL_COUNT_EXCEEDED - More than one text geo column on X, or more than one numeric geo column on one axis.",
                 "resolution": "Keep one geo column per axis."
               },
               {
                 "name": "8257",
-                "description": "A numeric geo column coexists with a categorical geo column.",
+                "description": "GEO_COL_COUNT_EXCEEDED_CATEGORICAL - A text geo column on X coexists with a numeric geo column on Y.",
                 "resolution": "Use one or the other."
               },
               {
                 "name": "8258",
-                "description": "A categorical geo column was placed on an axis other than X.",
+                "description": "GEO_COL_CATEGORY_ONLY_X - A text geo column was placed on a shelf other than X.",
                 "resolution": "Move it to xAxis."
               },
               {
+                "name": "8507",
+                "description": "MORE_THAN_MAX_LENGTH - A string exceeds its limit: title 100, description 250, chartType 50, axis displayName 250, columnName 1000, axis tableName 100, windowFunction object 1000, serialised values / defaultFilterValues array 1000.",
+                "resolution": "Shorten the value."
+              },
+              {
                 "name": "8509",
-                "description": "An enumerated or pattern-constrained value does not match — reportType: \"Chart\" (must be lowercase), type: \"sizeAxis\" (must be sizeaxis), sort: \"descending\", a wildcard expression without parentheses.",
+                "description": "PATTERN_NOT_MATCHED - A value does not match its pattern: reportType: \"Chart\", type: \"sizeAxis\", sort: \"descending\", a chartType with a hyphen, compType: \"multiselect\", a wildcard expression without parentheses, a wildcard operation in lowercase.",
                 "resolution": "Use the exact accepted values."
               },
               {
+                "name": "8516",
+                "description": "UNABLE_TO_PARSE_DATA_TYPE - A numeric value could not be parsed, for example rangeSize sent as an array.",
+                "resolution": "Send a plain number."
+              },
+              {
                 "name": "8517",
-                "description": "A field has the wrong JSON data type — exclude: \"yes\", isAxisMerge: \"maybe\", compType: 123.",
-                "resolution": "Use real JSON booleans and strings."
+                "description": "DATATYPE_NOT_MATCHED - A value has the wrong JSON type: exclude: \"yes\", isAxisMerge: 1, folderId: \"abc\".",
+                "resolution": "Use JSON booleans, numbers and strings as documented."
               },
               {
                 "name": "8534",
-                "description": "CONFIG is malformed, or a key has the wrong structural type — axisColumns as {}, mergeAxisInfo as an object, values as a bare string.",
+                "description": "JSON_PARSE_ERROR - CONFIG is not valid JSON, or a key has the wrong structure (axisColumns as {}, values as a string, mergeAxisInfo as an object).",
                 "resolution": "Arrays must be [], objects {}."
               },
               {
-                "name": "7005",
-                "description": "A null element inside axisColumns or filters.",
-                "resolution": "Ensure every array element is a JSON object."
+                "name": "8535",
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.update."
+              },
+              {
+                "name": "8542",
+                "description": "EXTRA_KEY_FOUND_IN_JSON - baseTableName or any other key outside the Update schema is present.",
+                "resolution": "Remove the key."
+              },
+              {
+                "name": "8544",
+                "description": "OUT_OF_RANGE - An integer is outside its range: percentileVal outside 0-100, a mergeAxisInfo index outside 0-100.",
+                "resolution": "Use a value inside the range."
+              },
+              {
+                "name": "8547",
+                "description": "ARRAY_SIZE_OUT_OF_RANGE - More than 15 entries in wildcard.criteria.",
+                "resolution": "Reduce the array size."
+              },
+              {
+                "name": "14037",
+                "description": "DISABLED_COLUMNS_USED - A disabled column is used in the report.",
+                "resolution": "Enable the column, or remove it."
               }
             ]
           },
@@ -1026,7 +1151,7 @@
         ],
         "x-zenesis-title": "Read Report Metadata",
         "summary": "Read Report Metadata",
-        "description": "Returns the stored definition of a chart, pivot or summary view.\n\nPermission required: Design Modify on the report. A read-only shared user cannot call this endpoint.",
+        "description": "Returns a summary of the stored definition of a chart, pivot or summary view. The <report-id> comes from Create Report (data.viewId) or from the workspace's view list.",
         "operationId": "getReportMetadata",
         "x-zenesis-sections": {
           "apiRequest": {
@@ -1165,38 +1290,43 @@
             "x-zenesis-statuscodes": [
               {
                 "name": "7103",
-                "description": "Workspace not found.",
-                "resolution": "Verify <workspace-id>."
+                "description": "META_OBJECT_NOT_PRESENT - Workspace not found.",
+                "resolution": "Verify <workspace-id> and that the ZANALYTICS-ORGID header matches it."
               },
               {
                 "name": "7104",
-                "description": "The report does not exist or has been deleted.",
+                "description": "META_OBJECT_NOT_PRESENT - The report does not exist.",
                 "resolution": "Verify <report-id>."
               },
               {
                 "name": "7106",
-                "description": "The report does not exist or has been deleted.",
+                "description": "META_OBJECT_NOT_PRESENT - The report has been deleted.",
                 "resolution": "Verify <report-id>."
               },
               {
+                "name": "7301",
+                "description": "SECURITY_NOT_PERMITTED - The caller is not the owner and lacks Design Modify permission on the report.",
+                "resolution": "Grant the caller edit access to the report."
+              },
+              {
+                "name": "7309",
+                "description": "SECURITY_NEEDS_LOGIN - Authorization header absent.",
+                "resolution": "Send Authorization: Zoho-oauthtoken <token>."
+              },
+              {
                 "name": "7319",
-                "description": "The report belongs to a different workspace.",
-                "resolution": "Make the two path IDs consistent."
+                "description": "OBJID_NOT_BELONGS_TO_DB - The report belongs to a different workspace.",
+                "resolution": "Make <workspace-id> and <report-id> consistent."
               },
               {
                 "name": "8021",
-                "description": "The target is not a chart, pivot or summary view.",
-                "resolution": "Use a report ID, not a table or dashboard."
-              },
-              {
-                "name": "7301",
-                "description": "The caller lacks Design Modify permission on the report.",
-                "resolution": "Grant edit access."
+                "description": "INVALID_VIEW_TYPE_IN_REQUEST - The target is a table, query table or dashboard, not a report.",
+                "resolution": "Use a report ID."
               },
               {
                 "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Refresh with scope ZohoAnalytics.modeling.read."
+                "description": "INVALID_OAUTHTOKEN - Invalid or expired OAuth token.",
+                "resolution": "Provide a valid token with scope ZohoAnalytics.modeling.read."
               }
             ]
           },
@@ -4019,254 +4149,6 @@
           ]
         ]
       },
-      "ViewSettings": {
-        "type": "object",
-        "title": "ViewSettings",
-        "description": "JSONObject holding the layout and theme settings of a pivot report. Supplying it for a chart or summary raises 8147. Maximum serialized size 10 KB.",
-        "properties": {
-          "layout": {
-            "$ref": "#/components/schemas/ViewSettingsLayout"
-          },
-          "themes": {
-            "$ref": "#/components/schemas/ViewSettingsThemes"
-          }
-        },
-        "examples": [
-          {
-            "layout": {
-              "defaultWidth": 143
-            },
-            "themes": {
-              "themeType": 4,
-              "themeFontSize": 14,
-              "themeRowSpacing": 2
-            }
-          }
-        ]
-      },
-      "ViewSettingsLayout": {
-        "type": "object",
-        "title": "ViewSettingsLayout",
-        "description": "JSONObject controlling the column layout of the view.",
-        "properties": {
-          "defaultWidth": {
-            "type": "integer",
-            "description": "Default column width in pixels, applied to pivot and summary tables.",
-            "minimum": 1,
-            "maximum": 1000,
-            "examples": [
-              143
-            ]
-          }
-        }
-      },
-      "ViewSettingsThemes": {
-        "type": "object",
-        "title": "ViewSettingsThemes",
-        "description": "JSONObject controlling the visual theme of the view.",
-        "properties": {
-          "themeType": {
-            "type": "integer",
-            "description": "Index of the preset theme style applied to the view.",
-            "minimum": 1,
-            "maximum": 7,
-            "examples": [
-              4
-            ]
-          },
-          "themeColor": {
-            "type": "string",
-            "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
-            "description": "Theme colour, #RRGGBB or #RGB."
-          },
-          "themeFontSize": {
-            "type": "integer",
-            "description": "Base font size of the view in points.",
-            "minimum": 5,
-            "maximum": 24,
-            "examples": [
-              14
-            ]
-          },
-          "themeRowSpacing": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 3,
-            "description": "Row spacing."
-          },
-          "compactIndent": {
-            "type": "integer",
-            "description": "Row indentation depth applied in compact mode.",
-            "minimum": 0,
-            "maximum": 3,
-            "examples": [
-              2
-            ]
-          },
-          "fontColor": {
-            "type": "string",
-            "pattern": "^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
-            "description": "Font colour, #RRGGBB or #RGB."
-          }
-        }
-      },
-      "DrillActionConfig": {
-        "type": "object",
-        "title": "DrillActionConfig",
-        "description": "JSONObject configuring up to 10 custom drill-through actions. Accepted on Create only; rejected on Update with 8542.",
-        "properties": {
-          "drillActionsConfig": {
-            "$ref": "#/components/schemas/DrillActions"
-          }
-        }
-      },
-      "DrillActions": {
-        "type": "array",
-        "title": "DrillActions",
-        "description": "JSONArray of drill action items. A maximum of 10 actions is allowed.",
-        "maxItems": 10,
-        "items": {
-          "$ref": "#/components/schemas/DrillAction"
-        },
-        "examples": [
-          [
-            {
-              "id": "1001",
-              "name": "View Order Details",
-              "urlString": "https://crm.example.com/orders?id={{OrderID}}",
-              "methodType": "GET"
-            }
-          ]
-        ]
-      },
-      "DrillAction": {
-        "type": "object",
-        "title": "DrillAction",
-        "description": "One drill-through action invoked from a data point in the view.",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier of the action, as a long integer or a hyphenated long-integer string.",
-            "examples": [
-              "1001"
-            ]
-          },
-          "name": {
-            "type": "string",
-            "description": "Display name of the action.",
-            "maxLength": 50,
-            "examples": [
-              "View Order Details"
-            ]
-          },
-          "urlString": {
-            "type": "string",
-            "description": "Target URL invoked when the action fires.",
-            "maxLength": 2000,
-            "examples": [
-              "https://crm.example.com/orders?id={{OrderID}}"
-            ]
-          },
-          "methodType": {
-            "type": "string",
-            "description": "HTTP method used to call the target URL.",
-            "enum": [
-              "GET",
-              "POST",
-              "PUT",
-              "DELETE"
-            ]
-          },
-          "headers": {
-            "$ref": "#/components/schemas/DrillActionKeyValues"
-          },
-          "params": {
-            "$ref": "#/components/schemas/DrillActionKeyValues"
-          },
-          "formData": {
-            "$ref": "#/components/schemas/DrillActionKeyValues"
-          },
-          "body": {
-            "type": "string",
-            "description": "Raw request body sent with the action.",
-            "maxLength": 50000,
-            "examples": [
-              "{\"orderId\": \"{{OrderID}}\"}"
-            ]
-          },
-          "bodyType": {
-            "type": "string",
-            "description": "Format of the request body.",
-            "enum": [
-              "raw",
-              "form",
-              "none"
-            ]
-          }
-        }
-      },
-      "DrillActionKeyValues": {
-        "type": "array",
-        "title": "DrillActionKeyValues",
-        "description": "JSONArray of key-value entries used for the headers, query parameters or form body of a drill action. Maximum serialized size 5 KB.",
-        "items": {
-          "$ref": "#/components/schemas/DrillActionKeyValue"
-        },
-        "examples": [
-          [
-            {
-              "key": "Content-Type",
-              "value": "application/json",
-              "type": "static"
-            }
-          ]
-        ]
-      },
-      "DrillActionKeyValue": {
-        "type": "object",
-        "title": "DrillActionKeyValue",
-        "description": "One key-value entry of a drill action.",
-        "properties": {
-          "key": {
-            "type": "string",
-            "description": "Name of the entry.",
-            "examples": [
-              "Content-Type"
-            ]
-          },
-          "value": {
-            "type": "string",
-            "description": "Value of the entry. Column placeholders in the format {{ColumnName}} are substituted at click time.",
-            "examples": [
-              "application/json"
-            ]
-          },
-          "type": {
-            "type": "string",
-            "description": "Whether the value is a literal or resolved from the clicked data point.",
-            "examples": [
-              "static"
-            ]
-          }
-        }
-      },
-      "ModifiedPaths": {
-        "type": "object",
-        "title": "ModifiedPaths",
-        "description": "JSONObject with the configuration path as key and the change marker as value, used to signal which parts of the configuration were touched. Maximum serialized size 10 KB.",
-        "properties": {
-          "<config_path>": {
-            "type": "string",
-            "description": "Marker for the change applied at that path. NOTE: the key should be a path within the report configuration."
-          }
-        },
-        "examples": [
-          {
-            "axisColumns": "modified",
-            "settings.themes": "modified"
-          }
-        ]
-      },
       "CreateReportConfig": {
         "type": "object",
         "title": "CreateReportConfig",
@@ -4446,15 +4328,6 @@
           },
           "userFilters": {
             "$ref": "#/components/schemas/UserFilters"
-          },
-          "settings": {
-            "$ref": "#/components/schemas/ViewSettings"
-          },
-          "drillActionConfig": {
-            "$ref": "#/components/schemas/DrillActionConfig"
-          },
-          "modifiedPaths": {
-            "$ref": "#/components/schemas/ModifiedPaths"
           }
         },
         "required": [
@@ -4631,19 +4504,6 @@
           },
           "userFilters": {
             "$ref": "#/components/schemas/UserFilters"
-          },
-          "settings": {
-            "$ref": "#/components/schemas/ViewSettings"
-          },
-          "folderId": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Accepted by the schema, but the report cannot be moved: supplying it raises 8145. Omit it."
-          },
-          "objId": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Inert: the server always uses the report ID from the URL."
           }
         },
         "required": [
@@ -4861,201 +4721,6 @@
           "operation": {
             "type": "string",
             "description": "Reverse-derived from storage: average/avg, absquarter/quarteryear, absmonth/monthyear, absweek/weekyear, actual/geo and variance/dc/distinctcount collapse, and all date distinct-count operations share one stored marker."
-          }
-        }
-      },
-      "DashboardSummary": {
-        "type": "object",
-        "title": "DashboardSummary",
-        "description": "Summary of one dashboard as returned by the listing APIs.",
-        "properties": {
-          "viewId": {
-            "type": "string",
-            "description": "ID of the dashboard. Returned as a string even though the underlying value is a long integer.",
-            "examples": [
-              "466206000000105001"
-            ]
-          },
-          "viewName": {
-            "type": "string",
-            "description": "Display name of the dashboard.",
-            "examples": [
-              "Executive Sales Dashboard"
-            ]
-          },
-          "viewDesc": {
-            "type": "string",
-            "description": "Description of the dashboard. An empty string when none is set.",
-            "examples": [
-              "High-level sales KPIs for the executive team"
-            ]
-          },
-          "viewType": {
-            "type": "string",
-            "description": "Type of the view. Always Dashboard for entries returned by these APIs.",
-            "examples": [
-              "Dashboard"
-            ]
-          },
-          "parentViewId": {
-            "type": "string",
-            "description": "ID of the parent view, if there is one. An empty string otherwise.",
-            "examples": [
-              ""
-            ]
-          },
-          "folderId": {
-            "type": "string",
-            "description": "ID of the folder that contains the dashboard.",
-            "examples": [
-              "466206000000071005"
-            ]
-          },
-          "createdTime": {
-            "type": "string",
-            "description": "Creation timestamp of the dashboard, in epoch milliseconds.",
-            "examples": [
-              "1719820800000"
-            ]
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "Email address of the user who created the dashboard.",
-            "examples": [
-              "alice@example.com"
-            ]
-          },
-          "lastModifiedTime": {
-            "type": "string",
-            "description": "Timestamp of the last modification, in epoch milliseconds.",
-            "examples": [
-              "1722499200000"
-            ]
-          },
-          "lastModifiedBy": {
-            "type": "string",
-            "description": "Email address of the user who last modified the dashboard.",
-            "examples": [
-              "alice@example.com"
-            ]
-          },
-          "isFavorite": {
-            "type": "boolean",
-            "description": "Indicates whether the requesting user has marked the dashboard as a favorite.",
-            "enum": [
-              true,
-              false
-            ]
-          },
-          "sharedBy": {
-            "type": "string",
-            "description": "Email address of the user who shared the dashboard. Populated for shared entries and an empty string for owned entries.",
-            "examples": [
-              "bob@example.com"
-            ]
-          },
-          "workspaceId": {
-            "type": "string",
-            "description": "ID of the workspace that contains the dashboard. Use it as the workspace ID in the workspace-scoped dashboard APIs.",
-            "examples": [
-              "466206000000071000"
-            ]
-          },
-          "orgId": {
-            "type": "string",
-            "description": "ID of the organization the workspace belongs to. It corresponds to the ZANALYTICS-ORGID header value.",
-            "examples": [
-              "700000123456"
-            ]
-          }
-        }
-      },
-      "DashboardSummaries": {
-        "type": "array",
-        "title": "DashboardSummaries",
-        "description": "JSONArray of dashboard summaries.",
-        "items": {
-          "$ref": "#/components/schemas/DashboardSummary"
-        }
-      },
-      "GetDashboardsResponse": {
-        "type": "object",
-        "title": "GetDashboardsResponse",
-        "description": "Response listing every dashboard accessible to the authenticated user, split into owned and shared.",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Result of the request.",
-            "enum": [
-              "success",
-              "failure"
-            ],
-            "x-zenesis-enums-desc": [
-              "Request succeeded",
-              "Request failed"
-            ]
-          },
-          "summary": {
-            "type": "string",
-            "description": "Human readable message describing the result.",
-            "examples": [
-              "Get all dashboards"
-            ]
-          },
-          "data": {
-            "$ref": "#/components/schemas/GetDashboardsResponseData"
-          }
-        }
-      },
-      "GetDashboardsResponseData": {
-        "type": "object",
-        "title": "GetDashboardsResponseData",
-        "description": "The two dashboard lists returned by Get All Dashboards.",
-        "properties": {
-          "ownedViews": {
-            "$ref": "#/components/schemas/DashboardSummaries"
-          },
-          "sharedViews": {
-            "$ref": "#/components/schemas/DashboardSummaries"
-          }
-        }
-      },
-      "GetDashboardListResponse": {
-        "type": "object",
-        "title": "GetDashboardListResponse",
-        "description": "Response carrying a single list of dashboards - owned only or shared only, depending on the endpoint.",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Result of the request.",
-            "enum": [
-              "success",
-              "failure"
-            ],
-            "x-zenesis-enums-desc": [
-              "Request succeeded",
-              "Request failed"
-            ]
-          },
-          "summary": {
-            "type": "string",
-            "description": "Human readable message describing the result.",
-            "examples": [
-              "Get owned dashboards"
-            ]
-          },
-          "data": {
-            "$ref": "#/components/schemas/GetDashboardListResponseData"
-          }
-        }
-      },
-      "GetDashboardListResponseData": {
-        "type": "object",
-        "title": "GetDashboardListResponseData",
-        "description": "The dashboard list returned by Get Owned Dashboards and Get Shared Dashboards.",
-        "properties": {
-          "views": {
-            "$ref": "#/components/schemas/DashboardSummaries"
           }
         }
       },
@@ -6606,6 +6271,201 @@
         "description": "JSONArray of the user filters as stored, reduced to three keys.",
         "items": {
           "$ref": "#/components/schemas/ReportMetadataUserFilter"
+        }
+      },
+      "DashboardSummaries": {
+        "type": "array",
+        "title": "DashboardSummaries",
+        "description": "JSONArray of dashboard summaries.",
+        "items": {
+          "$ref": "#/components/schemas/DashboardSummary"
+        }
+      },
+      "DashboardSummary": {
+        "type": "object",
+        "title": "DashboardSummary",
+        "description": "Summary of one dashboard as returned by the listing APIs.",
+        "properties": {
+          "viewId": {
+            "type": "string",
+            "description": "ID of the dashboard. Returned as a string even though the underlying value is a long integer.",
+            "examples": [
+              "466206000000105001"
+            ]
+          },
+          "viewName": {
+            "type": "string",
+            "description": "Display name of the dashboard.",
+            "examples": [
+              "Executive Sales Dashboard"
+            ]
+          },
+          "viewDesc": {
+            "type": "string",
+            "description": "Description of the dashboard. An empty string when none is set.",
+            "examples": [
+              "High-level sales KPIs for the executive team"
+            ]
+          },
+          "viewType": {
+            "type": "string",
+            "description": "Type of the view. Always Dashboard for entries returned by these APIs.",
+            "examples": [
+              "Dashboard"
+            ]
+          },
+          "parentViewId": {
+            "type": "string",
+            "description": "ID of the parent view, if there is one. An empty string otherwise.",
+            "examples": [
+              ""
+            ]
+          },
+          "folderId": {
+            "type": "string",
+            "description": "ID of the folder that contains the dashboard.",
+            "examples": [
+              "466206000000071005"
+            ]
+          },
+          "createdTime": {
+            "type": "string",
+            "description": "Creation timestamp of the dashboard, in epoch milliseconds.",
+            "examples": [
+              "1719820800000"
+            ]
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "Email address of the user who created the dashboard.",
+            "examples": [
+              "alice@example.com"
+            ]
+          },
+          "lastModifiedTime": {
+            "type": "string",
+            "description": "Timestamp of the last modification, in epoch milliseconds.",
+            "examples": [
+              "1722499200000"
+            ]
+          },
+          "lastModifiedBy": {
+            "type": "string",
+            "description": "Email address of the user who last modified the dashboard.",
+            "examples": [
+              "alice@example.com"
+            ]
+          },
+          "isFavorite": {
+            "type": "boolean",
+            "description": "Indicates whether the requesting user has marked the dashboard as a favorite.",
+            "enum": [
+              true,
+              false
+            ]
+          },
+          "sharedBy": {
+            "type": "string",
+            "description": "Email address of the user who shared the dashboard. Populated for shared entries and an empty string for owned entries.",
+            "examples": [
+              "bob@example.com"
+            ]
+          },
+          "workspaceId": {
+            "type": "string",
+            "description": "ID of the workspace that contains the dashboard. Use it as the workspace ID in the workspace-scoped dashboard APIs.",
+            "examples": [
+              "466206000000071000"
+            ]
+          },
+          "orgId": {
+            "type": "string",
+            "description": "ID of the organization the workspace belongs to. It corresponds to the ZANALYTICS-ORGID header value.",
+            "examples": [
+              "700000123456"
+            ]
+          }
+        }
+      },
+      "GetDashboardListResponse": {
+        "type": "object",
+        "title": "GetDashboardListResponse",
+        "description": "Response carrying a single list of dashboards - owned only or shared only, depending on the endpoint.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Result of the request.",
+            "enum": [
+              "success",
+              "failure"
+            ],
+            "x-zenesis-enums-desc": [
+              "Request succeeded",
+              "Request failed"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "description": "Human readable message describing the result.",
+            "examples": [
+              "Get owned dashboards"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetDashboardListResponseData"
+          }
+        }
+      },
+      "GetDashboardListResponseData": {
+        "type": "object",
+        "title": "GetDashboardListResponseData",
+        "description": "The dashboard list returned by Get Owned Dashboards and Get Shared Dashboards.",
+        "properties": {
+          "views": {
+            "$ref": "#/components/schemas/DashboardSummaries"
+          }
+        }
+      },
+      "GetDashboardsResponse": {
+        "type": "object",
+        "title": "GetDashboardsResponse",
+        "description": "Response listing every dashboard accessible to the authenticated user, split into owned and shared.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Result of the request.",
+            "enum": [
+              "success",
+              "failure"
+            ],
+            "x-zenesis-enums-desc": [
+              "Request succeeded",
+              "Request failed"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "description": "Human readable message describing the result.",
+            "examples": [
+              "Get all dashboards"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetDashboardsResponseData"
+          }
+        }
+      },
+      "GetDashboardsResponseData": {
+        "type": "object",
+        "title": "GetDashboardsResponseData",
+        "description": "The two dashboard lists returned by Get All Dashboards.",
+        "properties": {
+          "ownedViews": {
+            "$ref": "#/components/schemas/DashboardSummaries"
+          },
+          "sharedViews": {
+            "$ref": "#/components/schemas/DashboardSummaries"
+          }
         }
       }
     }

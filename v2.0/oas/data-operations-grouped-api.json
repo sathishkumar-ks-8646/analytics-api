@@ -1778,7 +1778,7 @@
           }
         ],
         "summary": "Get Export Job Details",
-        "description": "Reports the progress of an export job, and once it has finished, where to collect the file.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8120 | EXPORTJOBNOTFOUND — No export job exists for the given ID (HTTP 404). | Verify the jobId returned by the create call, and that the job has not passed its 72-hour retention. |\n| 8124 | EXPORTJOBACCESSDENIED — The caller did not create this job (HTTP 403). | Poll with the same user that created the job. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.data.read. |",
+        "description": "Reports the progress of an export job, and once it has finished, where to collect the file.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8120 | EXPORTJOBNOTFOUND — No export job exists for the given ID (HTTP 404). | Verify the jobId returned by the create call, and that the job has not passed its one-hour post-completion retention. |\n| 8124 | EXPORTJOBACCESSDENIED — The caller did not create this job (HTTP 403). | Poll with the same user that created the job. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.data.read. |",
         "operationId": "getExportJobDetails",
         "parameters": [
           {
@@ -1839,7 +1839,7 @@
           }
         ],
         "summary": "Download Exported Data",
-        "description": "Returns the exported file produced by a completed export job.\n\n**Notes**\n\n> Note:\n>\n> The exported file is available only for one hour after the export job completes.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8120 | EXPORTJOBNOTFOUND — No export job exists for the given ID, or it has passed its 72-hour retention (HTTP 404). | Verify the jobId; if it has expired, create a new job. |\n| 8121 | EXPORTJOBNOTINITIATED — The job is queued but has not started (jobCode 1001). | Poll Get Export Job Details until jobCode is 1004. |\n| 8122 | EXPORTJOBNOTCOMPLETED — The job is still running (jobCode 1002). | Poll Get Export Job Details until jobCode is 1004. |\n| 8123 | EXPORTJOBERROROCCURRED — The job failed (jobCode 1003). | Nothing to download. Create a new job; if the failure repeats, contact support. |\n| 8124 | EXPORTJOBACCESSDENIED — The caller did not create this job (HTTP 403). | Download with the same user that created the job. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.data.read. |",
+        "description": "Returns the exported file produced by a completed export job.\n\n**Notes**\n\n> Note:\n>\n> The exported file is available only for one hour after the export job completes.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8120 | EXPORTJOBNOTFOUND — No export job exists for the given ID, or it has passed its one-hour post-completion retention (HTTP 404). | Verify the jobId; if it has expired, create a new job. |\n| 8121 | EXPORTJOBNOTINITIATED — The job is queued but has not started (jobCode 1001). | Poll Get Export Job Details until jobCode is 1004. |\n| 8122 | EXPORTJOBNOTCOMPLETED — The job is still running (jobCode 1002). | Poll Get Export Job Details until jobCode is 1004. |\n| 8123 | EXPORTJOBERROROCCURRED — The job failed (jobCode 1003). | Nothing to download. Create a new job; if the failure repeats, contact support. |\n| 8124 | EXPORTJOBACCESSDENIED — The caller did not create this job (HTTP 403). | Download with the same user that created the job. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token carrying ZohoAnalytics.data.read. |",
         "operationId": "downloadExportedData",
         "parameters": [
           {
@@ -3141,7 +3141,7 @@
               },
               "expiryTime": {
                 "type": "string",
-                "description": "Epoch time in milliseconds at which the export job and its file are removed. Set to 72 hours after the job was created - not after it completed. Returned only after the job has completed.",
+                "description": "Epoch time in milliseconds at which the export job and its file are removed. Set to one hour after the job completed - not after it was created. Returned only after the job has completed.",
                 "examples": [
                   "1623765872891"
                 ]

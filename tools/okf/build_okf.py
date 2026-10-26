@@ -1270,8 +1270,8 @@ Additional documented limits:
 - Create Query Table and Edit Query Table are also limited to 15 requests per minute service-wide, in addition to the per-user throttle.
 - Copy Workspace allows only one copy operation per organization at a time; a second request while a copy is running is rejected.
 - Sync Data and Refetch Data are rate limited per user; a burst of calls is locked out for a short cool-off period. Refetch is additionally guarded by one refetch per table at a time (error `18072`).
-- Asynchronous export: at most 5 simultaneous export jobs per organization (error `8132`); jobs and their files are retained for 72 hours from creation.
-- Synchronous export: payload ceiling 100 MB; tables above one million rows, dashboards, query tables and live-connect views must use the asynchronous export (error `8133`).
+- Asynchronous export: at most 5 simultaneous export jobs per organization (error `8132`); jobs and their files are retained for 1 hour from job completion.
+- Synchronous export: payload ceiling 100 MB (error `7830`). The Export Data API is restricted for certain resources, which must use the asynchronous export (error `8133`): tables having more than one million rows; tables and views from live connect workspaces; dashboard and query table view types.
 - Synchronous import: maximum file size 20 MB per request.
 
 # API Units

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" data-kind="page">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting started · Zoho Analytics Node.js SDK</title>
+<meta name="description" content="Install the SDK, construct a client, and make a first authenticated call.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/docs.css">
+<script>
+// Applied before paint so a dark-mode reload does not flash light.
+(function(){try{var t=localStorage.getItem('za-sdk-docs-theme');
+if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="rail" data-open="false">
+  <a class="brand" href="index.html">
+    <span class="brand__mark">Zoho Analytics</span>
+    <span class="brand__name">REST API v2</span>
+    <span class="brand__lang">Node.js SDK</span>
+  </a>
+  <nav class="nav" aria-label="Documentation"><h2>Overview</h2><ul><li><a href="index.html">Introduction</a></li><li><a href="getting-started.html" aria-current="page">Getting started</a></li></ul><h2>Essentials</h2><ul><li><a href="authentication.html">Authentication</a></li><li><a href="configuration.html">Configuration</a></li><li><a href="errors.html">Errors</a></li><li><a href="limits.html">Limits</a></li></ul><h2>Guides</h2><ul><li><a href="guides/importing-data.html">Importing data</a></li><li><a href="guides/exporting-data.html">Exporting data</a></li></ul><h2>Reference</h2><ul><li><a href="reference/analytics-client.html">AnalyticsClient</a></li><li><a href="reference/org-api.html">OrgAPI</a></li><li><a href="reference/workspace-api.html">WorkspaceAPI</a></li><li><a href="reference/view-api.html">ViewAPI</a></li><li><a href="reference/bulk-api.html">BulkAPI</a></li></ul></nav>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <button class="ctl nav-toggle" type="button" data-nav-toggle
+            aria-expanded="false" aria-label="Toggle navigation">Menu</button>
+    <p class="crumbs"><a href="index.html">Docs</a><span aria-hidden="true">/</span><span>Getting started</span></p>
+    <div class="controls">
+      <button class="ctl" type="button" data-theme-toggle aria-pressed="false">
+        <span data-theme-label>Dark</span>
+      </button>
+    </div>
+  </div>
+  <div class="layout">
+    <main class="article" id="main" tabindex="-1">
+      <header class="page-head">
+        <p class="page-head__kicker">Start here</p>
+        <h1>Getting started</h1>
+        <p class="page-head__lede">Install the SDK, construct a client, and make a first authenticated call.</p>
+      </header>
+      <h2 id="install">Install<a class="anchor" href="#install" aria-label="Link to this section">#</a></h2><p>Require the client. Every method returns a Promise, so use <code>await</code> inside an <code>async</code> function or chain <code>.then()</code> / <code>.catch()</code>.</p><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">var analyticsClient = require(&#x27;./AnalyticsClient&#x27;);</code></pre></figure><h2 id="register-an-oauth-client">Register an OAuth client<a class="anchor" href="#register-an-oauth-client" aria-label="Link to this section">#</a></h2><ol><li>Open the <a href="https://api-console.zoho.com">Zoho API Console</a> for your data center.</li><li>Create a <strong>Self Client</strong> for server-to-server integrations, or a <strong>Server-based Application</strong> if users will authorise your app themselves.</li><li>Note the <strong>Client ID</strong> and <strong>Client Secret</strong>.</li><li>Generate a <strong>refresh token</strong> with the scopes your integration needs — see <a href="authentication.html">Authentication</a>.</li></ol><aside class="callout callout--warning" role="note" aria-label="Warning"><p class="callout__kind">Warning</p><p class="callout__title">Keep credentials out of source control</p><div class="callout__body"><p>The client secret and refresh token are long-lived credentials. Read them from environment variables or a secret manager; never commit them and never ship them in client-side code.</p></div></aside><h2 id="construct-the-client">Construct the client<a class="anchor" href="#construct-the-client" aria-label="Link to this section">#</a></h2><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">var analyticsClient = require(&#x27;./AnalyticsClient&#x27;);
+
+var clientId     = &#x27;1000.xxxxxxx&#x27;;
+var clientSecret = &#x27;xxxxxxx&#x27;;
+var refreshToken = &#x27;1000.xxxxxxx.xxxxxxx&#x27;;
+
+var ac = new analyticsClient(clientId, clientSecret, refreshToken);</code></pre></figure><h2 id="get-a-scoped-instance">Get a scoped instance<a class="anchor" href="#get-a-scoped-instance" aria-label="Link to this section">#</a></h2><p>The client hands out four scoped objects. Each one binds the identifiers it needs, so you do not repeat them on every call.</p><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">var org       = ac.getOrgInstance(orgId);
+var workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+var view      = ac.getViewInstance(orgId, workspaceId, viewId);
+var bulk      = ac.getBulkInstance(orgId, workspaceId);</code></pre></figure><div class="table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col" class="ta-left">Instance</th><th scope="col" class="ta-left">Bound to</th><th scope="col" class="ta-left">Use for</th></tr></thead><tbody><tr><td class="ta-left"><code>OrgAPI</code></td><td class="ta-left">organization</td><td class="ta-left">Users, roles, admins, subscription, security controls.</td></tr><tr><td class="ta-left"><code>WorkspaceAPI</code></td><td class="ta-left">organization + workspace</td><td class="ta-left">Views, folders, schedules, alerts, backups, sharing.</td></tr><tr><td class="ta-left"><code>ViewAPI</code></td><td class="ta-left">organization + workspace + view</td><td class="ta-left">Rows, columns, formulas, publishing.</td></tr><tr><td class="ta-left"><code>BulkAPI</code></td><td class="ta-left">organization + workspace</td><td class="ta-left">Importing and exporting data.</td></tr></tbody></table></div><h2 id="make-a-first-call">Make a first call<a class="anchor" href="#make-a-first-call" aria-label="Link to this section">#</a></h2><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">var ac = new analyticsClient(clientId, clientSecret, refreshToken);
+
+async function main() {
+    try {
+        var orgs = await ac.getOrgs();
+        console.log(orgs);
+    } catch (error) {
+        console.log(&#x27;Server error &#x27; + error.errorCode + &#x27;: &#x27; + error.errorMessage);
+    }
+}
+
+main();</code></pre></figure><p>A successful call returns the <code>data</code> payload of the response envelope, already decoded. A failure raises or returns A rejected Promise carrying <code>errorCode</code> and <code>errorMessage</code>..</p><h3 id="sample-response">Sample response<a class="anchor" href="#sample-response" aria-label="Link to this section">#</a></h3><figure class="code" data-lang="json"><figcaption><span>json</span><button class="copy" type="button" data-copy aria-label="Copy json code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-json">{
+  &quot;status&quot;: &quot;success&quot;,
+  &quot;summary&quot;: &quot;Get organizations&quot;,
+  &quot;data&quot;: {
+    &quot;orgs&quot;: [
+      {
+        &quot;orgId&quot;: &quot;55522777&quot;,
+        &quot;orgName&quot;: &quot;Zylker Analytics&quot;,
+        &quot;orgDesc&quot;: &quot;&quot;,
+        &quot;timeZone&quot;: &quot;Asia/Kolkata&quot;,
+        &quot;role&quot;: &quot;ORGADMIN&quot;
+      }
+    ]
+  }
+}</code></pre></figure><p>The SDK unwraps the envelope for you: the value you receive is the contents of <code>data.orgs</code>, not the whole document above.</p><h2 id="where-to-go-next">Where to go next<a class="anchor" href="#where-to-go-next" aria-label="Link to this section">#</a></h2><ul><li><a href="authentication.html">Authentication</a> — <strong>read the token throttle section before you ship.</strong></li><li><a href="errors.html">Errors</a> — what to branch on when a call fails.</li><li><a href="guides/importing-data.html">Importing data</a> — the three import modes and when to use each.</li></ul>
+      <nav class="pager" aria-label="Pagination"><a href="index.html" rel="prev"><span>Previous</span><strong>Introduction</strong></a><a href="authentication.html" rel="next"><span>Next</span><strong>Authentication</strong></a></nav>
+      <footer class="foot">
+        <span>Zoho Analytics Node.js SDK &middot; REST API v2</span>
+        <span>Generated 2026-10-26</span>
+      </footer>
+    </main>
+    <nav class="index" aria-label="On this page"><h2>On this page</h2><ul><li class="lvl-2"><a href="#install">Install</a></li><li class="lvl-2"><a href="#register-an-oauth-client">Register an OAuth client</a></li><li class="lvl-2"><a href="#construct-the-client">Construct the client</a></li><li class="lvl-2"><a href="#get-a-scoped-instance">Get a scoped instance</a></li><li class="lvl-2"><a href="#make-a-first-call">Make a first call</a></li><li class="lvl-3"><a href="#sample-response">Sample response</a></li><li class="lvl-2"><a href="#where-to-go-next">Where to go next</a></li></ul></nav>
+  </div>
+</div>
+</div>
+<script src="assets/docs.js" defer></script>
+</body>
+</html>

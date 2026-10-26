@@ -17,7 +17,7 @@ sources:
     title: OpenAPI 3 specifications (10 domain files plus shared components)
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 

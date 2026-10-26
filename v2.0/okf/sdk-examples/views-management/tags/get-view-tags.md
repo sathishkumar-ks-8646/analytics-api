@@ -44,7 +44,7 @@ sources:
     title: Endpoint reference - Get View Tags
 generated:
   by: process:build_okf
-  at: 2026-10-13T08:59:53Z
+  at: 2026-10-23T07:58:54Z
 status: stable
 ---
 
@@ -79,7 +79,7 @@ namespace ZohoAnalyticsTest
         public void GetViewTags(IAnalyticsClient ac)
         {
             IViewAPI view = ac.GetViewInstance(orgId, workspaceId, viewId);
-            JsonElement result = view.GetTags();
+            JsonElement result = view.GetViewTags();
             Console.WriteLine(result);
         }
 
@@ -117,7 +117,7 @@ var (
 
 func GetViewTags(ac ZAnalytics.Client) {
     view := ZAnalytics.GetViewInstance(&ac, orgId, workspaceId, viewId)
-    result, exception := view.GetTags()
+    result, exception := view.GetViewTags()
     if exception != nil {
         fmt.Println(exception.ErrorMessage)
         return
@@ -157,7 +157,7 @@ public class Test {
 
     public void getViewTags(AnalyticsClient ac) throws Exception {
         ViewAPI view = ac.getViewInstance(orgId, workspaceId, viewId);
-        JSONArray result = view.getTags();
+        JSONArray result = view.getViewTags();
         System.out.println(result);
     }
 }
@@ -181,7 +181,7 @@ class Test {
 
     function getViewTags() {
         $view = $this->ac->getViewInstance($this->org_id, $this->workspace_id, $this->view_id);
-        $response = $view->getTags();
+        $response = $view->getViewTags();
         print_r($response);
     }
 }
@@ -209,7 +209,7 @@ class Sample:
 
     def get_view_tags(self, ac):
         view = ac.get_view_instance(Config.ORGID, Config.WORKSPACEID, Config.VIEWID)
-        result = view.get_tags()
+        result = view.get_view_tags()
         print(result)
 
 obj = Sample()
@@ -226,7 +226,7 @@ var workspaceId = '35130000001055707';
 var viewId = '35130000001055717';
 
 var view = ac.getViewInstance(orgId, workspaceId, viewId);
-view.getTags().then((result) => { console.log(result); }).catch((error) => { console.log(error); });
+view.getViewTags().then((result) => { console.log(result); }).catch((error) => { console.log(error); });
 ```
 
 ## Ruby
@@ -251,7 +251,7 @@ class Sample
 
   def get_view_tags
     view = @ac.get_view_instance(Config::ORGID, Config::WORKSPACEID, Config::VIEWID)
-    result = view.get_tags
+    result = view.get_view_tags
     puts result
   end
 end

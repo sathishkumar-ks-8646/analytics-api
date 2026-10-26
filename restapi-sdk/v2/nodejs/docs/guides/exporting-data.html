@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-kind="page">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exporting data · Zoho Analytics Node.js SDK</title>
+<meta name="description" content="Synchronous export and the asynchronous job flow, including polling and expiry.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/docs.css">
+<script>
+// Applied before paint so a dark-mode reload does not flash light.
+(function(){try{var t=localStorage.getItem('za-sdk-docs-theme');
+if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="rail" data-open="false">
+  <a class="brand" href="../index.html">
+    <span class="brand__mark">Zoho Analytics</span>
+    <span class="brand__name">REST API v2</span>
+    <span class="brand__lang">Node.js SDK</span>
+  </a>
+  <nav class="nav" aria-label="Documentation"><h2>Overview</h2><ul><li><a href="../index.html">Introduction</a></li><li><a href="../getting-started.html">Getting started</a></li></ul><h2>Essentials</h2><ul><li><a href="../authentication.html">Authentication</a></li><li><a href="../configuration.html">Configuration</a></li><li><a href="../errors.html">Errors</a></li><li><a href="../limits.html">Limits</a></li></ul><h2>Guides</h2><ul><li><a href="../guides/importing-data.html">Importing data</a></li><li><a href="../guides/exporting-data.html" aria-current="page">Exporting data</a></li></ul><h2>Reference</h2><ul><li><a href="../reference/analytics-client.html">AnalyticsClient</a></li><li><a href="../reference/org-api.html">OrgAPI</a></li><li><a href="../reference/workspace-api.html">WorkspaceAPI</a></li><li><a href="../reference/view-api.html">ViewAPI</a></li><li><a href="../reference/bulk-api.html">BulkAPI</a></li></ul></nav>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <button class="ctl nav-toggle" type="button" data-nav-toggle
+            aria-expanded="false" aria-label="Toggle navigation">Menu</button>
+    <p class="crumbs"><a href="../index.html">Docs</a><span aria-hidden="true">/</span><span>Guides</span><span aria-hidden="true">/</span><span>Exporting data</span></p>
+    <div class="controls">
+      <button class="ctl" type="button" data-theme-toggle aria-pressed="false">
+        <span data-theme-label>Dark</span>
+      </button>
+    </div>
+  </div>
+  <div class="layout">
+    <main class="article" id="main" tabindex="-1">
+      <header class="page-head">
+        <p class="page-head__kicker">Guide</p>
+        <h1>Exporting data</h1>
+        <p class="page-head__lede">Synchronous export and the asynchronous job flow, including polling and expiry.</p>
+      </header>
+      <p>Two modes. Synchronous returns the file on the same call; asynchronous creates a job you poll and then download.</p><div class="table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col" class="ta-left">Mode</th><th scope="col" class="ta-left">Ceiling</th><th scope="col" class="ta-left">Use when</th></tr></thead><tbody><tr><td class="ta-left">Synchronous</td><td class="ta-left">100 MB</td><td class="ta-left">The resource is not one of the restricted ones below.</td></tr><tr><td class="ta-left">Asynchronous job</td><td class="ta-left">No practical ceiling</td><td class="ta-left"><strong>Required</strong> for any restricted resource, and for anything over the synchronous ceiling.</td></tr></tbody></table></div><p>The choice is not about convenience. Export Data API is restricted for the resources below; for these you must use the asynchronous export, and the synchronous call rejects them with <code>8133</code>:</p><ul><li>Tables having more than one million rows.</li><li>Tables and Views from live connect workspaces.</li><li>Dashboard and Query Table view types.</li></ul><h2 id="synchronous-export">Synchronous export<a class="anchor" href="#synchronous-export" aria-label="Link to this section">#</a></h2><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">var bulk = ac.getBulkInstance(orgId, workspaceId);
+await bulk.exportData(viewId, &#x27;csv&#x27;, &#x27;/home/user/Sales.csv&#x27;);</code></pre></figure><h3 id="formats">Formats<a class="anchor" href="#formats" aria-label="Link to this section">#</a></h3><div class="table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col" class="ta-left">Format</th><th scope="col" class="ta-left">Applies to</th></tr></thead><tbody><tr><td class="ta-left"><code>csv</code>, <code>json</code>, <code>xml</code></td><td class="ta-left">Tables, query tables, reports.</td></tr><tr><td class="ta-left"><code>xls</code></td><td class="ta-left">Tables and reports.</td></tr><tr><td class="ta-left"><code>pdf</code>, <code>html</code></td><td class="ta-left">Reports and dashboards.</td></tr><tr><td class="ta-left"><code>image</code></td><td class="ta-left">Charts.</td></tr></tbody></table></div><aside class="callout callout--limit" role="note" aria-label="Limit"><p class="callout__kind">Limit</p><p class="callout__title">Synchronous export is not always allowed</p><div class="callout__body"><p>Tables over one million rows, dashboards, query tables and live-connect views reject synchronous export with error <code>8133</code>. Use the asynchronous flow below.</p></div></aside><h2 id="asynchronous-export">Asynchronous export<a class="anchor" href="#asynchronous-export" aria-label="Link to this section">#</a></h2><p>Create the job, poll it, then download when it reports complete.</p><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">var bulk = ac.getBulkInstance(orgId, workspaceId);
+
+var jobId = await bulk.initiateBulkExport(viewId, &#x27;csv&#x27;);
+
+var job = await bulk.getExportJobDetails(jobId);
+if (job.jobStatus === &#x27;JOB COMPLETED&#x27;) {
+    await bulk.exportBulkData(jobId, &#x27;/home/user/Sales.csv&#x27;);
+}</code></pre></figure><h3 id="sample-job-response">Sample job response<a class="anchor" href="#sample-job-response" aria-label="Link to this section">#</a></h3><figure class="code" data-lang="json"><figcaption><span>json</span><button class="copy" type="button" data-copy aria-label="Copy json code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-json">{
+  &quot;status&quot;: &quot;success&quot;,
+  &quot;summary&quot;: &quot;Get export job details&quot;,
+  &quot;data&quot;: {
+    &quot;jobId&quot;: &quot;35130000001343084&quot;,
+    &quot;jobStatus&quot;: &quot;JOB COMPLETED&quot;,
+    &quot;downloadUrl&quot;: &quot;https://analyticsapi.zoho.com/restapi/v2/bulk/workspaces/35130000001055707/exportjobs/35130000001343084/data&quot;,
+    &quot;expiryTime&quot;: &quot;1735689600000&quot;
+  }
+}</code></pre></figure><aside class="callout callout--note" role="note" aria-label="Note"><p class="callout__kind">Note</p><p class="callout__title">Use the returned <code>downloadUrl</code></p><div class="callout__body"><p>It is fully qualified and already points at the correct data center. Do not assemble download URLs by hand — they differ by region.</p></div></aside><aside class="callout callout--warning" role="note" aria-label="Warning"><p class="callout__kind">Warning</p><p class="callout__title">Jobs and files expire one hour after the job completes</p><div class="callout__body"><p>Both the job record and the generated file are retained for one hour from the moment the job reports complete — not from when it was created. <code>expiryTime</code> carries the exact deadline. Download as soon as the job completes, or create a new job; nothing is recoverable afterwards.</p></div></aside><aside class="callout callout--limit" role="note" aria-label="Limit"><p class="callout__kind">Limit</p><p class="callout__title">Five concurrent export jobs per organization</p><div class="callout__body"><p>A sixth is rejected with error <code>8132</code>. Poll and drain the queue rather than creating jobs in a loop.</p></div></aside><h3 id="polling">Polling<a class="anchor" href="#polling" aria-label="Link to this section">#</a></h3><p>Poll at a sensible interval — a few seconds for small exports, tens of seconds for large ones. <code>jobStatus</code> moves through <code>JOB NOT STARTED</code>, <code>JOB IN PROGRESS</code>, then <code>JOB COMPLETED</code> or <code>JOB FAILED</code>. Treat <code>JOB FAILED</code> as terminal; the response carries the reason.</p><h2 id="related">Related<a class="anchor" href="#related" aria-label="Link to this section">#</a></h2><ul><li><a href="importing-data.html">Importing data</a></li><li><a href="../limits.html">Limits</a></li><li><a href="../errors.html">Errors</a></li></ul>
+      <nav class="pager" aria-label="Pagination"><a href="../guides/importing-data.html" rel="prev"><span>Previous</span><strong>Importing data</strong></a><a href="../reference/analytics-client.html" rel="next"><span>Next</span><strong>AnalyticsClient</strong></a></nav>
+      <footer class="foot">
+        <span>Zoho Analytics Node.js SDK &middot; REST API v2</span>
+        <span>Generated 2026-10-26</span>
+      </footer>
+    </main>
+    <nav class="index" aria-label="On this page"><h2>On this page</h2><ul><li class="lvl-2"><a href="#synchronous-export">Synchronous export</a></li><li class="lvl-3"><a href="#formats">Formats</a></li><li class="lvl-2"><a href="#asynchronous-export">Asynchronous export</a></li><li class="lvl-3"><a href="#sample-job-response">Sample job response</a></li><li class="lvl-3"><a href="#polling">Polling</a></li><li class="lvl-2"><a href="#related">Related</a></li></ul></nav>
+  </div>
+</div>
+</div>
+<script src="../assets/docs.js" defer></script>
+</body>
+</html>
