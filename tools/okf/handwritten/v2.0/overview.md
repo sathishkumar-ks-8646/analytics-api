@@ -58,7 +58,7 @@ An **organization** (identified by `orgId`) owns **workspaces**. A workspace con
 # Typical Call Sequence
 
 1. Obtain an access token ([Authentication](/foundations/authentication.md)).
-2. Call [Get Org List](/domains/organization-management/org-info-and-settings/get-organizations.md) and pick the `orgId`.
+2. Read the organization ID from the Zoho Analytics UI (Settings > Organisation) and send it as the `ZANALYTICS-ORGID` header.
 3. Resolve workspace and view IDs with [Get Meta Details From Name](/domains/organization-management/org-info-and-settings/get-meta-details.md) or the listing endpoints.
 4. Call the endpoint you need, sending `CONFIG` as the endpoint document specifies.
 5. Read `status`; on `failure`, look up `data.errorCode` in the [Error code catalog](/foundations/error-codes.md).

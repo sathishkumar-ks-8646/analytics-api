@@ -17,7 +17,7 @@ md/
 
 | Folder | Groups | Specification |
 |---|---|---|
-| `01 · Organization Management` | 2 | `org-management-grouped-api.json` |
+| `01 · Organization Management` | 3 | `org-management-grouped-api.json` |
 | `02 · User & Groups` | 4 | `user-groups-grouped-api.json` |
 | `03 · Workspace Management` | 6 | `workspace-management-grouped-api.json` |
 | `04 · Data Modeling & Schema` | 7 | `data-modeling-schema-grouped-api.json` |

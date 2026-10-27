@@ -53,7 +53,7 @@ Three identifiers circulate through these APIs and they are not interchangeable.
 
 | Identifier | Where it comes from | What addresses it |
 |---|---|---|
-| **Master workspace ID** | Any workspace you own, via [Get All Workspace List](WORKSPACE_OPERATIONS.md#6-get-all-workspace-list) | The `<workspace-id>` path segment of seven of the eight APIs. |
+| **Master workspace ID** | Any workspace you own, via [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) | The `<workspace-id>` path segment of seven of the eight APIs. |
 | **Client workspace ID** | [Get Linkable Workspaces](#3-get-linkable-workspaces) | `clients[].workspaceIds` on [Link Workspaces](#5-link-workspaces) and [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility). **Nothing else accepts it.** |
 | **Sandbox ID** | Minted by [Link Workspaces](#5-link-workspaces); read back from `clients[].workspaces[].sandboxId` of [Get Linked Workspaces For Master Workspace](#2-get-linked-workspaces-for-master-workspace) | `sandboxIds` on [Unlink Workspaces](#8-unlink-workspaces) and [Get Linked Workspace Sync Details](#7-get-linked-workspace-sync-details); `clients[].sandboxId` on [Sync Linked Workspaces](#6-sync-linked-workspaces). |
 
@@ -287,7 +287,7 @@ ZANALYTICS-ORGID: 700000654321
 | **Empty result is a success** | An organisation with no links returns `200` with `"linkedWorkspaces": []`, not an error. |
 | **Ids are strings** | Parse `workspaceId`, `orgId`, `sandboxId` and `syncedByZuId` as strings or 64-bit longs. A 32-bit integer type loses precision. |
 | **Responses are extensible** | Ignore unrecognised keys rather than validating against a closed schema. |
-| **Dependency chain** | [Get Org List](../01%20%C2%B7%20Organization%20Management/ORG_INFO_AND_SETTINGS.md#1-get-org-list) → `ZANALYTICS-ORGID` → Get Linked Workspaces For Organization → `sandboxId` for the sync and unlink APIs. |
+| **Dependency chain** | Organization ID (Zoho Analytics UI → **Settings → Organisation**) → `ZANALYTICS-ORGID` → Get Linked Workspaces For Organization → `sandboxId` for the sync and unlink APIs. |
 
 ### Error Codes
 
@@ -440,7 +440,7 @@ The `master` / `clients` structure is identical to one element of `data.linkedWo
 | **`syncTime` is epoch milliseconds** | A string of digits, `"0"` when the link has never synced successfully. |
 | **No paging, filtering or sorting** | The whole set comes back in one response. |
 | **Responses are extensible** | Ignore unrecognised keys rather than validating against a closed schema. |
-| **Dependency chain** | [Get All Workspace List](WORKSPACE_OPERATIONS.md#6-get-all-workspace-list) → `<workspace-id>` → Get Linked Workspaces For Master Workspace → `clients[].workspaces[].sandboxId`. |
+| **Dependency chain** | [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) → `<workspace-id>` → Get Linked Workspaces For Master Workspace → `clients[].workspaces[].sandboxId`. |
 
 ### Error Codes
 
@@ -578,7 +578,7 @@ ZANALYTICS-ORGID: 700000123456
 | **Empty result is a success** | `"orgs": []` means nothing is eligible — commonly because every candidate is already linked. |
 | **No paging, filtering or sorting** | The whole candidate set comes back in one response. |
 | **Responses are extensible** | Ignore unrecognised keys rather than validating against a closed schema. |
-| **Dependency chain** | [Get All Workspace List](WORKSPACE_OPERATIONS.md#6-get-all-workspace-list) → `<workspace-id>` → Get Linkable Workspaces → `orgs[].orgId` + `workspaces[].workspaceId` → [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility). |
+| **Dependency chain** | [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) → `<workspace-id>` → Get Linkable Workspaces → `orgs[].orgId` + `workspaces[].workspaceId` → [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility). |
 
 ### Error Codes
 
@@ -1601,7 +1601,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Header | Value | Required | Description |
 |--------|-------|----------|-------------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. Must carry the scope matching the operation (see [Appendix B](#appendix-b--oauth-scope-summary)). |
-| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID that owns the **master** workspace — or, for [Get Linked Workspaces For Organization](#1-get-linked-workspaces-for-organization), the organisation whose masters are listed. Missing header is `8083`. Obtainable from the [Get Org List](../01%20%C2%B7%20Organization%20Management/ORG_INFO_AND_SETTINGS.md#1-get-org-list) response. |
+| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID that owns the **master** workspace — or, for [Get Linked Workspaces For Organization](#1-get-linked-workspaces-for-organization), the organisation whose masters are listed. Missing header is `8083`. Read the Organization ID from **Settings → Organisation** in the Zoho Analytics UI. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required by the three APIs that send a `CONFIG` **body**: [Link Workspaces](#5-link-workspaces), [Sync Linked Workspaces](#6-sync-linked-workspaces) and [Unlink Workspaces](#8-unlink-workspaces) — note that the last is a `DELETE` **with** a body. [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility) and [Get Linked Workspace Sync Details](#7-get-linked-workspace-sync-details) pass `CONFIG` in the query string instead and need no `Content-Type`; the other three read APIs send no payload at all. |
 | `Host` | `analyticsapi.zoho.com` (or the DC equivalent) | **Mandatory** | Must be the **standard** Zoho Analytics API host. A request whose host is a Client Portal / White Label custom domain is rejected with `7301` for all eight APIs — see [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
 
@@ -1654,7 +1654,7 @@ CONFIG=%7B%22clients%22%3A%5B%7B%22orgId%22%3A700000654321%2C%22workspaceIds%22%
 - **Reading deletes stale mappings.** Links pointing at a deleted master or client workspace are purged while the response is built — a `GET` with a persistent side effect.
 - **Grouped by master workspace name.** Two masters sharing a display name collapse into one entry; see [Limitations](#limitations).
 - **`syncTime` is epoch milliseconds in a string,** `"0"` when the link has never synced.
-- **Dependency chain:** [Get Org List](../01%20%C2%B7%20Organization%20Management/ORG_INFO_AND_SETTINGS.md#1-get-org-list) → `ZANALYTICS-ORGID` → Get Linked Workspaces For Organization → `sandboxId`.
+- **Dependency chain:** Organization ID (Zoho Analytics UI → **Settings → Organisation**) → `ZANALYTICS-ORGID` → Get Linked Workspaces For Organization → `sandboxId`.
 
 ### Get Linked Workspaces For Master Workspace
 
@@ -1662,7 +1662,7 @@ CONFIG=%7B%22clients%22%3A%5B%7B%22orgId%22%3A700000654321%2C%22workspaceIds%22%
 - **"Not linked" is `{}` and HTTP 200.** An unlinked workspace, a fully filtered result and a workspace that is not a master are indistinguishable. This API never raises `8246`.
 - **Same filtering and same housekeeping side effect** as the organisation listing.
 - **This is where a freshly created link first becomes visible.** Because [Link Workspaces](#5-link-workspaces) only schedules the work, poll here until the new `sandboxId` appears.
-- **Dependency chain:** [Get All Workspace List](WORKSPACE_OPERATIONS.md#6-get-all-workspace-list) → `<workspace-id>` → Get Linked Workspaces For Master Workspace → `sandboxId`.
+- **Dependency chain:** [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) → `<workspace-id>` → Get Linked Workspaces For Master Workspace → `sandboxId`.
 
 ### Get Linkable Workspaces
 
@@ -1671,7 +1671,7 @@ CONFIG=%7B%22clients%22%3A%5B%7B%22orgId%22%3A700000654321%2C%22workspaceIds%22%
 - **The response key is `orgs`; the request key is `clients`.** The two shapes deliberately do not mirror each other — map `orgs[].orgId` → `clients[].orgId` and `orgs[].workspaces[].workspaceId` → `clients[].workspaceIds[]`.
 - **Candidates span every organisation the caller administers,** which is what makes cross-organisation linking possible at all.
 - **`orgId` can be `""`.** When the server could not resolve an organisation ID it returns the organisation name as the grouping key and leaves `orgId` empty; such an entry cannot be used in a write payload.
-- **Dependency chain:** [Get All Workspace List](WORKSPACE_OPERATIONS.md#6-get-all-workspace-list) → Get Linkable Workspaces → [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility).
+- **Dependency chain:** [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) → Get Linkable Workspaces → [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility).
 
 ### Get Workspace Linking Compatibility
 

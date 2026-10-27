@@ -15,11 +15,8 @@ These APIs manage the lifecycle and metadata of workspaces — creating, copying
 | 3 | [Rename Workspace](#3-rename-workspace) | PUT | `/restapi/v2/workspaces/<workspace-id>` |
 | 4 | [Delete Workspace](#4-delete-workspace) | DELETE | `/restapi/v2/workspaces/<workspace-id>` |
 | 5 | [Export as Template](#5-export-as-template) | GET | `/restapi/v2/workspaces/<workspace-id>/template/data` |
-| 6 | [Get All Workspace List](#6-get-all-workspace-list) | GET | `/restapi/v2/workspaces` |
-| 7 | [Get Owned Workspace List](#7-get-owned-workspace-list) | GET | `/restapi/v2/workspaces/owned` |
-| 8 | [Get Shared Workspace List](#8-get-shared-workspace-list) | GET | `/restapi/v2/workspaces/shared` |
-| 9 | [Get Workspace Secret Key](#9-get-workspace-secret-key) | GET | `/restapi/v2/workspaces/<workspace-id>/secretkey` |
-| 10 | [Get Workspace Info](#10-get-workspace-info) | GET | `/restapi/v2/workspaces/<workspace-id>` |
+| 6 | [Get Workspace Secret Key](#6-get-workspace-secret-key) | GET | `/restapi/v2/workspaces/<workspace-id>/secretkey` |
+| 7 | [Get Workspace Info](#7-get-workspace-info) | GET | `/restapi/v2/workspaces/<workspace-id>` |
 
 ---
 
@@ -94,7 +91,7 @@ CONFIG={"workspaceName":"HR Analytics","workspaceDesc":"Workspace for HR team da
 
 | Aspect | Detail |
 |--------|--------|
-| **Response returns only `workspaceId`** | The response data contains only the newly created workspace's ID. Call Get Workspace Info or Get All Workspace List to retrieve the full workspace record. |
+| **Response returns only `workspaceId`** | The response data contains only the newly created workspace's ID. Call Get Workspace Info or [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) to retrieve the full workspace record. |
 | **`workspaceDesc` defaults to empty string** | If omitted, the description is stored as `""`. This value can be updated later via Rename Workspace. |
 | **`workspaceKey` not in create response** | The workspace secret key is not generated at creation time. Use Get Workspace Secret Key when you need the key for cross-org copy operations. |
 | **Dependency** | No dependencies on other APIs for the request. |
@@ -117,7 +114,7 @@ Creates a copy of an existing workspace. The copy can be placed in the **same or
 
 > **Same-organisation copy:** Set `ZANALYTICS-ORGID` to the source workspace's organisation. No `workspaceKey` is required.
 
-> **Cross-organisation copy (Account Admin):** Set `ZANALYTICS-ORGID` to the **destination** organisation's ID. The `workspaceKey` of the source workspace must be provided to authorise the copy — obtain it via the [Get Workspace Secret Key](#9-get-workspace-secret-key) API.
+> **Cross-organisation copy (Account Admin):** Set `ZANALYTICS-ORGID` to the **destination** organisation's ID. The `workspaceKey` of the source workspace must be provided to authorise the copy — obtain it via the [Get Workspace Secret Key](#6-get-workspace-secret-key) API.
 
 > **Cross-organisation copy (Organization Admin):** An Organization Admin who has admin access to multiple organisations can copy to a target org by setting `ZANALYTICS-ORGID` to their own (source) org and providing `ZANALYTICS-DEST-ORGID` as the destination org. The system validates that the caller is a member of the destination org before proceeding. The `workspaceKey` is still required when the destination org differs from the source workspace's org.
 
@@ -138,7 +135,7 @@ CONFIG is **mandatory**. It must be sent as a form-encoded body parameter named 
 |-------|------|-----------|---------|-------------|
 | `newWorkspaceName` | String | **Yes** | — | Name for the copied workspace. Must be unique in the destination organisation. Max 50 characters. |
 | `newWorkspaceDesc` | String | No | `""` | Description for the copied workspace. Max 250 characters. When omitted, the new workspace has an empty description (the source description is not copied automatically). |
-| `workspaceKey` | String | **Yes (cross-org)** | `null` | The secret key of the **source** workspace. Required when the destination organisation (ZANALYTICS-ORGID) differs from the source workspace's organisation. Not required when copying within the same organisation. Obtain this key from the [Get Workspace Secret Key](#9-get-workspace-secret-key) API. |
+| `workspaceKey` | String | **Yes (cross-org)** | `null` | The secret key of the **source** workspace. Required when the destination organisation (ZANALYTICS-ORGID) differs from the source workspace's organisation. Not required when copying within the same organisation. Obtain this key from the [Get Workspace Secret Key](#6-get-workspace-secret-key) API. |
 | `copyWithData` | Boolean | No | `false` | When `false` (default): copies only the workspace structure (tables schema, views, formulas, dashboards) — no data rows are copied. When `true`: copies the complete workspace including all table data rows. Copying with data increases both duration and resource usage significantly. |
 | `copyWithImportSource` | Boolean | No | `false` | When `false` (default): import source connections are not copied. Tables in the copied workspace will have no active data source — data must be re-imported manually. When `true`: preserves import source configurations (cloud storage connections, database connectors, etc.) — the copied tables will retain their import source links. Only meaningful when there are active data sources in the source workspace. Cannot be `true` when the source workspace has only live/direct database connections (those always require manual reconnection). |
 
@@ -479,340 +476,7 @@ The `.atpt` file contains:
 
 ---
 
-## 6. Get All Workspace List
-
-Returns all workspaces accessible to the authenticated user — both workspaces they own or administer, and workspaces shared with them. The response separates owned and shared workspaces into two distinct arrays.
-
-This API is user-scoped: it returns only workspaces that the calling user has any level of access to — it does not return every workspace in the organisation. Account Admins see all workspaces in their org in the owned list.
-
-| Attribute | Value |
-|-----------|-------|
-| **Method** | GET |
-| **URL** | `/restapi/v2/workspaces` |
-| **OAuth Scope** | `ZohoAnalytics.metadata.read` |
-| **ZANALYTICS-ORGID Header** | Not required. |
-| **Permission Required** | Any authenticated Zoho Analytics user. |
-
-> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
-
-### Sample Requests
-
-**Case 1 — Account Admin fetching all accessible workspaces**
-
-```http
-GET /restapi/v2/workspaces HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-```
-
-**Case 2 — Shared user fetching their workspace access list**
-
-```http
-GET /restapi/v2/workspaces HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
-```
-
-### Sample Responses
-
-**HTTP 200 OK**
-
-**Case 1 — Account Admin (owns all org workspaces, none shared from other orgs)**
-```json
-{
-  "status": "success",
-  "summary": "Get all workspaces",
-  "data": {
-    "ownedWorkspaces": [
-      {
-        "workspaceId": "466206000000071000",
-        "workspaceName": "Sales Analytics",
-        "workspaceDesc": "Sales reporting workspace",
-        "orgId": "700000123456",
-        "createdTime": "1619175390377",
-        "createdBy": "admin@acme.com",
-        "isDefault": false
-      },
-      {
-        "workspaceId": "466206000000080000",
-        "workspaceName": "HR Analytics",
-        "workspaceDesc": "",
-        "orgId": "700000123456",
-        "createdTime": "1622097563854",
-        "createdBy": "admin@acme.com",
-        "isDefault": false
-      }
-    ],
-    "sharedWorkspaces": []
-  }
-}
-```
-
-**Case 2 — Shared user with access to workspaces in multiple orgs**
-```json
-{
-  "status": "success",
-  "summary": "Get all workspaces",
-  "data": {
-    "ownedWorkspaces": [
-      {
-        "workspaceId": "138022000000002015",
-        "workspaceName": "My Personal Workspace",
-        "workspaceDesc": "",
-        "orgId": "700000999888",
-        "createdTime": "1606987644675",
-        "createdBy": "shareduser@example.com",
-        "isDefault": false
-      }
-    ],
-    "sharedWorkspaces": [
-      {
-        "workspaceId": "466206000000071000",
-        "workspaceName": "Sales Analytics",
-        "workspaceDesc": "Sales reporting workspace",
-        "orgId": "700000123456",
-        "createdTime": "1619175390377",
-        "createdBy": "admin@acme.com",
-        "isDefault": false
-      }
-    ]
-  }
-}
-```
-
-#### Response Field Reference
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `data.ownedWorkspaces` | Array | Workspaces where the calling user is the owner (Account Admin) or admin (Org Admin, Workspace Admin). Empty array if none. |
-| `data.sharedWorkspaces` | Array | Workspaces from other organisations where views have been shared with the calling user, but the user does not administer the workspace. Empty array if none. |
-| `workspaces[].workspaceId` | String | Unique workspace identifier. |
-| `workspaces[].workspaceName` | String | Workspace display name. |
-| `workspaces[].workspaceDesc` | String | Description. Empty string `""` if not set. |
-| `workspaces[].orgId` | String | Organisation ID that owns this workspace. |
-| `workspaces[].createdTime` | String | Unix timestamp (milliseconds) when the workspace was created. |
-| `workspaces[].createdBy` | String | Email address of the user who created the workspace. |
-| `workspaces[].isDefault` | Boolean | `true` if this is the organisation's default workspace. `false` for all other workspaces. |
-
-### Notes & Behaviour
-
-| Aspect | Detail |
-|--------|--------|
-| **Returns both owned and shared workspaces** | This API combines the results of Get Owned Workspace List and Get Shared Workspace List for the calling user. |
-| **`ZANALYTICS-ORGID` not required** | This API does not require the org ID header because it returns workspaces scoped to the calling user's access, across any org they have access to. |
-| **`isDefault` and `isFavourite` in response** | The response indicates whether each workspace is the user's current default or in their favourites list, as set by the Workspace Preferences APIs. |
-| **Dependency for other APIs** | The `workspaceId` values returned here are the primary source for all workspace-specific API calls. |
-
-### Error Codes
-
-| Code | Reason | Solution |
-|------|--------|----------|
-| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
-
----
-
-## 7. Get Owned Workspace List
-
-Returns all workspaces owned by (created within) the authenticated user's organisation. This is an admin-scoped API — only the Account Admin can call it, and it returns all workspaces in the org regardless of sharing.
-
-| Attribute | Value |
-|-----------|-------|
-| **Method** | GET |
-| **URL** | `/restapi/v2/workspaces/owned` |
-| **OAuth Scope** | `ZohoAnalytics.metadata.read` |
-| **ZANALYTICS-ORGID Header** | Not required. |
-| **Permission Required** | The authenticated user must be the **Account Admin** of the organisation. |
-
-> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
-
-### Sample Requests
-
-**Case 1 — Account Admin listing all org-owned workspaces**
-
-```http
-GET /restapi/v2/workspaces/owned HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-```
-
-### Sample Responses
-
-**HTTP 200 OK**
-
-```json
-{
-  "status": "success",
-  "summary": "Get owned workspaces",
-  "data": {
-    "workspaces": [
-      {
-        "workspaceId": "466206000000071000",
-        "workspaceName": "Sales Analytics",
-        "workspaceDesc": "Sales reporting workspace",
-        "orgId": "700000123456",
-        "createdTime": "1619175390377",
-        "createdBy": "admin@acme.com",
-        "isDefault": false
-      },
-      {
-        "workspaceId": "466206000000080000",
-        "workspaceName": "HR Analytics",
-        "workspaceDesc": "",
-        "orgId": "700000123456",
-        "createdTime": "1622097563854",
-        "createdBy": "admin@acme.com",
-        "isDefault": false
-      }
-    ]
-  }
-}
-```
-
-> **Difference from Get All Workspace List:** Get Owned Workspace List returns only workspaces belonging to the Account Admin's own organisation. It is restricted to Account Admin access only. Get All Workspace List includes both owned and shared workspaces from all organisations and is accessible to any user.
-
-#### Response Field Reference
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `data.workspaces` | Array | All workspaces in the calling Account Admin's organisation. |
-| `workspaces[].workspaceId` | String | Unique workspace identifier. |
-| `workspaces[].workspaceName` | String | Workspace display name. |
-| `workspaces[].workspaceDesc` | String | Description. Empty string `""` if not set. |
-| `workspaces[].orgId` | String | Organisation ID. Always the Account Admin's org. |
-| `workspaces[].createdTime` | String | Unix timestamp (milliseconds) when the workspace was created. |
-| `workspaces[].createdBy` | String | Email of the user who created the workspace. |
-| `workspaces[].isDefault` | Boolean | `true` if this is the organisation's default workspace. |
-
-### Notes & Behaviour
-
-| Aspect | Detail |
-|--------|--------|
-| **Account Admin only** | Unlike Get All Workspace List (which any user can call), this API is restricted to Account Admins. It returns all workspaces under the caller's entire organisation, not just those the caller personally created. |
-| **`ZANALYTICS-ORGID` not required** | The org scope is determined from the Account Admin's session. |
-| **Relationship to Get All Workspace List** | Get Owned Workspace List is a superset for Account Admins — it includes workspaces the Account Admin may not directly own or have Workspace Admin access to, but are within their org. |
-| **Dependency** | No dependencies on other APIs for the request. |
-
-### Error Codes
-
-| Code | Reason | Solution |
-|------|--------|----------|
-| 7301 | User is not the Account Admin. Organization Admins and Workspace Admins cannot call this API. | Use Account Admin credentials. |
-| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
-
----
-
-## 8. Get Shared Workspace List
-
-Returns all workspaces that have been shared with the authenticated user from **other organisations**. Workspaces in the user's own organisation are not included — use Get All Workspace List to see both owned and shared together.
-
-| Attribute | Value |
-|-----------|-------|
-| **Method** | GET |
-| **URL** | `/restapi/v2/workspaces/shared` |
-| **OAuth Scope** | `ZohoAnalytics.metadata.read` |
-| **ZANALYTICS-ORGID Header** | Not required. |
-| **Permission Required** | Any authenticated Zoho Analytics user. |
-
-> This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
-
-### Sample Requests
-
-**Case 1 — User listing workspaces shared with them**
-
-```http
-GET /restapi/v2/workspaces/shared HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
-```
-
-### Sample Responses
-
-**HTTP 200 OK**
-
-**Case 1 — User has access to workspaces in two other organisations**
-```json
-{
-  "status": "success",
-  "summary": "Get shared workspaces",
-  "data": {
-    "workspaces": [
-      {
-        "workspaceId": "466206000000071000",
-        "workspaceName": "Sales Analytics",
-        "workspaceDesc": "Sales reporting workspace",
-        "orgId": "700000123456",
-        "createdTime": "1619175390377",
-        "createdBy": "admin@acme.com",
-        "isDefault": false
-      }
-    ]
-  }
-}
-```
-
-**Case 2 — User has no shared workspaces**
-```json
-{
-  "status": "success",
-  "summary": "Get shared workspaces",
-  "data": {
-    "workspaces": []
-  }
-}
-```
-
-**Case 3 — Client Portal user seeing their portal's workspace**
-```json
-{
-  "status": "success",
-  "summary": "Get shared workspaces",
-  "data": {
-    "workspaces": [
-      {
-        "workspaceId": "38190000004180410",
-        "workspaceName": "Client Analytics Portal",
-        "workspaceDesc": "",
-        "orgId": "57058019",
-        "createdTime": "1697525603846",
-        "createdBy": "admin@brandco.com",
-        "isDefault": false
-      }
-    ]
-  }
-}
-```
-
-#### Response Field Reference
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `data.workspaces` | Array | Workspaces from other organisations shared with the calling user. Empty array if no workspaces are shared. |
-| `workspaces[].workspaceId` | String | Unique workspace identifier. |
-| `workspaces[].workspaceName` | String | Workspace display name. |
-| `workspaces[].workspaceDesc` | String | Description. Empty string if not set. |
-| `workspaces[].orgId` | String | Organisation ID of the workspace owner (not the caller's org). |
-| `workspaces[].createdTime` | String | Unix timestamp (milliseconds) of workspace creation. |
-| `workspaces[].createdBy` | String | Email of the user who created the workspace. |
-| `workspaces[].isDefault` | Boolean | `true` if this is the source organisation's default workspace. |
-
-### Notes & Behaviour
-
-| Aspect | Detail |
-|--------|--------|
-| **Returns workspaces from other orgs** | This API returns workspaces that have been shared with the calling user by users from other organisations. Workspaces within the caller's own org are not included. |
-| **`ZANALYTICS-ORGID` not required** | The scope is cross-org and determined from the caller's identity, not an org header. |
-| **Relationship to Get All Workspace List** | The results of this API are a subset of what Get All Workspace List returns (the shared-from-other-orgs portion). |
-| **Dependency** | No dependencies on other APIs for the request. |
-
-### Error Codes
-
-| Code | Reason | Solution |
-|------|--------|----------|
-| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
-
----
-
-## 9. Get Workspace Secret Key
+## 6. Get Workspace Secret Key
 
 Returns the secret key for the specified workspace. This key is used as the `workspaceKey` parameter when performing a cross-organisation Copy Workspace operation — it authorises the copying of the workspace to a different organisation.
 
@@ -883,7 +547,7 @@ CONFIG={"regenerateKey":true}
 |--------|--------|
 | **`regenerateKey=false` (default) is safe to call repeatedly** | Returns the current key each time. If no key has been generated yet, one is created on the first call. |
 | **`regenerateKey=true` invalidates the old key immediately** | Any cross-org copy attempt using the old key after regeneration will fail with error 8024. In-progress copy operations started before regeneration are not affected. |
-| **Key is never in other API responses** | The workspace secret key is not returned by Get Workspace Info, Get All Workspace List, or any other API — only this dedicated endpoint returns it. |
+| **Key is never in other API responses** | The workspace secret key is not returned by Get Workspace Info, by the organisation workspace listing, or by any other API — only this dedicated endpoint returns it. |
 | **Dependency** | Workspace ID → any workspace list API. The returned key is used as `workspaceKey` in Copy Workspace. |
 
 ### Error Codes
@@ -896,7 +560,7 @@ CONFIG={"regenerateKey":true}
 
 ---
 
-## 10. Get Workspace Info
+## 7. Get Workspace Info
 
 Returns metadata for the specified workspace. The calling user must have at least some level of access to the workspace (Workspace Admin, or any view in the workspace shared with them). An optional `withUserRoleInfo` flag enriches the response with the calling user's role details within the workspace.
 
@@ -905,7 +569,7 @@ Returns metadata for the specified workspace. The calling user must have at leas
 | **Method** | GET |
 | **URL** | `/restapi/v2/workspaces/<workspace-id>` |
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
-| **ZANALYTICS-ORGID Header** | Not required (workspace ID determines org). |
+| **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID that owns the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. Account Admins and Organization Admins also have access. |
 
 ### CONFIG Parameter
@@ -924,6 +588,7 @@ CONFIG is optional.
 GET /restapi/v2/workspaces/466206000000071000 HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 ```
 
 **Case 2 — With calling user's role info**
@@ -932,6 +597,7 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 GET /restapi/v2/workspaces/466206000000071000 HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 Content-Type: application/x-www-form-urlencoded
 
 CONFIG={"withUserRoleInfo":true}
@@ -943,6 +609,7 @@ CONFIG={"withUserRoleInfo":true}
 GET /restapi/v2/workspaces/38190000004180410 HTTP/1.1
 Host: analytics.clientbrand.com
 Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
+ZANALYTICS-ORGID: 700000789012
 ```
 
 ### Sample Responses
@@ -1040,14 +707,17 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 | **`workspaceKey` is NOT returned** | Get Workspace Info does not expose the secret key. Use Get Workspace Secret Key for that. |
 | **Accessible to shared users with READ permission** | Unlike other workspace management APIs, this API is available to any user who has at least one view shared with them in the workspace (in addition to Workspace Admins). |
 | **Comparison with list APIs** | Get Workspace Info returns richer metadata for a single known workspace. Use the list APIs to discover workspace IDs, then this API for detailed info on a specific workspace. |
-| **Dependency** | Workspace ID → any workspace list API. |
+| **Organisation-scoped** | The workspace is resolved inside the organisation named in `ZANALYTICS-ORGID`. A workspace of another organisation is not found (**7103**). |
+| **Dependency** | Workspace ID → [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) or any workspace list API. |
 
 ### Error Codes
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7103 | Workspace not found. | Verify `<workspace-id>`. |
+| 7103 | Workspace not found in the organisation named in the header. | Verify `<workspace-id>` and that `ZANALYTICS-ORGID` names the organisation that owns it. |
 | 7301 | User does not have any access to the specified workspace. The user must be a workspace admin or have at least one view shared with them in this workspace. | Verify the user has been added to the workspace or has a view shared with them. |
+| 8083 | `ORGID_NOT_PRESENT_IN_THE_HEADER` — The `ZANALYTICS-ORGID` header is missing or empty. | Add the `ZANALYTICS-ORGID` header with your Organization ID. |
+| 8084 | `ORGID_NOT_EXIST` — No organisation exists with the given ID. | Read the Organization ID from **Settings → Organisation** in the Zoho Analytics UI. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 ---
@@ -1057,7 +727,7 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 | Header | Value | Required | Notes |
 |--------|-------|----------|-------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. |
-| `ZANALYTICS-ORGID` | Organisation ID | Mandatory for workspace-specific write operations | Required for Create (target org), Copy (source or destination org — see Copy Workspace notes), Rename, Delete, Export, and Get Secret Key. Not required for list operations or Get Workspace Info. |
+| `ZANALYTICS-ORGID` | Organisation ID | **Mandatory** for every API in this document | Required for Create (target org), Copy (source or destination org — see Copy Workspace notes), Rename, Delete, Export, Get Secret Key and Get Workspace Info. |
 | `ZANALYTICS-DEST-ORGID` | Destination Organisation ID | Optional — Copy Workspace only | Used by Organization Admins copying a workspace to a different org they have access to. Set to the destination org ID. When present, overrides destination org resolution and validates the caller is a member of that org. Not required for same-org copies or Account Admin cross-org copies (which use `ZANALYTICS-ORGID` directly as the destination). |
 | `Content-Type` | `application/x-www-form-urlencoded` | Required for POST/PUT/DELETE with CONFIG | Not required for GET-only APIs with no body or query-param CONFIG. |
 
@@ -1072,9 +742,6 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 | Rename Workspace | PUT | `ZohoAnalytics.modeling.update` |
 | Delete Workspace | DELETE | `ZohoAnalytics.modeling.delete` |
 | Export as Template | GET | `ZohoAnalytics.metadata.read` |
-| Get All Workspace List | GET | `ZohoAnalytics.metadata.read` |
-| Get Owned Workspace List | GET | `ZohoAnalytics.metadata.read` |
-| Get Shared Workspace List | GET | `ZohoAnalytics.metadata.read` |
 | Get Workspace Secret Key | GET | `ZohoAnalytics.metadata.read` |
 | Get Workspace Info | GET | `ZohoAnalytics.metadata.read` |
 
@@ -1161,11 +828,9 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 | `withUserRoleInfo=true` — custom role user | `isCustomRoleUser` is `true`, `roleId` is the custom role's numeric ID, `roleName` is the custom role's display name. |
 | `withUserRoleInfo=true` — shared user (no workspace role) | `roleName` may reflect their view-level access role. Behaviour depends on their permission level. |
 
-### Workspace List API Comparison
+### Workspace Lookup API Comparison
 
 | API | Returns | Who can call | ZANALYTICS-ORGID |
 |-----|---------|--------------|------------------|
-| Get All Workspace List | Owned + shared workspaces for the caller | Any user | Not required |
-| Get Owned Workspace List | All workspaces in the caller's org | Account Admin only | Not required |
-| Get Shared Workspace List | Workspaces from other orgs shared with the caller | Any user | Not required |
-| Get Workspace Info | Single workspace details | Workspace Admin, shared user, or any user with view access | Not required |
+| [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) | Workspaces of one organisation that the caller can reach | Any active user of the organisation | **Mandatory** |
+| Get Workspace Info | Single workspace details | Workspace Admin, shared user, or any user with view access | **Mandatory** |

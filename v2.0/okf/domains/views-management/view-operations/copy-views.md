@@ -46,10 +46,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T11:33:28Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -91,7 +91,7 @@ Copies one or more views from a **source workspace** to a **destination workspac
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.modeling.create`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 | `ZANALYTICS-DEST-ORGID` | `<org-id>` | Optional | ID of the destination organization. It is meant for an Organization Admin who holds admin access in several organizations and wants to copy into one of them while keeping their own organization in ZANALYTICS-ORGID. When it is sent, it overrides destination resolution and the service validates that the caller is a member of it, failing with error 7301 otherwise and with error 8058 if the organization does not exist. When it is omitted, the destination organization is the one in ZANALYTICS-ORGID. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Required | The CONFIG JSON is sent as a form field named `CONFIG`. |
 
@@ -275,5 +275,5 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Views Management](../overview.md) - the parent API domain.
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
-- Other endpoints in this group: [Save As View](save-as-view.md), [Create Similar Views](create-similar-views.md), [Rename View](rename-view.md), [Delete View](delete-view.md), [Get View List](get-views.md), [Get View Details](get-view-details.md), [Get View URL](get-view-url.md), [Get View Dependents](get-view-dependents.md), [Get Recent Views](get-recent-views.md).
+- Other endpoints in this group: [Save As View](save-as-view.md), [Create Similar Views](create-similar-views.md), [Rename View](rename-view.md), [Delete View](delete-view.md), [Get View List](get-views.md), [Get View Details](get-view-details.md), [Get View URL](get-view-url.md), [Get View Dependents](get-view-dependents.md).
 - [SDK examples](../../../sdk-examples/views-management/view-operations/copy-views.md).

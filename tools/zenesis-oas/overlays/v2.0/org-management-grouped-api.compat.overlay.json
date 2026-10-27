@@ -6,65 +6,52 @@
   },
   "actions": [
     {
-      "target": "$.paths['/restapi/v2/orgs'].get.responses['200'].content['application/json'].examples.singleOrganisation",
+      "target": "$.paths['/restapi/v2/orgs/workspaces'].get.responses['200'].content['application/json'].examples.twoWorkspaces",
       "update": {
-        "description": "Single organisation"
+        "description": "Two workspaces"
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/orgs'].get.responses['200'].content['application/json'].examples.singleOrganisation",
+      "target": "$.paths['/restapi/v2/orgs/workspaces'].get.responses['200'].content['application/json'].examples.twoWorkspaces",
       "update": {
-        "summary": "The user is the Account Admin of exactly one organisation, which is therefore also the default organisation."
+        "summary": "The caller can reach two workspaces of the organisation, one of which is their own default workspace."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/orgs'].get.responses['200'].content['application/json'].examples.multipleOrganisations",
+      "target": "$.paths['/restapi/v2/orgs/workspaces'].get.responses['200'].content['application/json'].examples.nothingVisible",
       "update": {
-        "description": "Multiple organisations"
+        "description": "Nothing visible"
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/orgs'].get.responses['200'].content['application/json'].examples.multipleOrganisations",
+      "target": "$.paths['/restapi/v2/orgs/workspaces'].get.responses['200'].content['application/json'].examples.nothingVisible",
       "update": {
-        "summary": "The user owns one organisation and holds the Organization Admin role in another. The role and workspace count differ per entry."
+        "summary": "Nothing is shared with the caller in this organisation, so an empty array is returned instead of an error."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/orgs'].get.responses['200'].content['application/json'].examples.sharedUserOrganisations",
-      "update": {
-        "description": "Shared user"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/orgs'].get.responses['200'].content['application/json'].examples.sharedUserOrganisations",
-      "update": {
-        "summary": "The user owns one organisation and is a shared user in another, where numberOfWorkspaces reflects only the workspaces shared with them."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/orgs'].get.responses['200'].content['application/json'].examples.noOrganisations",
-      "update": {
-        "description": "No organisations"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/orgs'].get.responses['200'].content['application/json'].examples.noOrganisations",
-      "update": {
-        "summary": "The user holds no Zoho Analytics organisation membership. An empty orgs array is returned instead of an error."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/orgs'].get.responses['200']",
+      "target": "$.paths['/restapi/v2/orgs/workspaces'].get.responses['200']",
       "update": {
         "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "The caller is not an active user of the organisation named in the header.",
+            "resolution": "Use the organisation the user belongs to, or ask an Account Admin to add the user to the organisation."
+          },
+          {
+            "name": "8083",
+            "description": "The ZANALYTICS-ORGID header is missing or empty.",
+            "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+          },
+          {
+            "name": "8084",
+            "description": "No organisation exists with the given ID.",
+            "resolution": "Read the Organization ID from Settings > Organisation in the Zoho Analytics UI."
+          },
           {
             "name": "8535",
             "description": "Invalid or expired OAuth token.",
@@ -75,27 +62,302 @@
       "x-migration": "Now a Markdown table in the operation description."
     },
     {
-      "target": "$.paths['/restapi/v2/orgs'].get",
+      "target": "$.paths['/restapi/v2/orgs/workspaces'].get",
       "update": {
-        "x-zenesis-title": "Get Organizations"
+        "x-zenesis-title": "Get Org Workspaces"
       },
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
     },
     {
-      "target": "$.paths['/restapi/v2/orgs'].get",
+      "target": "$.paths['/restapi/v2/orgs/workspaces'].get",
       "update": {
-        "description": "Returns the list of Zoho Analytics organisations that the authenticated user belongs to. For each organisation the response holds the role of the user within that organisation, the number of workspaces, and the plan details.\n\nThis is a user-scoped API. The `ZANALYTICS-ORGID` header is not required, and the result reflects the membership of the caller across all organisations rather than the contents of a single organisation."
+        "description": "Returns the workspaces of one organisation that the calling user can reach. The organisation is chosen with the `ZANALYTICS-ORGID` header and everything else is worked out from the identity of the caller.\n\nAn Account Admin or an Organization Admin receives every active workspace of the organisation; every other user receives only the workspaces shared with them. The result is therefore per caller: the same URL and header return different lists for different tokens. The `workspaceId` values returned here are the input of the Get Org Dashboards API and of every workspace-scoped API."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
     {
-      "target": "$.paths['/restapi/v2/orgs'].get",
+      "target": "$.paths['/restapi/v2/orgs/workspaces'].get",
       "update": {
         "x-zenesis-sections": {
+          "apiInfo": {
+            "1": {
+              "type": "editor",
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>An Account Admin and an Organization Admin receive every active workspace of the organisation. Every other user receives only the workspaces shared with them, directly or by an email address matching their account.</li><li>An Organization Admin, or any other user, whose primary email address is not verified receives an empty list. This does not apply to the Account Admin.</li><li>Workspaces created by certain internal services are not listed for any caller, whatever the role.</li><li>An empty list is a valid answer. It means that nothing is visible to this caller, not that the organisation is empty. Do not use the list as an inventory unless the caller is an Account Admin or an Organization Admin.</li><li>The call is allowed on a Client Portal or White Label domain, where the list holds only the workspaces enabled for the requesting domain.</li></ul>\n</span></blockquote>"
+            }
+          },
           "apiResponseParameters": {
             "1": {
               "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul>\n<li>Only active organisations are returned. Organisations that are expired or blocked are suppressed from the response.</li>\n<li>A user who holds no Zoho Analytics organisation membership receives HTTP 200 with an empty <code>orgs</code> array. No error is raised.</li>\n<li>Only one entry in the list can have <code>isDefault</code> set to true. When the user belongs to a single organisation, that organisation is always the default.</li>\n<li><code>numberOfWorkspaces</code> is role dependent. For the Account Admin and Organization Admin roles it is the total number of workspaces in the organisation. For every other role it is the number of workspaces shared with the user.</li>\n<li>A user who is an Account Admin in one organisation and a regular user in another sees both organisations in the list, with <code>role</code> and <code>numberOfWorkspaces</code> differing per entry.</li>\n</ul>\n</span></blockquote>"
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>The list is ordered with the newest workspace first, by creation time. There is no sort parameter and no paging - the whole list is returned in one response.</li><li><b>isDefault</b> belongs to the caller, not to the workspace. At most one entry is true, and none is when the caller has no default workspace or the default is in another organisation. Do not store it as a workspace attribute.</li><li><b>workspaceId</b>, <b>orgId</b> and <b>createdTime</b> are JSON strings. Keep them as strings and do not parse the IDs as 32-bit integers.</li><li>Some builds return additional fields. Ignore unrecognised keys rather than validating against a closed schema.</li></ul>\n</span></blockquote>"
+            }
+          }
+        }
+      },
+      "x-migration": "HTML restatement of `description`. Retire it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get.parameters[1].examples.namedWorkspacesPaged",
+      "update": {
+        "description": "Named workspaces, paged"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get.parameters[1].examples.namedWorkspacesPaged",
+      "update": {
+        "summary": "Lists the dashboards of two named workspaces, ten per page, returning the second page."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get.parameters[1].examples.searchByName",
+      "update": {
+        "description": "Search by name"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get.parameters[1].examples.searchByName",
+      "update": {
+        "summary": "Returns only the dashboards whose name contains Sales, across every workspace the caller can see."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get.responses['200'].content['application/json'].examples.morePagesAvailable",
+      "update": {
+        "description": "More pages available"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get.responses['200'].content['application/json'].examples.morePagesAvailable",
+      "update": {
+        "summary": "Two dashboards are returned and hasNextPage reports that the list continues on the next page."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get.responses['200'].content['application/json'].examples.nothingVisible",
+      "update": {
+        "description": "Nothing visible"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get.responses['200'].content['application/json'].examples.nothingVisible",
+      "update": {
+        "summary": "No dashboard is readable by the caller, so an empty array is returned with the paging details of the request."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "The caller is not a member of the organisation named in the header, or the request came through a Client Portal or White Label domain.",
+            "resolution": "Call from the standard API host as a member of the organisation named in the header."
+          },
+          {
+            "name": "7387",
+            "description": "A workspaceIds entry does not belong to the organisation in the header, or does not exist.",
+            "resolution": "Take the workspace IDs from the Get Org Workspaces API for the same organisation."
+          },
+          {
+            "name": "7430",
+            "description": "Org-level view listing is blocked for the organisation. This code is reported to the Account Admin.",
+            "resolution": "Use the workspace-level APIs, or contact support."
+          },
+          {
+            "name": "7431",
+            "description": "Org-level view listing is blocked for the organisation. This code is reported to every caller other than the Account Admin.",
+            "resolution": "Use the workspace-level APIs, or contact the account admin."
+          },
+          {
+            "name": "7476",
+            "description": "More workspaces are in scope than the limit allows.",
+            "resolution": "Send workspaceIds listing the workspaces you want, within the limit."
+          },
+          {
+            "name": "8083",
+            "description": "The ZANALYTICS-ORGID header is missing or empty.",
+            "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+          },
+          {
+            "name": "8084",
+            "description": "No organisation exists with the given ID.",
+            "resolution": "Read the Organization ID from Settings > Organisation in the Zoho Analytics UI."
+          },
+          {
+            "name": "8507",
+            "description": "searchKey exceeds 100 characters, workspaceIds exceeds 10,000 characters, or CONFIG exceeds 11,000 characters.",
+            "resolution": "Shorten the value, or send fewer workspace IDs per call."
+          },
+          {
+            "name": "8516",
+            "description": "pageNo or recordsPerPage is not a number.",
+            "resolution": "Send a plain number."
+          },
+          {
+            "name": "8534",
+            "description": "CONFIG is not valid JSON, or workspaceIds is not an array.",
+            "resolution": "Fix the JSON and URL encode it correctly, and send workspaceIds as an array of strings."
+          },
+          {
+            "name": "8535",
+            "description": "Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          },
+          {
+            "name": "8539",
+            "description": "CONFIG is sent empty, or a CONFIG value - searchKey, pageNo, recordsPerPage, workspaceIds or one of its entries - is null or an empty or blank string.",
+            "resolution": "Leave the key out instead of sending an empty value, and send only non-empty workspace IDs."
+          },
+          {
+            "name": "8542",
+            "description": "CONFIG holds a key other than workspaceIds, pageNo, recordsPerPage and searchKey.",
+            "resolution": "Remove the key."
+          },
+          {
+            "name": "8544",
+            "description": "pageNo is outside 1 to 1,000, or recordsPerPage is outside 1 to 500.",
+            "resolution": "Use a value inside the range."
+          },
+          {
+            "name": "8547",
+            "description": "workspaceIds holds more than 1,000 entries.",
+            "resolution": "Send at most 1,000 IDs, and in practice no more than the workspace limit allows."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get",
+      "update": {
+        "x-zenesis-title": "Get Org Dashboards"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get",
+      "update": {
+        "description": "Returns the dashboards of one organisation that the calling user may read, across all of the workspaces the caller can see or across the workspaces named in `workspaceIds`. The result is paged and is ordered with the most recently modified dashboard first.\n\nVisibility follows the permissions of the caller: a dashboard is returned only when the caller administers its workspace, holds a custom role in it, or the dashboard has been shared with them or made public. Account Admins, Organization Admins and workspace admins see every dashboard in their workspaces. The API is not available on a Client Portal or White Label domain."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/dashboards'].get",
+      "update": {
+        "x-zenesis-sections": {
+          "apiRequestParameters": {
+            "1": {
+              "type": "editor",
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>The CONFIG parameter is optional. Without it the first 100 dashboards across every workspace the caller can see are returned. As this is a GET request, the value must be stringified and URL encoded before it is sent.</li><li>When <b>workspaceIds</b> is omitted the server first counts the workspaces the caller can see. More than 100 fails with error 7476 - name the workspaces in <b>workspaceIds</b> to proceed. The same cap applies to the number of IDs you send. The limit is a server setting and can be changed per organisation.</li><li><b>workspaceIds</b> is validated, not filtered. An ID that belongs to another organisation, or that does not exist, fails the whole request with error 7387 rather than being skipped.</li><li>A CONFIG that is not valid JSON, or a <b>workspaceIds</b> that is not a JSON array, fails with error 8534. A key other than the four documented ones fails with error 8542. A key, or a <b>workspaceIds</b> entry, set to null or to an empty or blank string fails with error 8539 - leave the key out instead.</li><li>CONFIG accepts at most 11,000 characters in all.</li></ul>\n</span></blockquote>"
+            }
+          },
+          "apiInfo": {
+            "1": {
+              "type": "editor",
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Any member of the organisation may call this API. A user who is not a member is also admitted when they belong to the same Zoho organisation as the Account Admin, and the usual visibility rules then apply. Everyone else receives error 7301.</li><li>An organisation can have org-level dashboard listing switched off. The Account Admin then receives error 7430 and every other caller receives error 7431.</li><li>When Access Restrictions are active for the organisation, a caller whose email domain is not a trusted domain for sharing receives an empty list, and a caller who is barred from public views no longer receives public dashboards.</li><li>The API is disabled on a Client Portal or White Label domain and is rejected there with error 7301.</li></ul>\n</span></blockquote>"
+            }
+          },
+          "apiResponseParameters": {
+            "1": {
+              "type": "editor",
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Only dashboards are returned, whatever else the workspace holds. For every other view type use the workspace-level APIs.</li><li>The list is ordered with the most recently modified dashboard first. There is no sort parameter.</li><li><b>hasNextPage</b> is worked out after duplicate entries, and entries a custom role in the workspace does not allow, have been removed from the page. A page can therefore hold fewer than <b>recordsPerPage</b> entries, and on such a page <b>hasNextPage</b> can be false although later pages still hold dashboards. Keep requesting pages while <b>hasNextPage</b> is true, and do not treat a short page as proof that the list has ended.</li><li><b>createdBy</b>, <b>lastModifiedBy</b> and <b>sharedBy</b> are filled only when the caller is an active user of the owning organisation; otherwise they are empty strings. A key is left out when no address can be resolved for it.</li><li><b>isFavorite</b> belongs to the caller, not to the dashboard. The <b>isLive</b> field returned for other view types is never sent for a dashboard.</li><li>Some builds return additional fields. Ignore unrecognised keys rather than validating against a closed schema.</li></ul>\n</span></blockquote>"
+            }
+          }
+        }
+      },
+      "x-migration": "HTML restatement of `description`. Retire it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/recentitems'].get.responses['200'].content['application/json'].examples.threeRecentItems",
+      "update": {
+        "description": "Three recent items"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/recentitems'].get.responses['200'].content['application/json'].examples.threeRecentItems",
+      "update": {
+        "summary": "The caller opened a dashboard, a chart view and a table, returned newest first."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/recentitems'].get.responses['200'].content['application/json'].examples.noRecentItems",
+      "update": {
+        "description": "No recent items"
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/recentitems'].get.responses['200'].content['application/json'].examples.noRecentItems",
+      "update": {
+        "summary": "The caller has no history in a workspace that is visible to them in this organisation."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/recentitems'].get.responses['200']",
+      "update": {
+        "x-zenesis-statuscodes": [
+          {
+            "name": "7301",
+            "description": "The caller is not an active user of the organisation named in the header.",
+            "resolution": "Use the organisation the user belongs to, or ask an Account Admin to add the user to the organisation."
+          },
+          {
+            "name": "8083",
+            "description": "The ZANALYTICS-ORGID header is missing or empty.",
+            "resolution": "Add the ZANALYTICS-ORGID header with your Organization ID."
+          },
+          {
+            "name": "8084",
+            "description": "No organisation exists with the given ID.",
+            "resolution": "Read the Organization ID from Settings > Organisation in the Zoho Analytics UI."
+          },
+          {
+            "name": "8535",
+            "description": "Invalid or expired OAuth token.",
+            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
+          }
+        ]
+      },
+      "x-migration": "Now a Markdown table in the operation description."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/recentitems'].get",
+      "update": {
+        "x-zenesis-title": "Get Org Recent Items"
+      },
+      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/recentitems'].get",
+      "update": {
+        "description": "Returns the views the calling user opened most recently in one organisation, of any view type, newest first. At most 20 items are returned.\n\nThe API reads the own history of the caller and keeps the entries whose workspace is visible to them. It applies no view-level check, so an entry can refer to a view the caller can no longer open; treat the `viewId` as a hint and handle a refusal when you open it."
+      },
+      "x-migration": "Re-swaps the example fields for the current renderer."
+    },
+    {
+      "target": "$.paths['/restapi/v2/orgs/recentitems'].get",
+      "update": {
+        "x-zenesis-sections": {
+          "apiInfo": {
+            "1": {
+              "type": "editor",
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Each user has an independent list. The request cannot read the recent items of another user.</li><li>Entries are kept when their workspace is visible to the caller, exactly as the Get Org Workspaces API works it out. This API does not re-check view-level access, so an entry can refer to a view the caller can no longer open.</li><li>At most 20 entries are returned, newest first. There is no paging, no limit attribute and no type filter.</li><li>When the caller has no visible workspace in the organisation the list is empty; the existence of the organisation is still checked and an unknown ID fails with error 8084.</li><li>The call costs 1 API unit, ten times the cost of the other org-level listings.</li><li>The call is allowed on a Client Portal or White Label domain, where the entries are limited to the workspaces enabled for that domain.</li></ul>\n</span></blockquote>"
+            }
+          },
+          "apiResponseParameters": {
+            "1": {
+              "type": "editor",
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Tables, reports, dashboards and the other view types appear together in one list.</li><li><b>viewName</b> and <b>workspaceName</b> are stored in the recent-items record and are not looked up live.</li><li><b>summary</b> reads Get recent views, the same text as the workspace-level recent-views listing. The endpoint is told apart by its URL rather than by <b>summary</b>.</li><li>Some builds return additional fields. Ignore unrecognised keys rather than validating against a closed schema.</li></ul>\n</span></blockquote>"
             }
           }
         }
@@ -762,16 +1024,6 @@
       "x-migration": "Identical to `summary`. Make the renderer fall back to it."
     },
     {
-      "target": "$.components.schemas.GetOrganizationsResponse.properties.status",
-      "update": {
-        "x-zenesis-enums-desc": [
-          "Request succeeded",
-          "Request failed"
-        ]
-      },
-      "x-migration": "Positional array. Read x-enumDescriptions instead."
-    },
-    {
       "target": "$.components.schemas.GetResourceDetailsResponse.properties.status",
       "update": {
         "x-zenesis-enums-desc": [
@@ -802,24 +1054,60 @@
       "x-migration": "Positional array. Read x-enumDescriptions instead."
     },
     {
-      "target": "$.components.schemas.Org.examples",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+      "target": "$.components.schemas.GetOrgWorkspacesResponse.properties.status",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "Request succeeded",
+          "Request failed"
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
     },
     {
-      "target": "$.components.schemas.OrgList.examples",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+      "target": "$.components.schemas.OrgDashboardView.properties.viewType",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "A dashboard"
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
     },
     {
-      "target": "$.components.schemas.GetOrganizationsResponse.properties.status['x-enumDescriptions']",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+      "target": "$.components.schemas.GetOrgDashboardsResponse.properties.status",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "Request succeeded",
+          "Request failed"
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
     },
     {
-      "target": "$.components.schemas.GetOrganizationsResponse.examples",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+      "target": "$.components.schemas.OrgRecentItem.properties.viewType",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "A table",
+          "A tabular view",
+          "A chart view",
+          "A pivot view",
+          "A summary view",
+          "A query table",
+          "A dashboard",
+          "A pipeline table",
+          "A data model object"
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
+    },
+    {
+      "target": "$.components.schemas.GetOrgRecentItemsResponse.properties.status",
+      "update": {
+        "x-zenesis-enums-desc": [
+          "Request succeeded",
+          "Request failed"
+        ]
+      },
+      "x-migration": "Positional array. Read x-enumDescriptions instead."
     },
     {
       "target": "$.components.schemas.ResourceUsage.examples",
@@ -923,6 +1211,86 @@
     },
     {
       "target": "$.components.schemas.UpdateWorkspaceAccessRestrictionsConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.OrgWorkspace.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.OrgWorkspaceList.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetOrgWorkspacesResponse.properties.status['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetOrgWorkspacesResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetOrgDashboardsConfig.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.OrgDashboardView.properties.viewType['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.OrgDashboardView.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.OrgDashboardList.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.OrgDashboardPageDetails.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetOrgDashboardsResponse.properties.status['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetOrgDashboardsResponse.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.OrgRecentItem.properties.viewType['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.OrgRecentItem.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.OrgRecentItemList.examples",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetOrgRecentItemsResponse.properties.status['x-enumDescriptions']",
+      "remove": true,
+      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
+    },
+    {
+      "target": "$.components.schemas.GetOrgRecentItemsResponse.examples",
       "remove": true,
       "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
     }

@@ -7,6 +7,79 @@ patch for corrections. The OKF bundle's own content version is in `vN.N/okf/mani
 
 ## Unreleased
 
+### Added - a consumer-facing migration guide
+
+`migration/v2-mandatory-org-context/` — eight chapters explaining this change to an external developer:
+why organization context is mandatory, what changed, endpoint-by-endpoint migration with full
+before-and-after payloads, SDK migration for all seven languages, how each knowledge base and tool
+adopts it, the deprecation timeline to **March 2027**, and a troubleshooting/FAQ chapter.
+
+Markdown is the authored form; `build.py` renders an `.html` sibling for each chapter with shared
+navigation, and `--check` validates every internal link and anchor. `migration/` is the first tree in
+this repository written for API consumers rather than for the repository itself.
+
+### Removed - the user-scoped listings that were not bound to an organization
+
+The listings that reported across every organization the caller belongs to, and that did not mandate
+the `ZANALYTICS-ORGID` header, are gone. Source: `v2.0/temp/ORG_LEVEL_LISTINGS.md` (API team hand-off).
+
+| Removed endpoint | Method | Path | Replacement |
+|---|---|---|---|
+| Get Org List (`Get Organizations`) | GET | `/restapi/v2/orgs` | Read the Organization ID from **Settings → Organisation** in the Zoho Analytics UI. |
+| Get Owned Workspace List | GET | `/restapi/v2/workspaces/owned` | Get Org Workspaces |
+| Get Shared Workspace List | GET | `/restapi/v2/workspaces/shared` | Get Org Workspaces |
+| Get Owned Dashboards | GET | `/restapi/v2/dashboards/owned` | Get Org Dashboards |
+| Get Shared Dashboards | GET | `/restapi/v2/dashboards/shared` | Get Org Dashboards |
+| Get Recent Views | GET | `/restapi/v2/recentviews` | Get Org Recent Items |
+| Get All Workspace List | GET | `/restapi/v2/workspaces` | Get Org Workspaces |
+| Get All Dashboards | GET | `/restapi/v2/dashboards` | Get Org Dashboards |
+
+`POST /restapi/v2/workspaces` (Create Workspace) is unaffected - only the `GET` on that path is gone.
+Every remaining v2 endpoint now mandates the `ZANALYTICS-ORGID` header; there is no user-scoped
+cross-organization endpoint left in the surface.
+
+### Added - `Org Level Listings`, a new API group in Organization Management
+
+`v2.0/md/01 · Organization Management/ORG_LEVEL_LISTINGS.md`, the tag `Org Level Listings` in
+`org-management-grouped-api.json`, and the OKF group `organization-management/org-level-listings`.
+All three endpoints take a mandatory `ZANALYTICS-ORGID` header and `ZohoAnalytics.metadata.read`.
+
+| Endpoint | Method | Path | CONFIG |
+|---|---|---|---|
+| Get Org Workspaces | GET | `/restapi/v2/orgs/workspaces` | none |
+| Get Org Dashboards | GET | `/restapi/v2/orgs/dashboards` | optional - `workspaceIds`, `pageNo`, `recordsPerPage`, `searchKey` |
+| Get Org Recent Items | GET | `/restapi/v2/orgs/recentitems` | none |
+
+### Changed - `ZANALYTICS-ORGID` is now mandatory on Get Workspace Info and Get View Details
+
+Both resolved their target across organizations; both are now scoped to the organization named in the
+header, and both gained `8083` and `8084` in their error tables. In the SDKs they move off
+`AnalyticsClient`:
+
+- `getWorkspaceDetails` moves to **WorkspaceAPI** and loses its `workspaceId` argument (the instance
+  carries it); it now accepts the optional `config` with `withUserRoleInfo`.
+- `getViewDetails` moves to **OrgAPI** and keeps `(viewId, config)`.
+
+### Changed - the organization ID no longer comes from an API
+
+Every place that told a reader to call Get Org List for `orgId` - the `ZANALYTICS-ORGID` parameter
+descriptions in all ten specifications, `foundations/identifiers.md`, the bootstrap workflow, the
+Postman collection and folder descriptions, and the header rows of nine group documents - now points
+at **Settings → Organisation** in the Zoho Analytics UI.
+
+### Changed - all seven SDKs
+
+Removed from `AnalyticsClient`: `getOrgs`, `getWorkspaces`, `getOwnedWorkspaces`,
+`getSharedWorkspaces`, `getRecentViews`, `getDashboards`, `getOwnedDashboards`,
+`getSharedDashboards` (plus `getWorkspaceDetails` and `getViewDetails`, which moved).
+`AnalyticsClient` now carries only configuration and the four `get*Instance` factories.
+Added to `OrgAPI`: `getOrgWorkspaces`, `getOrgDashboards(config)`, `getOrgRecentItems`,
+`getViewDetails(viewId, config)`. Added to `WorkspaceAPI`: `getWorkspaceDetails(config)`.
+Sample programs, `ruby/README.md` and `<lang>/docs/` are regenerated to match.
+
+The OKF bundle goes to **2.0.0** (endpoints removed). Counts: 10 domains, 40 groups, 134 paths,
+203 operations, 205 bundle endpoints.
+
 ### Fixed - Go SDK parity and three defects in the SDK reference generator
 
 A cross-language comparison of all seven SDK surfaces (Go against Python, Node.js, Java, C#, PHP and
@@ -48,8 +121,8 @@ workspace from the instance instead of a `workspaceId` argument. Each `Workspace
 `securityControlsEndPoint` field (`/restapi/v2/security-controls/workspaces/<id>`) alongside the
 existing `workspaceEndPoint`, mirroring how `BulkAPI` already carries its `/restapi/v2/bulk/...`
 prefix. **This is a breaking change for SDK callers.** The SDK snippets in
-`v2.0/zenesis-oas-samples/`, the sample programs under `restapi-sdk/v2/<lang>/sample/` and every
-generated page (`restapi-sdk/v2/<lang>/docs/`, `v2.0/okf/sdk-examples/`) were rebuilt to match. The
+`v2.0/zenesis-oas-samples/`, the sample programs under `v2.0/sdk/<lang>/sample/` and every
+generated page (`v2.0/sdk/<lang>/docs/`, `v2.0/okf/sdk-examples/`) were rebuilt to match. The
 REST endpoint, its path and its API group are unchanged.
 
 An audit of the remaining surfaces found no other misplacement: the `/restapi/v2/automl/workspaces/`

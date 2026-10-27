@@ -11,7 +11,7 @@ tags:
 api:
   domain: views-management
   group: view-operations
-  endpoint_count: 10
+  endpoint_count: 9
   endpoints:
     - operation_id: saveAsView
       method: POST
@@ -49,19 +49,15 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents"
       doc: "/domains/views-management/view-operations/get-view-dependents.md"
-    - operation_id: getRecentViews
-      method: GET
-      path: "/restapi/v2/recentviews"
-      doc: "/domains/views-management/view-operations/get-recent-views.md"
 sources:
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T11:33:28Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -92,7 +88,6 @@ APIs for creating, copying, renaming, deleting, and retrieving views.
 | [Get View Details](get-view-details.md) | GET | `/restapi/v2/views/{view-id}` | `getViewDetails` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get View URL](get-view-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish` | `getViewUrl` | `ZohoAnalytics.embed.read` | 200 |
 | [Get View Dependents](get-view-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents` | `getViewDependents` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Recent Views](get-recent-views.md) | GET | `/restapi/v2/recentviews` | `getRecentViews` | `ZohoAnalytics.metadata.read` | 200 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 
@@ -179,6 +174,8 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | Getting details of a Dashboard Tab via its `viewId` | Returns the tab's basic info including `parentViewId` pointing to the parent Tabbed Dashboard. Does not return the tab's contained views unless `withInvolvedMetaInfo=true` and the user is a Workspace Admin. |
 | View is a Live Connect table | `isLive: true` is included in the response. `rowCount` returns `0` for live tables regardless of actual remote data volume. |
 | View is a Tabbed Dashboard but user is non-admin with `withInvolvedMetaInfo=true` | `isTabbedDashboard: true` is present, but `tabs` is `null` (admin-only). |
+| `ZANALYTICS-ORGID` is omitted | Request fails with error **8083**. The header is mandatory — the view is resolved within the organisation it names. |
+| `<view-id>` belongs to a workspace of another organisation | Request fails with error **7104**. Send the organisation that owns the workspace holding the view. |
 
 ## Get View URL
 
@@ -204,18 +201,6 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | Query table that is both a parent (references other tables) and a child (referenced by analysis views) | Get View Dependents returns **downstream** views only — those that depend on the QT. It does not list the tables the QT itself depends on (use Get View Details for that). |
 | `<view-id>` belongs to the Trash | Only active (non-trashed) views are returned as dependents. Views that have been moved to Trash are not included. |
 
-## Get Recent Views
-
-| Scenario | Behaviour |
-|----------|-----------|
-| User has never accessed any views | Returns HTTP 200 with an empty `views` array. |
-| Views from multiple workspaces and organisations | All recent views across all the user's accessible workspaces are returned together in a single list, ordered by access time. The `workspaceId` and `workspaceName` fields distinguish the workspace for each view. |
-| A recently accessed view was subsequently deleted | Deleted views are not included in recent views. Only currently active views are returned. |
-| Shared User or Group Member | Only views the user currently has access to appear in the result. If a view was later unshared, it is removed from the recent list. |
-| Calling with different OAuth tokens (different users) | Returns each user's own individual recent view history. The API is strictly per-user. |
-
----
-
 # Error Codes Used in This Group
 
 | Code | HTTP | Meaning |
@@ -231,6 +216,8 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | [8060](../../../foundations/error-codes.md#error-8060) | 400 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. |
 | [8061](../../../foundations/error-codes.md#error-8061) | 400 | The specified domainName does not belong to the org's Account Admin. |
 | [8062](../../../foundations/error-codes.md#error-8062) | 400 | ADDROWREQUESTSTILLINPROGRESS — Another row-write request for this table is still being processed. |
+| [8083](../../../foundations/error-codes.md#error-8083) | 400 | The ZANALYTICS-ORGID header is missing from a request that requires it. |
+| [8084](../../../foundations/error-codes.md#error-8084) | 404 | ORGID_NOT_EXIST - No organisation exists with the given ID. |
 | [8119](../../../foundations/error-codes.md#error-8119) | 400 | INVALIDVALUEFORATTRIBUTE — fileType, onError, delimiter, quoted, thousandSeparator, or decimalSeparator is outside its permitted set. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 | [15007](../../../foundations/error-codes.md#error-15007) | 400 | The copy operation is not allowed — the destination workspace's organisation does not match the caller's organisation, and no valid workspaceKey was supplied (or it does not match). |

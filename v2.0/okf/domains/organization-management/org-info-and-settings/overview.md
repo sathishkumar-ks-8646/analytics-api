@@ -11,12 +11,8 @@ tags:
 api:
   domain: organization-management
   group: org-info-and-settings
-  endpoint_count: 4
+  endpoint_count: 3
   endpoints:
-    - operation_id: getOrganizations
-      method: GET
-      path: "/restapi/v2/orgs"
-      doc: "/domains/organization-management/org-info-and-settings/get-organizations.md"
     - operation_id: getResourceDetails
       method: GET
       path: "/restapi/v2/resources"
@@ -34,16 +30,16 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T10:58:51Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
 # Summary
 
-These APIs provide information about the organisations, resource usage, subscription plan, and workspace/view identity lookups available to the authenticated user. They are read-only metadata APIs and do not modify any data.
+These APIs provide information about the resource usage, subscription plan, and workspace/view identity lookups available within an organisation. They are read-only metadata APIs and do not modify any data.
 
 ---
 
@@ -53,7 +49,6 @@ APIs for retrieving organisation information, resource usage, subscription detai
 
 | Endpoint | Method | Path | Operation ID | OAuth scope | Success |
 |---|---|---|---|---|---|
-| [Get Org List](get-organizations.md) | GET | `/restapi/v2/orgs` | `getOrganizations` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get Resource Details](get-resource-details.md) | GET | `/restapi/v2/resources` | `getResourceDetails` | `ZohoAnalytics.usermanagement.read` | 200 |
 | [Get Subscription Details](get-subscription-details.md) | GET | `/restapi/v2/subscription` | `getSubscriptionDetails` | `ZohoAnalytics.usermanagement.read` | 200 |
 | [Get Meta Details From Name](get-meta-details.md) | GET | `/restapi/v2/metadetails` | `getMetaDetails` | `ZohoAnalytics.metadata.read` | 200 |
@@ -61,15 +56,6 @@ APIs for retrieving organisation information, resource usage, subscription detai
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 
 # Operational Notes and Failure Cases
-
-## Get Org List
-
-| Scenario | Behaviour |
-|----------|-----------|
-| User belongs to no Zoho Analytics organisation | Returns HTTP 200 with an empty `orgs` array. No error is raised. |
-| User is Account Admin in one org and a regular User in another | Both orgs appear in the list. The `role` field differs per entry. `numberOfWorkspaces` reflects all workspaces for the admin org, and only shared workspaces for the User-role org. |
-| `isDefault` field | Only one entry in the list will have `isDefault: true`. This corresponds to the user's primary (default) organisation. If the user has a single org, it is always the default. |
-| User is a member of an expired or blocked org | Expired/blocked orgs are suppressed from the response. Only active organisations are returned. |
 
 ## Get Resource Details
 

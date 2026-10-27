@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T10:54:58Z
   - id: endpoint-doc
     resource: "/domains/data-modeling-and-schema/columns/delete-column.md"
     title: Endpoint reference - Delete Column
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 

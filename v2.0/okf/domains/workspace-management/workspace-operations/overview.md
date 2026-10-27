@@ -11,7 +11,7 @@ tags:
 api:
   domain: workspace-management
   group: workspace-operations
-  endpoint_count: 10
+  endpoint_count: 7
   endpoints:
     - operation_id: createWorkspace
       method: POST
@@ -33,18 +33,6 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/template/data"
       doc: "/domains/workspace-management/workspace-operations/export-as-template.md"
-    - operation_id: getAllWorkspaces
-      method: GET
-      path: "/restapi/v2/workspaces"
-      doc: "/domains/workspace-management/workspace-operations/get-all-workspaces.md"
-    - operation_id: getOwnedWorkspaces
-      method: GET
-      path: "/restapi/v2/workspaces/owned"
-      doc: "/domains/workspace-management/workspace-operations/get-owned-workspaces.md"
-    - operation_id: getSharedWorkspaces
-      method: GET
-      path: "/restapi/v2/workspaces/shared"
-      doc: "/domains/workspace-management/workspace-operations/get-shared-workspaces.md"
     - operation_id: getWorkspaceSecretKey
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/secretkey"
@@ -58,10 +46,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -84,9 +72,6 @@ APIs that manage the lifecycle and the metadata of workspaces, covering the crea
 | [Rename Workspace](rename-workspace.md) | PUT | `/restapi/v2/workspaces/{workspace-id}` | `renameWorkspace` | `ZohoAnalytics.modeling.update` | 204 |
 | [Delete Workspace](delete-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}` | `deleteWorkspace` | `ZohoAnalytics.modeling.delete` | 204 |
 | [Export as Template](export-as-template.md) | GET | `/restapi/v2/workspaces/{workspace-id}/template/data` | `exportAsTemplate` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get All Workspace List](get-all-workspaces.md) | GET | `/restapi/v2/workspaces` | `getAllWorkspaces` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Owned Workspace List](get-owned-workspaces.md) | GET | `/restapi/v2/workspaces/owned` | `getOwnedWorkspaces` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Shared Workspace List](get-shared-workspaces.md) | GET | `/restapi/v2/workspaces/shared` | `getSharedWorkspaces` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get Workspace Secret Key](get-workspace-secret-key.md) | GET | `/restapi/v2/workspaces/{workspace-id}/secretkey` | `getWorkspaceSecretKey` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get Workspace Info](get-workspace-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}` | `getWorkspaceDetails` | `ZohoAnalytics.metadata.read` | 200 |
 
@@ -173,14 +158,12 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | `withUserRoleInfo=true` — custom role user | `isCustomRoleUser` is `true`, `roleId` is the custom role's numeric ID, `roleName` is the custom role's display name. |
 | `withUserRoleInfo=true` — shared user (no workspace role) | `roleName` may reflect their view-level access role. Behaviour depends on their permission level. |
 
-## Workspace List API Comparison
+## Workspace Lookup API Comparison
 
 | API | Returns | Who can call | ZANALYTICS-ORGID |
 |-----|---------|--------------|------------------|
-| Get All Workspace List | Owned + shared workspaces for the caller | Any user | Not required |
-| Get Owned Workspace List | All workspaces in the caller's org | Account Admin only | Not required |
-| Get Shared Workspace List | Workspaces from other orgs shared with the caller | Any user | Not required |
-| Get Workspace Info | Single workspace details | Workspace Admin, shared user, or any user with view access | Not required |
+| [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) | Workspaces of one organisation that the caller can reach | Any active user of the organisation | **Mandatory** |
+| Get Workspace Info | Single workspace details | Workspace Admin, shared user, or any user with view access | **Mandatory** |
 
 # Error Codes Used in This Group
 
@@ -194,6 +177,8 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | [7951](../../../foundations/error-codes.md#error-7951) | 400 | The organisation has reached its workspace creation limit based on the current subscription plan. |
 | [8024](../../../foundations/error-codes.md#error-8024) | 400 | Cross-org copy attempted without a valid workspaceKey, or the provided key does not match the source workspace's secret key. |
 | [8058](../../../foundations/error-codes.md#error-8058) | 400 | The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist. |
+| [8083](../../../foundations/error-codes.md#error-8083) | 400 | The ZANALYTICS-ORGID header is missing from a request that requires it. |
+| [8084](../../../foundations/error-codes.md#error-8084) | 404 | ORGID_NOT_EXIST - No organisation exists with the given ID. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
 
 # Related

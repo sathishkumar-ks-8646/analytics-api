@@ -1,40 +1,7 @@
 {
   "base_url": "https://analyticsapi.zoho.com",
-  "endpoint_count": 210,
+  "endpoint_count": 205,
   "endpoints": [
-    {
-      "operation_id": "getOrganizations",
-      "title": "Get Org List",
-      "method": "GET",
-      "path": "/restapi/v2/orgs",
-      "domain": "organization-management",
-      "domain_title": "Organization Management",
-      "group": "org-info-and-settings",
-      "group_title": "Organization Info & Settings",
-      "oauth_scopes": [
-        "ZohoAnalytics.metadata.read"
-      ],
-      "org_id_header": "not-required",
-      "config_parameter": {
-        "location": "none",
-        "required": false
-      },
-      "request_content_type": null,
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "Any authenticated Zoho Analytics user.",
-      "error_codes": [
-        8535
-      ],
-      "doc": "/domains/organization-management/org-info-and-settings/get-organizations.md",
-      "sdk_examples": "/sdk-examples/organization-management/org-info-and-settings/get-organizations.md",
-      "openapi": {
-        "file": "/references/openapi/org-management-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1orgs/get"
-      }
-    },
     {
       "operation_id": "getResourceDetails",
       "title": "Get Resource Details",
@@ -139,6 +106,125 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1metadetails/get"
+      }
+    },
+    {
+      "operation_id": "getOrgWorkspaces",
+      "title": "Get Org Workspaces",
+      "method": "GET",
+      "path": "/restapi/v2/orgs/workspaces",
+      "domain": "organization-management",
+      "domain_title": "Organization Management",
+      "group": "org-level-listings",
+      "group_title": "Org-Level Listings",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an active user of the organisation. Account Admins and Organization Admins see every active workspace; other users see only the workspaces shared with them.",
+      "error_codes": [
+        7301,
+        8083,
+        8084,
+        8535
+      ],
+      "doc": "/domains/organization-management/org-level-listings/get-org-workspaces.md",
+      "sdk_examples": "/sdk-examples/organization-management/org-level-listings/get-org-workspaces.md",
+      "openapi": {
+        "file": "/references/openapi/org-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1orgs~1workspaces/get"
+      }
+    },
+    {
+      "operation_id": "getOrgDashboards",
+      "title": "Get Org Dashboards",
+      "method": "GET",
+      "path": "/restapi/v2/orgs/dashboards",
+      "domain": "organization-management",
+      "domain_title": "Organization Management",
+      "group": "org-level-listings",
+      "group_title": "Org-Level Listings",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "query",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be a member of the organisation. Only dashboards the user may read are returned. Not available on Client Portal / White Label domains (7301).",
+      "error_codes": [
+        7301,
+        7387,
+        7430,
+        7431,
+        7476,
+        8083,
+        8084,
+        8507,
+        8516,
+        8534,
+        8535,
+        8539,
+        8542,
+        8544,
+        8547
+      ],
+      "doc": "/domains/organization-management/org-level-listings/get-org-dashboards.md",
+      "sdk_examples": "/sdk-examples/organization-management/org-level-listings/get-org-dashboards.md",
+      "openapi": {
+        "file": "/references/openapi/org-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1orgs~1dashboards/get"
+      }
+    },
+    {
+      "operation_id": "getOrgRecentItems",
+      "title": "Get Org Recent Items",
+      "method": "GET",
+      "path": "/restapi/v2/orgs/recentitems",
+      "domain": "organization-management",
+      "domain_title": "Organization Management",
+      "group": "org-level-listings",
+      "group_title": "Org-Level Listings",
+      "oauth_scopes": [
+        "ZohoAnalytics.metadata.read"
+      ],
+      "org_id_header": "required",
+      "config_parameter": {
+        "location": "none",
+        "required": false
+      },
+      "request_content_type": null,
+      "success_status": 200,
+      "response_content_types": [
+        "application/json"
+      ],
+      "permission_required": "The authenticated user must be an active user of the organisation. Only the caller's own history is returned.",
+      "error_codes": [
+        7301,
+        8083,
+        8084,
+        8535
+      ],
+      "doc": "/domains/organization-management/org-level-listings/get-org-recent-items.md",
+      "sdk_examples": "/sdk-examples/organization-management/org-level-listings/get-org-recent-items.md",
+      "openapi": {
+        "file": "/references/openapi/org-management-grouped-api.json",
+        "pointer": "#/paths/~1restapi~1v2~1orgs~1recentitems/get"
       }
     },
     {
@@ -1450,106 +1536,6 @@
       }
     },
     {
-      "operation_id": "getAllWorkspaces",
-      "title": "Get All Workspace List",
-      "method": "GET",
-      "path": "/restapi/v2/workspaces",
-      "domain": "workspace-management",
-      "domain_title": "Workspace Management",
-      "group": "workspace-operations",
-      "group_title": "Workspace Operations",
-      "oauth_scopes": [
-        "ZohoAnalytics.metadata.read"
-      ],
-      "org_id_header": "not-required",
-      "config_parameter": {
-        "location": "none",
-        "required": false
-      },
-      "request_content_type": null,
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "Any authenticated Zoho Analytics user.",
-      "error_codes": [
-        8535
-      ],
-      "doc": "/domains/workspace-management/workspace-operations/get-all-workspaces.md",
-      "sdk_examples": "/sdk-examples/workspace-management/workspace-operations/get-all-workspaces.md",
-      "openapi": {
-        "file": "/references/openapi/workspace-management-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1workspaces/get"
-      }
-    },
-    {
-      "operation_id": "getOwnedWorkspaces",
-      "title": "Get Owned Workspace List",
-      "method": "GET",
-      "path": "/restapi/v2/workspaces/owned",
-      "domain": "workspace-management",
-      "domain_title": "Workspace Management",
-      "group": "workspace-operations",
-      "group_title": "Workspace Operations",
-      "oauth_scopes": [
-        "ZohoAnalytics.metadata.read"
-      ],
-      "org_id_header": "not-required",
-      "config_parameter": {
-        "location": "none",
-        "required": false
-      },
-      "request_content_type": null,
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "The authenticated user must be the Account Admin of the organisation.",
-      "error_codes": [
-        7301,
-        8535
-      ],
-      "doc": "/domains/workspace-management/workspace-operations/get-owned-workspaces.md",
-      "sdk_examples": "/sdk-examples/workspace-management/workspace-operations/get-owned-workspaces.md",
-      "openapi": {
-        "file": "/references/openapi/workspace-management-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1workspaces~1owned/get"
-      }
-    },
-    {
-      "operation_id": "getSharedWorkspaces",
-      "title": "Get Shared Workspace List",
-      "method": "GET",
-      "path": "/restapi/v2/workspaces/shared",
-      "domain": "workspace-management",
-      "domain_title": "Workspace Management",
-      "group": "workspace-operations",
-      "group_title": "Workspace Operations",
-      "oauth_scopes": [
-        "ZohoAnalytics.metadata.read"
-      ],
-      "org_id_header": "not-required",
-      "config_parameter": {
-        "location": "none",
-        "required": false
-      },
-      "request_content_type": null,
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "Any authenticated Zoho Analytics user.",
-      "error_codes": [
-        8535
-      ],
-      "doc": "/domains/workspace-management/workspace-operations/get-shared-workspaces.md",
-      "sdk_examples": "/sdk-examples/workspace-management/workspace-operations/get-shared-workspaces.md",
-      "openapi": {
-        "file": "/references/openapi/workspace-management-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1workspaces~1shared/get"
-      }
-    },
-    {
       "operation_id": "getWorkspaceSecretKey",
       "title": "Get Workspace Secret Key",
       "method": "GET",
@@ -1596,7 +1582,7 @@
       "oauth_scopes": [
         "ZohoAnalytics.metadata.read"
       ],
-      "org_id_header": "not-required",
+      "org_id_header": "required",
       "config_parameter": {
         "location": "query",
         "required": false
@@ -1610,6 +1596,8 @@
       "error_codes": [
         7103,
         7301,
+        8083,
+        8084,
         8535
       ],
       "doc": "/domains/workspace-management/workspace-operations/get-workspace-details.md",
@@ -5075,7 +5063,7 @@
       "oauth_scopes": [
         "ZohoAnalytics.metadata.read"
       ],
-      "org_id_header": "not-required",
+      "org_id_header": "required",
       "config_parameter": {
         "location": "query",
         "required": false
@@ -5089,6 +5077,8 @@
       "error_codes": [
         7104,
         7301,
+        8083,
+        8084,
         8535
       ],
       "doc": "/domains/views-management/view-operations/get-view-details.md",
@@ -5173,39 +5163,6 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1dependents/get"
-      }
-    },
-    {
-      "operation_id": "getRecentViews",
-      "title": "Get Recent Views",
-      "method": "GET",
-      "path": "/restapi/v2/recentviews",
-      "domain": "views-management",
-      "domain_title": "Views Management",
-      "group": "view-operations",
-      "group_title": "View Operations",
-      "oauth_scopes": [
-        "ZohoAnalytics.metadata.read"
-      ],
-      "org_id_header": "not-required",
-      "config_parameter": {
-        "location": "none",
-        "required": false
-      },
-      "request_content_type": null,
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "Any authenticated Zoho Analytics user.",
-      "error_codes": [
-        8535
-      ],
-      "doc": "/domains/views-management/view-operations/get-recent-views.md",
-      "sdk_examples": "/sdk-examples/views-management/view-operations/get-recent-views.md",
-      "openapi": {
-        "file": "/references/openapi/views-management-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1recentviews/get"
       }
     },
     {
@@ -6245,108 +6202,6 @@
       "openapi": {
         "file": "/references/openapi/reports-dashboards-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}/put"
-      }
-    },
-    {
-      "operation_id": "getDashboards",
-      "title": "Get All Dashboards",
-      "method": "GET",
-      "path": "/restapi/v2/dashboards",
-      "domain": "reports-and-dashboards",
-      "domain_title": "Reports & Dashboards",
-      "group": "dashboards",
-      "group_title": "Dashboards",
-      "oauth_scopes": [
-        "ZohoAnalytics.metadata.read"
-      ],
-      "org_id_header": "not-required",
-      "config_parameter": {
-        "location": "none",
-        "required": false
-      },
-      "request_content_type": null,
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "Any active Zoho Analytics user.",
-      "error_codes": [
-        7301,
-        8535
-      ],
-      "doc": "/domains/reports-and-dashboards/dashboards/get-dashboards.md",
-      "sdk_examples": "/sdk-examples/reports-and-dashboards/dashboards/get-dashboards.md",
-      "openapi": {
-        "file": "/references/openapi/reports-dashboards-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1dashboards/get"
-      }
-    },
-    {
-      "operation_id": "getOwnedDashboards",
-      "title": "Get Owned Dashboards",
-      "method": "GET",
-      "path": "/restapi/v2/dashboards/owned",
-      "domain": "reports-and-dashboards",
-      "domain_title": "Reports & Dashboards",
-      "group": "dashboards",
-      "group_title": "Dashboards",
-      "oauth_scopes": [
-        "ZohoAnalytics.metadata.read"
-      ],
-      "org_id_header": "not-required",
-      "config_parameter": {
-        "location": "none",
-        "required": false
-      },
-      "request_content_type": null,
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "The authenticated user must be an Account Admin.",
-      "error_codes": [
-        7301,
-        8535
-      ],
-      "doc": "/domains/reports-and-dashboards/dashboards/get-owned-dashboards.md",
-      "sdk_examples": "/sdk-examples/reports-and-dashboards/dashboards/get-owned-dashboards.md",
-      "openapi": {
-        "file": "/references/openapi/reports-dashboards-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1dashboards~1owned/get"
-      }
-    },
-    {
-      "operation_id": "getSharedDashboards",
-      "title": "Get Shared Dashboards",
-      "method": "GET",
-      "path": "/restapi/v2/dashboards/shared",
-      "domain": "reports-and-dashboards",
-      "domain_title": "Reports & Dashboards",
-      "group": "dashboards",
-      "group_title": "Dashboards",
-      "oauth_scopes": [
-        "ZohoAnalytics.metadata.read"
-      ],
-      "org_id_header": "not-required",
-      "config_parameter": {
-        "location": "none",
-        "required": false
-      },
-      "request_content_type": null,
-      "success_status": 200,
-      "response_content_types": [
-        "application/json"
-      ],
-      "permission_required": "Any active Zoho Analytics user.",
-      "error_codes": [
-        7301,
-        8535
-      ],
-      "doc": "/domains/reports-and-dashboards/dashboards/get-shared-dashboards.md",
-      "sdk_examples": "/sdk-examples/reports-and-dashboards/dashboards/get-shared-dashboards.md",
-      "openapi": {
-        "file": "/references/openapi/reports-dashboards-grouped-api.json",
-        "pointer": "#/paths/~1restapi~1v2~1dashboards~1shared/get"
       }
     },
     {

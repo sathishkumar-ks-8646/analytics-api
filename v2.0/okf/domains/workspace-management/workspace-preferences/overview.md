@@ -34,10 +34,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -93,7 +93,7 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | Scenario | Behaviour |
 |----------|-----------|
 | Workspace is currently the user's default | Default is removed. The user has no default workspace until they set a new one. |
-| Workspace is **not** the user's current default | **Fails with error 7415.** This is the primary failure case — use Get All Workspace List to confirm `isDefault: true` before calling this API. |
+| Workspace is **not** the user's current default | **Fails with error 7415.** This is the primary failure case — use [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) to confirm `isDefault: true` before calling this API. |
 | Workspace ID is valid but user has no access | Fails with error 7301. |
 | Calling immediately after Add Default | Succeeds — the workspace was just set and can be unset in sequence. |
 

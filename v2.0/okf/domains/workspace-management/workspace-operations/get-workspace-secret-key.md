@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -78,7 +78,7 @@ The key can optionally be regenerated, which invalidates the previous key. Any p
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.read`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 
 ## Path Parameters
 
@@ -98,7 +98,7 @@ CONFIG is optional. It must be sent as a query parameter or form-encoded body pa
 
 - Setting **regenerateKey** to false, which is the default, is safe to invoke repeatedly. The existing key is returned each time, and a key is generated on the first call when none exists.
 - Setting **regenerateKey** to true invalidates the previous key immediately. A cross-organization copy attempted with the old key after regeneration fails with error code 8024. A copy operation that had already started before the regeneration is not affected, as the key is validated only at the start of the copy.
-- The workspace secret key is returned only by this API. It is not present in the response of the Get Workspace Info, the Get All Workspace List or any other API.
+- The workspace secret key is returned only by this API. It is not present in the response of the Get Workspace Info, the Get Org Workspaces or any other API.
 - Only the Account Admins and the Organization Admins of the organization that owns the workspace can retrieve the key.
 - As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.
 
@@ -163,7 +163,7 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 |--------|--------|
 | **`regenerateKey=false` (default) is safe to call repeatedly** | Returns the current key each time. If no key has been generated yet, one is created on the first call. |
 | **`regenerateKey=true` invalidates the old key immediately** | Any cross-org copy attempt using the old key after regeneration will fail with error 8024. In-progress copy operations started before regeneration are not affected. |
-| **Key is never in other API responses** | The workspace secret key is not returned by Get Workspace Info, Get All Workspace List, or any other API — only this dedicated endpoint returns it. |
+| **Key is never in other API responses** | The workspace secret key is not returned by Get Workspace Info, by the organisation workspace listing, or by any other API — only this dedicated endpoint returns it. |
 | **Dependency** | Workspace ID → any workspace list API. The returned key is used as `workspaceKey` in Copy Workspace. |
 
 # Error Codes
@@ -183,5 +183,5 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Workspace Management](../overview.md) - the parent API domain.
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
-- Other endpoints in this group: [Create Workspace](create-workspace.md), [Copy Workspace](copy-workspace.md), [Rename Workspace](rename-workspace.md), [Delete Workspace](delete-workspace.md), [Export as Template](export-as-template.md), [Get All Workspace List](get-all-workspaces.md), [Get Owned Workspace List](get-owned-workspaces.md), [Get Shared Workspace List](get-shared-workspaces.md), [Get Workspace Info](get-workspace-details.md).
+- Other endpoints in this group: [Create Workspace](create-workspace.md), [Copy Workspace](copy-workspace.md), [Rename Workspace](rename-workspace.md), [Delete Workspace](delete-workspace.md), [Export as Template](export-as-template.md), [Get Workspace Info](get-workspace-details.md).
 - [SDK examples](../../../sdk-examples/workspace-management/workspace-operations/get-workspace-secret-key.md).

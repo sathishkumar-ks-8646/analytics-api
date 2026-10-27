@@ -34,10 +34,10 @@ sources:
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T10:54:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -464,7 +464,7 @@ Every recognised permission key, by group. All are booleans, and **an omitted ke
 | [8525](../../../foundations/error-codes.md#error-8525) | 400 | URLRULENOTCONFIGURED — <role-id> is not numeric, so the request matched no route. |
 | [8534](../../../foundations/error-codes.md#error-8534) | 400 | JSONPARSEERROR — CONFIG is not valid JSON. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [8539](../../../foundations/error-codes.md#error-8539) | 400 | INVALIDVALUENOTALLOWED — An attribute carries a value that is structurally valid but not accepted, such as an empty roleName. |
+| [8539](../../../foundations/error-codes.md#error-8539) | 400 | CONFIG is sent empty, or a CONFIG value - searchKey, pageNo, recordsPerPage, workspaceIds or one of its entries - is null or an empty or blank string. |
 
 # Related
 

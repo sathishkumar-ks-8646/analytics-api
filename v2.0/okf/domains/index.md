@@ -2,7 +2,7 @@
 
 # Subdirectories
 
-* [Organization Management](organization-management/index.md) - APIs that return information about the organisations, resource usage, subscription plan, and workspace or view identity lookups available to the authenticated user, and that read and update the organisation-wide and per-workspace access restriction settings.
+* [Organization Management](organization-management/index.md) - APIs that return information about the resource usage, subscription plan, and workspace or view identity lookups available within an organisation, that list the workspaces, dashboards and recently opened views the calling user can reach in that organisation, and that read and update the organisation-wide and per-workspace access restriction settings.
 * [Users & Groups](users-and-groups/index.md) - API for managing users and groups in Zoho Analytics — covering org-level users, workspace-level users, and workspace groups.
 * [Workspace Management](workspace-management/index.md) - API for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, folder management, linked workspaces, and backup and restore.
 * [Data Modeling & Schema](data-modeling-and-schema/index.md) - API for Data Modeling & Schema in Zoho Analytics — covering tables, schema, columns, lookups, query tables, formulas, and workspace variables.

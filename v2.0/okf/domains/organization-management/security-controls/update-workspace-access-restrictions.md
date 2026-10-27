@@ -52,10 +52,10 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T10:58:51Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -88,7 +88,7 @@ Switches one workspace between following the organisation and having its own set
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.update`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 | `Content-Type` | `application/x-www-form-urlencoded` | Required | The CONFIG JSON is sent as a form field named `CONFIG`. |
 
 ## Path Parameters
@@ -298,7 +298,7 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | [8077](../../../foundations/error-codes.md#error-8077) | 400 | `EMPTY_JSON_CONFIGURATION` — `CONFIG` is present but empty. | Send a JSON object in `CONFIG`. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | `INVALID_JSON_CONFIGURATION` — `CONFIG` is not valid JSON, or the workspace follows the organisation and the request has neither `useOrganizationSettings` nor a non-empty section. | Send valid JSON with at least one attribute to change. |
 | [8083](../../../foundations/error-codes.md#error-8083) | 400 | `ORGID_NOT_PRESENT_IN_THE_HEADER` — The `ZANALYTICS-ORGID` header is missing or empty. | Add the `ZANALYTICS-ORGID` header with your Organization ID. |
-| [8084](../../../foundations/error-codes.md#error-8084) | 400 | `ORGID_NOT_EXIST` — No organisation exists with the given ID. | Use the `orgId` returned by the organisation listing API. |
+| [8084](../../../foundations/error-codes.md#error-8084) | 404 | `ORGID_NOT_EXIST` — No organisation exists with the given ID. | Use the `orgId` returned by the organisation listing API. |
 | [8192](../../../foundations/error-codes.md#error-8192) | 400 | `TRUSTED_DOMAINS_WITHOUT_DOMAIN_RESTRICTION` — `trustedDomains` was sent for a section whose domain restriction is off or is being switched off. | Send `domainRestrictionEnabled: true` with the list, or send `domainRestrictionEnabled: false` with `trustedDomains: []` to clear it. |
 | [8193](../../../foundations/error-codes.md#error-8193) | 400 | `TRUSTED_DOMAINS_EMPTY` — The domain restriction is on, or being switched on, but the section has no trusted domains. | Send at least one domain in `trustedDomains`, or switch the restriction off. |
 | [8194](../../../foundations/error-codes.md#error-8194) | 400 | `DOMAIN_RESTRICTION_NOT_ALLOWED_WHEN_DISABLED` — Domain attributes were sent for `privateLinks`, `publicViews` or `emailViews` while that feature is disabled or is being disabled. | Enable the feature in the same request, or remove the domain attributes. |

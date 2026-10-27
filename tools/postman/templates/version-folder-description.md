@@ -21,7 +21,7 @@ Every request below assumes a valid access token.
 | Step | Action | Gives you |
 | --- | --- | --- |
 | 1 | Import and select the **`Zoho Analytics REST Variables`** environment | Every variable these requests read |
-| 2 | **🏢 Organization Management › Get Org List** | `orgId` → set `organization-id` |
+| 2 | Zoho Analytics UI › **Settings → Organisation** | `Organization ID` → set `organization-id` |
 | 3 | **🏢 Organization Management › Get Meta Details From Name** | `workspaceId`, `viewId` from plain names — **enable** those two variables first |
 | 4 | Any endpoint in the domain you need | — |
 
@@ -94,7 +94,7 @@ nothing here reads collection-level variables.
 | --- | --- |
 | `analytics-domain` | The API host of your data centre, e.g. `analyticsapi.zoho.com`. See the collection overview for the full list. |
 | `access-token` | Filled in automatically by **🔐 Authentication › Generate Tokens**. |
-| `organization-id` | **Get Org List** → `orgId`. Sent as `ZANALYTICS-ORGID` by almost every request here. |
+| `organization-id` | Zoho Analytics UI › **Settings → Organisation**. Sent as `ZANALYTICS-ORGID` by almost every request here. |
 
 **Disabled by default — enable the one your request needs**
 
@@ -104,12 +104,12 @@ run.
 
 | Variable | Enable it for | Read the ID from |
 | --- | --- | --- |
-| `workspace-id` | Nearly every domain below | **Get Meta Details From Name** / **Get All Workspace List** |
+| `workspace-id` | Nearly every domain below | **Get Meta Details From Name** / **Get Org Workspaces** |
 | `view-id` | Rows, exports, sharing, publish, tags, reports | **Get Meta Details From Name** / **Get View List** |
 | `column-id` | 🧱 Columns | **Get Table Metadata** |
 | `folder-id` | 🗂️ Workspace Folders | **Get Folder List** |
 | `querytable-id` | 🧱 Query Tables | **Get Query Tables** |
-| `dashboard-id` | 📊 Dashboards | **Get All Dashboards** |
+| `dashboard-id` | 📊 Dashboards | **Get Org Dashboards** |
 | `formula-id` | 🧱 Custom Formula Columns, Aggregate Formulas | **Get Custom Formulas** / **Get Aggregate Formula** |
 | `variable-id` | 🧱 Workspace Variables | **Get Variables** |
 | `group-id` | 👥 Workspace Groups | **Get Group List** |
@@ -122,7 +122,7 @@ run.
 | `analysis-id` | 🤖 AutoML | **Get AutoML Analysis In Workspace** |
 | `model-id` | 🤖 AutoML | **Get AutoML Analysis Details** |
 | `deployment-id` | 🤖 AutoML | **Get Deployments For A Model** |
-| `dest-organization-id` | **Copy Workspace**, **Copy Views**, **Copy Custom Formulas** | **Get Org List** — the _destination_ org |
+| `dest-organization-id` | **Copy Workspace**, **Copy Views**, **Copy Custom Formulas** | Zoho Analytics UI › **Settings → Organisation** of the _destination_ org |
 
 > **Cross-organization copies.** Those three copy requests carry a **disabled**  
 `ZANALYTICS-DEST-ORGID` header. To copy into another organization you administer, enable both  

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-kind="page">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration · Zoho Analytics Node.js SDK</title>
+<meta name="description" content="Timeouts, proxies, regions and per-request configuration.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/docs.css">
+<script>
+// Applied before paint so a dark-mode reload does not flash light.
+(function(){try{var t=localStorage.getItem('za-sdk-docs-theme');
+if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="rail" data-open="false">
+  <a class="brand" href="index.html">
+    <span class="brand__mark">Zoho Analytics</span>
+    <span class="brand__name">REST API v2</span>
+    <span class="brand__lang">Node.js SDK</span>
+  </a>
+  <nav class="nav" aria-label="Documentation"><h2>Overview</h2><ul><li><a href="index.html">Introduction</a></li><li><a href="getting-started.html">Getting started</a></li></ul><h2>Essentials</h2><ul><li><a href="authentication.html">Authentication</a></li><li><a href="configuration.html" aria-current="page">Configuration</a></li><li><a href="errors.html">Errors</a></li><li><a href="limits.html">Limits</a></li></ul><h2>Guides</h2><ul><li><a href="guides/importing-data.html">Importing data</a></li><li><a href="guides/exporting-data.html">Exporting data</a></li></ul><h2>Reference</h2><ul><li><a href="reference/analytics-client.html">AnalyticsClient</a></li><li><a href="reference/org-api.html">OrgAPI</a></li><li><a href="reference/workspace-api.html">WorkspaceAPI</a></li><li><a href="reference/view-api.html">ViewAPI</a></li><li><a href="reference/bulk-api.html">BulkAPI</a></li></ul></nav>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <button class="ctl nav-toggle" type="button" data-nav-toggle
+            aria-expanded="false" aria-label="Toggle navigation">Menu</button>
+    <p class="crumbs"><a href="index.html">Docs</a><span aria-hidden="true">/</span><span>Configuration</span></p>
+    <div class="controls">
+      <button class="ctl" type="button" data-theme-toggle aria-pressed="false">
+        <span data-theme-label>Dark</span>
+      </button>
+    </div>
+  </div>
+  <div class="layout">
+    <main class="article" id="main" tabindex="-1">
+      <header class="page-head">
+        <p class="page-head__kicker">Client settings</p>
+        <h1>Configuration</h1>
+        <p class="page-head__lede">Timeouts, proxies, regions and per-request configuration.</p>
+      </header>
+      <p>Everything on this page is set on the client and applies to every call made through it.</p><h2 id="timeouts">Timeouts<a class="anchor" href="#timeouts" aria-label="Link to this section">#</a></h2><p>Defaults are generous enough for interactive calls but not for large imports or exports. Raise the read timeout before moving large files.</p><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">// Timeouts are supplied when the client is constructed.
+var ac = new analyticsClient(clientId, clientSecret, refreshToken);
+ac.requestTimeout = 60000;   // milliseconds</code></pre></figure><aside class="callout callout--note" role="note" aria-label="Note"><p class="callout__kind">Note</p><p class="callout__title">Timeouts are not retries</p><div class="callout__body"><p>A timeout aborts the HTTP request; it does not cancel work already started on the server. An import that times out client-side may still land. Check the job status before retrying — see <a href="guides/importing-data.html">Importing data</a>.</p></div></aside><h2 id="proxy">Proxy<a class="anchor" href="#proxy" aria-label="Link to this section">#</a></h2><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">ac.setProxy(&#x27;proxy.example.com&#x27;, 8443, &#x27;proxyUser&#x27;, &#x27;proxyPassword&#x27;);</code></pre></figure><h2 id="region">Region<a class="anchor" href="#region" aria-label="Link to this section">#</a></h2><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">ac.setAnalyticsServerURL(&#x27;https://analyticsapi.zoho.eu&#x27;);
+ac.setAccountsServerURL(&#x27;https://accounts.zoho.eu&#x27;);</code></pre></figure><p>See <a href="authentication.html#data-centers">Authentication</a> for the full host table.</p><h2 id="request-configuration">Request configuration<a class="anchor" href="#request-configuration" aria-label="Link to this section">#</a></h2><p>Most methods take a final <code>config</code> value carrying optional parameters for that endpoint — filter criteria, output format, pagination and so on.</p><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">var config = {
+    &#x27;viewTypes&#x27;: [&#x27;0&#x27;, &#x27;1&#x27;]
+};
+var views = await workspace.getViews(config);</code></pre></figure><h2 id="supplying-an-access-token-directly">Supplying an access token directly<a class="anchor" href="#supplying-an-access-token-directly" aria-label="Link to this section">#</a></h2><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">ac.setAccessToken(&#x27;1000.xxxxxxx.xxxxxxx&#x27;);</code></pre></figure><h2 id="nodejs-notes">Node.js notes<a class="anchor" href="#nodejs-notes" aria-label="Link to this section">#</a></h2><ul><li>Unhandled rejections crash the process on modern Node; always attach a <code>catch</code> or wrap <code>await</code> in <code>try</code>.</li><li><code>config</code> defaults to <code>{}</code>.</li></ul><h2 id="related">Related<a class="anchor" href="#related" aria-label="Link to this section">#</a></h2><ul><li><a href="authentication.html">Authentication</a> — credentials and the token throttle.</li><li><a href="errors.html">Errors</a> — what a failure looks like.</li></ul>
+      <nav class="pager" aria-label="Pagination"><a href="authentication.html" rel="prev"><span>Previous</span><strong>Authentication</strong></a><a href="errors.html" rel="next"><span>Next</span><strong>Errors</strong></a></nav>
+      <footer class="foot">
+        <span>Zoho Analytics Node.js SDK &middot; REST API v2</span>
+        <span>Generated 2026-10-27</span>
+      </footer>
+    </main>
+    <nav class="index" aria-label="On this page"><h2>On this page</h2><ul><li class="lvl-2"><a href="#timeouts">Timeouts</a></li><li class="lvl-2"><a href="#proxy">Proxy</a></li><li class="lvl-2"><a href="#region">Region</a></li><li class="lvl-2"><a href="#request-configuration">Request configuration</a></li><li class="lvl-2"><a href="#supplying-an-access-token-directly">Supplying an access token directly</a></li><li class="lvl-2"><a href="#nodejs-notes">Node.js notes</a></li><li class="lvl-2"><a href="#related">Related</a></li></ul></nav>
+  </div>
+</div>
+</div>
+<script src="assets/docs.js" defer></script>
+</body>
+</html>

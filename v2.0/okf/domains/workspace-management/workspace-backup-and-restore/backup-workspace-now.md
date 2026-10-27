@@ -49,10 +49,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -85,7 +85,7 @@ Queues an immediate backup of the workspace. Returns at once with the new `backu
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.create`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 | `Content-Type` | `application/x-www-form-urlencoded` | Required | The CONFIG JSON is sent as a form field named `CONFIG`. |
 
 ## Path Parameters
@@ -201,7 +201,7 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | `SECURITY_NOT_PERMITTED` — The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | `INVALID_JSON_CONFIGURATION` — `CONFIG` is present but is not valid JSON. | Send a valid JSON object, or omit `CONFIG`. |
 | [8083](../../../foundations/error-codes.md#error-8083) | 400 | `ORGID_NOT_PRESENT_IN_THE_HEADER` — The `ZANALYTICS-ORGID` header is missing or empty. | Add the `ZANALYTICS-ORGID` header with your Organization ID. |
-| [8084](../../../foundations/error-codes.md#error-8084) | 400 | `ORGID_NOT_EXIST` — No organisation exists with the given ID. | Use the `orgId` returned by the organisation listing API. |
+| [8084](../../../foundations/error-codes.md#error-8084) | 404 | `ORGID_NOT_EXIST` — No organisation exists with the given ID. | Use the `orgId` returned by the organisation listing API. |
 | [8251](../../../foundations/error-codes.md#error-8251) | 400 | `INVALID_BACKUP_MODE` — `backupMode` is not an allowed value. | Use `STRUCTURE` or `STRUCTURE_AND_DATA`. |
 | [8253](../../../foundations/error-codes.md#error-8253) | 400 | `RESTORE_ALREADY_IN_PROGRESS` — A restore is running for this workspace. | Wait for the restore to finish ([Get Workspace Restore Status](get-workspace-restore-status.md)), then retry. |
 | [8255](../../../foundations/error-codes.md#error-8255) | 400 | `CONNECTOR_SYNC_IN_PROGRESS` — A connector sync is running for this workspace. | Wait for the sync to complete, then retry. |

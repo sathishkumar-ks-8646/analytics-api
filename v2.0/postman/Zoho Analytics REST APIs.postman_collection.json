@@ -2,7 +2,7 @@
  "info": {
   "_postman_id": "996b8ab6-b50c-436d-896f-b936936e48cd",
   "name": "Zoho Analytics REST APIs",
-  "description": "# Zoho Analytics REST API v2\n\n**213 API requests** · **10 domains** · **39 sections** · OpenAPI 3.1 accurate\n\nThe official Postman collection for the [Zoho Analytics](https://www.zoho.com/analytics/)  \nREST API v2 — every public endpoint, grouped exactly the way the API reference is grouped, with  \na ready-to-send `CONFIG` example on each request.\n\nGenerated from the two sources of truth:  \n[<b>analytics-oas</b>](https://github.com/zoho/analytics-oas) (OpenAPI 3.1 specifications) and the  \n[<b>analytics-okf</b>](https://github.com/zoho/analytics-okf) knowledge bundle (endpoint catalog, permissions and workflow playbooks).\n\n---\n\n## 🚀 Quick start\n\n| Step | Action |\n| --- | --- |\n| 1 | **Fork** this collection and import the **`Zoho Analytics REST Variables`** environment shipped with it. |\n| 2 | Fill `client-id`, `client-secret`, `accounts-domain`, `analytics-domain` for your data centre. |\n| 3 | Run **🔐 Authentication › Generate Tokens** — the token variables populate themselves. |\n| 4 | Run **🏢 Organization Management › Get Org List** and copy `orgId` into `organization-id`. |\n| 5 | Run **🏢 Organization Management › Get Meta Details From Name** to turn a workspace or view _name_ into the `workspace-id` / `view-id` every other request needs. |\n\n> Steps 4–5 are the **Bootstrap** playbook. Nothing else works until `organization-id` is set. \n  \n\n---\n\n## 🧭 What's inside\n\n| Domain | APIs | Sections |\n| --- | --- | --- |\n| **Organization Management** | 8 | 2 |\n| **Users & Groups** | 26 | 4 |\n| **Workspace Management** | 38 | 6 |\n| **Data Modeling & Schema** | 33 | 7 |\n| **Data Operations** | 20 | 6 |\n| **Views Management** | 27 | 5 |\n| **Reports & Dashboards** | 9 | 2 |\n| **Share & Publish** | 22 | 4 |\n| **Schedules & Alerts** | 16 | 2 |\n| **Data Science & Machine Learning** | 11 | 1 |\n\nEvery folder carries its own documentation: the sub-sections it contains, a table of its APIs  \nwith method, path and OAuth scope, and the multi-call **workflows** those APIs take part in.\n\n---\n\n## 🧩 Five conventions that apply everywhere\n\n|  |  |\n| --- | --- |\n| **Base URL** | `https://{{analytics-domain}}/restapi/v2/…` — always HTTPS, always region-specific. |\n| **Authorization** | `Bearer {{access-token}}`, set once at collection level. Zoho's own docs write the same header as `Zoho-oauthtoken` followed by the token; both schemes are accepted. |\n| **`ZANALYTICS-ORGID`** | Required by almost every endpoint — each request says so. Missing it returns error `8083`. |\n| **`CONFIG`** | One JSON object carries every optional argument. `GET` → URL-encoded **query** parameter (a collection pre-request script encodes it for you). `POST`/`PUT`/`DELETE` → **form field**. Imports → **multipart** field. |\n| **Response envelope** | `{ \"status\": \"success\", \"summary\": \"…\", \"data\": { … } }`. Write operations often answer **`204 No Content`** with no body — that is success. Failures return `{ \"status\": \"failure\", \"summary\": …, \"data\": { \"errorCode\": …, \"errorMessage\": … } }`. |\n\n---\n\n## 🧪 Workflows\n\nMost real integrations are a _sequence_ of calls. These playbooks are documented on the folders  \nthat own them:\n\n| Playbook | Call sequence |\n| --- | --- |\n| **Bootstrap: from access token to workspace and view IDs** | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Embed a view for many tenants with per-tenant row filters** | Mint a URL per tenant → Re-mint before expiry → Audit → Revoke |\n| **Export a view, dashboard or SQL result asynchronously** | Create the job → Wait for completion → Download |\n| **Load data into a table (small, large and very large files)** | Build CONFIG → Send the request → Read the result → Verify |\n| **Add users to an organization and a workspace, and set their roles** | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Schedule a recurring email delivery of a report or dashboard** | Create → Test → List and inspect → Pause or resume → Update → Delete |\n| **Share views with users or groups, with row and column restrictions** | (Optional) Create a group → Share → Inspect → Change → Revoke |\n| **Train an AutoML model, deploy it and score a table** | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |\n\n---\n\n## 🌍 Data centres\n\nSet both variables to the same region. Tokens are **not** portable across regions.\n\n| Region | `analytics-domain` | `accounts-domain` |\n| --- | --- | --- |\n| United States | `analyticsapi.zoho.com` | `accounts.zoho.com` |\n| Europe | `analyticsapi.zoho.eu` | `accounts.zoho.eu` |\n| India | `analyticsapi.zoho.in` | `accounts.zoho.in` |\n| Australia | `analyticsapi.zoho.com.au` | `accounts.zoho.com.au` |\n| Japan | `analyticsapi.zoho.jp` | `accounts.zoho.jp` |\n| China | `analyticsapi.zoho.com.cn` | `accounts.zoho.com.cn` |\n| Canada | `analyticsapi.zohocloud.ca` | `accounts.zohocloud.ca` |\n| Saudi Arabia | `analyticsapi.zoho.sa` | `accounts.zoho.sa` |\n\n---\n\n## 🔢 Variables\n\nThis collection ships **no collection-level variables** — they would shadow your own. Instead an  \nenvironment is shipped alongside it:\n\n> **`Zoho Analytics REST Variables`** — import it, select it in the environment dropdown, and  \nfill in `analytics-domain`, `accounts-domain`, `client-id` and `client-secret`. \n  \n\nCredentials and `organization-id` are **enabled** out of the box. The identifier variables  \n(`workspace-id`, `view-id`, `column-id`, `job-id`, `dest-organization-id`, …) ship  \n**disabled** — tick the one a request needs and paste the ID. **2️⃣ v2** lists every variable,  \nwhat it is for, and the API that returns it.\n\n---\n\n## ⚙️ Working with async jobs\n\nLarge imports and exports run as **jobs**. Create the job, keep the `jobId`, then poll  \n**Get Import Job Details** / **Get Export Job Details** until `jobCode` reports completion, and  \nfinally **Download Exported Data**. Supply a `callbackUrl` in `CONFIG` to be notified instead of  \npolling. See the workflow notes in **🔄 Data Operations**.\n\n---\n\n## 📚 Further reading\n\n- [API reference ↗](https://www.zoho.com/analytics/api/v2/introduction.html)\n    \n- [OpenAPI specifications ↗](https://github.com/zoho/analytics-oas)\n    \n- [Common error codes ↗](https://www.zoho.com/analytics/api/v2/common-error-codes.html)\n    \n- [API units, limits &amp; pricing ↗](https://www.zoho.com/analytics/api/v2/api-limits-pricing.html)\n    \n- [Client SDKs ↗](https://www.zoho.com/analytics/api/v2/client-library.html) — Java, C#, Python, PHP, Go, Node.js, Ruby",
+  "description": "# Zoho Analytics REST API v2\n\n**208 API requests** · **10 domains** · **40 sections** · OpenAPI 3.1 accurate\n\nThe official Postman collection for the [Zoho Analytics](https://www.zoho.com/analytics/)  \nREST API v2 — every public endpoint, grouped exactly the way the API reference is grouped, with  \na ready-to-send `CONFIG` example on each request.\n\nGenerated from the two sources of truth:  \n[<b>analytics-oas</b>](https://github.com/zoho/analytics-oas) (OpenAPI 3.1 specifications) and the  \n[<b>analytics-okf</b>](https://github.com/zoho/analytics-okf) knowledge bundle (endpoint catalog, permissions and workflow playbooks).\n\n---\n\n## 🚀 Quick start\n\n| Step | Action |\n| --- | --- |\n| 1 | **Fork** this collection and import the **`Zoho Analytics REST Variables`** environment shipped with it. |\n| 2 | Fill `client-id`, `client-secret`, `accounts-domain`, `analytics-domain` for your data centre. |\n| 3 | Run **🔐 Authentication › Generate Tokens** — the token variables populate themselves. |\n| 4 | Copy the Organization ID from **Settings → Organisation** in the Zoho Analytics UI into `organization-id`. |\n| 5 | Run **🏢 Organization Management › Get Meta Details From Name** to turn a workspace or view _name_ into the `workspace-id` / `view-id` every other request needs. |\n\n> Steps 4–5 are the **Bootstrap** playbook. Nothing else works until `organization-id` is set. \n  \n\n---\n\n## 🧭 What's inside\n\n| Domain | APIs | Sections |\n| --- | --- | --- |\n| **Organization Management** | 10 | 3 |\n| **Users & Groups** | 26 | 4 |\n| **Workspace Management** | 35 | 6 |\n| **Data Modeling & Schema** | 33 | 7 |\n| **Data Operations** | 20 | 6 |\n| **Views Management** | 26 | 5 |\n| **Reports & Dashboards** | 6 | 2 |\n| **Share & Publish** | 22 | 4 |\n| **Schedules & Alerts** | 16 | 2 |\n| **Data Science & Machine Learning** | 11 | 1 |\n\nEvery folder carries its own documentation: the sub-sections it contains, a table of its APIs  \nwith method, path and OAuth scope, and the multi-call **workflows** those APIs take part in.\n\n---\n\n## 🧩 Five conventions that apply everywhere\n\n|  |  |\n| --- | --- |\n| **Base URL** | `https://{{analytics-domain}}/restapi/v2/…` — always HTTPS, always region-specific. |\n| **Authorization** | `Bearer {{access-token}}`, set once at collection level. Zoho's own docs write the same header as `Zoho-oauthtoken` followed by the token; both schemes are accepted. |\n| **`ZANALYTICS-ORGID`** | Required by almost every endpoint — each request says so. Missing it returns error `8083`. |\n| **`CONFIG`** | One JSON object carries every optional argument. `GET` → URL-encoded **query** parameter (a collection pre-request script encodes it for you). `POST`/`PUT`/`DELETE` → **form field**. Imports → **multipart** field. |\n| **Response envelope** | `{ \"status\": \"success\", \"summary\": \"…\", \"data\": { … } }`. Write operations often answer **`204 No Content`** with no body — that is success. Failures return `{ \"status\": \"failure\", \"summary\": …, \"data\": { \"errorCode\": …, \"errorMessage\": … } }`. |\n\n---\n\n## 🧪 Workflows\n\nMost real integrations are a _sequence_ of calls. These playbooks are documented on the folders  \nthat own them:\n\n| Playbook | Call sequence |\n| --- | --- |\n| **Bootstrap: from access token to workspace and view IDs** | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Embed a view for many tenants with per-tenant row filters** | Mint a URL per tenant → Re-mint before expiry → Audit → Revoke |\n| **Export a view, dashboard or SQL result asynchronously** | Create the job → Wait for completion → Download |\n| **Load data into a table (small, large and very large files)** | Build CONFIG → Send the request → Read the result → Verify |\n| **Add users to an organization and a workspace, and set their roles** | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Schedule a recurring email delivery of a report or dashboard** | Create → Test → List and inspect → Pause or resume → Update → Delete |\n| **Share views with users or groups, with row and column restrictions** | (Optional) Create a group → Share → Inspect → Change → Revoke |\n| **Train an AutoML model, deploy it and score a table** | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |\n\n---\n\n## 🌍 Data centres\n\nSet both variables to the same region. Tokens are **not** portable across regions.\n\n| Region | `analytics-domain` | `accounts-domain` |\n| --- | --- | --- |\n| United States | `analyticsapi.zoho.com` | `accounts.zoho.com` |\n| Europe | `analyticsapi.zoho.eu` | `accounts.zoho.eu` |\n| India | `analyticsapi.zoho.in` | `accounts.zoho.in` |\n| Australia | `analyticsapi.zoho.com.au` | `accounts.zoho.com.au` |\n| Japan | `analyticsapi.zoho.jp` | `accounts.zoho.jp` |\n| China | `analyticsapi.zoho.com.cn` | `accounts.zoho.com.cn` |\n| Canada | `analyticsapi.zohocloud.ca` | `accounts.zohocloud.ca` |\n| Saudi Arabia | `analyticsapi.zoho.sa` | `accounts.zoho.sa` |\n\n---\n\n## 🔢 Variables\n\nThis collection ships **no collection-level variables** — they would shadow your own. Instead an  \nenvironment is shipped alongside it:\n\n> **`Zoho Analytics REST Variables`** — import it, select it in the environment dropdown, and  \nfill in `analytics-domain`, `accounts-domain`, `client-id` and `client-secret`. \n  \n\nCredentials and `organization-id` are **enabled** out of the box. The identifier variables  \n(`workspace-id`, `view-id`, `column-id`, `job-id`, `dest-organization-id`, …) ship  \n**disabled** — tick the one a request needs and paste the ID. **2️⃣ v2** lists every variable,  \nwhat it is for, and the API that returns it.\n\n---\n\n## ⚙️ Working with async jobs\n\nLarge imports and exports run as **jobs**. Create the job, keep the `jobId`, then poll  \n**Get Import Job Details** / **Get Export Job Details** until `jobCode` reports completion, and  \nfinally **Download Exported Data**. Supply a `callbackUrl` in `CONFIG` to be notified instead of  \npolling. See the workflow notes in **🔄 Data Operations**.\n\n---\n\n## 📚 Further reading\n\n- [API reference ↗](https://www.zoho.com/analytics/api/v2/introduction.html)\n    \n- [OpenAPI specifications ↗](https://github.com/zoho/analytics-oas)\n    \n- [Common error codes ↗](https://www.zoho.com/analytics/api/v2/common-error-codes.html)\n    \n- [API units, limits &amp; pricing ↗](https://www.zoho.com/analytics/api/v2/api-limits-pricing.html)\n    \n- [Client SDKs ↗](https://www.zoho.com/analytics/api/v2/client-library.html) — Java, C#, Python, PHP, Go, Node.js, Ruby",
   "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
  },
  "item": [
@@ -210,27 +210,6 @@
        "name": "Organization Info & Settings",
        "item": [
         {
-         "name": "Get Org List",
-         "request": {
-          "method": "GET",
-          "header": [],
-          "url": {
-           "raw": "https://{{analytics-domain}}/restapi/v2/orgs",
-           "protocol": "https",
-           "host": [
-            "{{analytics-domain}}"
-           ],
-           "path": [
-            "restapi",
-            "v2",
-            "orgs"
-           ]
-          },
-          "description": "Returns the list of Zoho Analytics organisations that the authenticated user belongs to.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/orgs` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | Not required |\n| **Success** | `200` |\n\n**Who can call it** — Any authenticated Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/get-org.html)"
-         },
-         "response": []
-        },
-        {
          "name": "Get Resource Details",
          "request": {
           "method": "GET",
@@ -238,7 +217,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -265,7 +244,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -292,7 +271,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -319,7 +298,105 @@
          "response": []
         }
        ],
-       "description": "## Organization Info & Settings\n\nThese APIs provide information about the organisations, resource usage, subscription plan, and workspace/view identity lookups available to the authenticated user. They are read-only metadata APIs and do not modify any data.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Org List** | `GET` | `/restapi/v2/orgs` | `metadata.read` |\n| 2 | **Get Resource Details** | `GET` | `/restapi/v2/resources` | `usermanagement.read` |\n| 3 | **Get Subscription Details** | `GET` | `/restapi/v2/subscription` | `usermanagement.read` |\n| 4 | **Get Meta Details From Name** | `GET` | `/restapi/v2/metadetails` | `metadata.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`\n- **Add users to an organization and a workspace, and set their roles** — Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step.  \n  `Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard`\n- **Schedule a recurring email delivery of a report or dashboard** — Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely.  \n  `Create → Test → List and inspect → Pause or resume → Update → Delete`"
+       "description": "## Organization Info & Settings\n\nThese APIs provide information about the resource usage, subscription plan, and workspace/view identity lookups available within an organisation. They are read-only metadata APIs and do not modify any data.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Resource Details** | `GET` | `/restapi/v2/resources` | `usermanagement.read` |\n| 2 | **Get Subscription Details** | `GET` | `/restapi/v2/subscription` | `usermanagement.read` |\n| 3 | **Get Meta Details From Name** | `GET` | `/restapi/v2/metadetails` | `metadata.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`\n- **Add users to an organization and a workspace, and set their roles** — Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step.  \n  `Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard`\n- **Schedule a recurring email delivery of a report or dashboard** — Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely.  \n  `Create → Test → List and inspect → Pause or resume → Update → Delete`"
+      },
+      {
+       "name": "Org-Level Listings",
+       "item": [
+        {
+         "name": "Get Org Workspaces",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/orgs/workspaces",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "orgs",
+            "workspaces"
+           ]
+          },
+          "description": "Returns the workspaces of one organisation that the calling user can reach.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/orgs/workspaces` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an active user of the organisation. Account Admins and Organization Admins see every active workspace; other users see only the workspaces shared with them.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/org-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Org Dashboards",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/orgs/dashboards",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "orgs",
+            "dashboards"
+           ],
+           "query": [
+            {
+             "key": "CONFIG",
+             "value": "{\"workspaceIds\": [\"137687000271334001\", \"466206000000071000\"], \"pageNo\": 2, \"recordsPerPage\": 10}",
+             "description": "JSONObject that selects the workspaces to scan, pages the result and filters it by dashboard name.",
+             "disabled": true
+            }
+           ]
+          },
+          "description": "Returns the dashboards of one organisation that the calling user may read, across all of the workspaces the caller can see or across the workspaces named in workspaceIds.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/orgs/dashboards` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Query parameter · optional |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be a member of the organisation. Only dashboards the user may read are returned. Not available on Client Portal / White Label domains (7301).\n\n**Other ready-made CONFIG examples:** *Search by name* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/org-management-grouped-api.json)"
+         },
+         "response": []
+        },
+        {
+         "name": "Get Org Recent Items",
+         "request": {
+          "method": "GET",
+          "header": [
+           {
+            "key": "ZANALYTICS-ORGID",
+            "value": "{{organization-id}}",
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
+           }
+          ],
+          "url": {
+           "raw": "https://{{analytics-domain}}/restapi/v2/orgs/recentitems",
+           "protocol": "https",
+           "host": [
+            "{{analytics-domain}}"
+           ],
+           "path": [
+            "restapi",
+            "v2",
+            "orgs",
+            "recentitems"
+           ]
+          },
+          "description": "Returns the views the calling user opened most recently in one organisation, of any view type, newest first.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/orgs/recentitems` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an active user of the organisation. Only the caller's own history is returned.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/org-management-grouped-api.json)"
+         },
+         "response": []
+        }
+       ],
+       "description": "## Org-Level Listings\n\nThis section covers the V2 **Org-Level Listing** REST APIs of Zoho Analytics — the APIs that list, for one organisation, the workspaces the calling user can reach, the dashboards across those workspaces, and the views the user opened most recently.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Org Workspaces** | `GET` | `/restapi/v2/orgs/workspaces` | `metadata.read` |\n| 2 | **Get Org Dashboards** | `GET` | `/restapi/v2/orgs/dashboards` | `metadata.read` |\n| 3 | **Get Org Recent Items** | `GET` | `/restapi/v2/orgs/recentitems` | `metadata.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`"
       },
       {
        "name": "Security Controls",
@@ -332,7 +409,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -360,7 +437,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -399,7 +476,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -429,7 +506,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -466,7 +543,7 @@
        "description": "## Security Controls\n\nThis section covers the V2 **Access Restriction** REST APIs of Zoho Analytics — the APIs that read and update the organisation-level and workspace-level controls governing who may receive shared views, whether private links, public views, exports and emailed views are allowed, and which email domains are trusted for each.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Org Access Restrictions** | `GET` | `/restapi/v2/security-controls/access-restrictions` | `metadata.read` |\n| 2 | **Update Org Access Restrictions** | `PUT` | `/restapi/v2/security-controls/access-restrictions` | `metadata.update` |\n| 3 | **Get Workspace Access Restrictions** | `GET` | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `metadata.read` |\n| 4 | **Update Workspace Access Restrictions** | `PUT` | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `metadata.update` |"
       }
      ],
-     "description": "# 🏢 Organization Management\n\nAPIs that return information about the organisations, resource usage, subscription plan, and workspace or view identity lookups available to the authenticated user, and that read and update the organisation-wide and per-workspace access restriction settings.\n\n> **8 APIs** in **2 sections** · scopes `metadata.*`, `usermanagement.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Organization Info & Settings** | 4 | APIs for retrieving organisation information, resource usage, subscription details, and workspace or view metadata. |\n| **Security Controls** | 4 | APIs for reading and updating the access restriction settings of an organisation and of an individual workspace - sharing, private links, public views, export and email. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Add users to an organization and a workspace, and set their roles**<br/>Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step. | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Schedule a recurring email delivery of a report or dashboard**<br/>Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely. | Create → Test → List and inspect → Pause or resume → Update → Delete |"
+     "description": "# 🏢 Organization Management\n\nAPIs that return information about the resource usage, subscription plan, and workspace or view identity lookups available within an organisation, that list the workspaces, dashboards and recently opened views the calling user can reach in that organisation, and that read and update the organisation-wide and per-workspace access restriction settings.\n\n> **10 APIs** in **3 sections** · scopes `metadata.*`, `usermanagement.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Organization Info & Settings** | 3 | APIs for retrieving organisation information, resource usage, subscription details, and workspace or view metadata. |\n| **Org-Level Listings** | 3 | APIs that list, for one organisation, the workspaces the calling user can reach, the dashboards across those workspaces, and the views the user opened most recently. |\n| **Security Controls** | 4 | APIs for reading and updating the access restriction settings of an organisation and of an individual workspace - sharing, private links, public views, export and email. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Add users to an organization and a workspace, and set their roles**<br/>Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step. | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Schedule a recurring email delivery of a report or dashboard**<br/>Create an email schedule with recipients and calendar frequency, trigger it once to test, enable or disable it, and update it safely. | Create → Test → List and inspect → Pause or resume → Update → Delete |"
     },
     {
      "name": "👥 Users & Groups",
@@ -482,7 +559,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -509,7 +586,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -547,7 +624,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -585,7 +662,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -624,7 +701,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -663,7 +740,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -702,7 +779,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -735,7 +812,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -763,7 +840,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -802,7 +879,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -842,7 +919,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -877,7 +954,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -906,7 +983,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -946,7 +1023,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -986,7 +1063,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1027,7 +1104,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1068,7 +1145,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -1097,7 +1174,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1137,7 +1214,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1183,7 +1260,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -1212,7 +1289,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1252,7 +1329,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1293,7 +1370,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1335,7 +1412,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1377,7 +1454,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -1407,7 +1484,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -1430,10 +1507,10 @@
          "response": []
         }
        ],
-       "description": "## Workspace Groups\n\nWorkspace Groups are named collections of users within a specific workspace. Groups allow you to manage view-level sharing permissions in bulk — instead of granting access to individual users, you can share views with a group and all members receive that access simultaneously. Managing group membership is the only way to batch-update sharing permissions for multiple users at once.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Group List** | `GET` | `/restapi/v2/workspaces/{workspace-id}/groups` | `share.read` |\n| 2 | **Create Group** | `POST` | `/restapi/v2/workspaces/{workspace-id}/groups` | `share.create` |\n| 3 | **Rename Group** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `share.update` |\n| 4 | **Add Group Members** | `POST` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members` | `share.create` |\n| 5 | **Remove Group Members** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members` | `share.delete` |\n| 6 | **Delete Group** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `share.delete` |\n| 7 | **Get Group Details** | `GET` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `share.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`\n- **Add users to an organization and a workspace, and set their roles** — Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step.  \n  `Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard`\n- **Share views with users or groups, with row and column restrictions** — Grant a permission set on one or more views to users or a group, optionally limiting rows with criteria and columns with column lists, then inspect, update or revoke the share.  \n  `(Optional) Create a group → Share → Inspect → Change → Revoke`"
+       "description": "## Workspace Groups\n\nWorkspace Groups are named collections of users within a specific workspace. Groups allow you to manage view-level sharing permissions in bulk — instead of granting access to individual users, you can share views with a group and all members receive that access simultaneously. Managing group membership is the only way to batch-update sharing permissions for multiple users at once.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Group List** | `GET` | `/restapi/v2/workspaces/{workspace-id}/groups` | `share.read` |\n| 2 | **Create Group** | `POST` | `/restapi/v2/workspaces/{workspace-id}/groups` | `share.create` |\n| 3 | **Rename Group** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `share.update` |\n| 4 | **Add Group Members** | `POST` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members` | `share.create` |\n| 5 | **Remove Group Members** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members` | `share.delete` |\n| 6 | **Delete Group** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `share.delete` |\n| 7 | **Get Group Details** | `GET` | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `share.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`\n- **Add users to an organization and a workspace, and set their roles** — Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step.  \n  `Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard`\n- **Share views with users or groups, with row and column restrictions** — Grant a permission set on one or more views to users or a group, optionally limiting rows with criteria and columns with column lists, then inspect, update or revoke the share.  \n  `(Optional) Create a group → Share → Inspect → Change → Revoke`"
       }
      ],
-     "description": "# 👥 Users & Groups\n\nAPI for managing users and groups in Zoho Analytics — covering org-level users, workspace-level users, and workspace groups.\n\n> **26 APIs** in **4 sections** · scopes `usermanagement.*`, `share.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Organization Users** | 7 | APIs that allow the Account Admin and the Organization Admins of a Zoho Analytics organization to manage its users - listing, adding, removing, activating, deactivating and changing the org-level role of the users, and listing the users who hold the Organization Admin role. |\n| **Custom Roles** | 4 | APIs that allow the Account Admin and the Organization Admins of a Zoho Analytics organization to define custom roles - named permission bundles that can be granted to users in place of the built-in roles. |\n| **Workspace Users** | 8 | APIs that manage the users and the administrators of a single Zoho Analytics workspace - controlling who has access to the workspace, the role they hold within it, and whether that access is currently active. |\n| **Workspace Groups** | 7 | APIs that manage the groups of a Zoho Analytics workspace. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Add users to an organization and a workspace, and set their roles**<br/>Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step. | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Share views with users or groups, with row and column restrictions**<br/>Grant a permission set on one or more views to users or a group, optionally limiting rows with criteria and columns with column lists, then inspect, update or revoke the share. | (Optional) Create a group → Share → Inspect → Change → Revoke |"
+     "description": "# 👥 Users & Groups\n\nAPI for managing users and groups in Zoho Analytics — covering org-level users, workspace-level users, and workspace groups.\n\n> **26 APIs** in **4 sections** · scopes `usermanagement.*`, `share.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Organization Users** | 7 | APIs that allow the Account Admin and the Organization Admins of a Zoho Analytics organization to manage its users - listing, adding, removing, activating, deactivating and changing the org-level role of the users, and listing the users who hold the Organization Admin role. |\n| **Custom Roles** | 4 | APIs that allow the Account Admin and the Organization Admins of a Zoho Analytics organization to define custom roles - named permission bundles that can be granted to users in place of the built-in roles. |\n| **Workspace Users** | 8 | APIs that manage the users and the administrators of a single Zoho Analytics workspace - controlling who has access to the workspace, the role they hold within it, and whether that access is currently active. |\n| **Workspace Groups** | 7 | APIs that manage the groups of a Zoho Analytics workspace. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Add users to an organization and a workspace, and set their roles**<br/>Invite users to the organization, place them in a workspace with a role, promote or demote admins, deactivate leavers, and understand who may perform each step. | Add to the organization → Set the organization role → Add to a workspace → Give access to views → Change workspace role or status → Offboard |\n| **Share views with users or groups, with row and column restrictions**<br/>Grant a permission set on one or more views to users or a group, optionally limiting rows with criteria and columns with column lists, then inspect, update or revoke the share. | (Optional) Create a group → Share → Inspect → Change → Revoke |"
     },
     {
      "name": "🗂️ Workspace Management",
@@ -1449,7 +1526,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1487,7 +1564,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            },
            {
             "key": "ZANALYTICS-DEST-ORGID",
@@ -1532,7 +1609,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1571,7 +1648,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -1599,7 +1676,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -1629,89 +1706,6 @@
          "response": []
         },
         {
-         "name": "Get All Workspace List",
-         "request": {
-          "method": "GET",
-          "header": [
-           {
-            "key": "ZANALYTICS-ORGID",
-            "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**. Optional for this endpoint."
-           }
-          ],
-          "url": {
-           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces",
-           "protocol": "https",
-           "host": [
-            "{{analytics-domain}}"
-           ],
-           "path": [
-            "restapi",
-            "v2",
-            "workspaces"
-           ]
-          },
-          "description": "Returns all workspaces accessible to the authenticated user — both workspaces they own or administer, and workspaces shared with them.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` optional — scopes the result to one organization |\n| **Success** | `200` |\n\n**Who can call it** — Any authenticated Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/all-workspace.html)"
-         },
-         "response": []
-        },
-        {
-         "name": "Get Owned Workspace List",
-         "request": {
-          "method": "GET",
-          "header": [
-           {
-            "key": "ZANALYTICS-ORGID",
-            "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**. Optional for this endpoint."
-           }
-          ],
-          "url": {
-           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/owned",
-           "protocol": "https",
-           "host": [
-            "{{analytics-domain}}"
-           ],
-           "path": [
-            "restapi",
-            "v2",
-            "workspaces",
-            "owned"
-           ]
-          },
-          "description": "Returns all workspaces owned by (created within) the authenticated user's organisation.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/owned` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` optional — scopes the result to one organization |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be the Account Admin of the organisation.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/owned-workspace.html)"
-         },
-         "response": []
-        },
-        {
-         "name": "Get Shared Workspace List",
-         "request": {
-          "method": "GET",
-          "header": [
-           {
-            "key": "ZANALYTICS-ORGID",
-            "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**. Optional for this endpoint."
-           }
-          ],
-          "url": {
-           "raw": "https://{{analytics-domain}}/restapi/v2/workspaces/shared",
-           "protocol": "https",
-           "host": [
-            "{{analytics-domain}}"
-           ],
-           "path": [
-            "restapi",
-            "v2",
-            "workspaces",
-            "shared"
-           ]
-          },
-          "description": "Returns all workspaces that have been shared with the authenticated user from other organisations.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/shared` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` optional — scopes the result to one organization |\n| **Success** | `200` |\n\n**Who can call it** — Any authenticated Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/shared-workspace.html)"
-         },
-         "response": []
-        },
-        {
          "name": "Get Workspace Secret Key",
          "request": {
           "method": "GET",
@@ -1719,7 +1713,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -1756,7 +1750,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**. Optional for this endpoint."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -1780,12 +1774,12 @@
             }
            ]
           },
-          "description": "Returns metadata for the specified workspace.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` optional — scopes the result to one organization |\n| **CONFIG** | Query parameter · optional |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. Account Admins and Organization Admins also have access.\n\n**Other ready-made CONFIG examples:** *With role info* — see the API reference.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/workspace-details.html)"
+          "description": "Returns metadata for the specified workspace.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Query parameter · optional |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. Account Admins and Organization Admins also have access.\n\n**Other ready-made CONFIG examples:** *With role info* — see the API reference.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/workspace-details.html)"
          },
          "response": []
         }
        ],
-       "description": "## Workspace Operations\n\nThese APIs manage the lifecycle and metadata of workspaces — creating, copying, renaming, deleting, and inspecting workspaces. They also provide mechanisms to retrieve workspace access keys for cross-organisation operations, list workspaces accessible to a user, and export a workspace's structure as a reusable template.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Create Workspace** | `POST` | `/restapi/v2/workspaces` | `modeling.create` |\n| 2 | **Copy Workspace** | `POST` | `/restapi/v2/workspaces/{workspace-id}` | `modeling.create` |\n| 3 | **Rename Workspace** | `PUT` | `/restapi/v2/workspaces/{workspace-id}` | `modeling.update` |\n| 4 | **Delete Workspace** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}` | `modeling.delete` |\n| 5 | **Export as Template** | `GET` | `/restapi/v2/workspaces/{workspace-id}/template/data` | `metadata.read` |\n| 6 | **Get All Workspace List** | `GET` | `/restapi/v2/workspaces` | `metadata.read` |\n| 7 | **Get Owned Workspace List** | `GET` | `/restapi/v2/workspaces/owned` | `metadata.read` |\n| 8 | **Get Shared Workspace List** | `GET` | `/restapi/v2/workspaces/shared` | `metadata.read` |\n| 9 | **Get Workspace Secret Key** | `GET` | `/restapi/v2/workspaces/{workspace-id}/secretkey` | `metadata.read` |\n| 10 | **Get Workspace Info** | `GET` | `/restapi/v2/workspaces/{workspace-id}` | `metadata.read` |"
+       "description": "## Workspace Operations\n\nThese APIs manage the lifecycle and metadata of workspaces — creating, copying, renaming, deleting, and inspecting workspaces. They also provide mechanisms to retrieve workspace access keys for cross-organisation operations, list workspaces accessible to a user, and export a workspace's structure as a reusable template.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Create Workspace** | `POST` | `/restapi/v2/workspaces` | `modeling.create` |\n| 2 | **Copy Workspace** | `POST` | `/restapi/v2/workspaces/{workspace-id}` | `modeling.create` |\n| 3 | **Rename Workspace** | `PUT` | `/restapi/v2/workspaces/{workspace-id}` | `modeling.update` |\n| 4 | **Delete Workspace** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}` | `modeling.delete` |\n| 5 | **Export as Template** | `GET` | `/restapi/v2/workspaces/{workspace-id}/template/data` | `metadata.read` |\n| 6 | **Get Workspace Secret Key** | `GET` | `/restapi/v2/workspaces/{workspace-id}/secretkey` | `metadata.read` |\n| 7 | **Get Workspace Info** | `GET` | `/restapi/v2/workspaces/{workspace-id}` | `metadata.read` |"
       },
       {
        "name": "Workspace Folders",
@@ -1798,7 +1792,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -1827,7 +1821,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1867,7 +1861,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1908,7 +1902,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1949,7 +1943,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -1991,7 +1985,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2033,7 +2027,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2074,7 +2068,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2098,7 +2092,7 @@
          "response": []
         }
        ],
-       "description": "## Workspace Folders\n\nFolders provide a hierarchical organization layer within a workspace. Views (tables, reports, dashboards) can be placed inside folders to help users navigate large workspaces. Folders can be nested up to one level deep — a top-level folder can have sub-folders, but sub-folders cannot have children of their own.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Folder List** | `GET` | `/restapi/v2/workspaces/{workspace-id}/folders` | `metadata.read` |\n| 2 | **Create Folder** | `POST` | `/restapi/v2/workspaces/{workspace-id}/folders` | `modeling.create` |\n| 3 | **Rename Folder** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}` | `modeling.update` |\n| 4 | **Delete Folder** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}` | `modeling.delete` |\n| 5 | **Change Folder Hierarchy** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/move` | `modeling.update` |\n| 6 | **Change Folder Position** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/reorder` | `modeling.update` |\n| 7 | **Move Views To Folder** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/views/movetofolder` | `modeling.update` |\n| 8 | **Make Default Folder** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/default` | `modeling.update` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`"
+       "description": "## Workspace Folders\n\nFolders provide a hierarchical organization layer within a workspace. Views (tables, reports, dashboards) can be placed inside folders to help users navigate large workspaces. Folders can be nested up to one level deep — a top-level folder can have sub-folders, but sub-folders cannot have children of their own.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Folder List** | `GET` | `/restapi/v2/workspaces/{workspace-id}/folders` | `metadata.read` |\n| 2 | **Create Folder** | `POST` | `/restapi/v2/workspaces/{workspace-id}/folders` | `modeling.create` |\n| 3 | **Rename Folder** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}` | `modeling.update` |\n| 4 | **Delete Folder** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}` | `modeling.delete` |\n| 5 | **Change Folder Hierarchy** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/move` | `modeling.update` |\n| 6 | **Change Folder Position** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/reorder` | `modeling.update` |\n| 7 | **Move Views To Folder** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/views/movetofolder` | `modeling.update` |\n| 8 | **Make Default Folder** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/default` | `modeling.update` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`"
       },
       {
        "name": "Workspace Preferences",
@@ -2111,7 +2105,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2140,7 +2134,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2169,7 +2163,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2198,7 +2192,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2233,7 +2227,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2262,7 +2256,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2297,7 +2291,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2324,7 +2318,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2353,7 +2347,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2383,7 +2377,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2420,7 +2414,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2460,7 +2454,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2501,7 +2495,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2539,7 +2533,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2585,7 +2579,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2614,7 +2608,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2654,7 +2648,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2685,7 +2679,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2727,7 +2721,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2758,7 +2752,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2785,7 +2779,7 @@
        "description": "## Workspace Backup & Restore\n\nThis section covers the V2 **Workspace Backup and Restore** REST APIs of Zoho Analytics — the APIs that list a workspace's backups, start a backup on demand, track its progress, download a backup file, restore the workspace from a backup, and track the restore.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Workspace Backups** | `GET` | `/restapi/v2/workspaces/{workspace-id}/backups` | `metadata.read` |\n| 2 | **Backup Workspace Now** | `POST` | `/restapi/v2/workspaces/{workspace-id}/backups` | `metadata.create` |\n| 3 | **Download Workspace Backup** | `GET` | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download` | `metadata.read` |\n| 4 | **Restore Workspace from Backup** | `POST` | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore` | `metadata.create` |\n| 5 | **Get Workspace Backup Status** | `GET` | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status` | `metadata.read` |\n| 6 | **Get Workspace Restore Status** | `GET` | `/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status` | `metadata.read` |"
       }
      ],
-     "description": "# 🗂️ Workspace Management\n\nAPI for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, folder management, linked workspaces, and backup and restore.\n\n> **38 APIs** in **6 sections** · scopes `metadata.*`, `modeling.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Workspace Operations** | 10 | APIs that manage the lifecycle and the metadata of workspaces, covering the creation, copying, renaming, deletion and inspection of a workspace. |\n| **Workspace Folders** | 8 | APIs that manage the folders of a workspace, covering the creation, renaming, deletion, nesting and reordering of folders, the movement of views between folders, and the selection of the default folder. |\n| **Workspace Preferences** | 4 | APIs that manage the workspace preferences of a user, covering the default workspace that opens on login and the favourite workspaces starred for quick access. |\n| **Domain & White Label Access** | 2 | APIs that control whether a workspace is reachable through the White Label or Client Portal domain of the organization. |\n| **Linked Workspaces** | 8 | APIs for listing, linking, syncing and unlinking client workspaces against a master workspace, and for checking which workspaces can be linked. |\n| **Workspace Backup & Restore** | 6 | APIs for listing and triggering workspace backups, downloading a backup, restoring a workspace from one, and tracking the status of either job. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |"
+     "description": "# 🗂️ Workspace Management\n\nAPI for managing workspaces in Zoho Analytics — covering workspace operations, preferences, domain access, folder management, linked workspaces, and backup and restore.\n\n> **35 APIs** in **6 sections** · scopes `metadata.*`, `modeling.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Workspace Operations** | 7 | APIs that manage the lifecycle and the metadata of workspaces, covering the creation, copying, renaming, deletion and inspection of a workspace. |\n| **Workspace Folders** | 8 | APIs that manage the folders of a workspace, covering the creation, renaming, deletion, nesting and reordering of folders, the movement of views between folders, and the selection of the default folder. |\n| **Workspace Preferences** | 4 | APIs that manage the workspace preferences of a user, covering the default workspace that opens on login and the favourite workspaces starred for quick access. |\n| **Domain & White Label Access** | 2 | APIs that control whether a workspace is reachable through the White Label or Client Portal domain of the organization. |\n| **Linked Workspaces** | 8 | APIs for listing, linking, syncing and unlinking client workspaces against a master workspace, and for checking which workspaces can be linked. |\n| **Workspace Backup & Restore** | 6 | APIs for listing and triggering workspace backups, downloading a backup, restoring a workspace from one, and tracking the status of either job. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |"
     },
     {
      "name": "🧱 Data Modeling & Schema",
@@ -2801,7 +2795,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2841,7 +2835,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -2865,7 +2859,7 @@
          "response": []
         }
        ],
-       "description": "## Table & Schema\n\nThis section covers the APIs for creating tables and inspecting table schema (column metadata) in a Zoho Analytics workspace. A table in Zoho Analytics is the primary data container — columns define its structure, and data is pushed or imported into rows.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Create Table** | `POST` | `/restapi/v2/workspaces/{workspace-id}/tables` | `modeling.create` |\n| 2 | **Get Table Metadata** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/metadata` | `metadata.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`\n- **Load data into a table (small, large and very large files)** — Choose between synchronous import, asynchronous import job and batch import, then create or fill a table and verify the result.  \n  `Build CONFIG → Send the request → Read the result → Verify`"
+       "description": "## Table & Schema\n\nThis section covers the APIs for creating tables and inspecting table schema (column metadata) in a Zoho Analytics workspace. A table in Zoho Analytics is the primary data container — columns define its structure, and data is pushed or imported into rows.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Create Table** | `POST` | `/restapi/v2/workspaces/{workspace-id}/tables` | `modeling.create` |\n| 2 | **Get Table Metadata** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/metadata` | `metadata.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`\n- **Load data into a table (small, large and very large files)** — Choose between synchronous import, asynchronous import job and batch import, then create or fill a table and verify the result.  \n  `Build CONFIG → Send the request → Read the result → Verify`"
       },
       {
        "name": "Columns",
@@ -2878,7 +2872,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2920,7 +2914,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -2963,7 +2957,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3006,7 +3000,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3049,7 +3043,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3092,7 +3086,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -3125,7 +3119,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3168,7 +3162,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3217,7 +3211,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3261,7 +3255,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3311,7 +3305,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -3348,7 +3342,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3388,7 +3382,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3429,7 +3423,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -3465,7 +3459,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -3496,7 +3490,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3538,7 +3532,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3581,7 +3575,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3624,7 +3618,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            },
            {
             "key": "ZANALYTICS-DEST-ORGID",
@@ -3679,7 +3673,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -3710,7 +3704,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3752,7 +3746,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3795,7 +3789,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3838,7 +3832,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -3867,7 +3861,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -3898,7 +3892,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -3935,7 +3929,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -3975,7 +3969,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4016,7 +4010,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4046,7 +4040,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4075,7 +4069,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4101,7 +4095,7 @@
        "description": "## Workspace Variables\n\nThis section covers the APIs for creating, editing, deleting, and retrieving **workspace variables** — reusable placeholders (e.g., `${Region}`, `${Target Sales}`) that can be embedded in formula expressions, SQL queries, filters, and reports. Variables allow the same report/formula definition to resolve to different values per user (or per Client Portal domain), without duplicating the underlying view.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Create Variable** | `POST` | `/restapi/v2/workspaces/{workspace-id}/variables` | `modeling.create` |\n| 2 | **Edit Variable** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` | `modeling.update` |\n| 3 | **Delete Variable** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` | `modeling.delete` |\n| 4 | **Get Variables** | `GET` | `/restapi/v2/workspaces/{workspace-id}/variables` | `modeling.read` |\n| 5 | **Get Variable Details** | `GET` | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` | `modeling.read` |"
       }
      ],
-     "description": "# 🧱 Data Modeling & Schema\n\nAPI for Data Modeling & Schema in Zoho Analytics — covering tables, schema, columns, lookups, query tables, formulas, and workspace variables.\n\n> **33 APIs** in **7 sections** · scopes `modeling.*`, `metadata.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Table & Schema** | 2 | APIs for creating tables and fetching table metadata. |\n| **Columns** | 8 | APIs for adding, renaming, reordering, showing, hiding, deleting, and sorting columns. |\n| **Lookups & Relationships** | 2 | APIs for adding and removing lookup relationships. |\n| **Query Tables** | 4 | APIs for creating, editing, and retrieving query table details. |\n| **Custom Formula Columns** | 5 | APIs for managing custom formula columns and copying formulas. |\n| **Aggregate Formulas (Unified Metrics)** | 7 | APIs for managing aggregate formulas and retrieving values and dependents. |\n| **Workspace Variables** | 5 | APIs for creating, updating, deleting, and retrieving workspace variables. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Load data into a table (small, large and very large files)**<br/>Choose between synchronous import, asynchronous import job and batch import, then create or fill a table and verify the result. | Build CONFIG → Send the request → Read the result → Verify |"
+     "description": "# 🧱 Data Modeling & Schema\n\nAPI for Data Modeling & Schema in Zoho Analytics — covering tables, schema, columns, lookups, query tables, formulas, and workspace variables.\n\n> **33 APIs** in **7 sections** · scopes `modeling.*`, `metadata.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Table & Schema** | 2 | APIs for creating tables and fetching table metadata. |\n| **Columns** | 8 | APIs for adding, renaming, reordering, showing, hiding, deleting, and sorting columns. |\n| **Lookups & Relationships** | 2 | APIs for adding and removing lookup relationships. |\n| **Query Tables** | 4 | APIs for creating, editing, and retrieving query table details. |\n| **Custom Formula Columns** | 5 | APIs for managing custom formula columns and copying formulas. |\n| **Aggregate Formulas (Unified Metrics)** | 7 | APIs for managing aggregate formulas and retrieving values and dependents. |\n| **Workspace Variables** | 5 | APIs for creating, updating, deleting, and retrieving workspace variables. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Load data into a table (small, large and very large files)**<br/>Choose between synchronous import, asynchronous import job and batch import, then create or fill a table and verify the result. | Build CONFIG → Send the request → Read the result → Verify |"
     },
     {
      "name": "🔄 Data Operations",
@@ -4117,7 +4111,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4170,7 +4164,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4231,7 +4225,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4278,7 +4272,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4327,7 +4321,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4375,7 +4369,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4425,7 +4419,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4462,7 +4456,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4507,7 +4501,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4544,7 +4538,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4584,7 +4578,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4615,7 +4609,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4653,7 +4647,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4695,7 +4689,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4737,7 +4731,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4785,7 +4779,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4827,7 +4821,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4869,7 +4863,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -4910,7 +4904,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4939,7 +4933,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -4982,7 +4976,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5024,7 +5018,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            },
            {
             "key": "ZANALYTICS-DEST-ORGID",
@@ -5071,7 +5065,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5113,7 +5107,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5154,7 +5148,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5195,7 +5189,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5232,7 +5226,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**. Optional for this endpoint."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5256,7 +5250,7 @@
             }
            ]
           },
-          "description": "Returns detailed metadata for a single view identified by its view ID.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/views/{view-id}` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` optional — scopes the result to one organization |\n| **CONFIG** | Query parameter · optional |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must have at least Read Only permission on the view. This includes Account Admins, Organization Admins, Workspace Admins, View Owners, and any user with Read Only or higher access to the view.\n\n**Other ready-made CONFIG examples:** *Extended details* — see the API reference.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/view-details.html)"
+          "description": "Returns detailed metadata for a single view identified by its view ID.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/views/{view-id}` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Query parameter · optional |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must have at least Read Only permission on the view. This includes Account Admins, Organization Admins, Workspace Admins, View Owners, and any user with Read Only or higher access to the view.\n\n**Other ready-made CONFIG examples:** *Extended details* — see the API reference.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/view-details.html)"
          },
          "response": []
         },
@@ -5268,7 +5262,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5307,7 +5301,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5329,30 +5323,9 @@
           "description": "Returns all active views that depend on the specified view.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin, Organization Admin, or Workspace Admin.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/get-view-dependents.html)"
          },
          "response": []
-        },
-        {
-         "name": "Get Recent Views",
-         "request": {
-          "method": "GET",
-          "header": [],
-          "url": {
-           "raw": "https://{{analytics-domain}}/restapi/v2/recentviews",
-           "protocol": "https",
-           "host": [
-            "{{analytics-domain}}"
-           ],
-           "path": [
-            "restapi",
-            "v2",
-            "recentviews"
-           ]
-          },
-          "description": "Returns a list of views recently accessed by the authenticated user across all workspaces the user has access to, sorted by access time (most recently accessed first).\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/recentviews` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | Not required |\n| **Success** | `200` |\n\n**Who can call it** — Any authenticated Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/recent-views.html)"
-         },
-         "response": []
         }
        ],
-       "description": "## View Operations\n\nThis section covers V2 REST APIs for managing views within workspaces in Zoho Analytics: creating copies, renaming, deleting, and listing views.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Save As View** | `POST` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/saveas` | `modeling.create` |\n| 2 | **Copy Views** | `POST` | `/restapi/v2/workspaces/{workspace-id}/views/copy` | `modeling.create` |\n| 3 | **Create Similar Views** | `POST` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/similarviews` | `modeling.create` |\n| 4 | **Rename View** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}` | `modeling.update` |\n| 5 | **Delete View** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}` | `modeling.delete` |\n| 6 | **Get View List** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views` | `metadata.read` |\n| 7 | **Get View Details** | `GET` | `/restapi/v2/views/{view-id}` | `metadata.read` |\n| 8 | **Get View URL** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish` | `embed.read` |\n| 9 | **Get View Dependents** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents` | `metadata.read` |\n| 10 | **Get Recent Views** | `GET` | `/restapi/v2/recentviews` | `metadata.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`\n- **Train an AutoML model, deploy it and score a table** — The end-to-end AutoML sequence - create an analysis on a training table, wait for models to train, deploy the best model, run predictions into an output table, and clean up.  \n  `Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up`"
+       "description": "## View Operations\n\nThis section covers V2 REST APIs for managing views within workspaces in Zoho Analytics: creating copies, renaming, deleting, and listing views.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Save As View** | `POST` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/saveas` | `modeling.create` |\n| 2 | **Copy Views** | `POST` | `/restapi/v2/workspaces/{workspace-id}/views/copy` | `modeling.create` |\n| 3 | **Create Similar Views** | `POST` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/similarviews` | `modeling.create` |\n| 4 | **Rename View** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}` | `modeling.update` |\n| 5 | **Delete View** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}` | `modeling.delete` |\n| 6 | **Get View List** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views` | `metadata.read` |\n| 7 | **Get View Details** | `GET` | `/restapi/v2/views/{view-id}` | `metadata.read` |\n| 8 | **Get View URL** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish` | `embed.read` |\n| 9 | **Get View Dependents** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents` | `metadata.read` |\n\n### Workflows that use these APIs\n\n- **Bootstrap: from access token to workspace and view IDs** — The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need.  \n  `Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed`\n- **Train an AutoML model, deploy it and score a table** — The end-to-end AutoML sequence - create an analysis on a training table, wait for models to train, deploy the best model, run predictions into an output table, and clean up.  \n  `Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up`"
       },
       {
        "name": "View Preferences",
@@ -5365,7 +5338,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5396,7 +5369,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5433,7 +5406,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5462,7 +5435,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5503,7 +5476,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5550,7 +5523,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5592,7 +5565,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5631,7 +5604,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5660,7 +5633,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5699,7 +5672,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5730,7 +5703,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5770,7 +5743,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5811,7 +5784,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -5841,7 +5814,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5883,7 +5856,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5925,7 +5898,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -5967,7 +5940,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6005,7 +5978,7 @@
        "description": "## Tags\n\nThis section covers the ten **Tag** REST APIs of Zoho Analytics — the APIs that create the coloured labels a workspace uses to organise its views, and that attach those labels to tables, reports, dashboards, and every other view type.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Get Tags List** | `GET` | `/restapi/v2/workspaces/{workspace-id}/tags` | `metadata.read` |\n| 2 | **Get Tagged Views** | `GET` | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `metadata.read` |\n| 3 | **Get View Tags** | `GET` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `metadata.read` |\n| 4 | **Create Tag** | `POST` | `/restapi/v2/workspaces/{workspace-id}/tags` | `modeling.create` |\n| 5 | **Update Tag** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}` | `modeling.update` |\n| 6 | **Delete Tag** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}` | `modeling.delete` |\n| 7 | **Add Tag To Multiple Views** | `POST` | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `modeling.create` |\n| 8 | **Remove Tag From Multiple Views** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `modeling.delete` |\n| 9 | **Add Multiple Tags To View** | `POST` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `modeling.create` |\n| 10 | **Remove Multiple Tags From View** | `DELETE` | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `modeling.delete` |"
       }
      ],
-     "description": "# 📋 Views Management\n\nAPI for Views Management in Zoho Analytics — covering view operations, auto analysis, favorites, and trash management.\n\n> **27 APIs** in **5 sections** · scopes `modeling.*`, `metadata.*`, `embed.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **View Operations** | 10 | APIs for creating, copying, renaming, deleting, and retrieving views. |\n| **View Preferences** | 2 | APIs to mark a view as a favorite for the authenticated user and to remove it from the favorites list. |\n| **Trash Management** | 3 | APIs to list the views available in the trash of a workspace, restore a trashed view back to the workspace, and permanently delete a view from the trash. |\n| **Auto Analysis** | 2 | APIs to automatically generate a curated set of views - charts, pivot tables and summary views - from an entire table or from a single column of it. |\n| **Tags** | 10 | APIs to create, update, delete and list the tags of a workspace, and to attach those tags to views. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Train an AutoML model, deploy it and score a table**<br/>The end-to-end AutoML sequence - create an analysis on a training table, wait for models to train, deploy the best model, run predictions into an output table, and clean up. | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |"
+     "description": "# 📋 Views Management\n\nAPI for Views Management in Zoho Analytics — covering view operations, auto analysis, favorites, and trash management.\n\n> **26 APIs** in **5 sections** · scopes `modeling.*`, `metadata.*`, `embed.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **View Operations** | 9 | APIs for creating, copying, renaming, deleting, and retrieving views. |\n| **View Preferences** | 2 | APIs to mark a view as a favorite for the authenticated user and to remove it from the favorites list. |\n| **Trash Management** | 3 | APIs to list the views available in the trash of a workspace, restore a trashed view back to the workspace, and permanently delete a view from the trash. |\n| **Auto Analysis** | 2 | APIs to automatically generate a curated set of views - charts, pivot tables and summary views - from an entire table or from a single column of it. |\n| **Tags** | 10 | APIs to create, update, delete and list the tags of a workspace, and to attach those tags to views. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Bootstrap: from access token to workspace and view IDs**<br/>The first three calls of every integration - list organizations, pick the org ID for the header, and resolve workspace and view names into the IDs that all other endpoints need. | Find the organization ID → Resolve the workspace → Resolve the view → Resolve deeper IDs as needed |\n| **Train an AutoML model, deploy it and score a table**<br/>The end-to-end AutoML sequence - create an analysis on a training table, wait for models to train, deploy the best model, run predictions into an output table, and clean up. | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |"
     },
     {
      "name": "📊 Reports & Dashboards",
@@ -6021,7 +5994,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6061,7 +6034,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6092,7 +6065,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6139,7 +6112,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6179,7 +6152,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6218,7 +6191,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6250,77 +6223,12 @@
           "description": "Replaces one or more sections of an existing dashboard.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `PUT /restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` |\n| **OAuth scope** | `ZohoAnalytics.modeling.update` |\n| **Org header** | `ZANALYTICS-ORGID` required |\n| **CONFIG** | Body form field · **mandatory** |\n| **Success** | `204` (no response body) |\n\n**Who can call it** — Design Modify on the dashboard — the owner, a Workspace Admin, an Organization Admin, or a shared user granted edit rights.\n\n**Other ready-made CONFIG examples:** *Replace the layout*, *Reset to the default theme* — see the API reference.\n\n🆕 Newly added — not yet on the docs site. [OpenAPI definition ↗](https://github.com/zoho/analytics-oas/blob/main/v2.0/reports-dashboards-grouped-api.json)"
          },
          "response": []
-        },
-        {
-         "name": "Get All Dashboards",
-         "request": {
-          "method": "GET",
-          "header": [],
-          "url": {
-           "raw": "https://{{analytics-domain}}/restapi/v2/dashboards",
-           "protocol": "https",
-           "host": [
-            "{{analytics-domain}}"
-           ],
-           "path": [
-            "restapi",
-            "v2",
-            "dashboards"
-           ]
-          },
-          "description": "Returns all dashboards accessible to the authenticated user - both those owned by the user and those shared with them - across every organization and workspace.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/dashboards` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | Not required |\n| **Success** | `200` |\n\n**Who can call it** — Any active Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/dashboards.html)"
-         },
-         "response": []
-        },
-        {
-         "name": "Get Owned Dashboards",
-         "request": {
-          "method": "GET",
-          "header": [],
-          "url": {
-           "raw": "https://{{analytics-domain}}/restapi/v2/dashboards/owned",
-           "protocol": "https",
-           "host": [
-            "{{analytics-domain}}"
-           ],
-           "path": [
-            "restapi",
-            "v2",
-            "dashboards",
-            "owned"
-           ]
-          },
-          "description": "Returns the list of dashboards owned by the authenticated user across every organization, as a single views array.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/dashboards/owned` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | Not required |\n| **Success** | `200` |\n\n**Who can call it** — The authenticated user must be an Account Admin.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/owned-dashboard.html)"
-         },
-         "response": []
-        },
-        {
-         "name": "Get Shared Dashboards",
-         "request": {
-          "method": "GET",
-          "header": [],
-          "url": {
-           "raw": "https://{{analytics-domain}}/restapi/v2/dashboards/shared",
-           "protocol": "https",
-           "host": [
-            "{{analytics-domain}}"
-           ],
-           "path": [
-            "restapi",
-            "v2",
-            "dashboards",
-            "shared"
-           ]
-          },
-          "description": "Returns all dashboards that have been shared with the authenticated user across every organization and workspace, as a single views array.\n\n| | |\n| :--- | :--- |\n| **Endpoint** | `GET /restapi/v2/dashboards/shared` |\n| **OAuth scope** | `ZohoAnalytics.metadata.read` |\n| **Org header** | Not required |\n| **Success** | `200` |\n\n**Who can call it** — Any active Zoho Analytics user.\n\n📘 [API reference ↗](https://www.zoho.com/analytics/api/v2/metadata-api/shared-dashboard.html)"
-         },
-         "response": []
         }
        ],
-       "description": "## Dashboards\n\nA **dashboard** is a canvas of cards. Each card occupies a rectangle on a fixed 80-unit-wide grid and holds either a saved report, a block of HTML, a title, an image, an embedded URL, or the interactive user-filter panel. Dashboards are stored as three independent sections — **layout** (the cards and their geometry), **settings** (viewer behaviour flags) and **themes** (background, card styling, typography) — and the APIs in this document let you create a dashboard, read those three sections back, and replace any of them.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Create Dashboard** | `POST` | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `modeling.create` |\n| 2 | **Read Dashboard Metadata** | `GET` | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `modeling.read` |\n| 3 | **Update Dashboard** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `modeling.update` |\n| 4 | **Get All Dashboards** | `GET` | `/restapi/v2/dashboards` | `metadata.read` |\n| 5 | **Get Owned Dashboards** | `GET` | `/restapi/v2/dashboards/owned` | `metadata.read` |\n| 6 | **Get Shared Dashboards** | `GET` | `/restapi/v2/dashboards/shared` | `metadata.read` |"
+       "description": "## Dashboards\n\nA **dashboard** is a canvas of cards. Each card occupies a rectangle on a fixed 80-unit-wide grid and holds either a saved report, a block of HTML, a title, an image, an embedded URL, or the interactive user-filter panel. Dashboards are stored as three independent sections — **layout** (the cards and their geometry), **settings** (viewer behaviour flags) and **themes** (background, card styling, typography) — and the APIs in this document let you create a dashboard, read those three sections back, and replace any of them.\n\n### APIs in this section\n\n| # | API | Method | Path | Scope |\n| ---: | :--- | :--- | :--- | :--- |\n| 1 | **Create Dashboard** | `POST` | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `modeling.create` |\n| 2 | **Read Dashboard Metadata** | `GET` | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `modeling.read` |\n| 3 | **Update Dashboard** | `PUT` | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `modeling.update` |"
       }
      ],
-     "description": "# 📊 Reports & Dashboards\n\nAPI for Reports and Dashboards in Zoho Analytics - covering the creation, update and metadata retrieval of analysis views, and the listing, creation, metadata retrieval and update of dashboards.\n\n> **9 APIs** in **2 sections** · scopes `modeling.*`, `metadata.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Reports (Analysis Views)** | 3 | APIs for creating a report (chart, pivot or summary view) on an existing table, reading the stored definition back, and rebuilding it. |\n| **Dashboards** | 6 | APIs for creating a dashboard, reading its stored layout, settings and themes, replacing any of those three sections, and listing the dashboards a user owns or can see. |"
+     "description": "# 📊 Reports & Dashboards\n\nAPI for Reports and Dashboards in Zoho Analytics - covering the creation, update and metadata retrieval of analysis views, and the listing, creation, metadata retrieval and update of dashboards.\n\n> **6 APIs** in **2 sections** · scopes `modeling.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **Reports (Analysis Views)** | 3 | APIs for creating a report (chart, pivot or summary view) on an existing table, reading the stored definition back, and rebuilding it. |\n| **Dashboards** | 3 | APIs for creating a dashboard, reading its stored layout, settings and themes, replacing any of those three sections, and listing the dashboards a user owns or can see. |"
     },
     {
      "name": "🔗 Share & Publish",
@@ -6336,7 +6244,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6365,7 +6273,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6405,7 +6313,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6447,7 +6355,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6484,7 +6392,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6524,7 +6432,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6562,7 +6470,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6605,7 +6513,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6637,7 +6545,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6677,7 +6585,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6720,7 +6628,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6752,7 +6660,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6784,7 +6692,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6833,7 +6741,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6873,7 +6781,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6913,7 +6821,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -6961,7 +6869,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -6990,7 +6898,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7029,7 +6937,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7059,7 +6967,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7099,7 +7007,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7140,7 +7048,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7182,7 +7090,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7211,7 +7119,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7251,7 +7159,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7292,7 +7200,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7322,7 +7230,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7364,7 +7272,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7400,7 +7308,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7429,7 +7337,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7460,7 +7368,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7492,7 +7400,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7522,7 +7430,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7564,7 +7472,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7605,7 +7513,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7645,7 +7553,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7686,7 +7594,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7728,7 +7636,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7779,7 +7687,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7807,7 +7715,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7837,7 +7745,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7868,7 +7776,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7902,7 +7810,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -7943,7 +7851,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -7974,7 +7882,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -8007,7 +7915,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -8052,7 +7960,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -8086,7 +7994,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "url": {
@@ -8119,7 +8027,7 @@
            {
             "key": "ZANALYTICS-ORGID",
             "value": "{{organization-id}}",
-            "description": "Organization ID. Get it from **Get Org List**."
+            "description": "Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI."
            }
           ],
           "body": {
@@ -8163,7 +8071,7 @@
      "description": "# 🤖 Data Science & Machine Learning\n\nAPI for DSML (Data Science & Machine Learning) in Zoho Analytics — covering AutoML analysis creation, execution, deployments, and what-if analysis.\n\n> **11 APIs** in **1 sections** · scopes `modeling.*`, `metadata.*`\n\n### Sections\n\n| Section | APIs | What it covers |\n| :--- | ---: | :--- |\n| **AutoML** | 11 | APIs for creating, running, deploying, and managing AutoML analyses and models. |\n\n### Workflows\n\n| Playbook | Call sequence |\n| :--- | :--- |\n| **Train an AutoML model, deploy it and score a table**<br/>The end-to-end AutoML sequence - create an analysis on a training table, wait for models to train, deploy the best model, run predictions into an output table, and clean up. | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |"
     }
    ],
-   "description": "# Zoho Analytics REST API v2\n\n**210 APIs** · **10 domains** · **39 sections** · generated from OpenAPI 3.1\n\nEverything under this folder is **version 2** of the Zoho Analytics REST API — every public  \nendpoint, grouped exactly the way the API reference is grouped, with a ready-to-send `CONFIG`  \nexample on each request.\n\nBuilt from the two sources of truth:  \n[<b>analytics-oas</b>](https://github.com/zoho/analytics-oas) (OpenAPI 3.1 specifications) and the  \n[<b>analytics-okf</b>](https://github.com/zoho/analytics-okf) knowledge bundle (endpoint catalog, permissions and workflow playbooks).\n\n> Authenticate first using the **🔐 Authentication** folder at the root of this collection.  \nEvery request below assumes a valid access token. \n  \n\n---\n\n## 🚀 Start here\n\n| Step | Action | Gives you |\n| --- | --- | --- |\n| 1 | Import and select the **`Zoho Analytics REST Variables`** environment | Every variable these requests read |\n| 2 | **🏢 Organization Management › Get Org List** | `orgId` → set `organization-id` |\n| 3 | **🏢 Organization Management › Get Meta Details From Name** | `workspaceId`, `viewId` from plain names — **enable** those two variables first |\n| 4 | Any endpoint in the domain you need | — |\n\nNothing else works until `organization-id` is set — it is the `ZANALYTICS-ORGID` header that  \nalmost every v2 endpoint requires. Identifier variables such as `workspace-id` and `view-id`  \nship **disabled**; tick the one you need in the environment editor before running a request.\n\n---\n\n## 🧭 What's inside\n\n| Domain | APIs | Sections | Covers |\n| --- | --- | --- | --- |\n| **🏢 Organization Management** | 8 | 2 | Org list, resource usage, subscription, name → ID lookup, access restrictions |\n| **👥 Users & Groups** | 26 | 4 | Org users, custom roles, workspace users and admins, groups |\n| **🗂️ Workspace Management** | 38 | 6 | Workspace lifecycle, folders, preferences, white-label access, linked workspaces, backup and restore |\n| **🧱 Data Modeling & Schema** | 33 | 7 | Tables, columns, lookups, query tables, formulas, variables |\n| **🔄 Data Operations** | 20 | 6 | Rows, sync/async/batch import, sync/async export, datasource sync |\n| **📋 Views Management** | 27 | 5 | View lifecycle, favourites, tags, trash, auto analysis |\n| **📊 Reports & Dashboards** | 9 | 2 | Analysis views and dashboards — create, read, update |\n| **🔗 Share & Publish** | 22 | 4 | Sharing, public/private URLs, embed URLs, slideshows |\n| **⏰ Schedules & Alerts** | 16 | 2 | Recurring email delivery of reports and dashboards, data alerts |\n| **🤖 Data Science & Machine Learning** | 11 | 1 | AutoML analyses, models, deployments, what-if |\n\nEach domain folder documents its own sections, lists every API with method, path and OAuth  \nscope, and names the multi-call **workflows** those APIs take part in.\n\n---\n\n## 🧩 Conventions shared by every v2 call\n\n|  |  |\n| --- | --- |\n| **Base URL** | `https://{{analytics-domain}}/restapi/v2/...` — always HTTPS, always the API host of your data centre. |\n| **`ZANALYTICS-ORGID`** | Required by almost every endpoint; each request's documentation says which. Missing it returns error `8083`. |\n| **`CONFIG`** | A single JSON object carries every optional argument. `GET` → URL-encoded **query** parameter (a collection pre-request script encodes it for you). `POST` / `PUT` / `DELETE` → **form field**. Imports → **multipart** field. |\n| **Identifiers** | Opaque numeric strings. Never construct one — read it from a listing API. See the variables table below. |\n| **Success envelope** | `{ \"status\": \"success\", \"summary\": \"...\", \"data\": { ... } }`. Many write operations answer **`204 No Content`** with no body — that is success. |\n| **Failure envelope** | `{ \"status\": \"failure\", \"summary\": \"...\", \"data\": { \"errorCode\": ..., \"errorMessage\": \"...\" } }`. HTTP status maps to the error code; see [Common error codes](https://www.zoho.com/analytics/api/v2/common-error-codes.html). |\n\n---\n\n## 🧪 Workflows\n\nMost real integrations are a _sequence_ of v2 calls. Each playbook is documented on the domain  \nfolder that owns it:\n\n| Playbook | Domain | Call sequence |\n| --- | --- | --- |\n| **Bootstrap: access token → workspace and view IDs** | 🏢 Organization Management | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs |\n| **Load data into a table (small, large, very large)** | 🔄 Data Operations | Build CONFIG → Send the request → Read the result → Verify |\n| **Export a view, dashboard or SQL result asynchronously** | 🔄 Data Operations | Create the job → Wait for completion → Download |\n| **Add users to an org and a workspace, set their roles** | 👥 Users & Groups | Add to the organization → Set the org role → Add to a workspace → Give access to views → Change role or status → Offboard |\n| **Share views with row and column restrictions** | 🔗 Share & Publish | (Optional) Create a group → Share → Inspect → Change → Revoke |\n| **Embed a view for many tenants with per-tenant filters** | 🔗 Share & Publish | Mint a URL per tenant → Re-mint before expiry → Audit → Revoke |\n| **Schedule a recurring email delivery** | ⏰ Schedules & Alerts | Create → Test → List and inspect → Pause or resume → Update → Delete |\n| **Train an AutoML model, deploy it and score a table** | 🤖 Data Science & ML | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |\n\n---\n\n## 🔢 Variables these requests expect\n\nEvery request below is parameterised. Import the **`Zoho Analytics REST Variables`**  \nenvironment that ships alongside this collection and select it in the environment dropdown —  \nnothing here reads collection-level variables.\n\n**Always on**\n\n| Variable | Set it to |\n| --- | --- |\n| `analytics-domain` | The API host of your data centre, e.g. `analyticsapi.zoho.com`. See the collection overview for the full list. |\n| `access-token` | Filled in automatically by **🔐 Authentication › Generate Tokens**. |\n| `organization-id` | **Get Org List** → `orgId`. Sent as `ZANALYTICS-ORGID` by almost every request here. |\n\n**Disabled by default — enable the one your request needs**\n\nIdentifier variables ship **unchecked** in the environment so the list stays readable and  \nnothing silently resolves to a placeholder. Tick the box next to a variable, paste the ID, and  \nrun.\n\n| Variable | Enable it for | Read the ID from |\n| --- | --- | --- |\n| `workspace-id` | Nearly every domain below | **Get Meta Details From Name** / **Get All Workspace List** |\n| `view-id` | Rows, exports, sharing, publish, tags, reports | **Get Meta Details From Name** / **Get View List** |\n| `column-id` | 🧱 Columns | **Get Table Metadata** |\n| `folder-id` | 🗂️ Workspace Folders | **Get Folder List** |\n| `querytable-id` | 🧱 Query Tables | **Get Query Tables** |\n| `dashboard-id` | 📊 Dashboards | **Get All Dashboards** |\n| `formula-id` | 🧱 Custom Formula Columns, Aggregate Formulas | **Get Custom Formulas** / **Get Aggregate Formula** |\n| `variable-id` | 🧱 Workspace Variables | **Get Variables** |\n| `group-id` | 👥 Workspace Groups | **Get Group List** |\n| `role-id` | 👥 Custom Roles | **Get Custom Roles** |\n| `tag-id` | 📋 Tags | **Get Tags List** |\n| `slide-id` | 🔗 Slideshow Management | **Get Slide List** |\n| `schedule-id` | ⏰ Email Schedules | **Get Email Schedules** |\n| `datasource-id` | 🔄 Data Sync & Connectivity | **Get Datasources** |\n| `job-id` | 🔄 Async import / export | Returned when the job is created |\n| `analysis-id` | 🤖 AutoML | **Get AutoML Analysis In Workspace** |\n| `model-id` | 🤖 AutoML | **Get AutoML Analysis Details** |\n| `deployment-id` | 🤖 AutoML | **Get Deployments For A Model** |\n| `dest-organization-id` | **Copy Workspace**, **Copy Views**, **Copy Custom Formulas** | **Get Org List** — the _destination_ org |\n\n> **Cross-organization copies.** Those three copy requests carry a **disabled**  \n`ZANALYTICS-DEST-ORGID` header. To copy into another organization you administer, enable both  \nthe header on the request and the `dest-organization-id` environment variable. Leave both off  \nand the copy lands in the organization from `ZANALYTICS-ORGID`. \n  \n\n---\n\n## ⚙️ Working with asynchronous jobs\n\nLarge imports and exports run as **jobs** rather than returning a result inline:\n\n1. Create the job — **Create Import Job…** / **Create Export Job…** — and keep the `jobId`.\n    \n2. Poll **Get Import Job Details** / **Get Export Job Details** until `jobCode` reports  \n    completion, or pass a `callbackUrl` in `CONFIG` and be notified instead of polling.\n    \n3. For exports, finish with **Download Exported Data**.\n    \n\nBatch imports additionally key each chunk so the server can assemble them in order. See  \n**🔄 Data Operations** for the full sequence.\n\n---\n\n## 📚 Further reading\n\n- [API reference ↗](https://www.zoho.com/analytics/api/v2/introduction.html)\n    \n- [OpenAPI specifications ↗](https://github.com/zoho/analytics-oas)\n    \n- [Common error codes ↗](https://www.zoho.com/analytics/api/v2/common-error-codes.html)\n    \n- [API units, limits and pricing ↗](https://www.zoho.com/analytics/api/v2/api-limits-pricing.html)\n    \n- [Client SDKs ↗](https://www.zoho.com/analytics/api/v2/client-library.html) — Java, C#, Python, PHP, Go, Node.js, Ruby"
+   "description": "# Zoho Analytics REST API v2\n\n**205 APIs** · **10 domains** · **40 sections** · generated from OpenAPI 3.1\n\nEverything under this folder is **version 2** of the Zoho Analytics REST API — every public  \nendpoint, grouped exactly the way the API reference is grouped, with a ready-to-send `CONFIG`  \nexample on each request.\n\nBuilt from the two sources of truth:  \n[<b>analytics-oas</b>](https://github.com/zoho/analytics-oas) (OpenAPI 3.1 specifications) and the  \n[<b>analytics-okf</b>](https://github.com/zoho/analytics-okf) knowledge bundle (endpoint catalog, permissions and workflow playbooks).\n\n> Authenticate first using the **🔐 Authentication** folder at the root of this collection.  \nEvery request below assumes a valid access token. \n  \n\n---\n\n## 🚀 Start here\n\n| Step | Action | Gives you |\n| --- | --- | --- |\n| 1 | Import and select the **`Zoho Analytics REST Variables`** environment | Every variable these requests read |\n| 2 | Zoho Analytics UI › **Settings → Organisation** | `Organization ID` → set `organization-id` |\n| 3 | **🏢 Organization Management › Get Meta Details From Name** | `workspaceId`, `viewId` from plain names — **enable** those two variables first |\n| 4 | Any endpoint in the domain you need | — |\n\nNothing else works until `organization-id` is set — it is the `ZANALYTICS-ORGID` header that  \nalmost every v2 endpoint requires. Identifier variables such as `workspace-id` and `view-id`  \nship **disabled**; tick the one you need in the environment editor before running a request.\n\n---\n\n## 🧭 What's inside\n\n| Domain | APIs | Sections | Covers |\n| --- | --- | --- | --- |\n| **🏢 Organization Management** | 10 | 3 | Org-level workspace, dashboard and recent-item listings, resource usage, subscription, name → ID lookup, access restrictions |\n| **👥 Users & Groups** | 26 | 4 | Org users, custom roles, workspace users and admins, groups |\n| **🗂️ Workspace Management** | 35 | 6 | Workspace lifecycle, folders, preferences, white-label access, linked workspaces, backup and restore |\n| **🧱 Data Modeling & Schema** | 33 | 7 | Tables, columns, lookups, query tables, formulas, variables |\n| **🔄 Data Operations** | 20 | 6 | Rows, sync/async/batch import, sync/async export, datasource sync |\n| **📋 Views Management** | 26 | 5 | View lifecycle, favourites, tags, trash, auto analysis |\n| **📊 Reports & Dashboards** | 6 | 2 | Analysis views and dashboards — create, read, update |\n| **🔗 Share & Publish** | 22 | 4 | Sharing, public/private URLs, embed URLs, slideshows |\n| **⏰ Schedules & Alerts** | 16 | 2 | Recurring email delivery of reports and dashboards, data alerts |\n| **🤖 Data Science & Machine Learning** | 11 | 1 | AutoML analyses, models, deployments, what-if |\n\nEach domain folder documents its own sections, lists every API with method, path and OAuth  \nscope, and names the multi-call **workflows** those APIs take part in.\n\n---\n\n## 🧩 Conventions shared by every v2 call\n\n|  |  |\n| --- | --- |\n| **Base URL** | `https://{{analytics-domain}}/restapi/v2/...` — always HTTPS, always the API host of your data centre. |\n| **`ZANALYTICS-ORGID`** | Required by almost every endpoint; each request's documentation says which. Missing it returns error `8083`. |\n| **`CONFIG`** | A single JSON object carries every optional argument. `GET` → URL-encoded **query** parameter (a collection pre-request script encodes it for you). `POST` / `PUT` / `DELETE` → **form field**. Imports → **multipart** field. |\n| **Identifiers** | Opaque numeric strings. Never construct one — read it from a listing API. See the variables table below. |\n| **Success envelope** | `{ \"status\": \"success\", \"summary\": \"...\", \"data\": { ... } }`. Many write operations answer **`204 No Content`** with no body — that is success. |\n| **Failure envelope** | `{ \"status\": \"failure\", \"summary\": \"...\", \"data\": { \"errorCode\": ..., \"errorMessage\": \"...\" } }`. HTTP status maps to the error code; see [Common error codes](https://www.zoho.com/analytics/api/v2/common-error-codes.html). |\n\n---\n\n## 🧪 Workflows\n\nMost real integrations are a _sequence_ of v2 calls. Each playbook is documented on the domain  \nfolder that owns it:\n\n| Playbook | Domain | Call sequence |\n| --- | --- | --- |\n| **Bootstrap: access token → workspace and view IDs** | 🏢 Organization Management | List organizations → Resolve the workspace → Resolve the view → Resolve deeper IDs |\n| **Load data into a table (small, large, very large)** | 🔄 Data Operations | Build CONFIG → Send the request → Read the result → Verify |\n| **Export a view, dashboard or SQL result asynchronously** | 🔄 Data Operations | Create the job → Wait for completion → Download |\n| **Add users to an org and a workspace, set their roles** | 👥 Users & Groups | Add to the organization → Set the org role → Add to a workspace → Give access to views → Change role or status → Offboard |\n| **Share views with row and column restrictions** | 🔗 Share & Publish | (Optional) Create a group → Share → Inspect → Change → Revoke |\n| **Embed a view for many tenants with per-tenant filters** | 🔗 Share & Publish | Mint a URL per tenant → Re-mint before expiry → Audit → Revoke |\n| **Schedule a recurring email delivery** | ⏰ Schedules & Alerts | Create → Test → List and inspect → Pause or resume → Update → Delete |\n| **Train an AutoML model, deploy it and score a table** | 🤖 Data Science & ML | Create the analysis → Wait for training → (Optional) What-if → Deploy → Run → Read predictions → Clean up |\n\n---\n\n## 🔢 Variables these requests expect\n\nEvery request below is parameterised. Import the **`Zoho Analytics REST Variables`**  \nenvironment that ships alongside this collection and select it in the environment dropdown —  \nnothing here reads collection-level variables.\n\n**Always on**\n\n| Variable | Set it to |\n| --- | --- |\n| `analytics-domain` | The API host of your data centre, e.g. `analyticsapi.zoho.com`. See the collection overview for the full list. |\n| `access-token` | Filled in automatically by **🔐 Authentication › Generate Tokens**. |\n| `organization-id` | Zoho Analytics UI › **Settings → Organisation**. Sent as `ZANALYTICS-ORGID` by almost every request here. |\n\n**Disabled by default — enable the one your request needs**\n\nIdentifier variables ship **unchecked** in the environment so the list stays readable and  \nnothing silently resolves to a placeholder. Tick the box next to a variable, paste the ID, and  \nrun.\n\n| Variable | Enable it for | Read the ID from |\n| --- | --- | --- |\n| `workspace-id` | Nearly every domain below | **Get Meta Details From Name** / **Get Org Workspaces** |\n| `view-id` | Rows, exports, sharing, publish, tags, reports | **Get Meta Details From Name** / **Get View List** |\n| `column-id` | 🧱 Columns | **Get Table Metadata** |\n| `folder-id` | 🗂️ Workspace Folders | **Get Folder List** |\n| `querytable-id` | 🧱 Query Tables | **Get Query Tables** |\n| `dashboard-id` | 📊 Dashboards | **Get Org Dashboards** |\n| `formula-id` | 🧱 Custom Formula Columns, Aggregate Formulas | **Get Custom Formulas** / **Get Aggregate Formula** |\n| `variable-id` | 🧱 Workspace Variables | **Get Variables** |\n| `group-id` | 👥 Workspace Groups | **Get Group List** |\n| `role-id` | 👥 Custom Roles | **Get Custom Roles** |\n| `tag-id` | 📋 Tags | **Get Tags List** |\n| `slide-id` | 🔗 Slideshow Management | **Get Slide List** |\n| `schedule-id` | ⏰ Email Schedules | **Get Email Schedules** |\n| `datasource-id` | 🔄 Data Sync & Connectivity | **Get Datasources** |\n| `job-id` | 🔄 Async import / export | Returned when the job is created |\n| `analysis-id` | 🤖 AutoML | **Get AutoML Analysis In Workspace** |\n| `model-id` | 🤖 AutoML | **Get AutoML Analysis Details** |\n| `deployment-id` | 🤖 AutoML | **Get Deployments For A Model** |\n| `dest-organization-id` | **Copy Workspace**, **Copy Views**, **Copy Custom Formulas** | Zoho Analytics UI › **Settings → Organisation** of the _destination_ org |\n\n> **Cross-organization copies.** Those three copy requests carry a **disabled**  \n`ZANALYTICS-DEST-ORGID` header. To copy into another organization you administer, enable both  \nthe header on the request and the `dest-organization-id` environment variable. Leave both off  \nand the copy lands in the organization from `ZANALYTICS-ORGID`. \n  \n\n---\n\n## ⚙️ Working with asynchronous jobs\n\nLarge imports and exports run as **jobs** rather than returning a result inline:\n\n1. Create the job — **Create Import Job…** / **Create Export Job…** — and keep the `jobId`.\n    \n2. Poll **Get Import Job Details** / **Get Export Job Details** until `jobCode` reports  \n    completion, or pass a `callbackUrl` in `CONFIG` and be notified instead of polling.\n    \n3. For exports, finish with **Download Exported Data**.\n    \n\nBatch imports additionally key each chunk so the server can assemble them in order. See  \n**🔄 Data Operations** for the full sequence.\n\n---\n\n## 📚 Further reading\n\n- [API reference ↗](https://www.zoho.com/analytics/api/v2/introduction.html)\n    \n- [OpenAPI specifications ↗](https://github.com/zoho/analytics-oas)\n    \n- [Common error codes ↗](https://www.zoho.com/analytics/api/v2/common-error-codes.html)\n    \n- [API units, limits and pricing ↗](https://www.zoho.com/analytics/api/v2/api-limits-pricing.html)\n    \n- [Client SDKs ↗](https://www.zoho.com/analytics/api/v2/client-library.html) — Java, C#, Python, PHP, Go, Node.js, Ruby"
   }
  ],
  "auth": {

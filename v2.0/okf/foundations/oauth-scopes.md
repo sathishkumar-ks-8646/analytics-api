@@ -48,7 +48,7 @@ sources:
     author: team:zoho-analytics-api-docs
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -84,7 +84,7 @@ Scopes are requested during the OAuth authorization step (see [Authentication](a
 | [`ZohoAnalytics.modeling.update`](#zohoanalyticsmodelingupdate) | Update modeling objects in Zoho Analytics. | 25 |
 | [`ZohoAnalytics.modeling.delete`](#zohoanalyticsmodelingdelete) | Delete modeling objects in Zoho Analytics. | 17 |
 | [`ZohoAnalytics.modeling.all`](#zohoanalyticsmodelingall) | Full access to modeling objects in Zoho Analytics. | 0 |
-| [`ZohoAnalytics.metadata.read`](#zohoanalyticsmetadataread) | Read metadata from Zoho Analytics. | 52 |
+| [`ZohoAnalytics.metadata.read`](#zohoanalyticsmetadataread) | Read metadata from Zoho Analytics. | 47 |
 | [`ZohoAnalytics.metadata.create`](#zohoanalyticsmetadatacreate) | Create metadata in Zoho Analytics. | 4 |
 | [`ZohoAnalytics.metadata.update`](#zohoanalyticsmetadataupdate) | Update metadata in Zoho Analytics. | 11 |
 | [`ZohoAnalytics.metadata.delete`](#zohoanalyticsmetadatadelete) | Delete metadata from Zoho Analytics. | 0 |
@@ -274,14 +274,13 @@ Read metadata from Zoho Analytics.
 
 | Operation | Method | Path |
 |---|---|---|
-| [Get Org List](../domains/organization-management/org-info-and-settings/get-organizations.md) | GET | `/restapi/v2/orgs` |
 | [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md) | GET | `/restapi/v2/metadetails` |
+| [Get Org Workspaces](../domains/organization-management/org-level-listings/get-org-workspaces.md) | GET | `/restapi/v2/orgs/workspaces` |
+| [Get Org Dashboards](../domains/organization-management/org-level-listings/get-org-dashboards.md) | GET | `/restapi/v2/orgs/dashboards` |
+| [Get Org Recent Items](../domains/organization-management/org-level-listings/get-org-recent-items.md) | GET | `/restapi/v2/orgs/recentitems` |
 | [Get Org Access Restrictions](../domains/organization-management/security-controls/get-org-access-restrictions.md) | GET | `/restapi/v2/security-controls/access-restrictions` |
 | [Get Workspace Access Restrictions](../domains/organization-management/security-controls/get-workspace-access-restrictions.md) | GET | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` |
 | [Export as Template](../domains/workspace-management/workspace-operations/export-as-template.md) | GET | `/restapi/v2/workspaces/{workspace-id}/template/data` |
-| [Get All Workspace List](../domains/workspace-management/workspace-operations/get-all-workspaces.md) | GET | `/restapi/v2/workspaces` |
-| [Get Owned Workspace List](../domains/workspace-management/workspace-operations/get-owned-workspaces.md) | GET | `/restapi/v2/workspaces/owned` |
-| [Get Shared Workspace List](../domains/workspace-management/workspace-operations/get-shared-workspaces.md) | GET | `/restapi/v2/workspaces/shared` |
 | [Get Workspace Secret Key](../domains/workspace-management/workspace-operations/get-workspace-secret-key.md) | GET | `/restapi/v2/workspaces/{workspace-id}/secretkey` |
 | [Get Workspace Info](../domains/workspace-management/workspace-operations/get-workspace-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}` |
 | [Get Folder List](../domains/workspace-management/workspace-folders/get-folders.md) | GET | `/restapi/v2/workspaces/{workspace-id}/folders` |
@@ -308,14 +307,10 @@ Read metadata from Zoho Analytics.
 | [Get View List](../domains/views-management/view-operations/get-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views` |
 | [Get View Details](../domains/views-management/view-operations/get-view-details.md) | GET | `/restapi/v2/views/{view-id}` |
 | [Get View Dependents](../domains/views-management/view-operations/get-view-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents` |
-| [Get Recent Views](../domains/views-management/view-operations/get-recent-views.md) | GET | `/restapi/v2/recentviews` |
 | [Get Trash Views](../domains/views-management/trash-management/get-trash-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/trash` |
 | [Get Tags List](../domains/views-management/tags/get-tags.md) | GET | `/restapi/v2/workspaces/{workspace-id}/tags` |
 | [Get Tagged Views](../domains/views-management/tags/get-tagged-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` |
 | [Get View Tags](../domains/views-management/tags/get-view-tags.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` |
-| [Get All Dashboards](../domains/reports-and-dashboards/dashboards/get-dashboards.md) | GET | `/restapi/v2/dashboards` |
-| [Get Owned Dashboards](../domains/reports-and-dashboards/dashboards/get-owned-dashboards.md) | GET | `/restapi/v2/dashboards/owned` |
-| [Get Shared Dashboards](../domains/reports-and-dashboards/dashboards/get-shared-dashboards.md) | GET | `/restapi/v2/dashboards/shared` |
 | [Get Email Schedules](../domains/schedules-and-alerts/email-schedules/get-email-schedules.md) | GET | `/restapi/v2/workspaces/{workspace-id}/emailschedules` |
 | [Get Alerts In Workspace](../domains/schedules-and-alerts/data-alerts/get-alerts-in-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts` |
 | [Get Alerts In View](../domains/schedules-and-alerts/data-alerts/get-alerts-in-view.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` |

@@ -30,10 +30,10 @@ sources:
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:28Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -711,7 +711,7 @@ Phrases are case-insensitive, words separated by exactly one space. `<unit>` is 
 | [8517](../../../foundations/error-codes.md#error-8517) | 400 | DATATYPE_NOT_MATCHED - A value has the wrong JSON type: exclude: "yes", isAxisMerge: 1, folderId: "abc". |
 | [8534](../../../foundations/error-codes.md#error-8534) | 400 | JSONPARSEERROR — CONFIG is not valid JSON. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [8542](../../../foundations/error-codes.md#error-8542) | 400 | EXTRA_KEY_FOUND_IN_JSON - A key not listed in this document is present. |
+| [8542](../../../foundations/error-codes.md#error-8542) | 400 | CONFIG holds a key other than workspaceIds, pageNo, recordsPerPage and searchKey. |
 | [8544](../../../foundations/error-codes.md#error-8544) | 400 | OUT_OF_RANGE - An integer is outside its range: percentileVal outside 0-100, a mergeAxisInfo index outside 0-100. |
 | [8547](../../../foundations/error-codes.md#error-8547) | 400 | ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries. |
 | [14037](../../../foundations/error-codes.md#error-14037) | 400 | DISABLED_COLUMNS_USED - A disabled column is used in the report. |

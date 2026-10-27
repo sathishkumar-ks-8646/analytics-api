@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>SDK migration &mdash; Zoho Analytics V2 organization-context migration</title>
+<meta name="description" content="Migrating the Zoho Analytics SDKs - Java, Python, C#, Go, PHP, Node.js and Ruby. The method moves off AnalyticsClient, and before-and-after code for each language.">
+<link rel="stylesheet" href="assets/migration.css">
+<script src="assets/migration.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <a class="wordmark" href="index.html">
+      <svg class="zoho-mark" role="img" aria-label="Zoho" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.66 6.897a1.299 1.299 0 0 0-1.205.765l-.642 1.44-.062-.385A1.291 1.291 0 0 0 5.27 7.648l-4.185.678A1.291 1.291 0 0 0 .016 9.807l.678 4.18a1.293 1.293 0 0 0 1.27 1.087c.074 0 .143-.01.216-.017l4.18-.678c.436-.07.784-.351.96-.723l2.933 1.307a1.304 1.304 0 0 0 .988.026c.321-.12.575-.365.716-.678l.28-.629.038.276a1.297 1.297 0 0 0 1.455 1.103l3.712-.501a1.29 1.29 0 0 0 1.03.514h4.236c.713 0 1.29-.58 1.291-1.291V9.545c0-.712-.58-1.291-1.291-1.291h-4.236c-.079 0-.155.008-.23.022a1.309 1.309 0 0 0-.275-.288c-.275-.21-.614-.3-.958-.253l-4.197.571c-.155.021-.3.07-.432.14L9.159 7.01a1.27 1.27 0 0 0-.499-.113zm-.025.705c.077 0 .159.013.24.052l2.971 1.324c-.128.238-.18.508-.142.782l.357 2.596h.002l-.745 1.672a.59.59 0 0 1-.777.296l-3.107-1.385-.004-.041-.41-2.526L8.1 7.95a.589.589 0 0 1 .536-.348zm-3.159.733c.125 0 .245.039.343.112.13.09.21.227.237.382l.234 1.446-.56 1.259a1.27 1.27 0 0 0-.026.987c.12.322.364.575.678.717l.295.131a.585.585 0 0 1-.428.314l-4.185.678a.59.59 0 0 1-.674-.485l-.678-4.18a.588.588 0 0 1 .485-.674l4.185-.678c.03-.004.064-.01.094-.01zm11.705.09a.59.59 0 0 1 .415.173 1.287 1.287 0 0 0-.416.947v4.237c0 .033.003.065.005.097l-3.55.482a.586.586 0 0 1-.66-.502l-.191-1.403.899-2.017a1.29 1.29 0 0 0-.333-1.5l3.754-.51c.026-.004.051-.004.077-.004zm1.3.532h4.227c.326 0 .588.266.588.588v4.237a.589.589 0 0 1-.588.588h-4.237a.564.564 0 0 1-.12-.013c.47-.246.758-.765.684-1.318zm-5.988.309.254.113c.296.133.43.48.296.777l-.432.97-.207-1.465a.58.58 0 0 1 .09-.395zm5.39.538.453 3.325a.583.583 0 0 1-.453.65zM6.496 11.545l.17 1.052a.588.588 0 0 1-.293-.776zm3.985 4.344a.588.588 0 0 0-.612.603c0 .358.244.61.601.61a.582.582 0 0 0 .607-.608c0-.35-.242-.605-.596-.605zm5.545 0a.588.588 0 0 0-.612.603c0 .358.245.61.602.61a.582.582 0 0 0 .606-.608c0-.35-.24-.605-.596-.605zm-8.537.018a.047.047 0 0 0-.048.047v.085c0 .026.021.047.048.047h.52l-.623.9a.052.052 0 0 0-.009.027v.027c0 .026.021.047.048.047h.815a.047.047 0 0 0 .047-.047v-.085a.047.047 0 0 0-.047-.047h-.55l.606-.9a.05.05 0 0 0 .008-.026v-.028a.047.047 0 0 0-.047-.047zm5.303 0a.047.047 0 0 0-.047.047v1.086c0 .026.02.047.047.047h.135a.047.047 0 0 0 .047-.047v-.454h.545v.454c0 .026.02.047.047.047h.134a.047.047 0 0 0 .047-.047v-1.086a.047.047 0 0 0-.047-.047h-.134a.047.047 0 0 0-.047.047v.453h-.545v-.453a.047.047 0 0 0-.047-.047zm-2.324.164c.25 0 .372.194.372.425 0 .219-.109.425-.358.426-.242 0-.375-.197-.375-.419 0-.235.108-.432.36-.432zm5.545 0c.25 0 .372.194.372.425 0 .219-.108.425-.358.426-.242 0-.374-.197-.374-.419 0-.235.108-.432.36-.432z" fill="currentColor"></path></svg>
+      Organization context<span>&nbsp;/ migration</span>
+    </a>
+    <span class="chip">Zoho Analytics API v2</span>
+    <nav class="topnav" aria-label="Guide chapters">
+      <a href="index.html">Start here</a>
+      <a href="01-why-org-context.html">Why</a>
+      <a href="02-whats-changed.html">What changed</a>
+      <a href="03-endpoint-migration.html">Endpoints</a>
+      <a href="04-sdk-migration.html" aria-current="page">SDKs</a>
+      <a href="05-knowledge-bases.html">Tools</a>
+      <a href="06-timeline.html">Timeline</a>
+      <a href="07-troubleshooting.html">Troubleshooting</a>
+    </nav>
+    <button class="icon-btn nav-toggle" id="nav-toggle" type="button"
+            aria-expanded="false" aria-controls="sidebar"
+            aria-label="Show chapter navigation">&#9776;</button>
+    <button class="icon-btn" id="theme-toggle" type="button"
+            aria-label="Switch colour theme">&#9680;</button>
+  </div>
+</header>
+
+<div class="deadline-bar">
+  <div class="deadline-bar__inner">
+    <span class="chip chip--deadline">Deadline</span>
+    <p>The replaced endpoints are <strong>deprecated</strong>. They stop answering in
+    <strong>March 2027</strong>. <a href="06-timeline.html">See the timeline &rarr;</a></p>
+  </div>
+</div>
+
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidenav" aria-label="Chapters">
+    <h2>Migration guide</h2>
+    <a href="index.html"><span class="n">00</span><span>Start here</span></a>
+    <a href="01-why-org-context.html"><span class="n">01</span><span>Why org context</span></a>
+    <a href="02-whats-changed.html"><span class="n">02</span><span>What changed</span></a>
+    <a href="03-endpoint-migration.html"><span class="n">03</span><span>Endpoint migration</span></a>
+    <a href="04-sdk-migration.html" aria-current="page"><span class="n">04</span><span>SDK migration</span></a>
+    <a href="05-knowledge-bases.html"><span class="n">05</span><span>Knowledge bases &amp; tools</span></a>
+    <a href="06-timeline.html"><span class="n">06</span><span>Timeline &amp; deprecation</span></a>
+    <a href="07-troubleshooting.html"><span class="n">07</span><span>Troubleshooting &amp; FAQ</span></a>
+    <h2>Source</h2>
+    <a href="04-sdk-migration.md"><span class="n">md</span><span>This page as Markdown</span></a>
+    <a href="README.md"><span class="n">&#8212;</span><span>Folder README</span></a>
+    </nav>
+  </aside>
+
+  <main class="doc" id="main">
+<header class="page-head">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <p class="eyebrow">Migration guide &middot; <b>Chapter 04</b></p>
+  <h1>SDK migration</h1>
+  <p class="lede">All seven official SDKs changed in the same way. If you understand the shape of the change once, the code is mechanical in every language.</p>
+</header>
+<div class="sunset"><span class="sunset__icon">Deprecated</span><div><p>The removed client methods call endpoints that are <strong>deprecated</strong> and switch off in <strong>March 2027</strong>. Upgrading the SDK removes them from your build, which is the fastest way to find every call site.</p></div></div>
+<section id="the-shape-of-the-change">
+<h2><span class="num">01</span>The shape of the change</h2>
+<p>Every SDK has the same five objects:</p>
+<pre><code class="lang-text">AnalyticsClient          ← configuration + factories
+ ├─ OrgAPI               ← needs an organization             getOrgInstance(orgId)
+ ├─ WorkspaceAPI         ← needs an organization + workspace getWorkspaceInstance(orgId, workspaceId)
+ ├─ ViewAPI              ← org + workspace + view            getViewInstance(orgId, workspaceId, viewId)
+ └─ BulkAPI              ← org + workspace                   getBulkInstance(orgId, workspaceId)</code></pre>
+<p>Each of <code>OrgAPI</code>, <code>WorkspaceAPI</code>, <code>ViewAPI</code> and <code>BulkAPI</code> holds the IDs you gave it and sends <code>ZANALYTICS-ORGID</code> on every request automatically. <strong><code>AnalyticsClient</code> holds no organization</strong> — which is exactly why the cross-organization methods used to live on it.</p>
+<p>Now that every endpoint needs an organization, there is nothing left for <code>AnalyticsClient</code> to call directly:</p>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Before</th><th>After</th></tr></thead><tbody><tr><td><code>AnalyticsClient</code> had 10 API methods plus 4 factories</td><td><code>AnalyticsClient</code> has <strong>only</strong> configuration and the 4 factories</td></tr><tr><td>You could call <code>ac.getWorkspaces()</code> straight away</td><td>You must first choose an organization: <code>ac.getOrgInstance(orgId)</code></td></tr></tbody></table></div>
+<div class="note note--good"><div class="note__title">This is the whole migration</div><p>Get an <code>OrgAPI</code> (or <code>WorkspaceAPI</code>) first, then call the method on that. The SDK fills in the header for you.</p></div>
+</section>
+<section id="the-method-map">
+<h2><span class="num">02</span>The method map</h2>
+<p>Use this table as your find-and-replace list. <code>ORG</code> means an <code>OrgAPI</code> instance, <code>WS</code> a <code>WorkspaceAPI</code> instance.</p>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Old &amp;mdash; on <code>AnalyticsClient</code></th><th>New</th><th>Returns</th></tr></thead><tbody><tr><td class="is-old"><code>getOrgs()</code></td><td><em>No replacement.</em> Read the Organization ID from <strong>Settings → Organisation</strong></td><td>—</td></tr><tr><td class="is-old"><code>getWorkspaces()</code></td><td class="is-new"><code>ORG.getOrgWorkspaces()</code></td><td>list of workspaces</td></tr><tr><td class="is-old"><code>getOwnedWorkspaces()</code></td><td class="is-new"><code>ORG.getOrgWorkspaces()</code></td><td>list of workspaces</td></tr><tr><td class="is-old"><code>getSharedWorkspaces()</code></td><td class="is-new"><code>ORG.getOrgWorkspaces()</code></td><td>list of workspaces</td></tr><tr><td class="is-old"><code>getDashboards()</code></td><td class="is-new"><code>ORG.getOrgDashboards(config)</code></td><td>object: <code>views</code> + <code>pageDetails</code></td></tr><tr><td class="is-old"><code>getOwnedDashboards()</code></td><td class="is-new"><code>ORG.getOrgDashboards(config)</code></td><td>object: <code>views</code> + <code>pageDetails</code></td></tr><tr><td class="is-old"><code>getSharedDashboards()</code></td><td class="is-new"><code>ORG.getOrgDashboards(config)</code></td><td>object: <code>views</code> + <code>pageDetails</code></td></tr><tr><td class="is-old"><code>getRecentViews()</code></td><td class="is-new"><code>ORG.getOrgRecentItems()</code></td><td>list of recent items</td></tr><tr><td class="is-old"><code>getWorkspaceDetails(workspaceId)</code></td><td class="is-new"><code>WS.getWorkspaceDetails(config)</code></td><td>workspace object</td></tr><tr><td class="is-old"><code>getViewDetails(viewId, config)</code></td><td class="is-new"><code>ORG.getViewDetails(viewId, config)</code></td><td>view object</td></tr></tbody></table></div>
+<p>Method names follow each language's convention: <code>getOrgWorkspaces</code> in Java, C#, Go, PHP and Node.js; <code>get_org_workspaces</code> in Python and Ruby.</p>
+<h3 id="getworkspacedetails-moves-to-workspaceapi">getWorkspaceDetails moves to WorkspaceAPI</h3>
+<p>Note the dropped argument. A <code>WorkspaceAPI</code> instance <strong>already holds the workspace ID</strong>, so passing it again would be redundant:</p>
+<pre><code class="lang-text">Before:  ac.getWorkspaceDetails(workspaceId)
+After:   ac.getWorkspaceInstance(orgId, workspaceId).getWorkspaceDetails(config)
+                                 ^^^^^^^^^^^^^^^^^                      ^^^^^^
+                                 IDs go here now            optional, withUserRoleInfo</code></pre>
+<p>The <code>config</code> argument is new on this method and optional. Pass <code>null</code> (or <code>{}</code> / <code>None</code>) if you do not need <code>withUserRoleInfo</code>.</p>
+<h3 id="getviewdetails-moves-to-orgapi">getViewDetails moves to OrgAPI</h3>
+<p>The signature is unchanged — only the object you call it on:</p>
+<pre><code class="lang-text">Before:  ac.getViewDetails(viewId, config)
+After:   ac.getOrgInstance(orgId).getViewDetails(viewId, config)</code></pre>
+<p>It lives on <code>OrgAPI</code> rather than <code>ViewAPI</code> because the endpoint resolves a view from the organization alone — there is no workspace in its URL, and a <code>ViewAPI</code> instance would demand one.</p>
+</section>
+<section id="java">
+<h2><span class="num">03</span>Java</h2>
+<p><strong>Before</strong></p>
+<pre><code class="lang-java">AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
+
+JSONArray  orgs       = ac.getOrgs();
+JSONObject workspaces = ac.getWorkspaces();       // ownedWorkspaces + sharedWorkspaces
+JSONArray  owned      = ac.getOwnedWorkspaces();
+JSONObject dashboards = ac.getDashboards();       // ownedViews + sharedViews
+JSONArray  recent     = ac.getRecentViews();
+JSONObject ws         = ac.getWorkspaceDetails(workspaceId);
+JSONObject view       = ac.getViewDetails(viewId, null);</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-java">AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
+
+long orgId = 700000123456L;                       // from configuration
+OrgAPI org = ac.getOrgInstance(orgId);
+
+JSONArray  workspaces = org.getOrgWorkspaces();   // one flat array
+
+JSONObject config = new JSONObject();
+config.put("recordsPerPage", 100);
+JSONObject dashboards = org.getOrgDashboards(config);
+JSONArray  views      = dashboards.getJSONArray("views");
+boolean    more       = dashboards.getJSONObject("pageDetails").getBoolean("hasNextPage");
+
+JSONArray  recent = org.getOrgRecentItems();
+JSONObject view   = org.getViewDetails(viewId, null);
+
+WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+JSONObject   ws        = workspace.getWorkspaceDetails(null);</code></pre>
+<p>Paging:</p>
+<pre><code class="lang-java">JSONArray all = new JSONArray();
+int page = 1;
+while (true) {
+    JSONObject cfg = new JSONObject();
+    cfg.put("pageNo", page);
+    cfg.put("recordsPerPage", 100);
+
+    JSONObject result = org.getOrgDashboards(cfg);
+    JSONArray  batch  = result.getJSONArray("views");
+    for (int i = 0; i &lt; batch.length(); i++) {
+        all.put(batch.get(i));
+    }
+    if (!result.getJSONObject("pageDetails").getBoolean("hasNextPage")) {
+        break;
+    }
+    page++;
+}</code></pre>
+</section>
+<section id="python">
+<h2><span class="num">04</span>Python</h2>
+<p><strong>Before</strong></p>
+<pre><code class="lang-python">ac = AnalyticsClient(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN)
+
+orgs       = ac.get_orgs()
+workspaces = ac.get_workspaces()        # {"ownedWorkspaces": [...], "sharedWorkspaces": [...]}
+owned      = ac.get_owned_workspaces()
+dashboards = ac.get_dashboards()        # {"ownedViews": [...], "sharedViews": [...]}
+recent     = ac.get_recent_views()
+ws         = ac.get_workspace_details(WORKSPACE_ID)
+view       = ac.get_view_details(VIEW_ID)</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-python">ac = AnalyticsClient(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN)
+
+ORG_ID = "700000123456"                 # from configuration
+org = ac.get_org_instance(ORG_ID)
+
+workspaces = org.get_org_workspaces()   # a flat list
+
+result     = org.get_org_dashboards({"recordsPerPage": 100})
+dashboards = result["views"]
+has_more   = result["pageDetails"]["hasNextPage"]
+
+recent = org.get_org_recent_items()
+view   = org.get_view_details(VIEW_ID)
+
+workspace = ac.get_workspace_instance(ORG_ID, WORKSPACE_ID)
+ws        = workspace.get_workspace_details()</code></pre>
+<p>Paging:</p>
+<pre><code class="lang-python">def all_dashboards(org, **config):
+    page = 1
+    while True:
+        result = org.get_org_dashboards({**config, "pageNo": page})
+        yield from result["views"]
+        if not result["pageDetails"]["hasNextPage"]:
+            return
+        page += 1
+
+for dashboard in all_dashboards(org, recordsPerPage=100):
+    print(dashboard["viewName"], dashboard["workspaceId"])</code></pre>
+</section>
+<section id="c">
+<h2><span class="num">05</span>C#</h2>
+<p><strong>Before</strong></p>
+<pre><code class="lang-csharp">IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
+
+JsonElement orgs       = ac.GetOrgs();
+JsonElement workspaces = ac.GetWorkspaces();
+JsonElement dashboards = ac.GetDashboards();
+JsonElement recent     = ac.GetRecentViews();
+JsonElement ws         = ac.GetWorkspaceDetails(workspaceId);
+JsonElement view       = ac.GetViewDetails(viewId, null);</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-csharp">IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
+
+long orgId  = 700000123456;                       // from configuration
+IOrgAPI org = ac.GetOrgInstance(orgId);
+
+JsonElement workspaces = org.GetOrgWorkspaces();
+
+var config = new Dictionary&lt;string, object&gt; { { "recordsPerPage", 100 } };
+JsonElement result     = org.GetOrgDashboards(config);
+JsonElement views      = result.GetProperty("views");
+bool        hasNext    = result.GetProperty("pageDetails").GetProperty("hasNextPage").GetBoolean();
+
+JsonElement recent = org.GetOrgRecentItems();
+JsonElement view   = org.GetViewDetails(viewId, null);
+
+IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);
+JsonElement   ws        = workspace.GetWorkspaceDetails(null);</code></pre>
+<div class="note note--info"><div class="note__title">The interface changed too</div><p><code>IAnalyticsClient</code> no longer declares the ten removed methods; <code>IOrgAPI</code> gained four and <code>IWorkspaceAPI</code> gained one. If you mock <code>IAnalyticsClient</code> in tests, your mocks will need updating — the compiler will tell you where.</p></div>
+</section>
+<section id="go">
+<h2><span class="num">06</span>Go</h2>
+<p><strong>Before</strong></p>
+<pre><code class="lang-go">ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)
+
+orgs, _       := ac.GetOrgs()
+workspaces, _ := ac.GetWorkspaces()
+dashboards, _ := ac.GetDashboards()
+recent, _     := ac.GetRecentViews()
+ws, _         := ac.GetWorkspaceDetails(workspaceId)
+view, _       := ac.GetViewDetails(viewId, config)</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-go">ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)
+
+orgId := "700000123456"                            // from configuration
+org   := ZAnalytics.GetOrgInstance(&amp;ac, orgId)
+
+workspaces, exception := org.GetOrgWorkspaces()
+if exception != nil {
+    fmt.Println(exception.ErrorMessage)
+    return
+}
+
+config := map[string]interface{}{"recordsPerPage": 100}
+result, exception := org.GetOrgDashboards(config)
+if exception != nil {
+    fmt.Println(exception.ErrorMessage)
+    return
+}
+views       := result["views"]
+pageDetails := result["pageDetails"].(map[string]interface{})
+hasNext     := pageDetails["hasNextPage"].(bool)
+
+recent, _ := org.GetOrgRecentItems()
+view, _   := org.GetViewDetails(viewId, config)
+
+workspace := ZAnalytics.GetWorkspaceInstance(&amp;ac, orgId, workspaceId)
+ws, _     := workspace.GetWorkspaceDetails(map[string]interface{}{})</code></pre>
+</section>
+<section id="php">
+<h2><span class="num">07</span>PHP</h2>
+<p><strong>Before</strong></p>
+<pre><code class="lang-php">$ac = new AnalyticsClient($client_id, $client_secret, $refresh_token);
+
+$orgs       = $ac-&gt;getOrgs();
+$workspaces = $ac-&gt;getWorkspaces();
+$dashboards = $ac-&gt;getDashboards();
+$recent     = $ac-&gt;getRecentViews();
+$ws         = $ac-&gt;getWorkspaceDetails($workspace_id);
+$view       = $ac-&gt;getViewDetails($view_id, NULL);</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-php">$ac = new AnalyticsClient($client_id, $client_secret, $refresh_token);
+
+$org_id = "700000123456";                          // from configuration
+$org    = $ac-&gt;getOrgInstance($org_id);
+
+$workspaces = $org-&gt;getOrgWorkspaces();
+
+$result     = $org-&gt;getOrgDashboards(array("recordsPerPage" =&gt; 100));
+$dashboards = $result["views"];
+$has_next   = $result["pageDetails"]["hasNextPage"];
+
+$recent = $org-&gt;getOrgRecentItems();
+$view   = $org-&gt;getViewDetails($view_id, NULL);
+
+$workspace = $ac-&gt;getWorkspaceInstance($org_id, $workspace_id);
+$ws        = $workspace-&gt;getWorkspaceDetails();</code></pre>
+</section>
+<section id="nodejs">
+<h2><span class="num">08</span>Node.js</h2>
+<p><strong>Before</strong></p>
+<pre><code class="lang-javascript">var ac = new analyticsClient(clientId, clientSecret, refreshToken);
+
+var orgs       = await ac.getOrgs();
+var workspaces = await ac.getWorkspaces();
+var dashboards = await ac.getDashboards();
+var recent     = await ac.getRecentViews();
+var ws         = await ac.getWorkspaceDetails(workspaceId);
+var view       = await ac.getViewDetails(viewId, {});</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-javascript">var ac = new analyticsClient(clientId, clientSecret, refreshToken);
+
+var orgId = '700000123456';                        // from configuration
+var org   = ac.getOrgInstance(orgId);
+
+var workspaces = await org.getOrgWorkspaces();
+
+var result     = await org.getOrgDashboards({ recordsPerPage: 100 });
+var dashboards = result.views;
+var hasNext    = result.pageDetails.hasNextPage;
+
+var recent = await org.getOrgRecentItems();
+var view   = await org.getViewDetails(viewId, {});
+
+var workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+var ws        = await workspace.getWorkspaceDetails({});</code></pre>
+<p>Paging:</p>
+<pre><code class="lang-javascript">async function allDashboards(org, config) {
+    var out = [];
+    var page = 1;
+    for (;;) {
+        var result = await org.getOrgDashboards(Object.assign({}, config, { pageNo: page }));
+        out = out.concat(result.views);
+        if (!result.pageDetails.hasNextPage) { return out; }
+        page++;
+    }
+}</code></pre>
+</section>
+<section id="ruby">
+<h2><span class="num">09</span>Ruby</h2>
+<p><strong>Before</strong></p>
+<pre><code class="lang-ruby">ac = AnalyticsClient.new.with_data_center("US").with_oauth(creds).build
+
+orgs       = ac.get_orgs
+workspaces = ac.get_workspaces
+dashboards = ac.get_dashboards
+recent     = ac.get_recent_views
+ws         = ac.get_workspace_details(WORKSPACE_ID)
+view       = ac.get_view_details(VIEW_ID)</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-ruby">ac = AnalyticsClient.new.with_data_center("US").with_oauth(creds).build
+
+ORG_ID = "700000123456"                            # from configuration
+org    = ac.get_org_instance(ORG_ID)
+
+workspaces = org.get_org_workspaces
+
+result     = org.get_org_dashboards({ "recordsPerPage" =&gt; 100 })
+dashboards = result["views"]
+has_next   = result["pageDetails"]["hasNextPage"]
+
+recent = org.get_org_recent_items
+view   = org.get_view_details(VIEW_ID)
+
+workspace = ac.get_workspace_instance(ORG_ID, WORKSPACE_ID)
+ws        = workspace.get_workspace_details</code></pre>
+</section>
+<section id="errors-your-build-will-throw-and-what-they-mean">
+<h2><span class="num">10</span>Errors your build will throw, and what they mean</h2>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Language</th><th>Message you will see</th><th>Fix</th></tr></thead><tbody><tr><td>Java</td><td><code>cannot find symbol: method getWorkspaces()</code></td><td><code>ac.getOrgInstance(orgId).getOrgWorkspaces()</code></td></tr><tr><td>C#</td><td><code>'IAnalyticsClient' does not contain a definition for 'GetDashboards'</code></td><td><code>ac.GetOrgInstance(orgId).GetOrgDashboards(config)</code></td></tr><tr><td>Go</td><td><code>ac.GetRecentViews undefined (type Client has no field or method GetRecentViews)</code></td><td><code>ZAnalytics.GetOrgInstance(&amp;ac, orgId).GetOrgRecentItems()</code></td></tr><tr><td>Python</td><td><code>AttributeError: 'AnalyticsClient' object has no attribute 'get_workspaces'</code></td><td><code>ac.get_org_instance(org_id).get_org_workspaces()</code></td></tr><tr><td>Ruby</td><td><code>NoMethodError: undefined method 'get_orgs'</code></td><td>No replacement — read the ID from the UI</td></tr><tr><td>PHP</td><td><code>Call to undefined method AnalyticsClient::getDashboards()</code></td><td><code>$ac-&gt;getOrgInstance($org_id)-&gt;getOrgDashboards($config)</code></td></tr><tr><td>Node.js</td><td><code>TypeError: ac.getRecentViews is not a function</code></td><td><code>ac.getOrgInstance(orgId).getOrgRecentItems()</code></td></tr></tbody></table></div>
+<div class="note note--warn"><div class="note__title">One runtime trap the compiler cannot catch</div><p><code>getOrgDashboards</code> returns an <strong>object</strong> containing <code>views</code> and <code>pageDetails</code>, where <code>getOwnedDashboards</code> returned an <strong>array</strong>. In Python, Ruby, PHP, Node.js and Go this is a runtime shape change, not a compile error. Search for every place you iterated the old return value directly and add <code>["views"]</code>.</p></div>
+</section>
+<section id="keeping-a-single-organization-id-in-one-place">
+<h2><span class="num">11</span>Keeping a single organization ID in one place</h2>
+<p>Since every call now needs it, put it next to your other connection settings rather than threading it through the call stack:</p>
+<pre><code class="lang-python"># config.py
+import os
+
+CLIENT_ID     = os.environ["ZOHO_CLIENT_ID"]
+CLIENT_SECRET = os.environ["ZOHO_CLIENT_SECRET"]
+REFRESH_TOKEN = os.environ["ZOHO_REFRESH_TOKEN"]
+ORG_ID        = os.environ["ZOHO_ANALYTICS_ORG_ID"]   # Settings → Organisation
+
+# analytics.py
+from AnalyticsClient import AnalyticsClient
+import config
+
+_client = AnalyticsClient(config.CLIENT_ID, config.CLIENT_SECRET, config.REFRESH_TOKEN)
+
+def org():
+    return _client.get_org_instance(config.ORG_ID)
+
+def workspace(workspace_id):
+    return _client.get_workspace_instance(config.ORG_ID, workspace_id)</code></pre>
+<p>Call sites then never mention the organization at all:</p>
+<pre><code class="lang-python">import analytics
+
+for ws in analytics.org().get_org_workspaces():
+    print(ws["workspaceName"])</code></pre>
+<hr>
+<p>Next: <a href="05-knowledge-bases.html">how your knowledge bases and tools adopt the change</a>.</p>
+</section>
+    <nav class="pager" aria-label="Chapter">
+      <a href="03-endpoint-migration.html"><span class="pager__side">Previous</span>&larr; Endpoint migration</a>
+      <a href="05-knowledge-bases.html" style="margin-left:auto;text-align:right"><span class="pager__side">Next</span>Knowledge bases &amp; tools &rarr;</a>
+    </nav>
+  </main>
+
+<aside class="toc" aria-label="On this page">
+  <nav>
+    <h2>On this page</h2>
+    <a href="#the-shape-of-the-change">The shape of the change</a>
+    <a href="#the-method-map">The method map</a>
+    <a href="#java">Java</a>
+    <a href="#python">Python</a>
+    <a href="#c">C#</a>
+    <a href="#go">Go</a>
+    <a href="#php">PHP</a>
+    <a href="#nodejs">Node.js</a>
+    <a href="#ruby">Ruby</a>
+    <a href="#errors-your-build-will-throw-and-what-they-mean">Errors your build will throw, and what they mean</a>
+    <a href="#keeping-a-single-organization-id-in-one-place">Keeping a single organization ID in one place</a>
+  </nav>
+</aside>
+</div>
+
+<footer class="footer">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <div class="footer__inner">
+    <div>
+      <h2>Guide</h2>
+      <a href="index.html">00 &nbsp;Start here</a>
+      <a href="01-why-org-context.html">01 &nbsp;Why org context</a>
+      <a href="02-whats-changed.html">02 &nbsp;What changed</a>
+      <a href="03-endpoint-migration.html">03 &nbsp;Endpoint migration</a>
+      <a href="04-sdk-migration.html">04 &nbsp;SDK migration</a>
+      <a href="05-knowledge-bases.html">05 &nbsp;Knowledge bases &amp; tools</a>
+      <a href="06-timeline.html">06 &nbsp;Timeline &amp; deprecation</a>
+      <a href="07-troubleshooting.html">07 &nbsp;Troubleshooting &amp; FAQ</a>
+    </div>
+    <div>
+      <h2>Reference</h2>
+      <a href="03-endpoint-migration.html#endpoint-index">Endpoint index</a>
+      <a href="07-troubleshooting.html#error-codes">Error codes</a>
+      <a href="06-timeline.html">Deprecation timeline</a>
+      <a href="01-why-org-context.html#where-to-find-your-organization-id">Find your Organization ID</a>
+    </div>
+    <div class="footer__meta">
+      <h2>About</h2>
+      <p>Migration guide for the Zoho Analytics REST API v2 move to mandatory
+      organization context.</p>
+      <p>Rendered from the Markdown in this folder by <code>build.py</code>.
+      Generated 2026-10-27.</p>
+      <p><strong>Old endpoints are removed in March 2027.</strong></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

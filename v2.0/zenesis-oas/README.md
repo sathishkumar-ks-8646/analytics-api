@@ -6,17 +6,17 @@ conformant tool ignores `x-` keys. They are hand-edited; nothing generates them.
 
 | File | Groups | Operations |
 |---|---|---|
-| `org-management-grouped-api.json` | 1 | 4 |
+| `org-management-grouped-api.json` | 3 | 10 |
 | `user-groups-grouped-api.json` | 4 | 26 |
-| `workspace-management-grouped-api.json` | 4 | 24 |
+| `workspace-management-grouped-api.json` | 6 | 35 |
 | `data-modeling-schema-grouped-api.json` | 7 | 33 |
 | `data-operations-grouped-api.json` | 6 | 20 |
-| `views-management-grouped-api.json` | 5 | 27 |
-| `reports-dashboards-grouped-api.json` | 2 | 9 |
+| `views-management-grouped-api.json` | 5 | 26 |
+| `reports-dashboards-grouped-api.json` | 2 | 6 |
 | `share-publish-grouped-api.json` | 4 | 20 |
-| `schedules-alerts-grouped-api.json` | 1 | 6 |
+| `schedules-alerts-grouped-api.json` | 2 | 16 |
 | `dsml-grouped-api.json` | 1 | 11 |
-| | **35** | **180** |
+| | **40** | **203** |
 
 ## Naming
 

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-kind="page">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Introduction · Zoho Analytics Node.js SDK</title>
+<meta name="description" content="The Node.js client for Zoho Analytics REST API v2 — 215 methods across five scoped surfaces.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/docs.css">
+<script>
+// Applied before paint so a dark-mode reload does not flash light.
+(function(){try{var t=localStorage.getItem('za-sdk-docs-theme');
+if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="rail" data-open="false">
+  <a class="brand" href="index.html">
+    <span class="brand__mark">Zoho Analytics</span>
+    <span class="brand__name">REST API v2</span>
+    <span class="brand__lang">Node.js SDK</span>
+  </a>
+  <nav class="nav" aria-label="Documentation"><h2>Overview</h2><ul><li><a href="index.html" aria-current="page">Introduction</a></li><li><a href="getting-started.html">Getting started</a></li></ul><h2>Essentials</h2><ul><li><a href="authentication.html">Authentication</a></li><li><a href="configuration.html">Configuration</a></li><li><a href="errors.html">Errors</a></li><li><a href="limits.html">Limits</a></li></ul><h2>Guides</h2><ul><li><a href="guides/importing-data.html">Importing data</a></li><li><a href="guides/exporting-data.html">Exporting data</a></li></ul><h2>Reference</h2><ul><li><a href="reference/analytics-client.html">AnalyticsClient</a></li><li><a href="reference/org-api.html">OrgAPI</a></li><li><a href="reference/workspace-api.html">WorkspaceAPI</a></li><li><a href="reference/view-api.html">ViewAPI</a></li><li><a href="reference/bulk-api.html">BulkAPI</a></li></ul></nav>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <button class="ctl nav-toggle" type="button" data-nav-toggle
+            aria-expanded="false" aria-label="Toggle navigation">Menu</button>
+    <p class="crumbs"><a href="index.html">Docs</a><span aria-hidden="true">/</span><span>Introduction</span></p>
+    <div class="controls">
+      <button class="ctl" type="button" data-theme-toggle aria-pressed="false">
+        <span data-theme-label>Dark</span>
+      </button>
+    </div>
+  </div>
+  <div class="layout">
+    <main class="article" id="main" tabindex="-1">
+      <header class="page-head">
+        <p class="page-head__kicker">Zoho Analytics · Node.js</p>
+        <h1>Introduction</h1>
+        <p class="page-head__lede">The Node.js client for Zoho Analytics REST API v2 — 215 methods across five scoped surfaces.</p>
+      </header>
+      <p>The Zoho Analytics Node.js client wraps REST API v2. It carries your OAuth credentials, keeps the access token alive, and exposes the API as four scoped instances hanging off one client object.</p><aside class="callout callout--danger" role="note" aria-label="Critical"><p class="callout__kind">Critical</p><p class="callout__title">Create the client once, not per request</p><div class="callout__body"><p>Constructing a new client on every request will get your integration blocked by Zoho Accounts within minutes. Read <a href="authentication.html#the-access-token-throttle">Authentication</a> before you ship anything.</p></div></aside><h2 id="start-here">Start here<a class="anchor" href="#start-here" aria-label="Link to this section">#</a></h2><ol><li><a href="getting-started.html">Getting started</a> — install, construct a client, make a first call.</li><li><a href="authentication.html">Authentication</a> — OAuth, scopes, data centers, and the token throttle.</li><li><a href="configuration.html">Configuration</a> — timeouts, proxies, custom headers, regions.</li><li><a href="errors.html">Errors</a> — the response envelope, HTTP statuses, and the codes worth branching on.</li><li><a href="limits.html">Limits</a> — throttles, concurrency guards and plan quotas.</li></ol><h2 id="guides">Guides<a class="anchor" href="#guides" aria-label="Link to this section">#</a></h2><ul><li><a href="guides/importing-data.html">Importing data</a> — synchronous, batched and job-based imports.</li><li><a href="guides/exporting-data.html">Exporting data</a> — synchronous export and the asynchronous job flow.</li></ul><h2 id="api-reference">API reference<a class="anchor" href="#api-reference" aria-label="Link to this section">#</a></h2><div class="table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col" class="ta-left">Surface</th><th scope="col" class="ta-left">Scope</th></tr></thead><tbody><tr><td class="ta-left"><a href="reference/analytics-client.html">AnalyticsClient</a></td><td class="ta-left">Credentials, transport settings, instance factories.</td></tr><tr><td class="ta-left"><a href="reference/org-api.html">OrgAPI</a></td><td class="ta-left">Users, roles, admins, subscription, security controls.</td></tr><tr><td class="ta-left"><a href="reference/workspace-api.html">WorkspaceAPI</a></td><td class="ta-left">Views, folders, tags, schedules, alerts, backups, sharing.</td></tr><tr><td class="ta-left"><a href="reference/view-api.html">ViewAPI</a></td><td class="ta-left">Rows, columns, formulas, publishing, per-view metadata.</td></tr><tr><td class="ta-left"><a href="reference/bulk-api.html">BulkAPI</a></td><td class="ta-left">Import and export, synchronous and asynchronous.</td></tr></tbody></table></div><h2 id="conventions-in-this-sdk">Conventions in this SDK<a class="anchor" href="#conventions-in-this-sdk" aria-label="Link to this section">#</a></h2><div class="table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col" class="ta-left"></th><th scope="col" class="ta-left"></th></tr></thead><tbody><tr><td class="ta-left">Method naming</td><td class="ta-left"><code>camelCase</code>.</td></tr><tr><td class="ta-left">Identifiers</td><td class="ta-left"><code>string</code>.</td></tr><tr><td class="ta-left">Failure surface</td><td class="ta-left">A rejected Promise carrying <code>errorCode</code> and <code>errorMessage</code>.</td></tr><tr><td class="ta-left">Source</td><td class="ta-left"><code>nodejs/source/AnalyticsClient.js</code></td></tr><tr><td class="ta-left">Sample program</td><td class="ta-left"><code>nodejs/sample/dummytest.js</code></td></tr></tbody></table></div>
+      <nav class="pager" aria-label="Pagination"><span></span><a href="getting-started.html" rel="next"><span>Next</span><strong>Getting started</strong></a></nav>
+      <footer class="foot">
+        <span>Zoho Analytics Node.js SDK &middot; REST API v2</span>
+        <span>Generated 2026-10-27</span>
+      </footer>
+    </main>
+    <nav class="index" aria-label="On this page"><h2>On this page</h2><ul><li class="lvl-2"><a href="#start-here">Start here</a></li><li class="lvl-2"><a href="#guides">Guides</a></li><li class="lvl-2"><a href="#api-reference">API reference</a></li><li class="lvl-2"><a href="#conventions-in-this-sdk">Conventions in this SDK</a></li></ul></nav>
+  </div>
+</div>
+</div>
+<script src="assets/docs.js" defer></script>
+</body>
+</html>

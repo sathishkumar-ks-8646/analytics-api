@@ -20,6 +20,14 @@
           }
         },
         {
+          "md": "ORG_LEVEL_LISTINGS",
+          "tag": "Org Level Listings",
+          "okf": {
+            "slug": "org-level-listings",
+            "title": "Org-Level Listings"
+          }
+        },
+        {
           "md": "SECURITY_CONTROLS",
           "tag": "Security Controls",
           "okf": {
@@ -35,7 +43,7 @@
       "postman": {
         "emoji": "🏢",
         "title": "Organization Management",
-        "covers": "Org list, resource usage, subscription, name → ID lookup, access restrictions"
+        "covers": "Org-level workspace, dashboard and recent-item listings, resource usage, subscription, name → ID lookup, access restrictions"
       }
     },
     {

@@ -38,7 +38,7 @@ SCHEMA = 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
 OAS_PUBLIC_BASE = 'https://github.com/zoho/analytics-oas/blob/main'
 
 ORG_HEADER = 'ZANALYTICS-ORGID'
-ORG_HEADER_DESC = 'Organization ID. Get it from **Get Org List**.'
+ORG_HEADER_DESC = 'Organization ID. Read it from **Settings → Organisation** in the Zoho Analytics UI.'
 # Header parameters other than the organization header, by OpenAPI parameter name.
 HEADER_VARS = {
     'dest-org-id': ('ZANALYTICS-DEST-ORGID', 'dest-organization-id',

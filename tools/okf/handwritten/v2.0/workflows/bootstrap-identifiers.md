@@ -29,9 +29,9 @@ Turn human-readable names into the `ZANALYTICS-ORGID` header value, `workspaceId
 
 # Steps
 
-1. **List organizations.** Call [Get Org List](/domains/organization-management/org-info-and-settings/get-organizations.md) (`GET /restapi/v2/orgs`, no organization header). Pick the entry whose `orgName` matches, or the one with `isDefault: true`. Keep `orgId`.
+1. **Find the organization ID.** Open the Zoho Analytics UI and read the Organization ID from **Settings > Organisation**. Keep it as `orgId`; every step below sends it in the `ZANALYTICS-ORGID` header.
 2. **Resolve the workspace.** Call [Get Meta Details From Name](/domains/organization-management/org-info-and-settings/get-meta-details.md) with `ZANALYTICS-ORGID: <orgId>` and `CONFIG={"workspaceName":"Sales Analytics"}`. Names are exact and case-sensitive. Keep `data.workspaces.workspaceId`.
-3. **Resolve the view.** Repeat step 2 adding `"viewName":"Revenue Trend"`; keep `data.views.viewId` and `data.views.viewType`. Alternatively list all views with [Get View List](/domains/views-management/view-operations/get-views.md) and pick by name and type.
+3. **Resolve the view.** Repeat step 2 adding `"viewName":"Revenue Trend"`; keep `data.views.viewId` and `data.views.viewType`. Alternatively list all views with [Get View List](/domains/views-management/view-operations/get-views.md) and pick by name and type, or list the workspaces of the organization with [Get Org Workspaces](/domains/organization-management/org-level-listings/get-org-workspaces.md).
 4. **Resolve deeper IDs as needed.** Columns: [Get Table Metadata](/domains/data-modeling-and-schema/table-and-schema/get-table-metadata.md). Folders: [Get Folder List](/domains/workspace-management/workspace-folders/get-folders.md). Groups: [Get Group List](/domains/users-and-groups/workspace-groups/get-groups.md). See [Identifiers](/foundations/identifiers.md) for the full map.
 
 # Failure Handling

@@ -18,7 +18,7 @@ api:
   group: workspace-operations
   oauth_scopes:
     - ZohoAnalytics.metadata.read
-  org_id_header: not-required
+  org_id_header: required
   config_parameter:
     location: query
     required: false
@@ -29,6 +29,8 @@ api:
   error_codes:
     - 7103
     - 7301
+    - 8083
+    - 8084
     - 8535
   openapi:
     file: "/references/openapi/workspace-management-grouped-api.json"
@@ -41,10 +43,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -63,7 +65,7 @@ Returns metadata for the specified workspace. The calling user must have at leas
 | URL | `/restapi/v2/workspaces/{workspace-id}` |
 | Base URL | `https://analyticsapi.zoho.com` (data-center specific, see [Data centers](../../../foundations/data-centers.md)) |
 | OAuth scope | [`ZohoAnalytics.metadata.read`](../../../foundations/oauth-scopes.md#zohoanalyticsmetadataread) |
-| ZANALYTICS-ORGID header | Not required (user-scoped API) |
+| ZANALYTICS-ORGID header | **Required** - Organisation ID that owns the workspace. |
 | Permission required | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. Account Admins and Organization Admins also have access. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `application/json` |
@@ -76,7 +78,7 @@ Returns metadata for the specified workspace. The calling user must have at leas
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.read`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | - | Not required | This API is user-scoped and works across all organizations of the caller. |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 
 ## Path Parameters
 
@@ -94,12 +96,12 @@ CONFIG is optional.
 
 ## Notes from the OpenAPI specification
 
-- The **data.workspaces** key of the response holds a single JSONObject and not a JSONArray. This differs from the Get All, the Get Owned and the Get Shared Workspace List APIs.
+- The **data.workspaces** key of the response holds a single JSONObject and not a JSONArray. This differs from the Get Org Workspaces API.
 - Setting **withUserRoleInfo** to false, which is the default, returns the workspace metadata alone and is the fastest response option.
 - Setting **withUserRoleInfo** to true adds the **userRoleInfo** object to the response. An Account Admin gets the role name Account Admin with roleId 0 and isCustomRoleUser false, an Organization Admin gets the role name Organization Admin with roleId 0, and a custom role user gets isCustomRoleUser true along with the ID and the display name of the custom role. For a shared user with no workspace level role, the role name may reflect their view level access role.
 - The workspace secret key is not returned by this API. Use the Get Workspace Secret Key API to retrieve it.
 - This API is available to any user who has at least one view of the workspace shared with them, in addition to the Workspace Admins, the Account Admins and the Organization Admins.
-- The **ZANALYTICS-ORGID** header is not required for this API, as the organization is resolved from the workspace ID.
+- The **ZANALYTICS-ORGID** header is mandatory for this API. The workspace is resolved inside the organization it names, and a workspace of another organization is not found.
 - As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.
 
 # Response
@@ -134,6 +136,7 @@ HTTP `200` with content type `application/json`. JSON responses use the standard
 GET /restapi/v2/workspaces/466206000000071000 HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 ```
 
 **Case 2 — With calling user's role info**
@@ -142,6 +145,7 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 GET /restapi/v2/workspaces/466206000000071000 HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 Content-Type: application/x-www-form-urlencoded
 
 CONFIG={"withUserRoleInfo":true}
@@ -153,6 +157,7 @@ CONFIG={"withUserRoleInfo":true}
 GET /restapi/v2/workspaces/38190000004180410 HTTP/1.1
 Host: analytics.clientbrand.com
 Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
+ZANALYTICS-ORGID: 700000789012
 ```
 
 ## Sample Responses
@@ -238,7 +243,8 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 | **`workspaceKey` is NOT returned** | Get Workspace Info does not expose the secret key. Use Get Workspace Secret Key for that. |
 | **Accessible to shared users with READ permission** | Unlike other workspace management APIs, this API is available to any user who has at least one view shared with them in the workspace (in addition to Workspace Admins). |
 | **Comparison with list APIs** | Get Workspace Info returns richer metadata for a single known workspace. Use the list APIs to discover workspace IDs, then this API for detailed info on a specific workspace. |
-| **Dependency** | Workspace ID → any workspace list API. |
+| **Organisation-scoped** | The workspace is resolved inside the organisation named in `ZANALYTICS-ORGID`. A workspace of another organisation is not found (**7103**). |
+| **Dependency** | Workspace ID → [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) or any workspace list API. |
 
 # Error Codes
 
@@ -247,8 +253,10 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | Code | HTTP | Reason | Solution |
 |---|---|---|---|
 | [7005](../../../foundations/error-codes.md#error-7005) | 500 | Unexpected error on the Zoho Analytics server while processing an otherwise valid request. Not caused by the request payload. | Retry after a short interval. If the error persists, contact Zoho Analytics support quoting the error code and the time of the request. |
-| [7103](../../../foundations/error-codes.md#error-7103) | 404 | Workspace not found. | Verify `<workspace-id>`. |
+| [7103](../../../foundations/error-codes.md#error-7103) | 404 | Workspace not found in the organisation named in the header. | Verify `<workspace-id>` and that `ZANALYTICS-ORGID` names the organisation that owns it. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | User does not have any access to the specified workspace. The user must be a workspace admin or have at least one view shared with them in this workspace. | Verify the user has been added to the workspace or has a view shared with them. |
+| [8083](../../../foundations/error-codes.md#error-8083) | 400 | `ORGID_NOT_PRESENT_IN_THE_HEADER` — The `ZANALYTICS-ORGID` header is missing or empty. | Add the `ZANALYTICS-ORGID` header with your Organization ID. |
+| [8084](../../../foundations/error-codes.md#error-8084) | 404 | `ORGID_NOT_EXIST` — No organisation exists with the given ID. | Read the Organization ID from **Settings → Organisation** in the Zoho Analytics UI. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 # Related
@@ -257,5 +265,5 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Workspace Management](../overview.md) - the parent API domain.
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
-- Other endpoints in this group: [Create Workspace](create-workspace.md), [Copy Workspace](copy-workspace.md), [Rename Workspace](rename-workspace.md), [Delete Workspace](delete-workspace.md), [Export as Template](export-as-template.md), [Get All Workspace List](get-all-workspaces.md), [Get Owned Workspace List](get-owned-workspaces.md), [Get Shared Workspace List](get-shared-workspaces.md), [Get Workspace Secret Key](get-workspace-secret-key.md).
+- Other endpoints in this group: [Create Workspace](create-workspace.md), [Copy Workspace](copy-workspace.md), [Rename Workspace](rename-workspace.md), [Delete Workspace](delete-workspace.md), [Export as Template](export-as-template.md), [Get Workspace Secret Key](get-workspace-secret-key.md).
 - [SDK examples](../../../sdk-examples/workspace-management/workspace-operations/get-workspace-details.md).

@@ -1038,13 +1038,7 @@
         "operationId": "getViewDetails",
         "parameters": [
           {
-            "name": "ZANALYTICS-ORGID",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "ID of the organization. It is not required by this API, since the view is resolved globally by its ID, but sending it is harmless and is recommended for consistency with the other APIs."
+            "$ref": "#/components/parameters/org-id"
           },
           {
             "$ref": "#/components/parameters/view-id"
@@ -1709,151 +1703,6 @@
         }
       }
     },
-    "/restapi/v2/recentviews": {
-      "get": {
-        "tags": [
-          "View Operations"
-        ],
-        "x-zenesis-title": "Get Recent Views",
-        "summary": "Get Recent Views",
-        "description": "Returns a list of views recently accessed by the authenticated user across all workspaces the user has access to, sorted by access time (most recently accessed first). This is a user-scoped, cross-workspace API — no workspace ID is required in the URL.\n\nThe API is user-scoped and spans workspaces: views from every workspace and organization the user can reach are returned together in one list, each carrying the workspace it belongs to. No workspace ID is needed in the URL, and the history returned is personal to the token used to make the call.",
-        "operationId": "getRecentViews",
-        "parameters": [],
-        "security": [
-          {
-            "iam-oauth2-schema": [
-              "ZohoAnalytics.metadata.read"
-            ]
-          }
-        ],
-        "x-zenesis-sections": {
-          "apiRequestParameters": {
-            "1": {
-              "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul>\n<li>This API has no CONFIG parameter and takes no workspace ID. <b>ZANALYTICS-ORGID</b> is not required either, because the API is user-scoped rather than tied to one workspace or organization.</li>\n<li>The result is strictly per user. Two different OAuth tokens return two different histories, each belonging to the user the token was issued for.</li>\n<li>Views from every workspace and organization the user can reach are returned in a single list. <b>workspaceId</b> and <b>workspaceName</b> tell them apart.</li>\n<li>The list is ordered by <b>viewLastAccessedTime</b> descending, so the most recently opened view comes first.</li>\n<li>Only views that are currently active and currently accessible are returned. A view deleted after it was accessed, or one later unshared from the user, drops out of the list.</li>\n<li>A user with no view history receives HTTP 200 with an empty <b>views</b> array.</li>\n<li><b>viewLastAccessedTime</b> is an epoch timestamp in milliseconds returned as a string. Divide it by 1000 to obtain epoch seconds.</li>\n</ul>\n</span></blockquote>"
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK. The views recently accessed by the authenticated user.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetRecentViewsResponse"
-                },
-                "examples": {
-                  "crossWorkspaceHistory": {
-                    "description": "Cross workspace history",
-                    "summary": "Views of several types drawn from more than one workspace, ordered by the time the calling user last opened each of them.",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get recent views",
-                      "data": {
-                        "views": [
-                          {
-                            "viewId": "137687000000005744",
-                            "viewName": "Column Sales",
-                            "viewType": "Table",
-                            "workspaceId": "137687000000005620",
-                            "workspaceName": "Q3 Sales Workspace",
-                            "viewLastAccessedTime": "1623165599255"
-                          },
-                          {
-                            "viewId": "137687000001859027",
-                            "viewName": "tabular_1",
-                            "viewType": "Report",
-                            "workspaceId": "137687000001859022",
-                            "workspaceName": "DBOwner-Backup",
-                            "viewLastAccessedTime": "1622797899143"
-                          },
-                          {
-                            "viewId": "137687000001859035",
-                            "viewName": "dashboard1",
-                            "viewType": "Dashboard",
-                            "workspaceId": "137687000001859022",
-                            "workspaceName": "DBOwner-Backup",
-                            "viewLastAccessedTime": "1622741330331"
-                          },
-                          {
-                            "viewId": "137687000001859030",
-                            "viewName": "summary",
-                            "viewType": "SummaryView",
-                            "workspaceId": "137687000001859022",
-                            "workspaceName": "DBOwner-Backup",
-                            "viewLastAccessedTime": "1622741297744"
-                          },
-                          {
-                            "viewId": "137687000001859029",
-                            "viewName": "pivot1",
-                            "viewType": "Pivot",
-                            "workspaceId": "137687000001859022",
-                            "workspaceName": "DBOwner-Backup",
-                            "viewLastAccessedTime": "1622741261238"
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  "sharedUserHistory": {
-                    "description": "Shared user history",
-                    "summary": "A shared user sees only the views they currently have access to. A view later unshared from them no longer appears here.",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get recent views",
-                      "data": {
-                        "views": [
-                          {
-                            "viewId": "138022000000002005",
-                            "viewName": "Sales",
-                            "viewType": "Table",
-                            "workspaceId": "138022000000002015",
-                            "workspaceName": "SharedUser Sales",
-                            "viewLastAccessedTime": "1607076349147"
-                          },
-                          {
-                            "viewId": "138022000000002105",
-                            "viewName": "Cost Across Years by Region",
-                            "viewType": "AnalysisView",
-                            "workspaceId": "138022000000002015",
-                            "workspaceName": "SharedUser Sales",
-                            "viewLastAccessedTime": "1606987675756"
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  "noRecentViews": {
-                    "description": "No history",
-                    "summary": "A user who has not opened any view yet receives an empty array with HTTP 200 rather than an error.",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get recent views",
-                      "data": {
-                        "views": []
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "x-zenesis-statuscodes": [
-              {
-                "name": "8535",
-                "description": "Invalid or expired OAuth token.",
-                "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
-              }
-            ]
-          },
-          "4XX": {
-            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
-          },
-          "500": {
-            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
-          }
-        }
-      }
-    },
     "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/autoanalyse": {
       "post": {
         "tags": [
@@ -2124,7 +1973,7 @@
         ],
         "x-zenesis-title": "Add Favorite View",
         "summary": "Add Favorite View",
-        "description": "Marks the specified view as a favorite for the authenticated user.\n\nThe favorite status is a per-user preference - marking a view as a favorite does not change what any other user sees. Once the view is marked, the `isFavorite` field returned by the listing APIs such as Get All Dashboards and Get Shared Dashboards reads `true` for the same user.\n\nThe call is idempotent. Marking a view that the user has already marked as a favorite succeeds silently without raising an error.",
+        "description": "Marks the specified view as a favorite for the authenticated user.\n\nThe favorite status is a per-user preference - marking a view as a favorite does not change what any other user sees. Once the view is marked, the `isFavorite` field returned by the listing APIs such as Get Org Dashboards reads `true` for the same user.\n\nThe call is idempotent. Marking a view that the user has already marked as a favorite succeeds silently without raising an error.",
         "operationId": "addFavoriteView",
         "parameters": [
           {
@@ -2197,7 +2046,7 @@
         ],
         "x-zenesis-title": "Remove Favorite View",
         "summary": "Remove Favorite View",
-        "description": "Removes the specified view from the favorites list of the authenticated user.\n\nThe favorite status is a per-user preference - unmarking a view does not change what any other user sees. Once the view is unmarked, the `isFavorite` field returned by the listing APIs such as Get All Dashboards and Get Shared Dashboards reads `false` or is omitted for the same user.\n\nThe call is idempotent. Removing a view that is not currently a favorite succeeds silently without raising an error.",
+        "description": "Removes the specified view from the favorites list of the authenticated user.\n\nThe favorite status is a per-user preference - unmarking a view does not change what any other user sees. Once the view is unmarked, the `isFavorite` field returned by the listing APIs such as Get Org Dashboards reads `false` or is omitted for the same user.\n\nThe call is idempotent. Removing a view that is not currently a favorite succeeds silently without raising an error.",
         "operationId": "removeFavoriteView",
         "parameters": [
           {
@@ -4172,7 +4021,7 @@
         "schema": {
           "type": "string"
         },
-        "description": "Organization ID (can be obtained using Get Organizations API)."
+        "description": "Organization ID. It is shown in the Zoho Analytics UI under Settings > Organisation."
       },
       "tag-id": {
         "name": "tag-id",
@@ -4679,38 +4528,6 @@
           ]
         ]
       },
-      "GetRecentViewsResponse": {
-        "type": "object",
-        "title": "GetRecentViewsResponse",
-        "description": "Response returned by the Get Recent Views API.",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Status of the request.",
-            "enum": [
-              "success",
-              "failure"
-            ],
-            "x-zenesis-enums-desc": [
-              "Request succeeded",
-              "Request failed"
-            ]
-          },
-          "summary": {
-            "type": "string",
-            "description": "Summary of the operation performed."
-          },
-          "data": {
-            "type": "object",
-            "description": "Container that holds the recent view list.",
-            "properties": {
-              "views": {
-                "$ref": "#/components/schemas/RecentViews"
-              }
-            }
-          }
-        }
-      },
       "GetTaggedViewsConfig": {
         "type": "object",
         "title": "GetTaggedViewsConfig",
@@ -5198,87 +5015,6 @@
               "viewId": "137687000000471836",
               "viewName": "Products",
               "viewType": "Table"
-            }
-          ]
-        ]
-      },
-      "RecentView": {
-        "type": "object",
-        "title": "RecentView",
-        "description": "A single view recently accessed by the authenticated user, together with the workspace it belongs to.",
-        "properties": {
-          "viewId": {
-            "type": "string",
-            "description": "Unique identifier of the view."
-          },
-          "viewName": {
-            "type": "string",
-            "description": "Display name of the view."
-          },
-          "viewType": {
-            "type": "string",
-            "description": "Type of the view, in the same form as the Get View List API returns.",
-            "enum": [
-              "Table",
-              "Report",
-              "AnalysisView",
-              "Pivot",
-              "SummaryView",
-              "TableView",
-              "QueryTable",
-              "Dashboard",
-              "Tab"
-            ],
-            "x-zenesis-enums-desc": [
-              "Data table",
-              "Grid report",
-              "Chart view",
-              "Pivot table",
-              "Summary view",
-              "Tabular view",
-              "Query table",
-              "Dashboard",
-              "Dashboard tab"
-            ]
-          },
-          "workspaceId": {
-            "type": "string",
-            "description": "ID of the workspace that holds this view."
-          },
-          "workspaceName": {
-            "type": "string",
-            "description": "Display name of the workspace that holds this view, useful for telling apart views drawn from several workspaces."
-          },
-          "viewLastAccessedTime": {
-            "type": "string",
-            "description": "Epoch timestamp in milliseconds at which the calling user last accessed this view, returned as a string."
-          }
-        }
-      },
-      "RecentViews": {
-        "type": "array",
-        "title": "RecentViews",
-        "description": "JSONArray holding the views recently accessed by the authenticated user across every workspace they can reach, ordered by viewLastAccessedTime descending. Empty when the user has no view history.",
-        "items": {
-          "$ref": "#/components/schemas/RecentView"
-        },
-        "examples": [
-          [
-            {
-              "viewId": "137687000000005744",
-              "viewName": "Column Sales",
-              "viewType": "Table",
-              "workspaceId": "137687000000005620",
-              "workspaceName": "Q3 Sales Workspace",
-              "viewLastAccessedTime": "1623165599255"
-            },
-            {
-              "viewId": "137687000001859027",
-              "viewName": "tabular_1",
-              "viewType": "Report",
-              "workspaceId": "137687000001859022",
-              "workspaceName": "DBOwner-Backup",
-              "viewLastAccessedTime": "1622797899143"
             }
           ]
         ]

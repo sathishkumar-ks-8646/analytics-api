@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
   - id: endpoint-doc
     resource: "/domains/workspace-management/workspace-operations/get-workspace-details.md"
     title: Endpoint reference - Get Workspace Info
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -58,6 +58,7 @@ Code samples for [Get Workspace Info](../../../domains/workspace-management/work
 
 ```bash
 curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>?CONFIG=%7B%22withUserRoleInfo%22%3Atrue%7D" \
+  -H 'ZANALYTICS-ORGID: <org-id>' \
   -H 'Authorization: Zoho-oauthtoken <access_token>'
 ```
 
@@ -65,6 +66,7 @@ curl "https://analyticsapi.zoho.com/restapi/v2/workspaces/<workspace-id>?CONFIG=
 
 ```csharp
 using System;
+using System.Collections.Generic;
 using ZohoAnalytics;
 using System.Text.Json;
 
@@ -72,11 +74,15 @@ namespace ZohoAnalyticsTest
 {
     class Program
     {
+        long orgId = 55522777;
         long workspaceId = 35130000001055707;
 
         public void GetWorkspaceDetails(IAnalyticsClient ac)
         {
-            JsonElement result = ac.GetWorkspaceDetails(workspaceId);
+            IWorkspaceAPI workspace = ac.GetWorkspaceInstance(orgId, workspaceId);
+            Dictionary<string, object> config = new Dictionary<string, object>();
+            config.Add("withUserRoleInfo", true);
+            JsonElement result = workspace.GetWorkspaceDetails(config);
             Console.WriteLine(result);
         }
 
@@ -112,11 +118,14 @@ var(
     clientId = "1000.xxxxxxx"
     clientSecret = "xxxxxxx"
     refreshToken = "1000.xxxxxxx.xxxxxxx"
+    orgId = "55522777"
     workspaceId = "35130000001055707"
 )
 
 func GetWorkspaceDetails(ac ZAnalytics.Client) {
-    result, _ := ac.GetWorkspaceDetails(workspaceId)
+    workspace := ZAnalytics.GetWorkspaceInstance(&ac, orgId, workspaceId)
+    config := map[string]interface{}{"withUserRoleInfo": true}
+    result, _ := workspace.GetWorkspaceDetails(config)
     fmt.Println(result)
 }
 
@@ -133,6 +142,7 @@ import com.zoho.analytics.client.*;
 import org.json.*;
 
 public class Test {
+    private long orgId = 55522777l;
     private long workspaceId = 35130000001055707l;
 
     public static void main(String args[]) {
@@ -147,7 +157,10 @@ public class Test {
     }
 
     public void getWorkspaceDetails(AnalyticsClient ac) throws Exception {
-        JSONObject result = ac.getWorkspaceDetails(workspaceId);
+        WorkspaceAPI workspace = ac.getWorkspaceInstance(orgId, workspaceId);
+        JSONObject config = new JSONObject();
+        config.put("withUserRoleInfo", true);
+        JSONObject result = workspace.getWorkspaceDetails(config);
         System.out.println(result);
     }
 }
@@ -167,7 +180,9 @@ public class Test {
         public $workspace_id = "35130000001055707";
         function __construct() { $this->ac = new AnalyticsClient($this->client_id, $this->client_secret, $this->refresh_token); }
         function getWorkspaceDetails() {
-            $response = $this->ac->getWorkspaceDetails($this->workspace_id);
+            $workspace = $this->ac->getWorkspaceInstance($this->org_id, $this->workspace_id);
+            $config = array("withUserRoleInfo" => true);
+            $response = $workspace->getWorkspaceDetails($config);
             print_r($response);
         }
     }
@@ -187,12 +202,15 @@ class Config:
     CLIENTID = "1000.xxxxxxx"
     CLIENTSECRET = "xxxxxxx"
     REFRESHTOKEN = "1000.xxxxxxx.xxxxxxx"
+    ORGID = "55522777"
     WORKSPACEID = "35130000001055707"
 
 class sample:
     ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)
     def get_workspace_details(self, ac):
-        result = ac.get_workspace_details(Config.WORKSPACEID)
+        workspace = ac.get_workspace_instance(Config.ORGID, Config.WORKSPACEID)
+        config = {"withUserRoleInfo": True}
+        result = workspace.get_workspace_details(config)
         print(result)
 
 try:
@@ -207,8 +225,9 @@ except Exception as e:
 ```javascript
 var analyticsClient = require('./AnalyticsClient');
 var ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');
-var workspaceId = '35130000001055707';
-ac.getWorkspaceDetails(workspaceId).then(function (result) {
+var workspace = ac.getWorkspaceInstance('55522777', '35130000001055707');
+var config = {withUserRoleInfo: true};
+workspace.getWorkspaceDetails(config).then(function (result) {
     console.log(result);
 }).catch(function (err) { console.log(err); });
 ```
@@ -219,6 +238,7 @@ ac.getWorkspaceDetails(workspaceId).then(function (result) {
 require 'zoho_analytics_client'
 
 class Config
+  ORGID = "55522777"
   WORKSPACEID = "35130000001055707"
 end
 
@@ -230,7 +250,9 @@ class Sample
            .build
   end
   def get_workspace_details
-    result = @ac.get_workspace_details(Config::WORKSPACEID)
+    workspace = @ac.get_workspace_instance(Config::ORGID, Config::WORKSPACEID)
+    config = {"withUserRoleInfo" => true}
+    result = workspace.get_workspace_details(config)
     puts result
   end
 end
@@ -248,12 +270,17 @@ end
 ## Deluge (Zoho scripting)
 
 ```deluge
+orgId = "55522777";
 workspaceId = "35130000001055707";
-config = {"withUserRoleInfo":true};
+headersMap = Map();
+headersMap.put("ZANALYTICS-ORGID", orgId);
+config = Map();
+config.put("withUserRoleInfo", true);
 response = invokeurl
 [
   url :"https://analyticsapi.zoho.com/restapi/v2/workspaces/" + workspaceId + "?CONFIG=" + zoho.encryption.urlEncode(config.toString())
   type :GET
+  headers:headersMap
   connection:"analytics_oauth_connection"
 ];
 info response;

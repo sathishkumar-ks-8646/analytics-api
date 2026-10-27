@@ -1,0 +1,77 @@
+<!--
+  Release Notes fragment - Version 2.10.0 - REMOVED / DEPRECATED APIs
+  Paste immediately after the "Newly added APIs" block for Version 2.10.0.
+
+  Replace MIGRATION_GUIDE_BASE with the hosted location of
+  analytics-api/migration/v2-mandatory-org-context once it is published.
+-->
+<h4>Removed APIs</h4>
+
+<p style="margin-left:60px;">Every Zoho Analytics V2 endpoint now resolves inside a single organization, named by the
+mandatory <code>ZANALYTICS-ORGID</code> header. The eight cross-organization endpoints below have no
+place in that model and are <strong>deprecated</strong>. They still answer today and
+<strong>stop answering in March 2027</strong>. There is no extension and no opt-out.</p>
+
+<p style="margin-left:60px;">The matching methods have been <strong>removed from all seven SDKs in 2.10.0</strong>, deliberately
+ahead of the endpoint switch-off: upgrading the SDK turns the migration into a build error today
+rather than an outage in 2027.</p>
+
+<table style="margin-left:60px;" border="1" cellpadding="6" cellspacing="0">
+<thead><tr><th>Removed endpoint</th><th>Replacement</th></tr></thead>
+<tbody>
+<tr><td>Get Org List &mdash; <code>GET /restapi/v2/orgs</code></td><td><em>No replacement.</em> Read the Organization ID from <strong>Settings &rarr; Organisation</strong> in the Zoho Analytics UI.</td></tr>
+<tr><td>Get All Workspace List &mdash; <code>GET /restapi/v2/workspaces</code></td><td><a href="/analytics/api/v2/metadata-api/get-org-workspaces.html">Get Org Workspaces</a> &mdash; <code>GET /restapi/v2/orgs/workspaces</code></td></tr>
+<tr><td>Get Owned Workspace List &mdash; <code>GET /restapi/v2/workspaces/owned</code></td><td><a href="/analytics/api/v2/metadata-api/get-org-workspaces.html">Get Org Workspaces</a></td></tr>
+<tr><td>Get Shared Workspace List &mdash; <code>GET /restapi/v2/workspaces/shared</code></td><td><a href="/analytics/api/v2/metadata-api/get-org-workspaces.html">Get Org Workspaces</a></td></tr>
+<tr><td>Get All Dashboards &mdash; <code>GET /restapi/v2/dashboards</code></td><td><a href="/analytics/api/v2/metadata-api/get-org-dashboards.html">Get Org Dashboards</a> &mdash; <code>GET /restapi/v2/orgs/dashboards</code></td></tr>
+<tr><td>Get Owned Dashboards &mdash; <code>GET /restapi/v2/dashboards/owned</code></td><td><a href="/analytics/api/v2/metadata-api/get-org-dashboards.html">Get Org Dashboards</a></td></tr>
+<tr><td>Get Shared Dashboards &mdash; <code>GET /restapi/v2/dashboards/shared</code></td><td><a href="/analytics/api/v2/metadata-api/get-org-dashboards.html">Get Org Dashboards</a></td></tr>
+<tr><td>Get Recent Views &mdash; <code>GET /restapi/v2/recentviews</code></td><td><a href="/analytics/api/v2/metadata-api/get-org-recent-items.html">Get Org Recent Items</a> &mdash; <code>GET /restapi/v2/orgs/recentitems</code></td></tr>
+</tbody>
+</table>
+
+<p style="margin-left:60px;"><strong>Note:</strong> only the <code>GET</code> on <code>/restapi/v2/workspaces</code> is gone. The
+<code>POST</code> on the same path &mdash; <em>Create Workspace</em> &mdash; is unaffected.</p>
+
+<h4>SDK methods that moved class</h4>
+
+<p style="margin-left:60px;">These two endpoints are <strong>not</strong> removed. The HTTP call is unchanged; only the SDK object
+you call it on has changed, because <code>AnalyticsClient</code> no longer holds an organization.</p>
+
+<ul style="margin-left:60px;">
+<li><code>getWorkspaceDetails</code> moved from <code>AnalyticsClient</code> to <strong><code>WorkspaceAPI</code></strong>. The workspace ID argument is dropped &mdash; the instance already holds it &mdash; and an optional <code>config</code> argument is added.</li>
+<li><code>getViewDetails</code> moved from <code>AnalyticsClient</code> to <strong><code>OrgAPI</code></strong>. The signature is unchanged.</li>
+</ul>
+
+<h4>Existing APIs that changed in place</h4>
+
+<p style="margin-left:60px;">Same URL, same response, same fields. <code>ZANALYTICS-ORGID</code> has gone from optional to
+<strong>mandatory</strong>, and each gained two error codes: <code>8083</code> (header missing or empty)
+and <code>8084</code> (no organization with that ID).</p>
+
+<ul style="margin-left:60px;">
+<li><a href="/analytics/api/v2/metadata-api/workspace-details.html">Get Workspace Info</a> &mdash; <code>GET /restapi/v2/workspaces/&lt;workspace-id&gt;</code></li>
+<li><a href="/analytics/api/v2/metadata-api/view-details.html">Get View Details</a> &mdash; <code>GET /restapi/v2/views/&lt;view-id&gt;</code></li>
+</ul>
+
+<h4>Migration</h4>
+
+<p style="margin-left:60px;">Full before-and-after detail, a find-and-replace method map, per-language code samples for all
+seven SDKs, and the removal timeline:</p>
+
+<ul style="margin-left:60px;">
+<li><a href="MIGRATION_GUIDE_BASE/index.html">Migrating to mandatory organization context</a> &mdash; start here</li>
+<li><a href="MIGRATION_GUIDE_BASE/02-whats-changed.html">What changed</a> &mdash; old and new request/response shapes side by side</li>
+<li><a href="MIGRATION_GUIDE_BASE/03-endpoint-migration.html">Endpoint-by-endpoint migration</a></li>
+<li><a href="MIGRATION_GUIDE_BASE/04-sdk-migration.html">SDK migration</a> &mdash; the method map and code for Java, Python, C#, Go, PHP, Node.js and Ruby</li>
+<li><a href="MIGRATION_GUIDE_BASE/06-timeline.html">Timeline</a> &mdash; what happens before March 2027 and on it</li>
+<li><a href="MIGRATION_GUIDE_BASE/07-troubleshooting.html">Troubleshooting</a></li>
+</ul>
+
+<p style="margin-left:60px;"><strong>One runtime trap the compiler cannot catch:</strong> <code>getOrgDashboards</code> returns an
+<em>object</em> containing <code>views</code> and <code>pageDetails</code>, where
+<code>getOwnedDashboards</code> returned an <em>array</em>. In Python, Ruby, PHP, Node.js and Go this is a
+runtime shape change, not a build error. Search for every place you iterated the old return value
+directly and add <code>["views"]</code>.</p>
+
+<p>&nbsp;</p>

@@ -414,7 +414,7 @@ HTTP/1.1 204 No Content
 | Header | Value | Required | Description |
 |--------|-------|----------|-------------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token. |
-| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the target workspace. Obtainable from the listing APIs (Get All Dashboards, etc.) as the `orgId` field. |
+| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the target workspace. Read it from **Settings → Organisation** in the Zoho Analytics UI, or take it from the `orgId` field of any listing API response. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Required when CONFIG is sent | Required for POST and DELETE requests that include a `CONFIG` body parameter. Not needed for GET requests or when no CONFIG is sent. |
 
 Example — GET (no CONFIG):

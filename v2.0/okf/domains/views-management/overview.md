@@ -13,7 +13,7 @@ api:
     - group: view-operations
       title: View Operations
       doc: "/domains/views-management/view-operations/overview.md"
-      endpoint_count: 10
+      endpoint_count: 9
     - group: view-preferences
       title: View Preferences
       doc: "/domains/views-management/view-preferences/overview.md"
@@ -30,17 +30,17 @@ api:
       title: Tags
       doc: "/domains/views-management/tags/overview.md"
       endpoint_count: 10
-  endpoint_count: 27
+  endpoint_count: 26
   openapi: "/references/openapi/views-management-grouped-api.json"
 sources:
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T11:33:28Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -52,7 +52,7 @@ API for Views Management in Zoho Analytics — covering view operations, auto an
 
 | Group | Endpoints | Description |
 |---|---|---|
-| [View Operations](view-operations/overview.md) | 10 | APIs for creating, copying, renaming, deleting, and retrieving views. |
+| [View Operations](view-operations/overview.md) | 9 | APIs for creating, copying, renaming, deleting, and retrieving views. |
 | [View Preferences](view-preferences/overview.md) | 2 | APIs to mark a view as a favorite for the authenticated user and to remove it from the favorites list. |
 | [Trash Management](trash-management/overview.md) | 3 | APIs to list the views available in the trash of a workspace, restore a trashed view back to the workspace, and permanently delete a view from the trash. |
 | [Auto Analysis](auto-analysis/overview.md) | 2 | APIs to automatically generate a curated set of views - charts, pivot tables and summary views - from an entire table or from a single column of it. |
@@ -71,7 +71,6 @@ API for Views Management in Zoho Analytics — covering view operations, auto an
 | [Get View Details](view-operations/get-view-details.md) | GET | `/restapi/v2/views/{view-id}` | `getViewDetails` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get View URL](view-operations/get-view-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish` | `getViewUrl` | `ZohoAnalytics.embed.read` | 200 |
 | [Get View Dependents](view-operations/get-view-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents` | `getViewDependents` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Recent Views](view-operations/get-recent-views.md) | GET | `/restapi/v2/recentviews` | `getRecentViews` | `ZohoAnalytics.metadata.read` | 200 |
 | [Add Favourite View](view-preferences/add-favorite-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite` | `addFavoriteView` | `ZohoAnalytics.metadata.update` | 204 |
 | [Remove Favourite View](view-preferences/remove-favorite-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite` | `removeFavoriteView` | `ZohoAnalytics.metadata.update` | 204 |
 | [Get Trash Views](trash-management/get-trash-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/trash` | `getTrashViews` | `ZohoAnalytics.metadata.read` | 200 |

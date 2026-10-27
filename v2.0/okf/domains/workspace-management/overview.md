@@ -13,7 +13,7 @@ api:
     - group: workspace-operations
       title: Workspace Operations
       doc: "/domains/workspace-management/workspace-operations/overview.md"
-      endpoint_count: 10
+      endpoint_count: 7
     - group: workspace-folders
       title: Workspace Folders
       doc: "/domains/workspace-management/workspace-folders/overview.md"
@@ -34,17 +34,17 @@ api:
       title: Workspace Backup & Restore
       doc: "/domains/workspace-management/workspace-backup-and-restore/overview.md"
       endpoint_count: 6
-  endpoint_count: 38
+  endpoint_count: 35
   openapi: "/references/openapi/workspace-management-grouped-api.json"
 sources:
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -56,7 +56,7 @@ API for managing workspaces in Zoho Analytics — covering workspace operations,
 
 | Group | Endpoints | Description |
 |---|---|---|
-| [Workspace Operations](workspace-operations/overview.md) | 10 | APIs that manage the lifecycle and the metadata of workspaces, covering the creation, copying, renaming, deletion and inspection of a workspace. |
+| [Workspace Operations](workspace-operations/overview.md) | 7 | APIs that manage the lifecycle and the metadata of workspaces, covering the creation, copying, renaming, deletion and inspection of a workspace. |
 | [Workspace Folders](workspace-folders/overview.md) | 8 | APIs that manage the folders of a workspace, covering the creation, renaming, deletion, nesting and reordering of folders, the movement of views between folders, and the selection of the default folder. |
 | [Workspace Preferences](workspace-preferences/overview.md) | 4 | APIs that manage the workspace preferences of a user, covering the default workspace that opens on login and the favourite workspaces starred for quick access. |
 | [Domain & White Label Access](domain-and-white-label/overview.md) | 2 | APIs that control whether a workspace is reachable through the White Label or Client Portal domain of the organization. |
@@ -72,9 +72,6 @@ API for managing workspaces in Zoho Analytics — covering workspace operations,
 | [Rename Workspace](workspace-operations/rename-workspace.md) | PUT | `/restapi/v2/workspaces/{workspace-id}` | `renameWorkspace` | `ZohoAnalytics.modeling.update` | 204 |
 | [Delete Workspace](workspace-operations/delete-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}` | `deleteWorkspace` | `ZohoAnalytics.modeling.delete` | 204 |
 | [Export as Template](workspace-operations/export-as-template.md) | GET | `/restapi/v2/workspaces/{workspace-id}/template/data` | `exportAsTemplate` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get All Workspace List](workspace-operations/get-all-workspaces.md) | GET | `/restapi/v2/workspaces` | `getAllWorkspaces` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Owned Workspace List](workspace-operations/get-owned-workspaces.md) | GET | `/restapi/v2/workspaces/owned` | `getOwnedWorkspaces` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Shared Workspace List](workspace-operations/get-shared-workspaces.md) | GET | `/restapi/v2/workspaces/shared` | `getSharedWorkspaces` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get Workspace Secret Key](workspace-operations/get-workspace-secret-key.md) | GET | `/restapi/v2/workspaces/{workspace-id}/secretkey` | `getWorkspaceSecretKey` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get Workspace Info](workspace-operations/get-workspace-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}` | `getWorkspaceDetails` | `ZohoAnalytics.metadata.read` | 200 |
 | [Get Folder List](workspace-folders/get-folders.md) | GET | `/restapi/v2/workspaces/{workspace-id}/folders` | `getFolders` | `ZohoAnalytics.metadata.read` | 200 |

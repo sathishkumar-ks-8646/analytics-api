@@ -19,7 +19,7 @@ Generated from the two sources of truth:
 | 1 | **Fork** this collection and import the **`Zoho Analytics REST Variables`** environment shipped with it. |
 | 2 | Fill `client-id`, `client-secret`, `accounts-domain`, `analytics-domain` for your data centre. |
 | 3 | Run **🔐 Authentication › Generate Tokens** — the token variables populate themselves. |
-| 4 | Run **🏢 Organization Management › Get Org List** and copy `orgId` into `organization-id`. |
+| 4 | Copy the Organization ID from **Settings → Organisation** in the Zoho Analytics UI into `organization-id`. |
 | 5 | Run **🏢 Organization Management › Get Meta Details From Name** to turn a workspace or view _name_ into the `workspace-id` / `view-id` every other request needs. |
 
 > Steps 4–5 are the **Bootstrap** playbook. Nothing else works until `organization-id` is set. 

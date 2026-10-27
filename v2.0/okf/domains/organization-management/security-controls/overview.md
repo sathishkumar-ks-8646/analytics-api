@@ -34,10 +34,10 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T10:58:51Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -242,7 +242,7 @@ These are the limits that apply with **default settings**.
 | [8077](../../../foundations/error-codes.md#error-8077) | 400 | EMPTY_JSON_CONFIGURATION - CONFIG is present but empty. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint. |
 | [8083](../../../foundations/error-codes.md#error-8083) | 400 | The ZANALYTICS-ORGID header is missing from a request that requires it. |
-| [8084](../../../foundations/error-codes.md#error-8084) | 400 | ORGID_NOT_EXIST - No organisation exists with the given ID. |
+| [8084](../../../foundations/error-codes.md#error-8084) | 404 | ORGID_NOT_EXIST - No organisation exists with the given ID. |
 | [8192](../../../foundations/error-codes.md#error-8192) | 400 | TRUSTED_DOMAINS_WITHOUT_DOMAIN_RESTRICTION - trustedDomains was sent for a section whose domain restriction is off or is being switched off. |
 | [8193](../../../foundations/error-codes.md#error-8193) | 400 | TRUSTED_DOMAINS_EMPTY - The domain restriction is on, or being switched on, but the section has no trusted domains. |
 | [8194](../../../foundations/error-codes.md#error-8194) | 400 | DOMAIN_RESTRICTION_NOT_ALLOWED_WHEN_DISABLED - Domain attributes were sent for privateLinks, publicViews or emailViews while that feature is disabled or is being disabled. |

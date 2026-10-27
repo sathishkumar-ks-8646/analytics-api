@@ -38,115 +38,12 @@
   ],
   "paths": {
     "/restapi/v2/workspaces": {
-      "get": {
-        "tags": [
-          "Workspace Operations"
-        ],
-        "summary": "Get All Workspace List",
-        "description": "Returns all workspaces accessible to the authenticated user — both workspaces they own or administer, and workspaces shared with them. The response separates owned and shared workspaces into two distinct arrays.\n\nThis API is scoped to the user and not to the organization. It returns only the workspaces that the requesting user has some level of access to. Account Admins see all the workspaces of their organization in the owned list.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
-        "operationId": "getAllWorkspaces",
-        "security": [
-          {
-            "iam-oauth2-schema": [
-              "ZohoAnalytics.metadata.read"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/org-id-optional"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Workspace list returned successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAllWorkspacesResponse"
-                },
-                "examples": {
-                  "ownedOnly": {
-                    "description": "An Account Admin who owns all the workspaces of the organization and has none shared from other organizations.",
-                    "summary": "Owned only",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get all workspaces",
-                      "data": {
-                        "ownedWorkspaces": [
-                          {
-                            "workspaceId": "466206000000071000",
-                            "workspaceName": "Sales Analytics",
-                            "workspaceDesc": "Sales reporting workspace",
-                            "orgId": "700000123456",
-                            "createdTime": "1619175390377",
-                            "createdBy": "admin@acme.com",
-                            "isDefault": false
-                          },
-                          {
-                            "workspaceId": "466206000000080000",
-                            "workspaceName": "HR Analytics",
-                            "workspaceDesc": "",
-                            "orgId": "700000123456",
-                            "createdTime": "1622097563854",
-                            "createdBy": "admin@acme.com",
-                            "isDefault": false
-                          }
-                        ],
-                        "sharedWorkspaces": []
-                      }
-                    }
-                  },
-                  "ownedAndShared": {
-                    "description": "A user who owns a workspace in their own organization and has a workspace from another organization shared with them.",
-                    "summary": "Owned and shared",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get all workspaces",
-                      "data": {
-                        "ownedWorkspaces": [
-                          {
-                            "workspaceId": "138022000000002015",
-                            "workspaceName": "My Personal Workspace",
-                            "workspaceDesc": "",
-                            "orgId": "700000999888",
-                            "createdTime": "1606987644675",
-                            "createdBy": "shareduser@example.com",
-                            "isDefault": false
-                          }
-                        ],
-                        "sharedWorkspaces": [
-                          {
-                            "workspaceId": "466206000000071000",
-                            "workspaceName": "Sales Analytics",
-                            "workspaceDesc": "Sales reporting workspace",
-                            "orgId": "700000123456",
-                            "createdTime": "1619175390377",
-                            "createdBy": "admin@acme.com",
-                            "isDefault": false
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
-          },
-          "500": {
-            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
-          }
-        }
-      },
       "post": {
         "tags": [
           "Workspace Operations"
         ],
         "summary": "Create Workspace",
-        "description": "Creates a new empty workspace in the specified organisation. The workspace is created with no tables, views, or users — content must be added through subsequent APIs.\n\n**Notes**\n\n> Note:\n>\n> - The **workspaceName** should be unique within the organization. Creating a workspace with a name that is already in use fails with error code 7111.\n> - The **workspaceName** can hold a maximum of 50 characters and the **workspaceDesc** can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.\n> - When **workspaceDesc** is omitted, the description is stored as an empty string. It can be updated later using the Rename Workspace API.\n> - The response data holds only the **workspaceId**. Use the Get Workspace Info or the Get All Workspace List API to retrieve the complete workspace record.\n> - The workspace secret key is not generated at creation time. Use the Get Workspace Secret Key API when the key is needed for a cross-organization copy.\n> - The number of workspaces that can be created depends on the subscription plan of the organization. Reaching the limit fails with error code 7951.\n> - Organization Admins are allowed to create workspaces within their organization.\n> - The workspace is created with no tables or views. The content has to be added using the subsequent APIs.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Organization Admin privileges in the target organisation. |\n| 7951 | The organisation has reached its workspace creation limit based on the current subscription plan. | Upgrade the plan or delete unused workspaces before creating a new one. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Creates a new empty workspace in the specified organisation. The workspace is created with no tables, views, or users — content must be added through subsequent APIs.\n\n**Notes**\n\n> Note:\n>\n> - The **workspaceName** should be unique within the organization. Creating a workspace with a name that is already in use fails with error code 7111.\n> - The **workspaceName** can hold a maximum of 50 characters and the **workspaceDesc** can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.\n> - When **workspaceDesc** is omitted, the description is stored as an empty string. It can be updated later using the Rename Workspace API.\n> - The response data holds only the **workspaceId**. Use the Get Workspace Info or the Get Org Workspaces API to retrieve the complete workspace record.\n> - The workspace secret key is not generated at creation time. Use the Get Workspace Secret Key API when the key is needed for a cross-organization copy.\n> - The number of workspaces that can be created depends on the subscription plan of the organization. Reaching the limit fails with error code 7951.\n> - Organization Admins are allowed to create workspaces within their organization.\n> - The workspace is created with no tables or views. The content has to be added using the subsequent APIs.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Organization Admin privileges in the target organisation. |\n| 7951 | The organisation has reached its workspace creation limit based on the current subscription plan. | Upgrade the plan or delete unused workspaces before creating a new one. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "createWorkspace",
         "security": [
           {
@@ -237,184 +134,6 @@
         }
       }
     },
-    "/restapi/v2/workspaces/owned": {
-      "get": {
-        "tags": [
-          "Workspace Operations"
-        ],
-        "summary": "Get Owned Workspace List",
-        "description": "Returns all workspaces owned by (created within) the authenticated user's organisation. This is an admin-scoped API — only the Account Admin can call it, and it returns all workspaces in the org regardless of sharing.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | User is not the Account Admin. Organization Admins and Workspace Admins cannot call this API. | Use Account Admin credentials. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
-        "operationId": "getOwnedWorkspaces",
-        "security": [
-          {
-            "iam-oauth2-schema": [
-              "ZohoAnalytics.metadata.read"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/org-id-optional"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Workspace list returned successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetOwnedWorkspacesResponse"
-                },
-                "examples": {
-                  "multipleWorkspaces": {
-                    "description": "The organization holds more than one workspace.",
-                    "summary": "Multiple workspaces",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get owned workspaces",
-                      "data": {
-                        "workspaces": [
-                          {
-                            "workspaceId": "466206000000071000",
-                            "workspaceName": "Sales Analytics",
-                            "workspaceDesc": "Sales reporting workspace",
-                            "orgId": "700000123456",
-                            "createdTime": "1619175390377",
-                            "createdBy": "admin@acme.com",
-                            "isDefault": false
-                          },
-                          {
-                            "workspaceId": "466206000000080000",
-                            "workspaceName": "HR Analytics",
-                            "workspaceDesc": "",
-                            "orgId": "700000123456",
-                            "createdTime": "1622097563854",
-                            "createdBy": "admin@acme.com",
-                            "isDefault": false
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  "noWorkspaces": {
-                    "description": "The organization holds no workspace and an empty array is returned.",
-                    "summary": "No workspaces",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get owned workspaces",
-                      "data": {
-                        "workspaces": []
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
-          },
-          "500": {
-            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
-          }
-        }
-      }
-    },
-    "/restapi/v2/workspaces/shared": {
-      "get": {
-        "tags": [
-          "Workspace Operations"
-        ],
-        "summary": "Get Shared Workspace List",
-        "description": "Returns all workspaces that have been shared with the authenticated user from other organisations. Workspaces in the user's own organisation are not included — use Get All Workspace List to see both owned and shared together.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
-        "operationId": "getSharedWorkspaces",
-        "security": [
-          {
-            "iam-oauth2-schema": [
-              "ZohoAnalytics.metadata.read"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/org-id-optional"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Workspace list returned successfully.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetSharedWorkspacesResponse"
-                },
-                "examples": {
-                  "sharedFromOtherOrg": {
-                    "description": "A workspace from another organization is shared with the requesting user.",
-                    "summary": "Shared workspaces",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get shared workspaces",
-                      "data": {
-                        "workspaces": [
-                          {
-                            "workspaceId": "466206000000071000",
-                            "workspaceName": "Sales Analytics",
-                            "workspaceDesc": "Sales reporting workspace",
-                            "orgId": "700000123456",
-                            "createdTime": "1619175390377",
-                            "createdBy": "admin@acme.com",
-                            "isDefault": false
-                          }
-                        ]
-                      }
-                    }
-                  },
-                  "noSharedWorkspaces": {
-                    "description": "No workspace is shared with the requesting user and an empty array is returned.",
-                    "summary": "No shared workspaces",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get shared workspaces",
-                      "data": {
-                        "workspaces": []
-                      }
-                    }
-                  },
-                  "clientPortalWorkspace": {
-                    "description": "A Client Portal or white label user retrieving the workspace of their portal.",
-                    "summary": "Client Portal user",
-                    "value": {
-                      "status": "success",
-                      "summary": "Get shared workspaces",
-                      "data": {
-                        "workspaces": [
-                          {
-                            "workspaceId": "38190000004180410",
-                            "workspaceName": "Client Analytics Portal",
-                            "workspaceDesc": "",
-                            "orgId": "57058019",
-                            "createdTime": "1697525603846",
-                            "createdBy": "admin@brandco.com",
-                            "isDefault": false
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "4XX": {
-            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/CommonErrorResponse"
-          },
-          "500": {
-            "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
-          }
-        }
-      }
-    },
     "/restapi/v2/workspaces/{workspace-id}": {
       "get": {
         "tags": [
@@ -432,7 +151,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/org-id-optional"
+            "$ref": "#/components/parameters/org-id"
           },
           {
             "$ref": "#/components/parameters/workspace-id"
@@ -803,7 +522,7 @@
           "Workspace Operations"
         ],
         "summary": "Get Workspace Secret Key",
-        "description": "Returns the secret key for the specified workspace. This key is used as the workspaceKey parameter when performing a cross-organisation Copy Workspace operation — it authorises the copying of the workspace to a different organisation.\n\nThe key can optionally be regenerated, which permanently invalidates the previous key. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.\n\n**Notes**\n\n> Note:\n>\n> - Setting **regenerateKey** to false, which is the default, is safe to invoke repeatedly. The existing key is returned each time, and a key is generated on the first call when none exists.\n> - Setting **regenerateKey** to true invalidates the previous key immediately. A cross-organization copy attempted with the old key after regeneration fails with error code 8024. A copy operation that had already started before the regeneration is not affected, as the key is validated only at the start of the copy.\n> - The workspace secret key is returned only by this API. It is not present in the response of the Get Workspace Info, the Get All Workspace List or any other API.\n> - Only the Account Admins and the Organization Admins of the organization that owns the workspace can retrieve the key.\n> - As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the secret key for the specified workspace. This key is used as the workspaceKey parameter when performing a cross-organisation Copy Workspace operation — it authorises the copying of the workspace to a different organisation.\n\nThe key can optionally be regenerated, which permanently invalidates the previous key. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.\n\n**Notes**\n\n> Note:\n>\n> - Setting **regenerateKey** to false, which is the default, is safe to invoke repeatedly. The existing key is returned each time, and a key is generated on the first call when none exists.\n> - Setting **regenerateKey** to true invalidates the previous key immediately. A cross-organization copy attempted with the old key after regeneration fails with error code 8024. A copy operation that had already started before the regeneration is not affected, as the key is validated only at the start of the copy.\n> - The workspace secret key is returned only by this API. It is not present in the response of the Get Workspace Info, the Get Org Workspaces or any other API.\n> - Only the Account Admins and the Organization Admins of the organization that owns the workspace can retrieve the key.\n> - As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getWorkspaceSecretKey",
         "security": [
           {
@@ -974,7 +693,7 @@
           "Workspace Preferences"
         ],
         "summary": "Add Default Workspace",
-        "description": "Marks the specified workspace as the calling user's default workspace. The default workspace is the one that opens automatically when the user logs in to Zoho Analytics.\n\nA user can hold only one default workspace at a time. When a different workspace is already set as the default, it is replaced silently. Invoking this API on a workspace that is already the default succeeds without error.\n\n**Notes**\n\n> Note:\n>\n> - Add Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - A user can hold only one default workspace at a time. When the user already holds a different workspace as the default, the previous default is replaced silently and no error is raised.\n> - This API is idempotent. Invoking it on a workspace that is already the default workspace of the user succeeds without error and makes no change.\n> - The requesting user should have at least one view of the workspace shared with them. A user with no access to any view of the workspace cannot mark it as the default workspace and the request fails with error code 7301.\n> - The default preference continues to be stored even when the user loses access to the workspace later. However, the workspace is not presented as accessible until the access is restored.\n> - After this API is invoked, the workspace is returned with isDefault as true in the response of the Get All Workspace List and the Get Shared Workspace List APIs. Use those APIs to verify the change.\n> - The preferences are stored per user and per organization. Marking a workspace as the default for one user has no effect on the preferences of any other user.\n> - Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace — no views have been shared with them, and they are not a Workspace Admin. | Ensure the user is a workspace member or has at least one view shared with them before marking it as default. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Marks the specified workspace as the calling user's default workspace. The default workspace is the one that opens automatically when the user logs in to Zoho Analytics.\n\nA user can hold only one default workspace at a time. When a different workspace is already set as the default, it is replaced silently. Invoking this API on a workspace that is already the default succeeds without error.\n\n**Notes**\n\n> Note:\n>\n> - Add Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - A user can hold only one default workspace at a time. When the user already holds a different workspace as the default, the previous default is replaced silently and no error is raised.\n> - This API is idempotent. Invoking it on a workspace that is already the default workspace of the user succeeds without error and makes no change.\n> - The requesting user should have at least one view of the workspace shared with them. A user with no access to any view of the workspace cannot mark it as the default workspace and the request fails with error code 7301.\n> - The default preference continues to be stored even when the user loses access to the workspace later. However, the workspace is not presented as accessible until the access is restored.\n> - After this API is invoked, the workspace is returned with isDefault as true in the response of the Get Org Workspaces API. Use that API to verify the change.\n> - The preferences are stored per user and per organization. Marking a workspace as the default for one user has no effect on the preferences of any other user.\n> - Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace — no views have been shared with them, and they are not a Workspace Admin. | Ensure the user is a workspace member or has at least one view shared with them before marking it as default. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "operationId": "addDefaultWorkspace",
         "security": [
           {
@@ -1008,7 +727,7 @@
           "Workspace Preferences"
         ],
         "summary": "Remove Default Workspace",
-        "description": "Removes the default workspace designation from the specified workspace for the calling user. After this operation, the user has no default workspace set.\n\nUnlike the Add Default Workspace API, this API is not idempotent. When the specified workspace is not the current default workspace of the user, the request fails with error code 7415. Verify the current default using the Get All Workspace List API, which returns `isDefault` as true for the current default, before invoking this API.\n\n**Notes**\n\n> Note:\n>\n> - Remove Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is not idempotent. When the specified workspace is not the current default workspace of the requesting user, the request fails with error code 7415 instead of succeeding silently.\n> - Use the Get All Workspace List API to confirm that the target workspace holds isDefault as true before invoking this API.\n> - This behaviour differs from the Add Default Workspace API, which is idempotent, and from the Remove Favourite Workspace API, which succeeds silently when the workspace is not in the favourites.\n> - After the designation is removed, the user holds no default workspace. A new default has to be set explicitly using the Add Default Workspace API.\n> - Invoking this API immediately after the Add Default Workspace API succeeds, as the workspace can be set and unset in sequence.\n> - The requesting user should have at least one view of the workspace shared with them, failing which the request fails with error code 7301.\n> - The preferences are stored per user and per organization. Removing the default designation for one user has no effect on the preferences of any other user.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |\n| 7415 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. | Use Get All Workspace List to identify the workspace with isDefault: true, then call this API with that workspace ID. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Removes the default workspace designation from the specified workspace for the calling user. After this operation, the user has no default workspace set.\n\nUnlike the Add Default Workspace API, this API is not idempotent. When the specified workspace is not the current default workspace of the user, the request fails with error code 7415. Verify the current default using the Get Org Workspaces API, which returns `isDefault` as true for the current default, before invoking this API.\n\n**Notes**\n\n> Note:\n>\n> - Remove Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is not idempotent. When the specified workspace is not the current default workspace of the requesting user, the request fails with error code 7415 instead of succeeding silently.\n> - Use the Get Org Workspaces API to confirm that the target workspace holds isDefault as true before invoking this API.\n> - This behaviour differs from the Add Default Workspace API, which is idempotent, and from the Remove Favourite Workspace API, which succeeds silently when the workspace is not in the favourites.\n> - After the designation is removed, the user holds no default workspace. A new default has to be set explicitly using the Add Default Workspace API.\n> - Invoking this API immediately after the Add Default Workspace API succeeds, as the workspace can be set and unset in sequence.\n> - The requesting user should have at least one view of the workspace shared with them, failing which the request fails with error code 7301.\n> - The preferences are stored per user and per organization. Removing the default designation for one user has no effect on the preferences of any other user.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |\n| 7415 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. | Use Get Org Workspaces to identify the workspace with isDefault: true, then call this API with that workspace ID. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "operationId": "removeDefaultWorkspace",
         "security": [
           {
@@ -3295,7 +3014,7 @@
         "schema": {
           "type": "string"
         },
-        "description": "The ID of the organization in which the operation has to be performed. It can be obtained using the Get Organizations API."
+        "description": "The ID of the organization in which the operation has to be performed. It is shown in the Zoho Analytics UI under Settings > Organisation."
       },
       "workspace-id": {
         "name": "workspace-id",
@@ -3314,15 +3033,6 @@
           "type": "string"
         },
         "description": "The ID of the folder. It can be obtained using the Get Folder List API."
-      },
-      "org-id-optional": {
-        "name": "ZANALYTICS-ORGID",
-        "in": "header",
-        "required": false,
-        "schema": {
-          "type": "string"
-        },
-        "description": "The ID of the organization. This header is not required for this API, as the scope of the request is resolved from the requesting user. It can be obtained using the Get Organizations API."
       },
       "dest-org-id": {
         "name": "ZANALYTICS-DEST-ORGID",
@@ -3586,228 +3296,6 @@
             466206000000085001,
             466206000000085003
           ]
-        ]
-      },
-      "GetAllWorkspacesResponse": {
-        "type": "object",
-        "title": "GetAllWorkspacesResponse",
-        "description": "JSONObject that holds the workspaces owned by and shared with the requesting user.",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "The status of the request."
-          },
-          "summary": {
-            "type": "string",
-            "description": "A short summary of the operation performed. It holds the value Get all workspaces."
-          },
-          "data": {
-            "type": "object",
-            "description": "JSONObject that holds the owned and the shared workspace lists.",
-            "properties": {
-              "ownedWorkspaces": {
-                "$ref": "#/components/schemas/WorkspaceList"
-              },
-              "sharedWorkspaces": {
-                "$ref": "#/components/schemas/WorkspaceList"
-              }
-            }
-          }
-        },
-        "examples": [
-          {
-            "status": "success",
-            "summary": "Get all workspaces",
-            "data": {
-              "ownedWorkspaces": [
-                {
-                  "workspaceId": "466206000000071000",
-                  "workspaceName": "Sales Analytics",
-                  "workspaceDesc": "Sales reporting workspace",
-                  "orgId": "700000123456",
-                  "createdTime": "1619175390377",
-                  "createdBy": "admin@acme.com",
-                  "isDefault": false
-                },
-                {
-                  "workspaceId": "466206000000080000",
-                  "workspaceName": "HR Analytics",
-                  "workspaceDesc": "",
-                  "orgId": "700000123456",
-                  "createdTime": "1622097563854",
-                  "createdBy": "admin@acme.com",
-                  "isDefault": false
-                }
-              ],
-              "sharedWorkspaces": []
-            }
-          }
-        ]
-      },
-      "GetOwnedWorkspacesResponse": {
-        "type": "object",
-        "title": "GetOwnedWorkspacesResponse",
-        "description": "JSONObject that holds all the workspaces present in the organization of the requesting Account Admin.",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "The status of the request."
-          },
-          "summary": {
-            "type": "string",
-            "description": "A short summary of the operation performed. It holds the value Get owned workspaces."
-          },
-          "data": {
-            "type": "object",
-            "description": "JSONObject that holds the owned workspace list.",
-            "properties": {
-              "workspaces": {
-                "$ref": "#/components/schemas/WorkspaceList"
-              }
-            }
-          }
-        },
-        "examples": [
-          {
-            "status": "success",
-            "summary": "Get owned workspaces",
-            "data": {
-              "workspaces": [
-                {
-                  "workspaceId": "466206000000071000",
-                  "workspaceName": "Sales Analytics",
-                  "workspaceDesc": "Sales reporting workspace",
-                  "orgId": "700000123456",
-                  "createdTime": "1619175390377",
-                  "createdBy": "admin@acme.com",
-                  "isDefault": false
-                },
-                {
-                  "workspaceId": "466206000000080000",
-                  "workspaceName": "HR Analytics",
-                  "workspaceDesc": "",
-                  "orgId": "700000123456",
-                  "createdTime": "1622097563854",
-                  "createdBy": "admin@acme.com",
-                  "isDefault": false
-                }
-              ]
-            }
-          }
-        ]
-      },
-      "GetSharedWorkspacesResponse": {
-        "type": "object",
-        "title": "GetSharedWorkspacesResponse",
-        "description": "JSONObject that holds the workspaces shared with the requesting user from other organizations.",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "The status of the request."
-          },
-          "summary": {
-            "type": "string",
-            "description": "A short summary of the operation performed. It holds the value Get shared workspaces."
-          },
-          "data": {
-            "type": "object",
-            "description": "JSONObject that holds the shared workspace list.",
-            "properties": {
-              "workspaces": {
-                "$ref": "#/components/schemas/WorkspaceList"
-              }
-            }
-          }
-        },
-        "examples": [
-          {
-            "status": "success",
-            "summary": "Get shared workspaces",
-            "data": {
-              "workspaces": [
-                {
-                  "workspaceId": "466206000000071000",
-                  "workspaceName": "Sales Analytics",
-                  "workspaceDesc": "Sales reporting workspace",
-                  "orgId": "700000123456",
-                  "createdTime": "1619175390377",
-                  "createdBy": "admin@acme.com",
-                  "isDefault": false
-                }
-              ]
-            }
-          }
-        ]
-      },
-      "WorkspaceList": {
-        "type": "array",
-        "title": "WorkspaceList",
-        "description": "JSONArray that holds the workspace records. It holds an empty array when no workspace matches the request.",
-        "items": {
-          "$ref": "#/components/schemas/WorkspaceSummary"
-        },
-        "examples": [
-          [
-            {
-              "workspaceId": "466206000000071000",
-              "workspaceName": "Sales Analytics",
-              "workspaceDesc": "Sales reporting workspace",
-              "orgId": "700000123456",
-              "createdTime": "1619175390377",
-              "createdBy": "admin@acme.com",
-              "isDefault": false
-            }
-          ]
-        ]
-      },
-      "WorkspaceSummary": {
-        "type": "object",
-        "title": "WorkspaceSummary",
-        "description": "JSONObject that holds the summary details of a workspace.",
-        "properties": {
-          "workspaceId": {
-            "type": "string",
-            "description": "The unique ID of the workspace."
-          },
-          "workspaceName": {
-            "type": "string",
-            "description": "The display name of the workspace."
-          },
-          "workspaceDesc": {
-            "type": "string",
-            "description": "The description of the workspace. It holds an empty string when the description is not set."
-          },
-          "orgId": {
-            "type": "string",
-            "description": "The ID of the organization that owns the workspace."
-          },
-          "createdTime": {
-            "type": "string",
-            "description": "The time at which the workspace was created, given as a Unix timestamp in milliseconds."
-          },
-          "createdBy": {
-            "type": "string",
-            "description": "The email address of the user who created the workspace."
-          },
-          "isDefault": {
-            "type": "boolean",
-            "description": "Indicates whether the workspace is the default workspace of the organization.",
-            "enum": [
-              true,
-              false
-            ]
-          }
-        },
-        "examples": [
-          {
-            "workspaceId": "466206000000071000",
-            "workspaceName": "Sales Analytics",
-            "workspaceDesc": "Sales reporting workspace",
-            "orgId": "700000123456",
-            "createdTime": "1619175390377",
-            "createdBy": "admin@acme.com",
-            "isDefault": false
-          }
         ]
       },
       "GetWorkspaceSecretKeyConfig": {

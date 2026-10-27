@@ -53,7 +53,7 @@ Zoho Analytics REST APIs
 └── 2️⃣ v2.0
     ├── 🏢 Organization Management        ← manifest `postman.emoji` + `postman.title`
     │   └── Organization Info & Settings  ← the group's `okf.title`
-    │       └── Get Organizations         ← the markdown `## N. Title`
+    │       └── Get Resource Details      ← the markdown `## N. Title`
     ├── 👥 Users & Groups
     └── … one folder per domain, in manifest order
 ```

@@ -7,7 +7,7 @@ The runnable examples that accompany each operation, in nine languages. One file
 They are kept out of the specifications on purpose: the snippets are large, they change independently
 of the contract, and a diff on one should not be a diff on the other.
 
-Coverage today is complete - all 180 operations, all nine languages.
+Coverage today is complete - all 203 operations, all nine languages.
 
 ## Shape
 

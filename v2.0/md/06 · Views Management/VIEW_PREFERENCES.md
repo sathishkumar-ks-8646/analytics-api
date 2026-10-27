@@ -38,7 +38,7 @@ This document describes the V2 **View Preferences** REST APIs of Zoho Analytics 
 - Adds the specified view to the **favourites list of the authenticated user**.
 - Has no effect on other users' favourite preferences.
 - If the view is already marked as a favourite by this user, the call succeeds silently (idempotent — no error is raised).
-- The resulting `isFavorite: true` value is reflected in listing API responses (e.g., Get All Dashboards, Get Shared Dashboards) for the same user.
+- The resulting `isFavorite: true` value is reflected in listing API responses (e.g., [Get Org Dashboards](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#2-get-org-dashboards)) for the same user.
 
 ### Sample Requests
 
@@ -173,7 +173,7 @@ ZANALYTICS-ORGID: 700000123456
 | Topic | Detail |
 |-------|--------|
 | **User-scoped preference** | Favourite status is stored per user (keyed by the authenticated user's ID). Marking or unmarking a view as a favourite does not affect any other user's view of the same resource. |
-| **Reflected in listing APIs** | After a successful Add, the `isFavorite` field in listing API responses (e.g., Get All Dashboards, Get Shared Dashboards) returns `true` for the same user. After a Remove, it returns `false` or is absent. |
+| **Reflected in listing APIs** | After a successful Add, the `isFavorite` field in listing API responses (e.g., [Get Org Dashboards](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#2-get-org-dashboards)) returns `true` for the same user. After a Remove, it returns `false` or is absent. |
 | **Idempotent operations** | Both APIs are safe to call multiple times. Adding a view that is already a favourite, or removing one that is not, succeeds without error. |
 | **Applicable view types** | Any view type that a user can access with Read Only or higher permission can be marked as a favourite: Tables, Analysis Views (charts), Pivot Tables, Summary Views, Dashboards, Query Tables, and others. |
 | **No CONFIG parameter** | Neither API accepts a CONFIG request parameter. The only inputs are the URL path parameters `<workspace-id>` and `<view-id>`. |

@@ -50,6 +50,9 @@ MD_FOLDER_RE = re.compile(r'^(\d{2}) · (.+)$')
 ROOT_ALLOWED = {
     'tools', '.git', '.github', 'manifest.json', 'README.md', 'CHANGELOG.md',
     'LICENSE.md', 'CLAUDE.md', 'AGENTS.md', 'Makefile', '.gitignore',
+    # consumer-facing migration guides, one folder per breaking change; each has
+    # its own build.py --check and is not part of the version pipeline
+    'migration',
 }
 # A version directory holds the authored sources (md, zenesis-oas, zenesis-oas-samples)
 # and the artefacts built from them (oas, okf, postman). Only the sources are checked here;
@@ -57,6 +60,9 @@ ROOT_ALLOWED = {
 VERSION_ALLOWED = {
     'md', 'zenesis-oas', 'zenesis-oas-samples', 'manifest.json', 'README.md',
     'oas', 'okf', 'postman',
+    # the SDK clients for this API version, with their own generator under
+    # tools/sdkdocs; not part of the md -> oas/okf/postman pipeline
+    'sdk',
 }
 # The shared components file sits with the documents that reference it.
 COMMON_SUBDIR = 'common'

@@ -411,49 +411,49 @@
       "C#": {
         "snippets": [
           {
-            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long viewId = 35130000001055717;\n\n        public void GetViewDetails(IAnalyticsClient ac)\n        {\n            Dictionary<string, object> config = new Dictionary<string, object>();\n            config.Add(\"withInvolvedMetaInfo\", true);\n            JsonElement views = ac.GetViewDetails(viewId, config);\n            Console.WriteLine(views);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetViewDetails(ac);\n        }\n    }\n}"
+            "code": "using System;\nusing System.Collections.Generic;\nusing ZohoAnalytics;\nusing System.Text.Json;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n        long orgId = 55522777;\n        long viewId = 35130000001055717;\n\n        public void GetViewDetails(IAnalyticsClient ac)\n        {\n            IOrgAPI org = ac.GetOrgInstance(orgId);\n            Dictionary<string, object> config = new Dictionary<string, object>();\n            config.Add(\"withInvolvedMetaInfo\", true);\n            JsonElement result = org.GetViewDetails(viewId, config);\n            Console.WriteLine(result);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            try\n            {\n                IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n                Program obj = new Program();\n                obj.GetViewDetails(ac);\n            }\n            catch (ServerException ex) { Console.WriteLine(\"Server exception - \" + ex.GetErrorMessage()); }\n            catch (Exception ex) { Console.WriteLine(\"Other exception - \" + ex.Message); }\n        }\n    }\n}"
           }
         ]
       },
       "Go": {
         "snippets": [
           {
-            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    viewId = \"35130000001055717\"\n)\n\nfunc GetViewDetails(ac ZAnalytics.Client) {\n    config := map[string]interface{}{}\n    result, exception := ac.GetViewDetails(viewId, config)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetViewDetails(ac)\n}"
+            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n    orgId = \"55522777\"\n    viewId = \"35130000001055717\"\n)\n\nfunc GetViewDetails(ac ZAnalytics.Client) {\n    org := ZAnalytics.GetOrgInstance(&ac, orgId)\n    config := map[string]interface{}{\"withInvolvedMetaInfo\": true}\n    result, exception := org.GetViewDetails(viewId, config)\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetViewDetails(ac)\n}"
           }
         ]
       },
       "Java": {
         "snippets": [
           {
-            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long viewId = 35130000001055717l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getViewDetails(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getViewDetails(AnalyticsClient ac) throws Exception {\n        JSONObject config = new JSONObject();\n        config.put(\"withInvolvedMetaInfo\", true);\n        JSONObject result = ac.getViewDetails(viewId, config);\n        System.out.println(result);\n    }\n}"
+            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n    private long orgId = 55522777l;\n    private long viewId = 35130000001055717l;\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try { tObj.getViewDetails(ac); }\n        catch (ServerException ex) { System.out.println(\"Server exception - \" + ex.getErrorCode() + \" : \" + ex.getErrorMessage()); }\n        catch (Exception ex) { ex.printStackTrace(); }\n    }\n\n    public void getViewDetails(AnalyticsClient ac) throws Exception {\n        OrgAPI org = ac.getOrgInstance(orgId);\n        JSONObject config = new JSONObject();\n        config.put(\"withInvolvedMetaInfo\", true);\n        JSONObject result = org.getViewDetails(viewId, config);\n        System.out.println(result);\n    }\n}"
           }
         ]
       },
       "Php": {
         "snippets": [
           {
-            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n    public $view_id = \"35130000001055717\";\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getViewDetails() {\n        $config = array(\"withInvolvedMetaInfo\" => true);\n        $response = $this->ac->getViewDetails($this->view_id, $config);\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getViewDetails();\n?>"
+            "code": "<?php\n    require 'AnalyticsClient.php';\n    class Test {\n        public $ac = NULL;\n        public $client_id = \"1000.xxxxxxx\";\n        public $client_secret = \"xxxxxxx\";\n        public $refresh_token = \"1000.xxxxxxx.xxxxxxx\";\n        public $org_id = \"55522777\";\n        public $view_id = \"35130000001055717\";\n        function __construct() { $this->ac = new AnalyticsClient($this->client_id, $this->client_secret, $this->refresh_token); }\n        function getViewDetails() {\n            $org = $this->ac->getOrgInstance($this->org_id);\n            $config = array(\"withInvolvedMetaInfo\" => true);\n            $response = $org->getViewDetails($this->view_id, $config);\n            print_r($response);\n        }\n    }\n    $test_obj = new Test();\n    try { $test_obj->getViewDetails(); }\n    catch(ServerException $se) { echo \"Server exception : \" . $se->getErrorMessage() . \"\\n\"; }\n    catch(Exception $e) { echo \"Exception : \" . $e->getMessage() . \"\\n\"; }\n?>"
           }
         ]
       },
       "Python": {
         "snippets": [
           {
-            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    VIEWID = \"35130000001055717\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_view_details(self, ac):\n        config = {\"withInvolvedMetaInfo\": True}\n        result = ac.get_view_details(Config.VIEWID, config)\n        print(result)\n\nobj = Sample()\nobj.get_view_details(obj.ac)"
+            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n    ORGID = \"55522777\"\n    VIEWID = \"35130000001055717\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_view_details(self, ac):\n        org = ac.get_org_instance(Config.ORGID)\n        config = {\"withInvolvedMetaInfo\": True}\n        result = org.get_view_details(Config.VIEWID, config)\n        print(result)\n\nobj = Sample()\nobj.get_view_details(obj.ac)"
           }
         ]
       },
       "Node": {
         "snippets": [
           {
-            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar viewId = '35130000001055717';\nvar config = {withInvolvedMetaInfo: true};\n\nac.getViewDetails(viewId, config).then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
+            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\nvar org = ac.getOrgInstance('55522777');\nvar viewId = '35130000001055717';\nvar config = {withInvolvedMetaInfo: true};\n\norg.getViewDetails(viewId, config).then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
           }
         ]
       },
       "Ruby": {
         "snippets": [
           {
-            "code": "require 'zoho_analytics_client'\n\nclass Config\n  VIEWID = \"35130000001055717\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_view_details\n    config = {\"withInvolvedMetaInfo\" => true}\n    result = @ac.get_view_details(Config::VIEWID, config)\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_view_details"
+            "code": "require 'zoho_analytics_client'\n\nclass Config\n  ORGID = \"55522777\"\n  VIEWID = \"35130000001055717\"\nend\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_view_details\n    org = @ac.get_org_instance(Config::ORGID)\n    config = {\"withInvolvedMetaInfo\" => true}\n    result = org.get_view_details(Config::VIEWID, config)\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_view_details"
           }
         ]
       },
@@ -595,73 +595,6 @@
         "snippets": [
           {
             "code": "orgId = \"55522777\";\nworkspaceId = \"35130000001055707\";\nviewId = \"35130000001055717\";\nheadersMap = Map();\nheadersMap.put(\"ZANALYTICS-ORGID\", orgId);\nresponse = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/workspaces/\" + workspaceId + \"/views/\" + viewId + \"/dependents\"\n  type :GET\n  headers:headersMap\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
-          }
-        ]
-      }
-    }
-  },
-  "/restapi/v2/recentviews": {
-    "get": {
-      "Curl": {
-        "snippets": [
-          {
-            "code": "curl \"https://analyticsapi.zoho.com/restapi/v2/recentviews\" -H 'Authorization: Zoho-oauthtoken <access_token>'"
-          }
-        ]
-      },
-      "C#": {
-        "snippets": [
-          {
-            "code": "using System;\nusing System.Collections.Generic;\nusing System.Text.Json;\nusing ZohoAnalytics;\n\nnamespace ZohoAnalyticsTest\n{\n    class Program\n    {\n\n        public void GetRecentViews(IAnalyticsClient ac)\n        {\n            JsonElement views = ac.GetRecentViews();\n            Console.WriteLine(views);\n        }\n\n        static void Main(string[] args)\n        {\n            string clientId = \"1000.xxxxxxx\";\n            string clientSecret = \"xxxxxxx\";\n            string refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n            Program obj = new Program();\n            obj.GetRecentViews(ac);\n        }\n    }\n}"
-          }
-        ]
-      },
-      "Go": {
-        "snippets": [
-          {
-            "code": "package main\n\nimport (\n    \"fmt\"\n    ZAnalytics \"zoho/pkg/analyticsclient\"\n)\n\nvar (\n    clientId = \"1000.xxxxxxx\"\n    clientSecret = \"xxxxxxx\"\n    refreshToken = \"1000.xxxxxxx.xxxxxxx\"\n)\n\nfunc GetRecentViews(ac ZAnalytics.Client) {\n    result, exception := ac.GetRecentViews()\n    if exception != nil {\n        fmt.Println(exception.ErrorMessage)\n        return\n    }\n    fmt.Println(result)\n}\n\nfunc main() {\n    ac := ZAnalytics.GetAnalyticsClient(clientId, clientSecret, refreshToken)\n    GetRecentViews(ac)\n}"
-          }
-        ]
-      },
-      "Java": {
-        "snippets": [
-          {
-            "code": "import com.zoho.analytics.client.*;\nimport org.json.*;\n\npublic class Test {\n\n    public static void main(String args[]) {\n        String clientId = \"1000.xxxxxxx\";\n        String clientSecret = \"xxxxxxx\";\n        String refreshToken = \"1000.xxxxxxx.xxxxxxx\";\n        Test tObj = new Test();\n        AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);\n        try {\n            tObj.getRecentViews(ac);\n        } catch (Exception ex) {\n            ex.printStackTrace();\n        }\n    }\n\n    public void getRecentViews(AnalyticsClient ac) throws Exception {\n        JSONArray result = ac.getRecentViews();\n        System.out.println(result);\n    }\n}"
-          }
-        ]
-      },
-      "Php": {
-        "snippets": [
-          {
-            "code": "<?php\nrequire 'AnalyticsClient.php';\n\nclass Test {\n    public $ac;\n\n    function __construct() {\n        $this->ac = new AnalyticsClient(\"1000.xxxxxxx\", \"xxxxxxx\", \"1000.xxxxxxx.xxxxxxx\");\n    }\n\n    function getRecentViews() {\n        $response = $this->ac->getRecentViews();\n        print_r($response);\n    }\n}\n\n$obj = new Test();\n$obj->getRecentViews();\n?>"
-          }
-        ]
-      },
-      "Python": {
-        "snippets": [
-          {
-            "code": "from AnalyticsClient import AnalyticsClient\n\nclass Config:\n    CLIENTID = \"1000.xxxxxxx\"\n    CLIENTSECRET = \"xxxxxxx\"\n    REFRESHTOKEN = \"1000.xxxxxxx.xxxxxxx\"\n\nclass Sample:\n    ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)\n\n    def get_recent_views(self, ac):\n        result = ac.get_recent_views()\n        print(result)\n\nobj = Sample()\nobj.get_recent_views(obj.ac)"
-          }
-        ]
-      },
-      "Node": {
-        "snippets": [
-          {
-            "code": "var analyticsClient = require('./AnalyticsClient');\nvar ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');\n\nac.getRecentViews().then((result) => { console.log(result); }).catch((error) => { console.log(error); });"
-          }
-        ]
-      },
-      "Ruby": {
-        "snippets": [
-          {
-            "code": "require 'zoho_analytics_client'\n\nclass Sample\n  def initialize\n    @ac = AnalyticsClient.new.with_data_center(\"US\").with_oauth({\n      \"clientId\" => \"1000.xxxxxxx\",\n      \"clientSecret\" => \"xxxxxxx\",\n      \"refreshToken\" => \"1000.xxxxxxx.xxxxxxx\"\n    }).build\n  end\n\n  def get_recent_views\n    result = @ac.get_recent_views\n    puts result\n  end\nend\n\nobj = Sample.new\nobj.get_recent_views"
-          }
-        ]
-      },
-      "Deluge": {
-        "snippets": [
-          {
-            "code": "response = invokeurl\n[\n  url :\"https://analyticsapi.zoho.com/restapi/v2/recentviews\"\n  type :GET\n  connection:\"analytics_oauth_connection\"\n];\ninfo response;"
           }
         ]
       }

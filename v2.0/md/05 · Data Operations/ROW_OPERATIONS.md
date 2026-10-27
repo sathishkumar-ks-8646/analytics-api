@@ -620,7 +620,7 @@ CONFIG={
 | Header | Value | Required | Description |
 |--------|-------|----------|-------------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. Must carry the scope matching the operation (see [Appendix B](#appendix-b--oauth-scope-summary)). |
-| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the view. Obtainable from the [Get Organizations](../01%20%C2%B7%20Organization%20Management/ORG_INFO_AND_SETTINGS.md) response or from listing API responses as the `orgId` field. |
+| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the view. Read it from **Settings → Organisation** in the Zoho Analytics UI, or take it from the `orgId` field of any listing API response. |
 | `Content-Type` | `application/x-www-form-urlencoded` | **Mandatory** | All three APIs send `CONFIG` as a URL-encoded form parameter — including `DELETE`, which carries a body here. |
 
 > **`ZANALYTICS-DEST-ORGID` is not used by any API in this document.** That header applies only to cross-organization copy operations (Copy Workspace, [Copy Views](../06%20%C2%B7%20Views%20Management/VIEW_OPERATIONS.md#2-copy-views), Copy Formulas).

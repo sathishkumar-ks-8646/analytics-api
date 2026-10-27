@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" data-kind="page">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Importing data · Zoho Analytics Node.js SDK</title>
+<meta name="description" content="Synchronous, batched and job-based imports, with the limits and response shapes for each.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/docs.css">
+<script>
+// Applied before paint so a dark-mode reload does not flash light.
+(function(){try{var t=localStorage.getItem('za-sdk-docs-theme');
+if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="rail" data-open="false">
+  <a class="brand" href="../index.html">
+    <span class="brand__mark">Zoho Analytics</span>
+    <span class="brand__name">REST API v2</span>
+    <span class="brand__lang">Node.js SDK</span>
+  </a>
+  <nav class="nav" aria-label="Documentation"><h2>Overview</h2><ul><li><a href="../index.html">Introduction</a></li><li><a href="../getting-started.html">Getting started</a></li></ul><h2>Essentials</h2><ul><li><a href="../authentication.html">Authentication</a></li><li><a href="../configuration.html">Configuration</a></li><li><a href="../errors.html">Errors</a></li><li><a href="../limits.html">Limits</a></li></ul><h2>Guides</h2><ul><li><a href="../guides/importing-data.html" aria-current="page">Importing data</a></li><li><a href="../guides/exporting-data.html">Exporting data</a></li></ul><h2>Reference</h2><ul><li><a href="../reference/analytics-client.html">AnalyticsClient</a></li><li><a href="../reference/org-api.html">OrgAPI</a></li><li><a href="../reference/workspace-api.html">WorkspaceAPI</a></li><li><a href="../reference/view-api.html">ViewAPI</a></li><li><a href="../reference/bulk-api.html">BulkAPI</a></li></ul></nav>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <button class="ctl nav-toggle" type="button" data-nav-toggle
+            aria-expanded="false" aria-label="Toggle navigation">Menu</button>
+    <p class="crumbs"><a href="../index.html">Docs</a><span aria-hidden="true">/</span><span>Guides</span><span aria-hidden="true">/</span><span>Importing data</span></p>
+    <div class="controls">
+      <button class="ctl" type="button" data-theme-toggle aria-pressed="false">
+        <span data-theme-label>Dark</span>
+      </button>
+    </div>
+  </div>
+  <div class="layout">
+    <main class="article" id="main" tabindex="-1">
+      <header class="page-head">
+        <p class="page-head__kicker">Guide</p>
+        <h1>Importing data</h1>
+        <p class="page-head__lede">Synchronous, batched and job-based imports, with the limits and response shapes for each.</p>
+      </header>
+      <p>Three modes, chosen by file size and whether you need to wait for the result.</p><div class="table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col" class="ta-left">Mode</th><th scope="col" class="ta-left">File size</th><th scope="col" class="ta-left">Blocking</th><th scope="col" class="ta-left">Use when</th></tr></thead><tbody><tr><td class="ta-left">Synchronous</td><td class="ta-left">up to 20 MB</td><td class="ta-left">Yes</td><td class="ta-left">Small files where you want the row counts immediately.</td></tr><tr><td class="ta-left">Batched</td><td class="ta-left">any</td><td class="ta-left">Yes</td><td class="ta-left">Large CSV files; the SDK splits and uploads them for you.</td></tr><tr><td class="ta-left">Asynchronous job</td><td class="ta-left">any</td><td class="ta-left">No</td><td class="ta-left">Large files where you want to poll for completion.</td></tr></tbody></table></div><aside class="callout callout--warning" role="note" aria-label="Warning"><p class="callout__kind">Warning</p><p class="callout__title">Do not load data row by row</p><div class="callout__body"><p>Add Row costs one API unit per row. Importing a file costs far less and is dramatically faster. Use the row APIs for corrections, not for loading.</p></div></aside><h2 id="synchronous-import">Synchronous import<a class="anchor" href="#synchronous-import" aria-label="Link to this section">#</a></h2><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">var bulk = ac.getBulkInstance(orgId, workspaceId);
+
+var response = await bulk.importData(
+    viewId,
+    &#x27;TRUNCATEADD&#x27;,
+    &#x27;csv&#x27;,
+    true,
+    &#x27;/home/user/Sales.csv&#x27;
+);
+console.log(response);</code></pre></figure><h3 id="import-types">Import types<a class="anchor" href="#import-types" aria-label="Link to this section">#</a></h3><div class="table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col" class="ta-left">Value</th><th scope="col" class="ta-left">Behaviour</th></tr></thead><tbody><tr><td class="ta-left"><code>APPEND</code></td><td class="ta-left">Add every row. Duplicates are kept.</td></tr><tr><td class="ta-left"><code>TRUNCATEADD</code></td><td class="ta-left">Delete all existing rows, then add.</td></tr><tr><td class="ta-left"><code>UPDATEADD</code></td><td class="ta-left">Update rows matching the configured key, add the rest.</td></tr></tbody></table></div><aside class="callout callout--note" role="note" aria-label="Note"><p class="callout__kind">Note</p><p class="callout__title"><code>UPDATEADD</code> needs a matching column</p><div class="callout__body"><p>Set <code>matchingColumns</code> in the config, otherwise the server cannot tell which rows to update and the call fails validation.</p></div></aside><h3 id="sample-response">Sample response<a class="anchor" href="#sample-response" aria-label="Link to this section">#</a></h3><figure class="code" data-lang="json"><figcaption><span>json</span><button class="copy" type="button" data-copy aria-label="Copy json code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-json">{
+  &quot;status&quot;: &quot;success&quot;,
+  &quot;summary&quot;: &quot;Import data&quot;,
+  &quot;data&quot;: {
+    &quot;importSummary&quot;: {
+      &quot;totalColumnCount&quot;: 8,
+      &quot;selectedColumnCount&quot;: 8,
+      &quot;totalRowCount&quot;: 12500,
+      &quot;successRowCount&quot;: 12498,
+      &quot;warnings&quot;: 2,
+      &quot;importOperation&quot;: &quot;updateadd&quot;
+    },
+    &quot;importErrors&quot;: &quot;2 rows were skipped: date value did not match the column format.&quot;
+  }
+}</code></pre></figure><aside class="callout callout--warning" role="note" aria-label="Warning"><p class="callout__kind">Warning</p><p class="callout__title">A successful import can still skip rows</p><div class="callout__body"><p><code>status</code> is <code>success</code> whenever the request was processed. Compare <code>successRowCount</code> against <code>totalRowCount</code> and inspect <code>importErrors</code> — rows with unparseable values are skipped silently otherwise.</p></div></aside><h2 id="batched-import">Batched import<a class="anchor" href="#batched-import" aria-label="Link to this section">#</a></h2><p>For files over 20 MB. The SDK splits the file, uploads each batch, and returns a job id.</p><figure class="code" data-lang="javascript"><figcaption><span>javascript</span><button class="copy" type="button" data-copy aria-label="Copy javascript code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-javascript">var bulk = ac.getBulkInstance(orgId, workspaceId);
+
+var jobId = await bulk.importDataAsBatches(
+    viewId, &#x27;APPEND&#x27;, true, &#x27;/home/user/large-sales.csv&#x27;, 100000
+);
+
+console.log(await bulk.getImportJobDetails(jobId));</code></pre></figure><p>Batch size is counted in rows. Keep each resulting batch under 100 MB.</p><h3 id="sample-job-response">Sample job response<a class="anchor" href="#sample-job-response" aria-label="Link to this section">#</a></h3><figure class="code" data-lang="json"><figcaption><span>json</span><button class="copy" type="button" data-copy aria-label="Copy json code to clipboard">Copy</button></figcaption><pre tabindex="0"><code class="language-json">{
+  &quot;status&quot;: &quot;success&quot;,
+  &quot;summary&quot;: &quot;Get import job details&quot;,
+  &quot;data&quot;: {
+    &quot;jobId&quot;: &quot;35130000001343088&quot;,
+    &quot;jobStatus&quot;: &quot;JOB COMPLETED&quot;,
+    &quot;importSummary&quot;: {
+      &quot;totalRowCount&quot;: 2400000,
+      &quot;successRowCount&quot;: 2400000,
+      &quot;warnings&quot;: 0
+    }
+  }
+}</code></pre></figure><p><code>jobStatus</code> is one of <code>JOB NOT STARTED</code>, <code>JOB IN PROGRESS</code>, <code>JOB COMPLETED</code> or <code>JOB FAILED</code>.</p><aside class="callout callout--note" role="note" aria-label="Note"><p class="callout__kind">Note</p><p class="callout__title">Driving the batches yourself</p><div class="callout__body"><p>If you have already split the file, the batch endpoint can be driven directly: send <code>batchKey: &quot;start&quot;</code> with <code>importType</code> and <code>autoIdentify</code> on the first batch, reuse the returned <code>batchKey</code> on the rest, and set <code>isLastBatch: true</code> on the final one to commit the job.</p></div></aside><h2 id="related">Related<a class="anchor" href="#related" aria-label="Link to this section">#</a></h2><ul><li><a href="exporting-data.html">Exporting data</a></li><li><a href="../limits.html">Limits</a> — file size ceilings and API unit costs.</li><li><a href="../errors.html">Errors</a></li></ul>
+      <nav class="pager" aria-label="Pagination"><a href="../limits.html" rel="prev"><span>Previous</span><strong>Limits</strong></a><a href="../guides/exporting-data.html" rel="next"><span>Next</span><strong>Exporting data</strong></a></nav>
+      <footer class="foot">
+        <span>Zoho Analytics Node.js SDK &middot; REST API v2</span>
+        <span>Generated 2026-10-27</span>
+      </footer>
+    </main>
+    <nav class="index" aria-label="On this page"><h2>On this page</h2><ul><li class="lvl-2"><a href="#synchronous-import">Synchronous import</a></li><li class="lvl-3"><a href="#import-types">Import types</a></li><li class="lvl-3"><a href="#sample-response">Sample response</a></li><li class="lvl-2"><a href="#batched-import">Batched import</a></li><li class="lvl-3"><a href="#sample-job-response">Sample job response</a></li><li class="lvl-2"><a href="#related">Related</a></li></ul></nav>
+  </div>
+</div>
+</div>
+<script src="../assets/docs.js" defer></script>
+</body>
+</html>

@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -79,7 +79,7 @@ A user can have only one default workspace at a time. If the user already has a 
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.update`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 
 ## Path Parameters
 
@@ -98,7 +98,7 @@ This endpoint takes no CONFIG parameter.
 - This API is idempotent. Invoking it on a workspace that is already the default workspace of the user succeeds without error and makes no change.
 - The requesting user should have at least one view of the workspace shared with them. A user with no access to any view of the workspace cannot mark it as the default workspace and the request fails with error code 7301.
 - The default preference continues to be stored even when the user loses access to the workspace later. However, the workspace is not presented as accessible until the access is restored.
-- After this API is invoked, the workspace is returned with isDefault as true in the response of the Get All Workspace List and the Get Shared Workspace List APIs. Use those APIs to verify the change.
+- After this API is invoked, the workspace is returned with isDefault as true in the response of the Get Org Workspaces API. Use that API to verify the change.
 - The preferences are stored per user and per organization. Marking a workspace as the default for one user has no effect on the preferences of any other user.
 - Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.
 
@@ -162,8 +162,8 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 | **Idempotent** | Calling this API with the workspace that is already the user's default succeeds without error and makes no change. |
 | **Access requirement** | The user must have at least one view shared with them in the workspace (i.e. any path to the workspace). Users with no access to any view in the workspace cannot set it as default (error 7301). |
 | **No CONFIG or request body** | The workspace is identified solely by `<workspace-id>` in the URL. |
-| **`isDefault` flag in list responses** | After calling this API, the workspace appears with `isDefault: true` in Get All Workspace List and Get Shared Workspace List responses. Use those APIs to verify the change. |
-| **Dependency** | `<workspace-id>` → Get All Workspace List or Get Shared Workspace List. |
+| **`isDefault` flag in list responses** | After calling this API, the workspace appears with `isDefault: true` in the [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) response. Use that API to verify the change. |
+| **Dependency** | `<workspace-id>` → [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md). |
 
 # Error Codes
 

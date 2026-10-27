@@ -1129,7 +1129,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Header | Value | Required | Description |
 |--------|-------|----------|-------------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. Must carry the scope matching the operation (see [Appendix B](#appendix-b--oauth-scope-summary)). |
-| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the schedule. Obtainable from the [Get Organizations](../01%20%C2%B7%20Organization%20Management/ORG_INFO_AND_SETTINGS.md) response or from listing API responses as the `orgId` field. |
+| `ZANALYTICS-ORGID` | Organization ID string | **Mandatory** | Organization ID of the workspace that owns the schedule. Read it from **Settings → Organisation** in the Zoho Analytics UI, or take it from the `orgId` field of any listing API response. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Conditional | Required only for the three APIs that send a CONFIG body: [Create Email Schedule](#2-create-email-schedule), [Update Email Schedule](#3-update-email-schedule), and [Change Email Schedule Status](#5-change-email-schedule-status). The other three send no payload. |
 | `Host` | `analyticsapi.zoho.com` (or the DC equivalent) | **Mandatory** | Must be the **standard** Zoho Analytics API host. A request whose host is a Client Portal / White Label custom domain is rejected with `7301` for all six APIs — see [White Label / Client Portal Behaviour](#white-label--client-portal-behaviour). |
 

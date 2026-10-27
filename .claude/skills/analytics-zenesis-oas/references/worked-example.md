@@ -199,7 +199,7 @@ And the shared parameters, defined once per file:
 "components": { "parameters": {
   "org-id":       { "name": "ZANALYTICS-ORGID", "in": "header", "required": true,
                     "schema": { "type": "string" },
-                    "description": "Organization ID (can be obtained using Get Organizations API)." },
+                    "description": "Organization ID. It is shown in the Zoho Analytics UI under Settings > Organisation." },
   "workspace-id": { "name": "workspace-id", "in": "path", "required": true,
                     "schema": { "type": "string" }, "description": "ID of the workspace." },
   "schedule-id":  { "name": "schedule-id", "in": "path", "required": true,

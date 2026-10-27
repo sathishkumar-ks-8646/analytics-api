@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Endpoint migration &mdash; Zoho Analytics V2 organization-context migration</title>
+<meta name="description" content="One section per affected Zoho Analytics v2 endpoint - full before-and-after requests and responses, field mapping tables, and the behaviour that genuinely differs.">
+<link rel="stylesheet" href="assets/migration.css">
+<script src="assets/migration.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <a class="wordmark" href="index.html">
+      <svg class="zoho-mark" role="img" aria-label="Zoho" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.66 6.897a1.299 1.299 0 0 0-1.205.765l-.642 1.44-.062-.385A1.291 1.291 0 0 0 5.27 7.648l-4.185.678A1.291 1.291 0 0 0 .016 9.807l.678 4.18a1.293 1.293 0 0 0 1.27 1.087c.074 0 .143-.01.216-.017l4.18-.678c.436-.07.784-.351.96-.723l2.933 1.307a1.304 1.304 0 0 0 .988.026c.321-.12.575-.365.716-.678l.28-.629.038.276a1.297 1.297 0 0 0 1.455 1.103l3.712-.501a1.29 1.29 0 0 0 1.03.514h4.236c.713 0 1.29-.58 1.291-1.291V9.545c0-.712-.58-1.291-1.291-1.291h-4.236c-.079 0-.155.008-.23.022a1.309 1.309 0 0 0-.275-.288c-.275-.21-.614-.3-.958-.253l-4.197.571c-.155.021-.3.07-.432.14L9.159 7.01a1.27 1.27 0 0 0-.499-.113zm-.025.705c.077 0 .159.013.24.052l2.971 1.324c-.128.238-.18.508-.142.782l.357 2.596h.002l-.745 1.672a.59.59 0 0 1-.777.296l-3.107-1.385-.004-.041-.41-2.526L8.1 7.95a.589.589 0 0 1 .536-.348zm-3.159.733c.125 0 .245.039.343.112.13.09.21.227.237.382l.234 1.446-.56 1.259a1.27 1.27 0 0 0-.026.987c.12.322.364.575.678.717l.295.131a.585.585 0 0 1-.428.314l-4.185.678a.59.59 0 0 1-.674-.485l-.678-4.18a.588.588 0 0 1 .485-.674l4.185-.678c.03-.004.064-.01.094-.01zm11.705.09a.59.59 0 0 1 .415.173 1.287 1.287 0 0 0-.416.947v4.237c0 .033.003.065.005.097l-3.55.482a.586.586 0 0 1-.66-.502l-.191-1.403.899-2.017a1.29 1.29 0 0 0-.333-1.5l3.754-.51c.026-.004.051-.004.077-.004zm1.3.532h4.227c.326 0 .588.266.588.588v4.237a.589.589 0 0 1-.588.588h-4.237a.564.564 0 0 1-.12-.013c.47-.246.758-.765.684-1.318zm-5.988.309.254.113c.296.133.43.48.296.777l-.432.97-.207-1.465a.58.58 0 0 1 .09-.395zm5.39.538.453 3.325a.583.583 0 0 1-.453.65zM6.496 11.545l.17 1.052a.588.588 0 0 1-.293-.776zm3.985 4.344a.588.588 0 0 0-.612.603c0 .358.244.61.601.61a.582.582 0 0 0 .607-.608c0-.35-.242-.605-.596-.605zm5.545 0a.588.588 0 0 0-.612.603c0 .358.245.61.602.61a.582.582 0 0 0 .606-.608c0-.35-.24-.605-.596-.605zm-8.537.018a.047.047 0 0 0-.048.047v.085c0 .026.021.047.048.047h.52l-.623.9a.052.052 0 0 0-.009.027v.027c0 .026.021.047.048.047h.815a.047.047 0 0 0 .047-.047v-.085a.047.047 0 0 0-.047-.047h-.55l.606-.9a.05.05 0 0 0 .008-.026v-.028a.047.047 0 0 0-.047-.047zm5.303 0a.047.047 0 0 0-.047.047v1.086c0 .026.02.047.047.047h.135a.047.047 0 0 0 .047-.047v-.454h.545v.454c0 .026.02.047.047.047h.134a.047.047 0 0 0 .047-.047v-1.086a.047.047 0 0 0-.047-.047h-.134a.047.047 0 0 0-.047.047v.453h-.545v-.453a.047.047 0 0 0-.047-.047zm-2.324.164c.25 0 .372.194.372.425 0 .219-.109.425-.358.426-.242 0-.375-.197-.375-.419 0-.235.108-.432.36-.432zm5.545 0c.25 0 .372.194.372.425 0 .219-.108.425-.358.426-.242 0-.374-.197-.374-.419 0-.235.108-.432.36-.432z" fill="currentColor"></path></svg>
+      Organization context<span>&nbsp;/ migration</span>
+    </a>
+    <span class="chip">Zoho Analytics API v2</span>
+    <nav class="topnav" aria-label="Guide chapters">
+      <a href="index.html">Start here</a>
+      <a href="01-why-org-context.html">Why</a>
+      <a href="02-whats-changed.html">What changed</a>
+      <a href="03-endpoint-migration.html" aria-current="page">Endpoints</a>
+      <a href="04-sdk-migration.html">SDKs</a>
+      <a href="05-knowledge-bases.html">Tools</a>
+      <a href="06-timeline.html">Timeline</a>
+      <a href="07-troubleshooting.html">Troubleshooting</a>
+    </nav>
+    <button class="icon-btn nav-toggle" id="nav-toggle" type="button"
+            aria-expanded="false" aria-controls="sidebar"
+            aria-label="Show chapter navigation">&#9776;</button>
+    <button class="icon-btn" id="theme-toggle" type="button"
+            aria-label="Switch colour theme">&#9680;</button>
+  </div>
+</header>
+
+<div class="deadline-bar">
+  <div class="deadline-bar__inner">
+    <span class="chip chip--deadline">Deadline</span>
+    <p>The replaced endpoints are <strong>deprecated</strong>. They stop answering in
+    <strong>March 2027</strong>. <a href="06-timeline.html">See the timeline &rarr;</a></p>
+  </div>
+</div>
+
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidenav" aria-label="Chapters">
+    <h2>Migration guide</h2>
+    <a href="index.html"><span class="n">00</span><span>Start here</span></a>
+    <a href="01-why-org-context.html"><span class="n">01</span><span>Why org context</span></a>
+    <a href="02-whats-changed.html"><span class="n">02</span><span>What changed</span></a>
+    <a href="03-endpoint-migration.html" aria-current="page"><span class="n">03</span><span>Endpoint migration</span></a>
+    <a href="04-sdk-migration.html"><span class="n">04</span><span>SDK migration</span></a>
+    <a href="05-knowledge-bases.html"><span class="n">05</span><span>Knowledge bases &amp; tools</span></a>
+    <a href="06-timeline.html"><span class="n">06</span><span>Timeline &amp; deprecation</span></a>
+    <a href="07-troubleshooting.html"><span class="n">07</span><span>Troubleshooting &amp; FAQ</span></a>
+    <h2>Source</h2>
+    <a href="03-endpoint-migration.md"><span class="n">md</span><span>This page as Markdown</span></a>
+    <a href="README.md"><span class="n">&#8212;</span><span>Folder README</span></a>
+    </nav>
+  </aside>
+
+  <main class="doc" id="main">
+<header class="page-head">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <p class="eyebrow">Migration guide &middot; <b>Chapter 03</b></p>
+  <h1>Endpoint migration</h1>
+  <p class="lede">The working chapter. Each endpoint gets its own section with the old call, the new call, a field mapping table and the gotchas. Work down the list and tick them off.</p>
+</header>
+<div class="sunset"><span class="sunset__icon">Deprecated</span><div><p>Every endpoint in the <strong>Before</strong> blocks on this page is <strong>deprecated</strong> and will be <strong>switched off in March 2027</strong>. The replacements are available now.</p></div></div>
+<section id="endpoint-index">
+<h2><span class="num">01</span>Endpoint index</h2>
+<p>Type to filter. Every row links to its own section below.</p>
+<div class="filterbar">
+  <label class="visually-hidden" for="ep-filter">Filter endpoints</label>
+  <input type="search" id="ep-filter" placeholder="Filter&hellip;  e.g. dashboards, recent, header" autocomplete="off" spellcheck="false">
+  <span class="filterbar__count" id="ep-count"></span>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Old call</th><th class="col-narrow">Status</th><th>What to do</th></tr></thead>
+<tbody>
+<tr data-ep><td class="is-old"><code>GET /restapi/v2/orgs</code></td><td><span class="tag tag--removed">replaced</span></td><td><a href="#get-org-list">Read the Organization ID from the UI</a></td></tr>
+<tr data-ep><td class="is-old"><code>GET /restapi/v2/workspaces</code></td><td><span class="tag tag--removed">replaced</span></td><td><a href="#the-three-workspace-listings">Use Get Org Workspaces</a></td></tr>
+<tr data-ep><td class="is-old"><code>GET /restapi/v2/workspaces/owned</code></td><td><span class="tag tag--removed">replaced</span></td><td><a href="#the-three-workspace-listings">Use Get Org Workspaces</a></td></tr>
+<tr data-ep><td class="is-old"><code>GET /restapi/v2/workspaces/shared</code></td><td><span class="tag tag--removed">replaced</span></td><td><a href="#the-three-workspace-listings">Use Get Org Workspaces</a></td></tr>
+<tr data-ep><td class="is-old"><code>GET /restapi/v2/dashboards</code></td><td><span class="tag tag--removed">replaced</span></td><td><a href="#the-three-dashboard-listings">Use Get Org Dashboards</a></td></tr>
+<tr data-ep><td class="is-old"><code>GET /restapi/v2/dashboards/owned</code></td><td><span class="tag tag--removed">replaced</span></td><td><a href="#the-three-dashboard-listings">Use Get Org Dashboards</a></td></tr>
+<tr data-ep><td class="is-old"><code>GET /restapi/v2/dashboards/shared</code></td><td><span class="tag tag--removed">replaced</span></td><td><a href="#the-three-dashboard-listings">Use Get Org Dashboards</a></td></tr>
+<tr data-ep><td class="is-old"><code>GET /restapi/v2/recentviews</code></td><td><span class="tag tag--removed">replaced</span></td><td><a href="#get-recent-views">Use Get Org Recent Items</a></td></tr>
+<tr data-ep><td><code>GET /restapi/v2/workspaces/{workspace-id}</code></td><td><span class="tag tag--changed">changed</span></td><td><a href="#get-workspace-info">Add the header</a></td></tr>
+<tr data-ep><td><code>GET /restapi/v2/views/{view-id}</code></td><td><span class="tag tag--changed">changed</span></td><td><a href="#get-view-details">Add the header</a></td></tr>
+<tr data-ep><td><code>POST /restapi/v2/workspaces</code></td><td><span class="tag tag--info">unchanged</span></td><td>Create Workspace is not affected &mdash; no action</td></tr>
+</tbody>
+</table>
+</div>
+<p class="empty-msg" id="ep-empty" hidden>No endpoint matches that filter.</p>
+</section>
+<section id="get-org-list">
+<h2><span class="num">02</span>Get Org List</h2>
+<div class="sunset"><span class="sunset__icon">Deprecated</span><div><p><code>GET /restapi/v2/orgs</code> is <strong>deprecated</strong> and switches off in <strong>March 2027</strong>. There is no API replacement — this is the one change that moves a step out of code and into configuration.</p></div></div>
+<p><strong>Before</strong></p>
+<pre><code class="lang-http">GET /restapi/v2/orgs HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy</code></pre>
+<pre><code class="lang-json">{
+  "status": "success",
+  "summary": "Get organizations",
+  "data": {
+    "orgs": [
+      {
+        "orgId": "64036181",
+        "orgName": "acme-analytics",
+        "orgDesc": "",
+        "createdBy": "admin@acme.com",
+        "createdByZuId": "64035928",
+        "planName": "Enterprise",
+        "isDefault": true,
+        "numberOfWorkspaces": 41,
+        "role": "Account Admin"
+      }
+    ]
+  }
+}</code></pre>
+<p><strong>After</strong> — there is no call. Read the Organization ID once from <strong>Settings → Organisation</strong> in the Zoho Analytics UI and put it in your configuration:</p>
+<pre><code class="lang-bash"># .env, a secret manager, a config file — wherever your other connection settings live
+ZOHO_ANALYTICS_ORG_ID=700000123456</code></pre>
+<h3 id="why-this-one-has-no-api-replacement">Why this one has no API replacement</h3>
+<p>Everything <code>GET /restapi/v2/orgs</code> returned was either <em>discovery</em> (which organizations exist for me) or <em>metadata about an organization</em> (plan, workspace count, my role). Discovery is the part that is going away: the whole point of the change is that your application states its organization rather than discovering one. The metadata is still available, organization-scoped:</p>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Old field</th><th>Where to get it now</th></tr></thead><tbody><tr><td><code>orgId</code></td><td>Configuration, read once from <strong>Settings → Organisation</strong></td></tr><tr><td><code>orgName</code>, <code>orgDesc</code></td><td>Zoho Analytics UI → <strong>Settings → Organisation</strong></td></tr><tr><td><code>planName</code></td><td><code>GET /restapi/v2/subscription</code> (needs the header)</td></tr><tr><td><code>numberOfWorkspaces</code></td><td>Count <code>data.workspaces</code> from <code>GET /restapi/v2/orgs/workspaces</code>, or <code>GET /restapi/v2/resources</code></td></tr><tr><td><code>role</code></td><td><code>GET /restapi/v2/workspaces/{workspace-id}</code> with <code>CONFIG={"withUserRoleInfo":true}</code></td></tr><tr><td><code>isDefault</code></td><td>No equivalent. It described which organization was <em>your</em> default; your application now decides.</td></tr></tbody></table></div>
+<h3 id="recipe-i-used-to-list-across-every-organization">Recipe: I used to list across every organization</h3>
+<p>Some products legitimately serve users who work in several organizations — a consultancy dashboard, a backup tool, an internal admin console. The pattern changes from <em>discover then fan out</em> to <em>configure then fan out</em>:</p>
+<pre><code class="lang-text">Before:  orgs = GET /restapi/v2/orgs
+         for each org: GET /restapi/v2/workspaces   ← actually returned ALL orgs anyway
+
+After:   orgs = &lt;the list of organization IDs your app is configured with&gt;
+         for each orgId:
+             GET /restapi/v2/orgs/workspaces   with ZANALYTICS-ORGID: orgId</code></pre>
+<pre><code class="lang-python"># After — explicit fan-out over organizations you have been configured with
+ORG_IDS = ["700000123456", "700000999888"]   # from config, not from an API call
+
+all_workspaces = []
+for org_id in ORG_IDS:
+    org = ac.get_org_instance(org_id)
+    for ws in org.get_org_workspaces():
+        ws["sourceOrgId"] = org_id       # keep track of where each row came from
+        all_workspaces.append(ws)</code></pre>
+<p>This is more code than before, and that is deliberate: the fan-out is now visible, bounded and auditable instead of implicit.</p>
+<div class="note note--warn"><div class="note__title">Let the user add organizations, do not guess them</div><p>If your product needs to cover organizations you cannot know in advance, add an "Add organization" step to your setup flow and ask the user for the Organization ID — the same way you already ask for a client ID and refresh token.</p></div>
+</section>
+<section id="the-three-workspace-listings">
+<h2><span class="num">03</span>The three workspace listings</h2>
+<div class="sunset"><span class="sunset__icon">Deprecated</span><div><p><code>GET /restapi/v2/workspaces</code>, <code>GET /restapi/v2/workspaces/owned</code> and <code>GET /restapi/v2/workspaces/shared</code> are all <strong>deprecated</strong> and switch off in <strong>March 2027</strong>. All three become one call.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Old</th><th>New</th></tr></thead><tbody><tr><td class="is-old"><code>GET /restapi/v2/workspaces</code></td><td class="is-new"><code>GET /restapi/v2/orgs/workspaces</code></td></tr><tr><td class="is-old"><code>GET /restapi/v2/workspaces/owned</code></td><td class="is-new"><code>GET /restapi/v2/orgs/workspaces</code></td></tr><tr><td class="is-old"><code>GET /restapi/v2/workspaces/shared</code></td><td class="is-new"><code>GET /restapi/v2/orgs/workspaces</code></td></tr></tbody></table></div>
+<h3 id="the-new-call">The new call</h3>
+<pre><code class="lang-http">GET /restapi/v2/orgs/workspaces HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456</code></pre>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Attribute</th><th>Value</th></tr></thead><tbody><tr><td>Method</td><td><code>GET</code></td></tr><tr><td>URL</td><td><code>/restapi/v2/orgs/workspaces</code></td></tr><tr><td>OAuth scope</td><td><code>ZohoAnalytics.metadata.read</code></td></tr><tr><td><code>ZANALYTICS-ORGID</code></td><td><strong>Mandatory</strong></td></tr><tr><td>CONFIG</td><td>None — this endpoint takes no parameters</td></tr><tr><td>Permission</td><td>Any active user of the organization</td></tr><tr><td>API units</td><td>0.1</td></tr></tbody></table></div>
+<pre><code class="lang-json">{
+  "status": "success",
+  "summary": "Get org workspaces",
+  "data": {
+    "workspaces": [
+      {
+        "workspaceId": "137687000271334001",
+        "workspaceName": "Sales Analysis",
+        "workspaceDesc": "Quarterly sales dashboards",
+        "orgId": "700000123456",
+        "createdTime": "1718361737000",
+        "createdBy": "jane.doe@example.com",
+        "isDefault": true
+      }
+    ]
+  }
+}</code></pre>
+<h3 id="field-mapping">Field mapping</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Old location</th><th>New location</th><th>Change</th></tr></thead><tbody><tr><td><code>data.ownedWorkspaces[]</code></td><td><code>data.workspaces[]</code></td><td>Merged</td></tr><tr><td><code>data.sharedWorkspaces[]</code></td><td><code>data.workspaces[]</code></td><td>Merged</td></tr><tr><td><code>data.workspaces[]</code> <em>(owned / shared endpoints)</em></td><td><code>data.workspaces[]</code></td><td>Same key, same shape</td></tr><tr><td><code>…[].workspaceId</code></td><td>same</td><td>—</td></tr><tr><td><code>…[].workspaceName</code></td><td>same</td><td>—</td></tr><tr><td><code>…[].workspaceDesc</code></td><td>same</td><td>—</td></tr><tr><td><code>…[].orgId</code></td><td>same</td><td>Always equals the header you sent</td></tr><tr><td><code>…[].createdTime</code></td><td>same</td><td>Epoch ms as a string</td></tr><tr><td><code>…[].createdBy</code></td><td>same</td><td>Omitted when no address can be resolved</td></tr><tr><td><code>…[].isDefault</code></td><td>same</td><td><strong>Meaning clarified</strong> — the <em>caller's</em> default workspace</td></tr></tbody></table></div>
+<h3 id="rebuilding-owned-and-shared">Rebuilding "owned" and "shared"</h3>
+<p>If your UI really does need the two buckets, derive them from the data:</p>
+<pre><code class="lang-python">me = "jane.doe@example.com"
+workspaces = org.get_org_workspaces()
+
+owned  = [w for w in workspaces if w.get("createdBy") == me]
+shared = [w for w in workspaces if w.get("createdBy") != me]</code></pre>
+<p>In most cases you will find you no longer want the split: within one organization an admin sees everything anyway, and for everyone else "shared with me" <em>is</em> the whole list.</p>
+<h3 id="behaviour-worth-knowing">Behaviour worth knowing</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Aspect</th><th>Detail</th></tr></thead><tbody><tr><td>Who sees what</td><td>Account Admins and Organization Admins get every active workspace in the organization. Everyone else gets only the workspaces shared with them.</td></tr><tr><td>Unverified email</td><td>An Organization Admin or ordinary user whose primary email address is not verified gets an <strong>empty list</strong>. This does not apply to the Account Admin.</td></tr><tr><td>Order</td><td>Newest created first. No sort parameter.</td></tr><tr><td>Paging</td><td>None. The whole list comes back in one response.</td></tr><tr><td>Empty list</td><td>Valid. HTTP 200 with <code>"workspaces": []</code> means "nothing visible to this caller".</td></tr><tr><td>Client Portal / White Label</td><td>Allowed. The list holds only the workspaces enabled for that domain.</td></tr></tbody></table></div>
+<h3 id="errors">Errors</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Code</th><th>Meaning</th><th>Fix</th></tr></thead><tbody><tr><td><code>7301</code></td><td>The caller is not an active user of that organization</td><td>Use an organization the user belongs to, or have an Account Admin add them</td></tr><tr><td><code>8083</code></td><td><code>ZANALYTICS-ORGID</code> missing or empty</td><td>Send the header</td></tr><tr><td><code>8084</code></td><td>No organization with that ID</td><td>Re-read the ID from <strong>Settings → Organisation</strong></td></tr><tr><td><code>8535</code></td><td>Invalid or expired OAuth token</td><td>Refresh the token; needs <code>ZohoAnalytics.metadata.read</code></td></tr></tbody></table></div>
+</section>
+<section id="the-three-dashboard-listings">
+<h2><span class="num">04</span>The three dashboard listings</h2>
+<div class="sunset"><span class="sunset__icon">Deprecated</span><div><p><code>GET /restapi/v2/dashboards</code>, <code>GET /restapi/v2/dashboards/owned</code> and <code>GET /restapi/v2/dashboards/shared</code> are <strong>deprecated</strong> and switch off in <strong>March 2027</strong>.</p></div></div>
+<p>This is the biggest behavioural change in the migration, because the replacement is <strong>paged</strong>. Code that assumed one request returned everything must be rewritten, not just re-pointed.</p>
+<h3 id="the-new-call">The new call</h3>
+<pre><code class="lang-http">GET /restapi/v2/orgs/dashboards HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456</code></pre>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Attribute</th><th>Value</th></tr></thead><tbody><tr><td>Method</td><td><code>GET</code></td></tr><tr><td>URL</td><td><code>/restapi/v2/orgs/dashboards</code></td></tr><tr><td>OAuth scope</td><td><code>ZohoAnalytics.metadata.read</code></td></tr><tr><td><code>ZANALYTICS-ORGID</code></td><td><strong>Mandatory</strong></td></tr><tr><td>CONFIG</td><td>Optional, as a URL-encoded query parameter</td></tr><tr><td>Permission</td><td>Any member of the organization. Not available on Client Portal / White Label domains</td></tr><tr><td>API units</td><td>0.1</td></tr></tbody></table></div>
+<h3 id="config-parameters">CONFIG parameters</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Name</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead><tbody><tr><td><code>workspaceIds</code></td><td>array of string</td><td>all visible workspaces</td><td>0–1,000 entries, 10,000 characters total. Duplicates ignored. Every ID must belong to the organization in the header or the whole call fails with <code>7387</code>.</td></tr><tr><td><code>pageNo</code></td><td>integer</td><td><code>1</code></td><td>Range 1–1,000. Outside that: <code>8544</code>.</td></tr><tr><td><code>recordsPerPage</code></td><td>integer</td><td><code>100</code></td><td>Range 1–500. Outside that: <code>8544</code>.</td></tr><tr><td><code>searchKey</code></td><td>string</td><td>none</td><td>Name contains this text, matched as one phrase, applied before paging. Max 100 characters. Empty or blank: <code>8539</code>.</td></tr></tbody></table></div>
+<p>CONFIG is JSON, stringified and URL-encoded:</p>
+<pre><code class="lang-http">GET /restapi/v2/orgs/dashboards?CONFIG=%7B%22searchKey%22%3A%22Sales%22%2C%22recordsPerPage%22%3A50%7D HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456</code></pre>
+<h3 id="paging-correctly">Paging correctly</h3>
+<pre><code class="lang-python"># After — walk every page, the safe way
+org = ac.get_org_instance(ORG_ID)
+
+dashboards = []
+page = 1
+while True:
+    result = org.get_org_dashboards({"pageNo": page, "recordsPerPage": 100})
+    dashboards.extend(result["views"])
+    if not result["pageDetails"]["hasNextPage"]:
+        break
+    page += 1</code></pre>
+<div class="note note--danger"><div class="note__title">Do not stop on a short page</div><p><code>hasNextPage</code> is computed after duplicates and role-restricted entries have been removed from the page. A page can legitimately come back with 3 entries when you asked for 100 and still have more pages behind it. <strong>Loop on <code>hasNextPage</code>, never on <code>len(views) &lt; recordsPerPage</code>.</strong></p></div>
+<h3 id="field-mapping">Field mapping</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Old location</th><th>New location</th><th>Change</th></tr></thead><tbody><tr><td><code>data.ownedViews[]</code></td><td><code>data.views[]</code></td><td>Merged</td></tr><tr><td><code>data.sharedViews[]</code></td><td><code>data.views[]</code></td><td>Merged</td></tr><tr><td><code>data.views[]</code> <em>(owned / shared endpoints)</em></td><td><code>data.views[]</code></td><td>Same key</td></tr><tr><td>—</td><td><code>data.pageDetails.pageNo</code></td><td><strong>New</strong></td></tr><tr><td>—</td><td><code>data.pageDetails.recordsPerPage</code></td><td><strong>New</strong></td></tr><tr><td>—</td><td><code>data.pageDetails.hasNextPage</code></td><td><strong>New</strong> — drives your loop</td></tr><tr><td><code>…[].viewId</code>, <code>viewName</code>, <code>viewDesc</code>, <code>viewType</code></td><td>same</td><td>—</td></tr><tr><td><code>…[].parentViewId</code>, <code>folderId</code></td><td>same</td><td><code>folderId</code> is the string <code>"null"</code> when the dashboard is in no folder</td></tr><tr><td><code>…[].createdTime</code>, <code>createdBy</code></td><td>same</td><td><code>createdBy</code> is <code>""</code> when the caller is not an active user of the owning organization</td></tr><tr><td><code>…[].lastModifiedTime</code>, <code>lastModifiedBy</code></td><td>same</td><td>—</td></tr><tr><td><code>…[].isFavorite</code></td><td>same</td><td>Belongs to the <strong>caller</strong>, not the dashboard</td></tr><tr><td><code>…[].sharedBy</code></td><td>same</td><td>Omitted when no address can be resolved</td></tr><tr><td><code>…[].workspaceId</code>, <code>orgId</code></td><td>same</td><td>—</td></tr></tbody></table></div>
+<h3 id="the-100-workspace-cap">The 100-workspace cap</h3>
+<p>If you omit <code>workspaceIds</code>, the server first counts the workspaces the caller can see. More than 100 and the call fails:</p>
+<pre><code class="lang-json">{
+  "status": "failure",
+  "summary": "ORG_LEVEL_VIEWS_WS_MORE_THAN_ALLOWED_LIMIT",
+  "data": {
+    "errorCode": 7476,
+    "errorMessage": "Workspace count is more than the allowed limit. Kindly specify the workspace id's to get the views."
+  }
+}</code></pre>
+<p>The fix is to name the workspaces yourself, in batches:</p>
+<pre><code class="lang-python"># After — list dashboards for a large organization, 100 workspaces at a time
+workspaces = org.get_org_workspaces()
+ids = [w["workspaceId"] for w in workspaces]
+
+for batch_start in range(0, len(ids), 100):
+    batch = ids[batch_start:batch_start + 100]
+    page = 1
+    while True:
+        result = org.get_org_dashboards({"workspaceIds": batch, "pageNo": page})
+        handle(result["views"])
+        if not result["pageDetails"]["hasNextPage"]:
+            break
+        page += 1</code></pre>
+<div class="note note--warn"><div class="note__title"><code>workspaceIds</code> is validated, not filtered</div><p>A workspace ID that belongs to another organization, or does not exist, fails the <strong>whole request</strong> with <code>7387</code>. It is not silently skipped. Build the batch from <code>Get Org Workspaces</code> for the same organization and you will never hit this.</p></div>
+<h3 id="errors">Errors</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Code</th><th>Meaning</th><th>Fix</th></tr></thead><tbody><tr><td><code>7301</code></td><td>Not a member of that organization, or the request came through a Client Portal / White Label domain</td><td>Call from the standard API host as a member</td></tr><tr><td><code>7387</code></td><td>A <code>workspaceIds</code> entry is not in this organization, or does not exist</td><td>Take IDs from Get Org Workspaces for the same organization</td></tr><tr><td><code>7430</code></td><td>Org-level view listing is switched off for the organization (reported to the Account Admin)</td><td>Use the workspace-level APIs, or contact support</td></tr><tr><td><code>7431</code></td><td>Same, reported to every other caller</td><td>Use the workspace-level APIs, or contact your account admin</td></tr><tr><td><code>7476</code></td><td>More than 100 workspaces in scope</td><td>Send <code>workspaceIds</code> in batches</td></tr><tr><td><code>8083</code> / <code>8084</code></td><td>Header missing / organization unknown</td><td>Send a valid <code>ZANALYTICS-ORGID</code></td></tr><tr><td><code>8507</code></td><td><code>searchKey</code> &gt; 100 chars, <code>workspaceIds</code> &gt; 10,000 chars, or CONFIG &gt; 11,000 chars</td><td>Shorten, or send fewer IDs per call</td></tr><tr><td><code>8516</code></td><td><code>pageNo</code> or <code>recordsPerPage</code> is not a number</td><td>Send a plain number, not a string</td></tr><tr><td><code>8534</code></td><td>CONFIG is not valid JSON, or <code>workspaceIds</code> is not an array</td><td>Fix the JSON and URL-encode it</td></tr><tr><td><code>8539</code></td><td>A CONFIG value is <code>null</code>, empty or blank</td><td>Leave the key out instead of sending an empty value</td></tr><tr><td><code>8542</code></td><td>CONFIG holds a key other than the four documented ones</td><td>Remove it</td></tr><tr><td><code>8544</code></td><td><code>pageNo</code> outside 1–1,000, or <code>recordsPerPage</code> outside 1–500</td><td>Use a value in range</td></tr><tr><td><code>8547</code></td><td>More than 1,000 entries in <code>workspaceIds</code></td><td>Send at most 1,000 — in practice no more than 100</td></tr></tbody></table></div>
+</section>
+<section id="get-recent-views">
+<h2><span class="num">05</span>Get Recent Views</h2>
+<div class="sunset"><span class="sunset__icon">Deprecated</span><div><p><code>GET /restapi/v2/recentviews</code> is <strong>deprecated</strong> and switches off in <strong>March 2027</strong>.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Old</th><th>New</th></tr></thead><tbody><tr><td class="is-old"><code>GET /restapi/v2/recentviews</code></td><td class="is-new"><code>GET /restapi/v2/orgs/recentitems</code></td></tr></tbody></table></div>
+<pre><code class="lang-http">GET /restapi/v2/orgs/recentitems HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456</code></pre>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Attribute</th><th>Value</th></tr></thead><tbody><tr><td>Method</td><td><code>GET</code></td></tr><tr><td>URL</td><td><code>/restapi/v2/orgs/recentitems</code></td></tr><tr><td>OAuth scope</td><td><code>ZohoAnalytics.metadata.read</code></td></tr><tr><td><code>ZANALYTICS-ORGID</code></td><td><strong>Mandatory</strong></td></tr><tr><td>CONFIG</td><td>None</td></tr><tr><td>Permission</td><td>Any active user of the organization. Only the caller's own history</td></tr><tr><td>API units</td><td><strong>1</strong> — ten times the other two org-level listings</td></tr></tbody></table></div>
+<p>The response shape is unchanged — <code>data.views[]</code> with <code>viewId</code>, <code>viewName</code>, <code>viewType</code>, <code>workspaceId</code>, <code>workspaceName</code> and <code>viewLastAccessedTime</code>. What differs:</p>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Aspect</th><th>Detail</th></tr></thead><tbody><tr><td>Scope</td><td>Only entries whose workspace is visible to the caller <strong>in the named organization</strong>.</td></tr><tr><td>Size</td><td>At most <strong>20</strong> entries, newest first. No paging, no <code>limit</code>, no type filter.</td></tr><tr><td>Access check</td><td>Workspace-level only. An entry can point at a view the caller can no longer open.</td></tr><tr><td>Names</td><td><code>viewName</code> and <code>workspaceName</code> come from the stored history record, not a live lookup. They can be stale if something was renamed.</td></tr><tr><td><code>summary</code></td><td>Still <code>"Get recent views"</code>. Tell the endpoints apart by URL.</td></tr><tr><td>Cost</td><td>1 API unit. If you poll this, budget for it.</td></tr></tbody></table></div>
+<h3 id="errors">Errors</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Code</th><th>Meaning</th></tr></thead><tbody><tr><td><code>7301</code></td><td>The caller is not an active user of that organization</td></tr><tr><td><code>8083</code> / <code>8084</code></td><td>Header missing / organization unknown</td></tr><tr><td><code>8535</code></td><td>Invalid or expired OAuth token</td></tr></tbody></table></div>
+</section>
+<section id="get-workspace-info">
+<h2><span class="num">06</span>Get Workspace Info</h2>
+<p>Status: <span class="tag tag--changed">changed</span> — <strong>not removed</strong>. Same URL, same response. The header became mandatory.</p>
+<p><strong>Before</strong></p>
+<pre><code class="lang-http">GET /restapi/v2/workspaces/466206000000071000 HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-http">GET /restapi/v2/workspaces/466206000000071000 HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456</code></pre>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">What</th><th>Before</th><th>After</th></tr></thead><tbody><tr><td><code>ZANALYTICS-ORGID</code></td><td>Optional</td><td><strong>Mandatory</strong></td></tr><tr><td>Resolution</td><td>The workspace was found wherever it lived</td><td>The workspace is found <strong>inside the named organization</strong></td></tr><tr><td><code>CONFIG={"withUserRoleInfo":true}</code></td><td>Supported</td><td>Supported, unchanged</td></tr><tr><td>Response</td><td><code>data.workspaces</code> — a single object, not an array</td><td>Unchanged</td></tr><tr><td>New errors</td><td>—</td><td><code>8083</code> header missing, <code>8084</code> organization unknown</td></tr><tr><td>Changed error</td><td><code>7103</code> = workspace not found</td><td><code>7103</code> = not found <strong>in this organization</strong></td></tr></tbody></table></div>
+<div class="note note--warn"><div class="note__title">7103 can now mean "right workspace, wrong organization"</div><p>If you get <code>7103</code> on a workspace ID that you are certain exists, check the header before you check the ID. The workspace is probably in a different organization than the one you named.</p></div>
+<p>In the SDKs this method moved from <code>AnalyticsClient</code> to <code>WorkspaceAPI</code> — see <a href="04-sdk-migration.html#getworkspacedetails-moves-to-workspaceapi">chapter 04</a>.</p>
+</section>
+<section id="get-view-details">
+<h2><span class="num">07</span>Get View Details</h2>
+<p>Status: <span class="tag tag--changed">changed</span> — <strong>not removed</strong>. Same URL, same response. The header became mandatory.</p>
+<p><strong>Before</strong></p>
+<pre><code class="lang-http">GET /restapi/v2/views/137687000000471835 HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-http">GET /restapi/v2/views/137687000000471835?CONFIG=%7B%22withInvolvedMetaInfo%22%3Atrue%7D HTTP/1.1
+Host: analyticsapi.zoho.com
+Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456</code></pre>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">What</th><th>Before</th><th>After</th></tr></thead><tbody><tr><td><code>ZANALYTICS-ORGID</code></td><td>Optional ("harmless, recommended for consistency")</td><td><strong>Mandatory</strong></td></tr><tr><td>Resolution</td><td>The view was resolved globally by ID</td><td>The view is resolved <strong>inside the named organization</strong></td></tr><tr><td><code>CONFIG={"withInvolvedMetaInfo":true}</code></td><td>Supported</td><td>Supported, unchanged</td></tr><tr><td>Response</td><td><code>data.views</code> — a single object</td><td>Unchanged</td></tr><tr><td>New errors</td><td>—</td><td><code>8083</code> header missing, <code>8084</code> organization unknown</td></tr><tr><td>Changed error</td><td><code>7104</code> = view not found</td><td><code>7104</code> = not found <strong>in this organization</strong></td></tr></tbody></table></div>
+<p>In the SDKs this method moved from <code>AnalyticsClient</code> to <code>OrgAPI</code> — see <a href="04-sdk-migration.html#getviewdetails-moves-to-orgapi">chapter 04</a>.</p>
+<div class="note note--info"><div class="note__title">Why OrgAPI and not ViewAPI?</div><p><code>ViewAPI</code> instances are built from an organization <strong>and a workspace and a view</strong>. This endpoint has no workspace in its URL — it finds the view from the organization alone. <code>OrgAPI</code>, which carries exactly an organization, is the honest home for it.</p></div>
+</section>
+<section id="a-migration-checklist-you-can-paste-into-a-ticket">
+<h2><span class="num">08</span>A migration checklist you can paste into a ticket</h2>
+<pre><code class="lang-text">[ ] Organization ID read from Settings → Organisation and stored in config
+[ ] ZANALYTICS-ORGID added in the shared HTTP client / request builder
+[ ] GET /restapi/v2/orgs              → removed, ID now comes from config
+[ ] GET /restapi/v2/workspaces        → GET /restapi/v2/orgs/workspaces
+[ ] GET /restapi/v2/workspaces/owned  → GET /restapi/v2/orgs/workspaces
+[ ] GET /restapi/v2/workspaces/shared → GET /restapi/v2/orgs/workspaces
+[ ] ownedWorkspaces + sharedWorkspaces parsing replaced by data.workspaces
+[ ] GET /restapi/v2/dashboards        → GET /restapi/v2/orgs/dashboards
+[ ] GET /restapi/v2/dashboards/owned  → GET /restapi/v2/orgs/dashboards
+[ ] GET /restapi/v2/dashboards/shared → GET /restapi/v2/orgs/dashboards
+[ ] ownedViews + sharedViews parsing replaced by data.views
+[ ] Dashboard paging loop added, driven by pageDetails.hasNextPage
+[ ] 7476 handled — fall back to batched workspaceIds for large organizations
+[ ] GET /restapi/v2/recentviews       → GET /restapi/v2/orgs/recentitems
+[ ] Recent-items callers tolerate a viewId they can no longer open
+[ ] GET /restapi/v2/workspaces/{id}   → header added
+[ ] GET /restapi/v2/views/{id}        → header added
+[ ] 8083 and 8084 handled wherever the header is now required
+[ ] SDK upgraded; getWorkspaceDetails and getViewDetails moved class
+[ ] OpenAPI / Postman / OKF / MCP copies re-imported (chapter 05)</code></pre>
+<hr>
+<p>Next: <a href="04-sdk-migration.html">the same migration, in the SDKs</a>.</p>
+</section>
+    <nav class="pager" aria-label="Chapter">
+      <a href="02-whats-changed.html"><span class="pager__side">Previous</span>&larr; What changed</a>
+      <a href="04-sdk-migration.html" style="margin-left:auto;text-align:right"><span class="pager__side">Next</span>SDK migration &rarr;</a>
+    </nav>
+  </main>
+
+<aside class="toc" aria-label="On this page">
+  <nav>
+    <h2>On this page</h2>
+    <a href="#endpoint-index">Endpoint index</a>
+    <a href="#get-org-list">Get Org List</a>
+    <a href="#the-three-workspace-listings">The three workspace listings</a>
+    <a href="#the-three-dashboard-listings">The three dashboard listings</a>
+    <a href="#get-recent-views">Get Recent Views</a>
+    <a href="#get-workspace-info">Get Workspace Info</a>
+    <a href="#get-view-details">Get View Details</a>
+    <a href="#a-migration-checklist-you-can-paste-into-a-ticket">A migration checklist you can paste into a ticket</a>
+  </nav>
+</aside>
+</div>
+
+<footer class="footer">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <div class="footer__inner">
+    <div>
+      <h2>Guide</h2>
+      <a href="index.html">00 &nbsp;Start here</a>
+      <a href="01-why-org-context.html">01 &nbsp;Why org context</a>
+      <a href="02-whats-changed.html">02 &nbsp;What changed</a>
+      <a href="03-endpoint-migration.html">03 &nbsp;Endpoint migration</a>
+      <a href="04-sdk-migration.html">04 &nbsp;SDK migration</a>
+      <a href="05-knowledge-bases.html">05 &nbsp;Knowledge bases &amp; tools</a>
+      <a href="06-timeline.html">06 &nbsp;Timeline &amp; deprecation</a>
+      <a href="07-troubleshooting.html">07 &nbsp;Troubleshooting &amp; FAQ</a>
+    </div>
+    <div>
+      <h2>Reference</h2>
+      <a href="03-endpoint-migration.html#endpoint-index">Endpoint index</a>
+      <a href="07-troubleshooting.html#error-codes">Error codes</a>
+      <a href="06-timeline.html">Deprecation timeline</a>
+      <a href="01-why-org-context.html#where-to-find-your-organization-id">Find your Organization ID</a>
+    </div>
+    <div class="footer__meta">
+      <h2>About</h2>
+      <p>Migration guide for the Zoho Analytics REST API v2 move to mandatory
+      organization context.</p>
+      <p>Rendered from the Markdown in this folder by <code>build.py</code>.
+      Generated 2026-10-27.</p>
+      <p><strong>Old endpoints are removed in March 2027.</strong></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

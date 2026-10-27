@@ -100,7 +100,7 @@ CONFIG={"widgetName":"Sales widget"}
 | Aspect | Detail |
 |--------|--------|
 | **Not idempotent** | Calling twice with the same name fails with `7104`. |
-| **Dependency** | `<workspace-id>` → [Get All Workspace List](WORKSPACE_OPERATIONS_API_DOC_INFO.md#6-get-all-workspace-list). |
+| **Dependency** | `<workspace-id>` → [Get Org Workspaces](ORG_LEVEL_LISTINGS_API_DOC_INFO.md#1-get-org-workspaces). |
 
 ### Error Codes
 

@@ -33,7 +33,7 @@ A Zoho Analytics v2 request is an HTTPS call to `https://<ZohoAnalytics_Server_U
 | Prefix | `/restapi/v2` | All endpoints. Asynchronous (bulk) data operations use `/restapi/v2/bulk/...`. |
 | Scope segments | `/workspaces/{workspace-id}`, `/views/{view-id}`, ... | Path placeholders are numeric IDs sent as strings. The markdown reference writes them as `<workspace-id>`; the OpenAPI files write `{workspace-id}`. See [Identifiers](/foundations/identifiers.md). |
 
-Endpoints are **organization-scoped** (the `ZANALYTICS-ORGID` header selects the organization), **workspace-scoped** (`/workspaces/{workspace-id}/...`), **view-scoped** (`/workspaces/{workspace-id}/views/{view-id}/...`), or **user-scoped** (no organization header, for example Get Org List, Get All Workspace List).
+Every endpoint is **organization-scoped**: the `ZANALYTICS-ORGID` header selects the organization and is mandatory. Within that organization an endpoint is further **workspace-scoped** (`/workspaces/{workspace-id}/...`) or **view-scoped** (`/workspaces/{workspace-id}/views/{view-id}/...`); the org-level listings under `/orgs/...` name no workspace and work the scope out from the caller's identity.
 
 # Headers
 

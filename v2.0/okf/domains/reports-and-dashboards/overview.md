@@ -17,18 +17,18 @@ api:
     - group: dashboards
       title: Dashboards
       doc: "/domains/reports-and-dashboards/dashboards/overview.md"
-      endpoint_count: 6
-  endpoint_count: 9
+      endpoint_count: 3
+  endpoint_count: 6
   openapi: "/references/openapi/reports-dashboards-grouped-api.json"
 sources:
   - id: openapi-spec
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:28Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -41,7 +41,7 @@ API for Reports and Dashboards in Zoho Analytics - covering the creation, update
 | Group | Endpoints | Description |
 |---|---|---|
 | [Reports (Analysis Views)](reports/overview.md) | 3 | APIs for creating a report (chart, pivot or summary view) on an existing table, reading the stored definition back, and rebuilding it. |
-| [Dashboards](dashboards/overview.md) | 6 | APIs for creating a dashboard, reading its stored layout, settings and themes, replacing any of those three sections, and listing the dashboards a user owns or can see. |
+| [Dashboards](dashboards/overview.md) | 3 | APIs for creating a dashboard, reading its stored layout, settings and themes, replacing any of those three sections, and listing the dashboards a user owns or can see. |
 
 # Endpoints
 
@@ -53,9 +53,6 @@ API for Reports and Dashboards in Zoho Analytics - covering the creation, update
 | [Create Dashboard](dashboards/create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `createDashboard` | `ZohoAnalytics.modeling.create` | 200 |
 | [Read Dashboard Metadata](dashboards/get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `getDashboardMetadata` | `ZohoAnalytics.modeling.read` | 200 |
 | [Update Dashboard](dashboards/update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `updateDashboard` | `ZohoAnalytics.modeling.update` | 204 |
-| [Get All Dashboards](dashboards/get-dashboards.md) | GET | `/restapi/v2/dashboards` | `getDashboards` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Owned Dashboards](dashboards/get-owned-dashboards.md) | GET | `/restapi/v2/dashboards/owned` | `getOwnedDashboards` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Shared Dashboards](dashboards/get-shared-dashboards.md) | GET | `/restapi/v2/dashboards/shared` | `getSharedDashboards` | `ZohoAnalytics.metadata.read` | 200 |
 
 # Related
 

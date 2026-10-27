@@ -804,7 +804,7 @@ ZANALYTICS-ORGID: 700000123456
 | Header | Value | Required | Notes |
 |--------|-------|----------|-------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. |
-| `ZANALYTICS-ORGID` | Organisation ID | **Mandatory** for all APIs | Use the `orgId` value from the Get Org List response. |
+| `ZANALYTICS-ORGID` | Organisation ID | **Mandatory** for all APIs | Read the Organization ID from **Settings → Organisation** in the Zoho Analytics UI. |
 | `Content-Type` | `application/x-www-form-urlencoded` | Required for POST/PUT/DELETE | Add Users, Remove Users, Activate Users, Deactivate Users, and Change User Role send CONFIG as a form-encoded body parameter. Get Users and Get Org Admins have no body. |
 
 ---

@@ -41,10 +41,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -54,7 +54,7 @@ status: stable
 
 Removes the default workspace designation from the specified workspace for the calling user. After this operation, the user has no default workspace set.
 
-Unlike Add Default Workspace, this API is **not idempotent** — if the specified workspace is not currently the user's default, the call fails with error **7415**. Verify the user's current default using Get All Workspace List (which returns `isDefault: true` for the current default) before calling this API.
+Unlike Add Default Workspace, this API is **not idempotent** — if the specified workspace is not currently the user's default, the call fails with error **7415**. Verify the user's current default using [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) (which returns `isDefault: true` for the current default) before calling this API.
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
@@ -80,7 +80,7 @@ Unlike Add Default Workspace, this API is **not idempotent** — if the specifie
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.update`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 
 ## Path Parameters
 
@@ -96,7 +96,7 @@ This endpoint takes no CONFIG parameter.
 
 - Remove Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.
 - This API is not idempotent. When the specified workspace is not the current default workspace of the requesting user, the request fails with error code 7415 instead of succeeding silently.
-- Use the Get All Workspace List API to confirm that the target workspace holds isDefault as true before invoking this API.
+- Use the Get Org Workspaces API to confirm that the target workspace holds isDefault as true before invoking this API.
 - This behaviour differs from the Add Default Workspace API, which is idempotent, and from the Remove Favourite Workspace API, which succeeds silently when the workspace is not in the favourites.
 - After the designation is removed, the user holds no default workspace. A new default has to be set explicitly using the Add Default Workspace API.
 - Invoking this API immediately after the Add Default Workspace API succeeds, as the workspace can be set and unset in sequence.
@@ -172,11 +172,11 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 | Aspect | Detail |
 |--------|--------|
 | **Success response has no body** | Remove Default Workspace returns a bare HTTP `204 No Content` on success — no `status`/`summary` JSON to parse. |
-| **NOT idempotent — fails if not currently default** | Unlike Remove Favourite Workspace (which silently no-ops), this API returns error 7415 if the workspace is not the user's current default. Always verify `isDefault: true` in Get All Workspace List before calling. |
+| **NOT idempotent — fails if not currently default** | Unlike Remove Favourite Workspace (which silently no-ops), this API returns error 7415 if the workspace is not the user's current default. Always verify `isDefault: true` in [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) before calling. |
 | **Contrast with Add Default Workspace** | Add Default Workspace is idempotent (calling it twice is safe). Remove Default Workspace is not — the second call on the same workspace will fail with 7415. |
 | **After removal, user has no default workspace** | A new default must be set explicitly using Add Default Workspace. |
 | **No CONFIG or request body** | The workspace is identified solely by `<workspace-id>` in the URL. |
-| **Dependency** | `<workspace-id>` → Get All Workspace List. Confirm `isDefault: true` on the target workspace before calling. |
+| **Dependency** | `<workspace-id>` → [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md). Confirm `isDefault: true` on the target workspace before calling. |
 
 # Error Codes
 
@@ -187,7 +187,7 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | [7005](../../../foundations/error-codes.md#error-7005) | 500 | Unexpected error on the Zoho Analytics server while processing an otherwise valid request. Not caused by the request payload. | Retry after a short interval. If the error persists, contact Zoho Analytics support quoting the error code and the time of the request. |
 | [7103](../../../foundations/error-codes.md#error-7103) | 404 | Workspace not found. | Verify `<workspace-id>`. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |
-| [7415](../../../foundations/error-codes.md#error-7415) | 400 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. | Use Get All Workspace List to identify the workspace with `isDefault: true`, then call this API with that workspace ID. |
+| [7415](../../../foundations/error-codes.md#error-7415) | 400 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. | Use [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) to identify the workspace with `isDefault: true`, then call this API with that workspace ID. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.update`. |
 
 # Related

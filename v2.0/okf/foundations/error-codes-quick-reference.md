@@ -1,14 +1,14 @@
 ---
 type: Reference
 title: Error codes - quick reference
-description: "Compact one-line-per-code table of all 382 Zoho Analytics REST API v2 error codes (code, summary constant, HTTP status, meaning); use the full catalog for per-operation reasons and solutions."
+description: "Compact one-line-per-code table of all 385 Zoho Analytics REST API v2 error codes (code, summary constant, HTTP status, meaning); use the full catalog for per-operation reasons and solutions."
 tags:
   - zoho-analytics
   - rest-api-v2
   - errors
   - error-codes
   - quick-reference
-error_code_count: 382
+error_code_count: 385
 full_catalog: "/foundations/error-codes.md"
 sources:
   - id: error-catalog
@@ -17,7 +17,7 @@ sources:
     author: team:zoho-analytics-api-docs
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -87,7 +87,7 @@ One row per error code. Follow the code link for the full entry with per-operati
 | [7277](error-codes.md#error-7277) | - | 400 (typical) | The folder contains tables that have dependent child views; deletion blocked. | 3 |
 | [7280](error-codes.md#error-7280) | - | 400 (typical) | A lookup relationship already exists on this child column. | 1 |
 | [7282](error-codes.md#error-7282) | - | 400 (typical) | A group with the same name already exists in this workspace. Group names must be unique per workspace. | 2 |
-| [7301](error-codes.md#error-7301) | `SECURITY_NOT_PERMITTED`, `CREATEALERT` | 403 (observed) | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. | 203 |
+| [7301](error-codes.md#error-7301) | `SECURITY_NOT_PERMITTED`, `CREATEALERT` | 403 (observed) | The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource. | 202 |
 | [7307](error-codes.md#error-7307) | `OWNER_CANNOT_SHARE_HIMSELF` | 400 (typical) | OWNERCANNOTSHAREHIMSELF — The sharer attempted to share a view to themselves. | 1 |
 | [7309](error-codes.md#error-7309) | `SECURITY_NEEDS_LOGIN` | 400 (typical) | SECURITYNEEDSLOGIN — No authentication was supplied. | 10 |
 | [7319](error-codes.md#error-7319) | `OBJID_NOT_BELONGS_TO_DB` | 400 (observed) | The view does not belong to the specified workspace. | 61 |
@@ -111,7 +111,7 @@ One row per error code. Follow the code link for the full entry with per-operati
 | [7377](error-codes.md#error-7377) | - | 400 (typical) | An identical lookup relationship (same child column → same reference column) is already defined. | 1 |
 | [7378](error-codes.md#error-7378) | - | 400 (typical) | No lookup relationship is defined on this column. | 1 |
 | [7379](error-codes.md#error-7379) | - | 400 (typical) | A lookup column cannot reference a column within the same table. | 2 |
-| [7387](error-codes.md#error-7387) | `DBID_NOT_BELONGS_TO_ZSOID` | 400 (observed) | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | 14 |
+| [7387](error-codes.md#error-7387) | `DBID_NOT_BELONGS_TO_ZSOID` | 400 (observed) | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | 15 |
 | [7390](error-codes.md#error-7390) | `WORKSPACE_NOT_BELONGS_TO_ORG` | 400 (typical) | WORKSPACENOTBELONGSTOORG — The workspace does not belong to the organization in ZANALYTICS-ORGID. | 11 |
 | [7395](error-codes.md#error-7395) | - | 400 (typical) | The column specified in LOOKUPCOLUMN.COLUMNNAME does not exist in the referenced table. | 1 |
 | [7396](error-codes.md#error-7396) | `SLIDE_NOT_PRESENT_IN_DB` | 400 (typical) | SLIDENOTPRESENTINDB — The slideshow record exists but no slide details could be read for it. | 2 |
@@ -134,10 +134,13 @@ One row per error code. Follow the code link for the full entry with per-operati
 | [7427](error-codes.md#error-7427) | - | 400 (typical) | The specified <formula-id> is not a valid formula column on this view. | 2 |
 | [7428](error-codes.md#error-7428) | - | 400 (typical) | The specified <formula-id> is not a valid aggregate formula on this view. | 4 |
 | [7429](error-codes.md#error-7429) | - | 400 (typical) | A design edit (schema change) is already in progress for this query table. | 1 |
+| [7430](error-codes.md#error-7430) | `ORG_LEVEL_VIEWS_NOT_ALLOWED` | 400 (typical) | Org-level view listing is blocked for the organisation. This code is reported to the Account Admin. | 1 |
+| [7431](error-codes.md#error-7431) | `ORG_LEVEL_VIEWS_NOT_ALLOWED_WL_USERS` | 400 (typical) | Org-level view listing is blocked for the organisation. This code is reported to every caller other than the Account Admin. | 1 |
 | [7433](error-codes.md#error-7433) | `SELECT` | 400 (typical) | Duplicate column names detected in the SELECT clause (after aliasing). | 1 |
 | [7439](error-codes.md#error-7439) | - | 400 (typical) | The view is not a table. | 3 |
 | [7447](error-codes.md#error-7447) | - | 400 (typical) | The query result would exceed the allowed row/column limit. | 2 |
 | [7467](error-codes.md#error-7467) | - | 400 (typical) | Formula columns are not supported on Pipeline Tables. | 3 |
+| [7476](error-codes.md#error-7476) | `ORG_LEVEL_VIEWS_WS_MORE_THAN_ALLOWED_LIMIT` | 400 (observed) | More workspaces are in scope than the limit allows. | 1 |
 | [7478](error-codes.md#error-7478) | `MORE_THAN_MAX_COLUMN` | 400 (typical) | MORETHANMAXCOLUMN — The source has more columns than a table can hold. | 6 |
 | [7479](error-codes.md#error-7479) | - | 400 (typical) | A card is missing one or more of type, width, height, left, top. | 2 |
 | [7480](error-codes.md#error-7480) | - | 400 (typical) | Negative offset, width/height of 1 or less, or left + width > 80. | 2 |
@@ -259,8 +262,8 @@ One row per error code. Follow the code link for the full entry with per-operati
 | [8078](error-codes.md#error-8078) | `EMPTY_JSON_ATTRIBUTE_FOUND` | 400 (observed) | EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent blank. | 10 |
 | [8079](error-codes.md#error-8079) | `ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION`, `UPDATEADD` | 400 (observed) | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. | 25 |
 | [8080](error-codes.md#error-8080) | `INVALID_JSON_CONFIGURATION`, `CONFIG` | 400 (typical) | CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint. | 28 |
-| [8083](error-codes.md#error-8083) | `ORGID_NOT_PRESENT_IN_THE_HEADER` | 400 (typical) | The ZANALYTICS-ORGID header is missing from a request that requires it. | 42 |
-| [8084](error-codes.md#error-8084) | `ORGID_NOT_EXIST` | 400 (typical) | ORGID_NOT_EXIST - No organisation exists with the given ID. | 10 |
+| [8083](error-codes.md#error-8083) | `ORGID_NOT_PRESENT_IN_THE_HEADER` | 400 (typical) | The ZANALYTICS-ORGID header is missing from a request that requires it. | 47 |
+| [8084](error-codes.md#error-8084) | `ORGID_NOT_EXIST` | 404 (observed) | ORGID_NOT_EXIST - No organisation exists with the given ID. | 15 |
 | [8085](error-codes.md#error-8085) | `SHAREDTO_EXTERNAL_DOMAIN_NOT_ALLOWED` | 400 (typical) | SHAREDTOEXTERNALDOMAINNOTALLOWED — Sharing to an email outside the allowed domain(s) is disabled by org policy. | 1 |
 | [8086](error-codes.md#error-8086) | `SHAREDTO_EXTERNAL_DOMAIN_NOT_ALLOWED` | 400 (typical) | SHAREDTOEXTERNALDOMAINNOTALLOWED — Sharing to an email outside the allowed domain(s) is disabled by org policy. | 1 |
 | [8088](error-codes.md#error-8088) | `SECURITY_CONTROLS_FEATURE_DISABLED` | 400 (typical) | SECURITYCONTROLSFEATUREDISABLED — Export is disabled for the organization. | 7 |
@@ -341,17 +344,17 @@ One row per error code. Follow the code link for the full entry with per-operati
 | [8257](error-codes.md#error-8257) | `BACKUP_ALREADY_IN_PROGRESS`, `GEO_COL_COUNT_EXCEEDED_CATEGORICAL` | 400 (observed) | GEO_COL_COUNT_EXCEEDED_CATEGORICAL - A text geo column on X coexists with a numeric geo column on Y. | 4 |
 | [8258](error-codes.md#error-8258) | `GEO_COL_CATEGORY_ONLY_X` | 400 (typical) | GEO_COL_CATEGORY_ONLY_X - A text geo column was placed on a shelf other than X. | 2 |
 | [8504](error-codes.md#error-8504) | `LESS_THAN_MIN_OCCURANCE`, `CONFIG` | 400 (typical) | LESSTHANMINOCCURANCE — CONFIG was not sent. | 33 |
-| [8507](error-codes.md#error-8507) | `MORE_THAN_MAX_LENGTH`, `CONFIG` | 400 (typical) | MORETHANMAXLENGTH — roleName exceeds 30 characters, or permissions exceeds its size limit. | 17 |
+| [8507](error-codes.md#error-8507) | `MORE_THAN_MAX_LENGTH`, `CONFIG` | 400 (typical) | MORETHANMAXLENGTH — roleName exceeds 30 characters, or permissions exceeds its size limit. | 18 |
 | [8509](error-codes.md#error-8509) | `PATTERN_NOT_MATCHED` | 400 (typical) | PATTERNNOTMATCHED — roleName contains disallowed characters, or accessType is not one of the three values. | 10 |
-| [8516](error-codes.md#error-8516) | `UNABLE_TO_PARSE_DATA_TYPE` | 400 (typical) | UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type. | 6 |
+| [8516](error-codes.md#error-8516) | `UNABLE_TO_PARSE_DATA_TYPE` | 400 (typical) | UNABLETOPARSEDATATYPE — A CONFIG value has the wrong JSON type. | 7 |
 | [8517](error-codes.md#error-8517) | `DATATYPE_NOT_MATCHED` | 400 (typical) | DATATYPE_NOT_MATCHED - A value has the wrong JSON type: exclude: "yes", isAxisMerge: 1, folderId: "abc". | 4 |
 | [8525](error-codes.md#error-8525) | `URL_RULE_NOT_CONFIGURED` | 400 (typical) | URLRULENOTCONFIGURED — <role-id> is not numeric, so the request matched no route. | 2 |
-| [8534](error-codes.md#error-8534) | `CONFIG`, `JSON_PARSE_ERROR` | 400 (typical) | JSONPARSEERROR — CONFIG is not valid JSON. | 6 |
-| [8535](error-codes.md#error-8535) | `INVALID_OAUTHTOKEN` | 401 (typical) | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. | 163 |
-| [8539](error-codes.md#error-8539) | `INVALID_VALUE_NOT_ALLOWED` | 400 (typical) | INVALIDVALUENOTALLOWED — An attribute carries a value that is structurally valid but not accepted, such as an empty roleName. | 1 |
-| [8542](error-codes.md#error-8542) | `EXTRA_KEY_FOUND_IN_JSON`, `CONFIG` | 400 (typical) | EXTRA_KEY_FOUND_IN_JSON - A key not listed in this document is present. | 4 |
-| [8544](error-codes.md#error-8544) | `OUT_OF_RANGE` | 400 (typical) | OUT_OF_RANGE - An integer is outside its range: percentileVal outside 0-100, a mergeAxisInfo index outside 0-100. | 3 |
-| [8547](error-codes.md#error-8547) | `ARRAY_SIZE_OUT_OF_RANGE` | 400 (typical) | ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries. | 10 |
+| [8534](error-codes.md#error-8534) | `CONFIG`, `JSON_PARSE_ERROR` | 400 (typical) | JSONPARSEERROR — CONFIG is not valid JSON. | 7 |
+| [8535](error-codes.md#error-8535) | `INVALID_OAUTHTOKEN` | 401 (typical) | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. | 158 |
+| [8539](error-codes.md#error-8539) | `INVALID_VALUE_NOT_ALLOWED`, `CONFIG` | 400 (typical) | CONFIG is sent empty, or a CONFIG value - searchKey, pageNo, recordsPerPage, workspaceIds or one of its entries - is null or an empty or blank string. | 2 |
+| [8542](error-codes.md#error-8542) | `EXTRA_KEY_FOUND_IN_JSON`, `CONFIG` | 400 (typical) | CONFIG holds a key other than workspaceIds, pageNo, recordsPerPage and searchKey. | 5 |
+| [8544](error-codes.md#error-8544) | `OUT_OF_RANGE` | 400 (typical) | OUT_OF_RANGE - An integer is outside its range: percentileVal outside 0-100, a mergeAxisInfo index outside 0-100. | 4 |
+| [8547](error-codes.md#error-8547) | `ARRAY_SIZE_OUT_OF_RANGE` | 400 (typical) | ARRAYSIZEOUTOFRANGE — selectedColumns is empty or holds more than 300 entries. | 11 |
 | [9001](error-codes.md#error-9001) | `USERFILTERS` | 400 (typical) | Every card in the layout is a USERFILTERS card. | 2 |
 | [9102](error-codes.md#error-9102) | `LANGUAGE_NOT_SUPPORTED` | 400 (typical) | LANGUAGENOTSUPPORTED — language is not one of the supported language names. | 1 |
 | [12049](error-codes.md#error-12049) | - | 400 (typical) | The workspace is already enabled for White Label domain access. Calling Enable on an already-enabled workspace is not idempotent. | 1 |

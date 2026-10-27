@@ -21,7 +21,7 @@ sources:
     title: White Label sections and Case samples across the markdown reference
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 

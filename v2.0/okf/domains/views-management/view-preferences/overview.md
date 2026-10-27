@@ -26,10 +26,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T11:33:28Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -63,7 +63,7 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 | Topic | Detail |
 |-------|--------|
 | **User-scoped preference** | Favourite status is stored per user (keyed by the authenticated user's ID). Marking or unmarking a view as a favourite does not affect any other user's view of the same resource. |
-| **Reflected in listing APIs** | After a successful Add, the `isFavorite` field in listing API responses (e.g., Get All Dashboards, Get Shared Dashboards) returns `true` for the same user. After a Remove, it returns `false` or is absent. |
+| **Reflected in listing APIs** | After a successful Add, the `isFavorite` field in listing API responses (e.g., [Get Org Dashboards](../../organization-management/org-level-listings/get-org-dashboards.md)) returns `true` for the same user. After a Remove, it returns `false` or is absent. |
 | **Idempotent operations** | Both APIs are safe to call multiple times. Adding a view that is already a favourite, or removing one that is not, succeeds without error. |
 | **Applicable view types** | Any view type that a user can access with Read Only or higher permission can be marked as a favourite: Tables, Analysis Views (charts), Pivot Tables, Summary Views, Dashboards, Query Tables, and others. |
 | **No CONFIG parameter** | Neither API accepts a CONFIG request parameter. The only inputs are the URL path parameters `<workspace-id>` and `<view-id>`. |

@@ -8,7 +8,7 @@ that takes any markdown description of an API change and carries it through ever
 
 | Version | API | Status | Sources | Built artefacts |
 |---|---|---|---|---|
-| [`v2.0/`](v2.0/README.md) | v2 | current | 10 domains, 39 API groups, 138 paths, 208 operations | [OpenAPI](v2.0/oas) · [OKF bundle](v2.0/okf/index.md) (210 endpoints, 382 error codes) · [Postman](v2.0/postman) |
+| [`v2.0/`](v2.0/README.md) | v2 | current | 10 domains, 40 API groups, 134 paths, 203 operations | [OpenAPI](v2.0/oas) · [OKF bundle](v2.0/okf/index.md) (205 endpoints, 385 error codes) · [Postman](v2.0/postman) |
 
 [`manifest.json`](manifest.json) is the machine-readable form of that table: every version directory,
 which is `latest`, and where each version's sources and artefacts are. Tooling starts there rather
@@ -33,7 +33,15 @@ analytics-api/
 │   ├── zenesis-oas-samples/       SOURCE   SDK snippets per path + method in 9 languages
 │   ├── oas/                       BUILT    vendor-neutral OpenAPI 3.1; copied as is to zoho/analytics-oas; oas/common/ is placed by hand
 │   ├── okf/                       BUILT    Open Knowledge Format v0.2 bundle; copied as is to zoho/analytics-okf
-│   └── postman/                   BUILT    Postman collection + environment
+│   ├── postman/                   BUILT    Postman collection + environment
+│   └── sdk/                       the seven SDK clients for this version, built by tools/sdkdocs/
+│       └── <lang>/source · sample · docs    one folder per language: Java, Python, C#, Go, PHP, Node.js, Ruby
+│
+├── migration/                     consumer-facing migration guides, one folder per breaking change
+│   └── v2-mandatory-org-context/  v2: every endpoint now requires ZANALYTICS-ORGID (old ones off March 2027)
+│       ├── README.md              how the guide is built and written
+│       ├── build.py               renders each *.md into an *.html sibling
+│       └── index.md / index.html  start here; 8 chapters, Markdown and HTML
 │
 └── tools/
     ├── validate_api_docs.py       naming, completeness and integrity of the SOURCES of every version
@@ -42,6 +50,10 @@ analytics-api/
     ├── postman/                   Postman generator (+ curated API-reference links and templates)
     └── api-agent/                 AI-agent workflow: plan.py, scaffold.py, pipeline.py, AGENT.md
 ```
+
+`migration/` is the one tree that is written **for API consumers rather than for this repository**.
+When a change removes or reshapes an endpoint, the migration guide is how an external developer finds
+out what to do about it. Build and validate it with `python3 build.py --check` inside its folder.
 
 **Sources are authored; everything else is built from them.** An API fact is corrected in `md/`,
 `zenesis-oas/` and `zenesis-oas-samples/` of its version, and flows outward:

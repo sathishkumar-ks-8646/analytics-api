@@ -53,7 +53,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Organization ID (can be obtained using Get Organizations API)."
+            "description": "Organization ID. It is shown in the Zoho Analytics UI under Settings > Organisation."
           },
           {
             "$ref": "#/components/parameters/workspace-id"
@@ -240,7 +240,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Organization ID (can be obtained using Get Organizations API)."
+            "description": "Organization ID. It is shown in the Zoho Analytics UI under Settings > Organisation."
           },
           {
             "$ref": "#/components/parameters/workspace-id"
@@ -451,7 +451,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Organization ID (can be obtained using Get Organizations API)."
+            "description": "Organization ID. It is shown in the Zoho Analytics UI under Settings > Organisation."
           },
           {
             "$ref": "#/components/parameters/workspace-id"
@@ -4249,7 +4249,7 @@
         "schema": {
           "type": "string"
         },
-        "description": "Organization ID (can be obtained using Get Organizations API)."
+        "description": "Organization ID. It is shown in the Zoho Analytics UI under Settings > Organisation."
       },
       "view-id": {
         "name": "view-id",

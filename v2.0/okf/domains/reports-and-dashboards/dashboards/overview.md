@@ -11,7 +11,7 @@ tags:
 api:
   domain: reports-and-dashboards
   group: dashboards
-  endpoint_count: 6
+  endpoint_count: 3
   endpoints:
     - operation_id: createDashboard
       method: POST
@@ -25,27 +25,15 @@ api:
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}"
       doc: "/domains/reports-and-dashboards/dashboards/update-dashboard.md"
-    - operation_id: getDashboards
-      method: GET
-      path: "/restapi/v2/dashboards"
-      doc: "/domains/reports-and-dashboards/dashboards/get-dashboards.md"
-    - operation_id: getOwnedDashboards
-      method: GET
-      path: "/restapi/v2/dashboards/owned"
-      doc: "/domains/reports-and-dashboards/dashboards/get-owned-dashboards.md"
-    - operation_id: getSharedDashboards
-      method: GET
-      path: "/restapi/v2/dashboards/shared"
-      doc: "/domains/reports-and-dashboards/dashboards/get-shared-dashboards.md"
 sources:
   - id: openapi-spec
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:28Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -76,9 +64,6 @@ APIs for creating a dashboard, reading its stored layout, settings and themes, r
 | [Create Dashboard](create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `createDashboard` | `ZohoAnalytics.modeling.create` | 200 |
 | [Read Dashboard Metadata](get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `getDashboardMetadata` | `ZohoAnalytics.modeling.read` | 200 |
 | [Update Dashboard](update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `updateDashboard` | `ZohoAnalytics.modeling.update` | 204 |
-| [Get All Dashboards](get-dashboards.md) | GET | `/restapi/v2/dashboards` | `getDashboards` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Owned Dashboards](get-owned-dashboards.md) | GET | `/restapi/v2/dashboards/owned` | `getOwnedDashboards` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Shared Dashboards](get-shared-dashboards.md) | GET | `/restapi/v2/dashboards/shared` | `getSharedDashboards` | `ZohoAnalytics.metadata.read` | 200 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 
@@ -280,7 +265,7 @@ These are silently lost by a read-modify-write cycle:
 | [8517](../../../foundations/error-codes.md#error-8517) | 400 | DATATYPE_NOT_MATCHED - A value has the wrong JSON type: exclude: "yes", isAxisMerge: 1, folderId: "abc". |
 | [8534](../../../foundations/error-codes.md#error-8534) | 400 | JSONPARSEERROR — CONFIG is not valid JSON. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation. |
-| [8542](../../../foundations/error-codes.md#error-8542) | 400 | EXTRA_KEY_FOUND_IN_JSON - A key not listed in this document is present. |
+| [8542](../../../foundations/error-codes.md#error-8542) | 400 | CONFIG holds a key other than workspaceIds, pageNo, recordsPerPage and searchKey. |
 | [9001](../../../foundations/error-codes.md#error-9001) | 400 | Every card in the layout is a USERFILTERS card. |
 
 # Related

@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -78,7 +78,7 @@ Creates a new empty workspace in the specified organisation. The workspace is cr
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.modeling.create`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 | `Content-Type` | `application/x-www-form-urlencoded` | Required | The CONFIG JSON is sent as a form field named `CONFIG`. |
 
 ## Path Parameters
@@ -99,7 +99,7 @@ CONFIG is **mandatory**. It must be sent as a form-encoded body parameter named 
 - The **workspaceName** should be unique within the organization. Creating a workspace with a name that is already in use fails with error code 7111.
 - The **workspaceName** can hold a maximum of 50 characters and the **workspaceDesc** can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.
 - When **workspaceDesc** is omitted, the description is stored as an empty string. It can be updated later using the Rename Workspace API.
-- The response data holds only the **workspaceId**. Use the Get Workspace Info or the Get All Workspace List API to retrieve the complete workspace record.
+- The response data holds only the **workspaceId**. Use the Get Workspace Info or the Get Org Workspaces API to retrieve the complete workspace record.
 - The workspace secret key is not generated at creation time. Use the Get Workspace Secret Key API when the key is needed for a cross-organization copy.
 - The number of workspaces that can be created depends on the subscription plan of the organization. Reaching the limit fails with error code 7951.
 - Organization Admins are allowed to create workspaces within their organization.
@@ -167,7 +167,7 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 
 | Aspect | Detail |
 |--------|--------|
-| **Response returns only `workspaceId`** | The response data contains only the newly created workspace's ID. Call Get Workspace Info or Get All Workspace List to retrieve the full workspace record. |
+| **Response returns only `workspaceId`** | The response data contains only the newly created workspace's ID. Call Get Workspace Info or [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) to retrieve the full workspace record. |
 | **`workspaceDesc` defaults to empty string** | If omitted, the description is stored as `""`. This value can be updated later via Rename Workspace. |
 | **`workspaceKey` not in create response** | The workspace secret key is not generated at creation time. Use Get Workspace Secret Key when you need the key for cross-org copy operations. |
 | **Dependency** | No dependencies on other APIs for the request. |
@@ -189,5 +189,5 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Workspace Management](../overview.md) - the parent API domain.
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
-- Other endpoints in this group: [Copy Workspace](copy-workspace.md), [Rename Workspace](rename-workspace.md), [Delete Workspace](delete-workspace.md), [Export as Template](export-as-template.md), [Get All Workspace List](get-all-workspaces.md), [Get Owned Workspace List](get-owned-workspaces.md), [Get Shared Workspace List](get-shared-workspaces.md), [Get Workspace Secret Key](get-workspace-secret-key.md), [Get Workspace Info](get-workspace-details.md).
+- Other endpoints in this group: [Copy Workspace](copy-workspace.md), [Rename Workspace](rename-workspace.md), [Delete Workspace](delete-workspace.md), [Export as Template](export-as-template.md), [Get Workspace Secret Key](get-workspace-secret-key.md), [Get Workspace Info](get-workspace-details.md).
 - [SDK examples](../../../sdk-examples/workspace-management/workspace-operations/create-workspace.md).

@@ -13,55 +13,55 @@ sources:
     resource: "/references/openapi/org-management-grouped-api.json"
     title: OpenAPI 3 specification - org-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T10:58:51Z
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
     title: OpenAPI 3 specification - user-groups-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T10:54:58Z
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
     title: OpenAPI 3 specification - data-modeling-schema-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T10:54:58Z
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
     title: OpenAPI 3 specification - data-operations-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T10:54:58Z
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T11:33:28Z
   - id: openapi-spec
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
     title: OpenAPI 3 specification - reports-dashboards-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:28Z
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
     title: OpenAPI 3 specification - share-publish-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T10:54:58Z
   - id: openapi-spec
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
     title: OpenAPI 3 specification - schedules-alerts-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T10:54:58Z
   - id: openapi-spec
     resource: "/references/openapi/dsml-grouped-api.json"
     title: OpenAPI 3 specification - dsml-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T10:54:58Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -69,7 +69,7 @@ status: stable
 
 All identifiers are numeric but are transmitted as **strings** (JSON strings in responses, plain text in URL paths and headers). Treat them as opaque strings; never parse them as 32-bit integers, because view and workspace IDs exceed that range. Identifiers are stable for the lifetime of the object but differ across data centers and environments, so resolve them at runtime rather than hard-coding them. The recommended bootstrap sequence is:
 
-1. Call [Get Org List](../domains/organization-management/org-info-and-settings/get-organizations.md) to obtain `orgId` for the `ZANALYTICS-ORGID` header.
+1. Read the organization ID from the Zoho Analytics UI (Settings > Organisation) and send it in the `ZANALYTICS-ORGID` header.
 2. Call [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md) to resolve a workspace name (and optionally a view name) into `workspaceId` and `viewId`.
 3. Use listing APIs (views, columns, folders, groups, schedules...) to obtain the remaining IDs.
 
@@ -77,21 +77,19 @@ All identifiers are numeric but are transmitted as **strings** (JSON strings in 
 
 ## ZANALYTICS-ORGID
 
-- **What it is:** Organization ID
+- **What it is:** Organization ID, shown in the Zoho Analytics UI under Settings > Organisation
 - **Where it is sent:** HTTP header.
-- **OpenAPI description:** ID of the organisation on which the operation has to be performed. The organisation ID can be obtained using the Get Organizations API.
+- **OpenAPI description:** ID of the organisation on which the operation has to be performed. It is shown in the Zoho Analytics UI under Settings > Organisation.
 
-- **Obtained from:** [Get Org List](../domains/organization-management/org-info-and-settings/get-organizations.md), [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md).
+- **Obtained from:** [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md).
 
-- **Used by:** 203 operations, for example [Get Resource Details](../domains/organization-management/org-info-and-settings/get-resource-details.md), [Get Subscription Details](../domains/organization-management/org-info-and-settings/get-subscription-details.md), [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md), [Get Org Access Restrictions](../domains/organization-management/security-controls/get-org-access-restrictions.md), [Update Org Access Restrictions](../domains/organization-management/security-controls/update-org-access-restrictions.md), [Get Workspace Access Restrictions](../domains/organization-management/security-controls/get-workspace-access-restrictions.md), and others.
+- **Used by:** 203 operations, for example [Get Resource Details](../domains/organization-management/org-info-and-settings/get-resource-details.md), [Get Subscription Details](../domains/organization-management/org-info-and-settings/get-subscription-details.md), [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md), [Get Org Workspaces](../domains/organization-management/org-level-listings/get-org-workspaces.md), [Get Org Dashboards](../domains/organization-management/org-level-listings/get-org-dashboards.md), [Get Org Recent Items](../domains/organization-management/org-level-listings/get-org-recent-items.md), and others.
 
 ## ZANALYTICS-DEST-ORGID
 
-- **What it is:** Destination organization ID for cross-organization copies
+- **What it is:** Destination organization ID for cross-organization copies, shown in the Zoho Analytics UI under Settings > Organisation
 - **Where it is sent:** HTTP header.
 - **OpenAPI description:** The ID of the destination organization into which the workspace has to be copied. It is used by Organization Admins who have admin access in more than one organization. When this header is present, the system validates that the requesting user is a member of the specified organization and uses it as the target of the copy. When it is absent, the destination organization defaults to the organization resolved from the ZANALYTICS-ORGID header.
-
-- **Obtained from:** [Get Org List](../domains/organization-management/org-info-and-settings/get-organizations.md).
 
 - **Used by:** 3 operations, for example [Copy Workspace](../domains/workspace-management/workspace-operations/copy-workspace.md), [Copy Custom Formulas](../domains/data-modeling-and-schema/formula-columns/copy-formulas.md), [Copy Views](../domains/views-management/view-operations/copy-views.md).
 
@@ -101,7 +99,7 @@ All identifiers are numeric but are transmitted as **strings** (JSON strings in 
 - **Where it is sent:** URL path segment `{workspace-id}`.
 - **OpenAPI description:** ID of the workspace.
 
-- **Obtained from:** [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md), [Get All Workspace List](../domains/workspace-management/workspace-operations/get-all-workspaces.md), [Get Owned Workspace List](../domains/workspace-management/workspace-operations/get-owned-workspaces.md), [Get Shared Workspace List](../domains/workspace-management/workspace-operations/get-shared-workspaces.md), [Create Workspace](../domains/workspace-management/workspace-operations/create-workspace.md).
+- **Obtained from:** [Get Org Workspaces](../domains/organization-management/org-level-listings/get-org-workspaces.md), [Get Meta Details From Name](../domains/organization-management/org-info-and-settings/get-meta-details.md), [Create Workspace](../domains/workspace-management/workspace-operations/create-workspace.md).
 
 - **Used by:** 180 operations, for example [Get Workspace Access Restrictions](../domains/organization-management/security-controls/get-workspace-access-restrictions.md), [Update Workspace Access Restrictions](../domains/organization-management/security-controls/update-workspace-access-restrictions.md), [Get Workspace Users](../domains/users-and-groups/workspace-users/get-workspace-users.md), [Add Workspace Users](../domains/users-and-groups/workspace-users/add-workspace-users.md), [Remove Workspace Users](../domains/users-and-groups/workspace-users/delete-workspace-users.md), [Change Workspace Users Status](../domains/users-and-groups/workspace-users/change-workspace-users-status.md), and others.
 
@@ -291,7 +289,7 @@ All identifiers are numeric but are transmitted as **strings** (JSON strings in 
 - **Where it is sent:** URL path segment `{dashboard-id}`.
 - **OpenAPI description:** ID of the dashboard whose configuration is returned.
 
-- **Obtained from:** [Get All Dashboards](../domains/reports-and-dashboards/dashboards/get-dashboards.md), [Get Owned Dashboards](../domains/reports-and-dashboards/dashboards/get-owned-dashboards.md), [Get Shared Dashboards](../domains/reports-and-dashboards/dashboards/get-shared-dashboards.md), [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md), [Get View List](../domains/views-management/view-operations/get-views.md).
+- **Obtained from:** [Get Org Dashboards](../domains/organization-management/org-level-listings/get-org-dashboards.md), [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md), [Get View List](../domains/views-management/view-operations/get-views.md).
 
 - **Used by:** 2 operations, for example [Read Dashboard Metadata](../domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md), [Update Dashboard](../domains/reports-and-dashboards/dashboards/update-dashboard.md).
 

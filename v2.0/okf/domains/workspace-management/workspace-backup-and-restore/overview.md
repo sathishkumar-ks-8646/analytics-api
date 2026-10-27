@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -267,7 +267,7 @@ These are the limits that apply with **default settings**.
 | [8077](../../../foundations/error-codes.md#error-8077) | 400 | EMPTY_JSON_CONFIGURATION - CONFIG is present but empty. |
 | [8080](../../../foundations/error-codes.md#error-8080) | 400 | CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint. |
 | [8083](../../../foundations/error-codes.md#error-8083) | 400 | The ZANALYTICS-ORGID header is missing from a request that requires it. |
-| [8084](../../../foundations/error-codes.md#error-8084) | 400 | ORGID_NOT_EXIST - No organisation exists with the given ID. |
+| [8084](../../../foundations/error-codes.md#error-8084) | 404 | ORGID_NOT_EXIST - No organisation exists with the given ID. |
 | [8245](../../../foundations/error-codes.md#error-8245) | 404 | BACKUP_NOT_FOUND - The backup does not exist, or does not belong to this workspace. |
 | [8246](../../../foundations/error-codes.md#error-8246) | 400 | INVALID_MASTER_WORKSPACE_MAPPING - <workspace-id> is itself linked as a client of another master. |
 | [8247](../../../foundations/error-codes.md#error-8247) | 400 | LINK_WORKSPACES_INCOMPATIBLE_WORKSPACES - At least one candidate failed the compatibility check. Nothing was linked. |

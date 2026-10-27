@@ -42,10 +42,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T11:33:28Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -59,7 +59,7 @@ From the OpenAPI specification:
 
 Marks the specified view as a favorite for the authenticated user.
 
-The favorite status is a per-user preference - marking a view as a favorite does not change what any other user sees. Once the view is marked, the `isFavorite` field returned by the listing APIs such as Get All Dashboards and Get Shared Dashboards reads `true` for the same user.
+The favorite status is a per-user preference - marking a view as a favorite does not change what any other user sees. Once the view is marked, the `isFavorite` field returned by the listing APIs such as Get Org Dashboards reads `true` for the same user.
 
 The call is idempotent. Marking a view that the user has already marked as a favorite succeeds silently without raising an error.
 
@@ -85,7 +85,7 @@ The call is idempotent. Marking a view that the user has already marked as a fav
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.update`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 
 ## Path Parameters
 
@@ -151,7 +151,7 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 - Adds the specified view to the **favourites list of the authenticated user**.
 - Has no effect on other users' favourite preferences.
 - If the view is already marked as a favourite by this user, the call succeeds silently (idempotent — no error is raised).
-- The resulting `isFavorite: true` value is reflected in listing API responses (e.g., Get All Dashboards, Get Shared Dashboards) for the same user.
+- The resulting `isFavorite: true` value is reflected in listing API responses (e.g., [Get Org Dashboards](../../organization-management/org-level-listings/get-org-dashboards.md)) for the same user.
 
 # Error Codes
 

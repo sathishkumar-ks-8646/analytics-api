@@ -4,7 +4,7 @@ Everything for the [Zoho Analytics REST API v2](https://www.zoho.com/analytics/a
 source documents and the artefacts built from them. This is the `current` version in
 [`../manifest.json`](../manifest.json).
 
-**10 domains, 39 API groups, 138 paths, 208 operations** (210 endpoints in the OKF bundle and the
+**10 domains, 40 API groups, 134 paths, 203 operations** (205 endpoints in the OKF bundle and the
 Postman collection: two Embed URL endpoints are documented from the API reference only).
 
 ## Layout
@@ -19,7 +19,11 @@ v2.0/
 ├── zenesis-oas-samples/     SOURCE  SDK snippets, 9 languages         -> zenesis-oas-samples/README.md
 ├── oas/                     BUILT   vendor-neutral OpenAPI 3.1, one file per domain, + common/ (hand-placed)
 ├── okf/                     BUILT   Open Knowledge Format v0.2 bundle -> okf/index.md, okf/llms.txt
-└── postman/                 BUILT   Zoho Analytics REST APIs.postman_collection.json + the environment
+├── postman/                 BUILT   Zoho Analytics REST APIs.postman_collection.json + the environment
+└── sdk/                     the seven SDK clients for this version -> ../tools/sdkdocs/README.md
+    ├── <lang>/source/       SOURCE  the client library: java python csharp go php nodejs ruby
+    ├── <lang>/sample/       SOURCE  a runnable sample program per language
+    └── <lang>/docs/         BUILT   13 pages per language, Markdown + HTML siblings
 ```
 
 | Directory | Built by | Consumed by |
@@ -27,12 +31,13 @@ v2.0/
 | `oas/` | `make -C tools/zenesis-oas to-analytics VERSION=v2.0` | [zoho/analytics-oas](https://github.com/zoho/analytics-oas) `v2.0/`, Swagger UI, Redoc, SDK generators, MCP servers |
 | `okf/` | `python3 tools/okf/build_okf.py --version v2.0` | [zoho/analytics-okf](https://github.com/zoho/analytics-okf) `v2.0/`, AI assistants via `okf/llms.txt` |
 | `postman/` | `python3 tools/postman/build_postman.py --version v2.0` | Postman |
+| `sdk/<lang>/docs/` | `python3 tools/sdkdocs/build.py --version v2.0` | Developers using the SDK clients |
 
 ## Domains
 
 | # | Domain folder (`md/`) | Groups | Specification (`zenesis-oas/`, `oas/`) | Samples (`zenesis-oas-samples/`) | OKF domain (`okf/domains/`) |
 |---|---|---|---|---|---|
-| 01 | `01 · Organization Management` | 2 | `org-management-grouped-api.json` | `org-management-grouped-api-samples.json` | `organization-management` |
+| 01 | `01 · Organization Management` | 3 | `org-management-grouped-api.json` | `org-management-grouped-api-samples.json` | `organization-management` |
 | 02 | `02 · User & Groups` | 4 | `user-groups-grouped-api.json` | `user-groups-grouped-api-samples.json` | `users-and-groups` |
 | 03 | `03 · Workspace Management` | 6 | `workspace-management-grouped-api.json` | `workspace-management-grouped-api-samples.json` | `workspace-management` |
 | 04 | `04 · Data Modeling & Schema` | 7 | `data-modeling-schema-grouped-api.json` | `data-modeling-schema-grouped-api-samples.json` | `data-modeling-and-schema` |

@@ -43,10 +43,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -80,7 +80,7 @@ Returns the links of a single master workspace, in the same shape as one entry o
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.read`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 
 ## Path Parameters
 
@@ -230,7 +230,7 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 | **`syncTime` is epoch milliseconds** | A string of digits, `"0"` when the link has never synced successfully. |
 | **No paging, filtering or sorting** | The whole set comes back in one response. |
 | **Responses are extensible** | Ignore unrecognised keys rather than validating against a closed schema. |
-| **Dependency chain** | [Get All Workspace List](../workspace-operations/get-all-workspaces.md) → `<workspace-id>` → Get Linked Workspaces For Master Workspace → `clients[].workspaces[].sandboxId`. |
+| **Dependency chain** | [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) → `<workspace-id>` → Get Linked Workspaces For Master Workspace → `clients[].workspaces[].sandboxId`. |
 
 # Error Codes
 

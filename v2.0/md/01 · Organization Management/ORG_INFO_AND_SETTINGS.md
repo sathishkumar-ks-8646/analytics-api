@@ -1,6 +1,6 @@
 # Zoho Analytics V2 REST API — Organisation Information
 
-These APIs provide information about the organisations, resource usage, subscription plan, and workspace/view identity lookups available to the authenticated user. They are read-only metadata APIs and do not modify any data.
+These APIs provide information about the resource usage, subscription plan, and workspace/view identity lookups available within an organisation. They are read-only metadata APIs and do not modify any data.
 
 ---
 
@@ -8,189 +8,13 @@ These APIs provide information about the organisations, resource usage, subscrip
 
 | # | API Name | Method | URL |
 |---|----------|--------|-----|
-| 1 | [Get Org List](#1-get-org-list) | GET | `/restapi/v2/orgs` |
-| 2 | [Get Resource Details](#2-get-resource-details) | GET | `/restapi/v2/resources` |
-| 3 | [Get Subscription Details](#3-get-subscription-details) | GET | `/restapi/v2/subscription` |
-| 4 | [Get Meta Details From Name](#4-get-meta-details-from-name) | GET | `/restapi/v2/metadetails` |
+| 1 | [Get Resource Details](#1-get-resource-details) | GET | `/restapi/v2/resources` |
+| 2 | [Get Subscription Details](#2-get-subscription-details) | GET | `/restapi/v2/subscription` |
+| 3 | [Get Meta Details From Name](#3-get-meta-details-from-name) | GET | `/restapi/v2/metadetails` |
 
 ---
 
-## 1. Get Org List
-
-Returns the list of Zoho Analytics organisations that the authenticated user belongs to. For each organisation, the response includes the user's role within that organisation, the number of workspaces, and plan details.
-
-This is a **user-scoped** API — no `ZANALYTICS-ORGID` header is required. The result reflects the caller's membership across all organisations, not the contents of a single organisation.
-
-| Attribute | Value |
-|-----------|-------|
-| **Method** | GET |
-| **URL** | `/restapi/v2/orgs` |
-| **OAuth Scope** | `ZohoAnalytics.metadata.read` |
-| **ZANALYTICS-ORGID Header** | Not required — user-scoped, returns data across all organisations. |
-| **Permission Required** | Any authenticated Zoho Analytics user. |
-
-### CONFIG Parameter
-
-The CONFIG parameter is optional. When provided, it is passed as a query parameter named `CONFIG`.
-
-> **Note:** The `getOrgsConfig` template exposes only one field. All other filtering is implicit — the API always returns only the organisations the authenticated user is a member of.
-
-| Field | Type | Mandatory | Default | Description |
-|-------|------|-----------|---------|-------------|
-| *(none)* | — | — | — | This API takes no CONFIG fields. |
-
-> If you do not need any filtering, omit CONFIG entirely — the API returns all accessible organisations.
-
-### Sample Requests
-
-**Case 1 — Get all organisations for the authenticated user**
-
-```http
-GET /restapi/v2/orgs HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-```
-
-**Case 2 — Account Admin who owns one org and is a member of others**
-
-```http
-GET /restapi/v2/orgs HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
-```
-
-### Sample Responses
-
-**HTTP 200 OK**
-
-**Case 1 — Account Admin user in a single org**
-```json
-{
-  "status": "success",
-  "summary": "Get organizations",
-  "data": {
-    "orgs": [
-      {
-        "orgId": "64036181",
-        "orgName": "acme-analytics",
-        "orgDesc": "",
-        "createdBy": "admin@acme.com",
-        "createdByZuId": "64035928",
-        "planName": "Enterprise",
-        "isDefault": true,
-        "numberOfWorkspaces": 41,
-        "role": "Account Admin"
-      }
-    ]
-  }
-}
-```
-
-**Case 2 — Org Admin user who belongs to multiple organisations**
-```json
-{
-  "status": "success",
-  "summary": "Get organizations",
-  "data": {
-    "orgs": [
-      {
-        "orgId": "64036201",
-        "orgName": "dev-team-analytics",
-        "orgDesc": "",
-        "createdBy": "orgadmin@dev.com",
-        "createdByZuId": "64036024",
-        "planName": "Premium",
-        "isDefault": false,
-        "numberOfWorkspaces": 1,
-        "role": "Account Admin"
-      },
-      {
-        "orgId": "64036181",
-        "orgName": "acme-analytics",
-        "orgDesc": "",
-        "createdBy": "admin@acme.com",
-        "createdByZuId": "64035928",
-        "planName": "Enterprise",
-        "isDefault": false,
-        "numberOfWorkspaces": 41,
-        "role": "Organization Admin"
-      }
-    ]
-  }
-}
-```
-
-**Case 3 — Shared User in another user's org (shows workspaces shared with them)**
-```json
-{
-  "status": "success",
-  "summary": "Get organizations",
-  "data": {
-    "orgs": [
-      {
-        "orgId": "64036287",
-        "orgName": "shared-user-own-org",
-        "orgDesc": "",
-        "createdBy": "shareduser@test.com",
-        "createdByZuId": "64036387",
-        "planName": "Premium",
-        "isDefault": false,
-        "numberOfWorkspaces": 3,
-        "role": "Account Admin"
-      },
-      {
-        "orgId": "64036181",
-        "orgName": "acme-analytics",
-        "orgDesc": "",
-        "createdBy": "admin@acme.com",
-        "createdByZuId": "64035928",
-        "planName": "Enterprise",
-        "isDefault": false,
-        "numberOfWorkspaces": 18,
-        "role": "User"
-      }
-    ]
-  }
-}
-```
-
-> **`numberOfWorkspaces` interpretation:** For Account Admin and Organization Admin roles, this is the total count of all workspaces in the org. For all other roles (`User`, `Workspace Admin`, etc.), this is the count of workspaces that have been **shared** with the user within that org — not the total workspace count.
-
-**Case 4 — User with no Zoho Analytics organisation memberships**
-```json
-{
-  "status": "success",
-  "summary": "Get organizations",
-  "data": {
-    "orgs": []
-  }
-}
-```
-
-#### Response Field Reference
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `orgs` | Array | List of organisations the user belongs to. Empty array if the user has no Analytics org membership. |
-| `orgs[].orgId` | String | Unique identifier of the organisation. Use this as the `ZANALYTICS-ORGID` header value in workspace-scoped APIs. |
-| `orgs[].orgName` | String | Display name of the organisation. |
-| `orgs[].orgDesc` | String | Description of the organisation. Empty string if not set. |
-| `orgs[].createdBy` | String | Email address of the user who created (owns) this organisation. |
-| `orgs[].createdByZuId` | String | Zoho User ID of the organisation creator. |
-| `orgs[].planName` | String | Current subscription plan name for this organisation (e.g., `"Enterprise"`, `"Premium"`, `"Basic"`). |
-| `orgs[].isDefault` | Boolean | `true` if this is the calling user's default organisation. Only one org per user can have `isDefault: true`. |
-| `orgs[].numberOfWorkspaces` | Integer | Number of workspaces visible to the user. For admins: all workspaces in the org. For other roles: only workspaces shared with the user. |
-| `orgs[].role` | String | The calling user's role in this organisation. Possible values: `"Account Admin"`, `"Organization Admin"`, `"User"`. |
-
-### Error Codes
-
-| Code | Reason | Solution |
-|------|--------|----------|
-| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
-
----
-
-## 2. Get Resource Details
+## 1. Get Resource Details
 
 Returns the current resource allocation and usage statistics for the specified organisation. This includes metrics such as user seats, row limits, API units, scheduled imports, and other plan-governed resources. Useful for monitoring usage against plan limits.
 
@@ -337,7 +161,7 @@ ZANALYTICS-ORGID: 700000654321
 
 ---
 
-## 3. Get Subscription Details
+## 2. Get Subscription Details
 
 Returns the current subscription plan, add-on details, billing date, and trial status for the specified organisation.
 
@@ -444,7 +268,7 @@ ZANALYTICS-ORGID: 700000654321
 
 ---
 
-## 4. Get Meta Details From Name
+## 3. Get Meta Details From Name
 
 Resolves a workspace (and optionally a view) **by name** to return its numeric IDs. This is useful when you know the human-readable names of a workspace and view but need their IDs to call other workspace-scoped or view-scoped APIs.
 
@@ -606,7 +430,7 @@ ZANALYTICS-ORGID: 700000789012
 | Header | Value | Required | Notes |
 |--------|-------|----------|-------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. |
-| `ZANALYTICS-ORGID` | Organisation ID | Required for Get Resource Details, Get Subscription Details, and Get Meta Details From Name | Not required for **[Get Org List](#1-get-org-list)** — that API is user-scoped across all orgs. Use `orgId` from the Get Org List response as the value for this header. |
+| `ZANALYTICS-ORGID` | Organisation ID | **Mandatory** for all APIs in this document | Read the Organization ID from **Settings → Organisation** in the Zoho Analytics UI, or take it from the `orgId` field of any listing API response. |
 
 ---
 
@@ -614,7 +438,6 @@ ZANALYTICS-ORGID: 700000789012
 
 | API | Method | Scope |
 |-----|--------|-------|
-| Get Org List | GET | `ZohoAnalytics.metadata.read` |
 | Get Resource Details | GET | `ZohoAnalytics.usermanagement.read` |
 | Get Subscription Details | GET | `ZohoAnalytics.usermanagement.read` |
 | Get Meta Details From Name | GET | `ZohoAnalytics.metadata.read` |
@@ -622,15 +445,6 @@ ZANALYTICS-ORGID: 700000789012
 ---
 
 ## Appendix C – Operational Notes and Failure Cases
-
-### Get Org List
-
-| Scenario | Behaviour |
-|----------|-----------|
-| User belongs to no Zoho Analytics organisation | Returns HTTP 200 with an empty `orgs` array. No error is raised. |
-| User is Account Admin in one org and a regular User in another | Both orgs appear in the list. The `role` field differs per entry. `numberOfWorkspaces` reflects all workspaces for the admin org, and only shared workspaces for the User-role org. |
-| `isDefault` field | Only one entry in the list will have `isDefault: true`. This corresponds to the user's primary (default) organisation. If the user has a single org, it is always the default. |
-| User is a member of an expired or blocked org | Expired/blocked orgs are suppressed from the response. Only active organisations are returned. |
 
 ### Get Resource Details
 

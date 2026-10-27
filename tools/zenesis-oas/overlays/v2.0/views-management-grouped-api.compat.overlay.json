@@ -1150,89 +1150,6 @@
       "x-migration": "HTML restatement of `description`. Retire it."
     },
     {
-      "target": "$.paths['/restapi/v2/recentviews'].get.responses['200'].content['application/json'].examples.crossWorkspaceHistory",
-      "update": {
-        "description": "Cross workspace history"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/recentviews'].get.responses['200'].content['application/json'].examples.crossWorkspaceHistory",
-      "update": {
-        "summary": "Views of several types drawn from more than one workspace, ordered by the time the calling user last opened each of them."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/recentviews'].get.responses['200'].content['application/json'].examples.sharedUserHistory",
-      "update": {
-        "description": "Shared user history"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/recentviews'].get.responses['200'].content['application/json'].examples.sharedUserHistory",
-      "update": {
-        "summary": "A shared user sees only the views they currently have access to. A view later unshared from them no longer appears here."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/recentviews'].get.responses['200'].content['application/json'].examples.noRecentViews",
-      "update": {
-        "description": "No history"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/recentviews'].get.responses['200'].content['application/json'].examples.noRecentViews",
-      "update": {
-        "summary": "A user who has not opened any view yet receives an empty array with HTTP 200 rather than an error."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/recentviews'].get.responses['200']",
-      "update": {
-        "x-zenesis-statuscodes": [
-          {
-            "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
-          }
-        ]
-      },
-      "x-migration": "Now a Markdown table in the operation description."
-    },
-    {
-      "target": "$.paths['/restapi/v2/recentviews'].get",
-      "update": {
-        "x-zenesis-title": "Get Recent Views"
-      },
-      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
-    },
-    {
-      "target": "$.paths['/restapi/v2/recentviews'].get",
-      "update": {
-        "description": "Returns a list of views recently accessed by the authenticated user across all workspaces the user has access to, sorted by access time (most recently accessed first). This is a user-scoped, cross-workspace API — no workspace ID is required in the URL.\n\nThe API is user-scoped and spans workspaces: views from every workspace and organization the user can reach are returned together in one list, each carrying the workspace it belongs to. No workspace ID is needed in the URL, and the history returned is personal to the token used to make the call."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/recentviews'].get",
-      "update": {
-        "x-zenesis-sections": {
-          "apiRequestParameters": {
-            "1": {
-              "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul>\n<li>This API has no CONFIG parameter and takes no workspace ID. <b>ZANALYTICS-ORGID</b> is not required either, because the API is user-scoped rather than tied to one workspace or organization.</li>\n<li>The result is strictly per user. Two different OAuth tokens return two different histories, each belonging to the user the token was issued for.</li>\n<li>Views from every workspace and organization the user can reach are returned in a single list. <b>workspaceId</b> and <b>workspaceName</b> tell them apart.</li>\n<li>The list is ordered by <b>viewLastAccessedTime</b> descending, so the most recently opened view comes first.</li>\n<li>Only views that are currently active and currently accessible are returned. A view deleted after it was accessed, or one later unshared from the user, drops out of the list.</li>\n<li>A user with no view history receives HTTP 200 with an empty <b>views</b> array.</li>\n<li><b>viewLastAccessedTime</b> is an epoch timestamp in milliseconds returned as a string. Divide it by 1000 to obtain epoch seconds.</li>\n</ul>\n</span></blockquote>"
-            }
-          }
-        }
-      },
-      "x-migration": "HTML restatement of `description`. Retire it."
-    },
-    {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/autoanalyse'].post.responses['200'].content['application/json'].examples.reportsGenerated",
       "update": {
         "description": "Reports generated"
@@ -1483,7 +1400,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite'].post",
       "update": {
-        "description": "Marks the specified view as a favorite for the authenticated user.\n\nThe favorite status is a per-user preference - marking a view as a favorite does not change what any other user sees. Once the view is marked, the `isFavorite` field returned by the listing APIs such as Get All Dashboards and Get Shared Dashboards reads `true` for the same user.\n\nThe call is idempotent. Marking a view that the user has already marked as a favorite succeeds silently without raising an error."
+        "description": "Marks the specified view as a favorite for the authenticated user.\n\nThe favorite status is a per-user preference - marking a view as a favorite does not change what any other user sees. Once the view is marked, the `isFavorite` field returned by the listing APIs such as Get Org Dashboards reads `true` for the same user.\n\nThe call is idempotent. Marking a view that the user has already marked as a favorite succeeds silently without raising an error."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1544,7 +1461,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite'].delete",
       "update": {
-        "description": "Removes the specified view from the favorites list of the authenticated user.\n\nThe favorite status is a per-user preference - unmarking a view does not change what any other user sees. Once the view is unmarked, the `isFavorite` field returned by the listing APIs such as Get All Dashboards and Get Shared Dashboards reads `false` or is omitted for the same user.\n\nThe call is idempotent. Removing a view that is not currently a favorite succeeds silently without raising an error."
+        "description": "Removes the specified view from the favorites list of the authenticated user.\n\nThe favorite status is a per-user preference - unmarking a view does not change what any other user sees. Once the view is unmarked, the `isFavorite` field returned by the listing APIs such as Get Org Dashboards reads `false` or is omitted for the same user.\n\nThe call is idempotent. Removing a view that is not currently a favorite succeeds silently without raising an error."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -3094,16 +3011,6 @@
       "x-migration": "Positional array. Read x-enumDescriptions instead."
     },
     {
-      "target": "$.components.schemas.GetRecentViewsResponse.properties.status",
-      "update": {
-        "x-zenesis-enums-desc": [
-          "Request succeeded",
-          "Request failed"
-        ]
-      },
-      "x-migration": "Positional array. Read x-enumDescriptions instead."
-    },
-    {
       "target": "$.components.schemas.GetTaggedViewsResponse.properties.status",
       "update": {
         "x-zenesis-enums-desc": [
@@ -3214,23 +3121,6 @@
         "x-zenesis-enums-desc": [
           "Request succeeded",
           "Request failed"
-        ]
-      },
-      "x-migration": "Positional array. Read x-enumDescriptions instead."
-    },
-    {
-      "target": "$.components.schemas.RecentView.properties.viewType",
-      "update": {
-        "x-zenesis-enums-desc": [
-          "Data table",
-          "Grid report",
-          "Chart view",
-          "Pivot table",
-          "Summary view",
-          "Tabular view",
-          "Query table",
-          "Dashboard",
-          "Dashboard tab"
         ]
       },
       "x-migration": "Positional array. Read x-enumDescriptions instead."
@@ -3433,16 +3323,6 @@
       "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
     },
     {
-      "target": "$.components.schemas.GetRecentViewsResponse.properties.status['x-enumDescriptions']",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
-    },
-    {
-      "target": "$.components.schemas.GetRecentViewsResponse.examples",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
-    },
-    {
       "target": "$.components.schemas.GetTaggedViewsConfig.examples",
       "remove": true,
       "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
@@ -3564,16 +3444,6 @@
     },
     {
       "target": "$.components.schemas.GetViewsResponse.examples",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
-    },
-    {
-      "target": "$.components.schemas.RecentView.properties.viewType['x-enumDescriptions']",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
-    },
-    {
-      "target": "$.components.schemas.RecentView.examples",
       "remove": true,
       "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
     },

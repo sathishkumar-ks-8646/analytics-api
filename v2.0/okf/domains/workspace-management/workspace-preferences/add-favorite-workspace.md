@@ -40,10 +40,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -79,7 +79,7 @@ A user can favourite multiple workspaces simultaneously — there is no exclusiv
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.update`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID. Obtain it from [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](../../../foundations/identifiers.md). |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 
 ## Path Parameters
 
@@ -161,7 +161,7 @@ Code samples in cURL, C#, Go, Java, PHP, Python, Node.js, Ruby, Deluge (Zoho scr
 | **Multiple favourites allowed** | There is no limit on the number of workspaces a user can mark as favourite. |
 | **Access requirement** | The user must have at least one view shared with them in the workspace. Without access, the call fails with error 7301. |
 | **No CONFIG or request body** | The workspace is identified solely by `<workspace-id>` in the URL. |
-| **Dependency** | `<workspace-id>` → Get All Workspace List or Get Shared Workspace List. |
+| **Dependency** | `<workspace-id>` → [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md). |
 
 # Error Codes
 

@@ -38,13 +38,13 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T11:33:28Z
   - id: endpoint-doc
     resource: "/domains/views-management/view-operations/get-view-details.md"
     title: Endpoint reference - Get View Details
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -65,21 +65,23 @@ curl "https://analyticsapi.zoho.com/restapi/v2/views/35130000001055717?CONFIG=%7
 ```csharp
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using ZohoAnalytics;
+using System.Text.Json;
 
 namespace ZohoAnalyticsTest
 {
     class Program
     {
+        long orgId = 55522777;
         long viewId = 35130000001055717;
 
         public void GetViewDetails(IAnalyticsClient ac)
         {
+            IOrgAPI org = ac.GetOrgInstance(orgId);
             Dictionary<string, object> config = new Dictionary<string, object>();
             config.Add("withInvolvedMetaInfo", true);
-            JsonElement views = ac.GetViewDetails(viewId, config);
-            Console.WriteLine(views);
+            JsonElement result = org.GetViewDetails(viewId, config);
+            Console.WriteLine(result);
         }
 
         static void Main(string[] args)
@@ -87,9 +89,14 @@ namespace ZohoAnalyticsTest
             string clientId = "1000.xxxxxxx";
             string clientSecret = "xxxxxxx";
             string refreshToken = "1000.xxxxxxx.xxxxxxx";
-            IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
-            Program obj = new Program();
-            obj.GetViewDetails(ac);
+            try
+            {
+                IAnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
+                Program obj = new Program();
+                obj.GetViewDetails(ac);
+            }
+            catch (ServerException ex) { Console.WriteLine("Server exception - " + ex.GetErrorMessage()); }
+            catch (Exception ex) { Console.WriteLine("Other exception - " + ex.Message); }
         }
     }
 }
@@ -109,12 +116,14 @@ var (
     clientId = "1000.xxxxxxx"
     clientSecret = "xxxxxxx"
     refreshToken = "1000.xxxxxxx.xxxxxxx"
+    orgId = "55522777"
     viewId = "35130000001055717"
 )
 
 func GetViewDetails(ac ZAnalytics.Client) {
-    config := map[string]interface{}{}
-    result, exception := ac.GetViewDetails(viewId, config)
+    org := ZAnalytics.GetOrgInstance(&ac, orgId)
+    config := map[string]interface{}{"withInvolvedMetaInfo": true}
+    result, exception := org.GetViewDetails(viewId, config)
     if exception != nil {
         fmt.Println(exception.ErrorMessage)
         return
@@ -135,6 +144,7 @@ import com.zoho.analytics.client.*;
 import org.json.*;
 
 public class Test {
+    private long orgId = 55522777l;
     private long viewId = 35130000001055717l;
 
     public static void main(String args[]) {
@@ -143,17 +153,16 @@ public class Test {
         String refreshToken = "1000.xxxxxxx.xxxxxxx";
         Test tObj = new Test();
         AnalyticsClient ac = new AnalyticsClient(clientId, clientSecret, refreshToken);
-        try {
-            tObj.getViewDetails(ac);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        try { tObj.getViewDetails(ac); }
+        catch (ServerException ex) { System.out.println("Server exception - " + ex.getErrorCode() + " : " + ex.getErrorMessage()); }
+        catch (Exception ex) { ex.printStackTrace(); }
     }
 
     public void getViewDetails(AnalyticsClient ac) throws Exception {
+        OrgAPI org = ac.getOrgInstance(orgId);
         JSONObject config = new JSONObject();
         config.put("withInvolvedMetaInfo", true);
-        JSONObject result = ac.getViewDetails(viewId, config);
+        JSONObject result = org.getViewDetails(viewId, config);
         System.out.println(result);
     }
 }
@@ -163,25 +172,26 @@ public class Test {
 
 ```php
 <?php
-require 'AnalyticsClient.php';
-
-class Test {
-    public $ac;
-    public $view_id = "35130000001055717";
-
-    function __construct() {
-        $this->ac = new AnalyticsClient("1000.xxxxxxx", "xxxxxxx", "1000.xxxxxxx.xxxxxxx");
+    require 'AnalyticsClient.php';
+    class Test {
+        public $ac = NULL;
+        public $client_id = "1000.xxxxxxx";
+        public $client_secret = "xxxxxxx";
+        public $refresh_token = "1000.xxxxxxx.xxxxxxx";
+        public $org_id = "55522777";
+        public $view_id = "35130000001055717";
+        function __construct() { $this->ac = new AnalyticsClient($this->client_id, $this->client_secret, $this->refresh_token); }
+        function getViewDetails() {
+            $org = $this->ac->getOrgInstance($this->org_id);
+            $config = array("withInvolvedMetaInfo" => true);
+            $response = $org->getViewDetails($this->view_id, $config);
+            print_r($response);
+        }
     }
-
-    function getViewDetails() {
-        $config = array("withInvolvedMetaInfo" => true);
-        $response = $this->ac->getViewDetails($this->view_id, $config);
-        print_r($response);
-    }
-}
-
-$obj = new Test();
-$obj->getViewDetails();
+    $test_obj = new Test();
+    try { $test_obj->getViewDetails(); }
+    catch(ServerException $se) { echo "Server exception : " . $se->getErrorMessage() . "\n"; }
+    catch(Exception $e) { echo "Exception : " . $e->getMessage() . "\n"; }
 ?>
 ```
 
@@ -194,14 +204,16 @@ class Config:
     CLIENTID = "1000.xxxxxxx"
     CLIENTSECRET = "xxxxxxx"
     REFRESHTOKEN = "1000.xxxxxxx.xxxxxxx"
+    ORGID = "55522777"
     VIEWID = "35130000001055717"
 
 class Sample:
     ac = AnalyticsClient(Config.CLIENTID, Config.CLIENTSECRET, Config.REFRESHTOKEN)
 
     def get_view_details(self, ac):
+        org = ac.get_org_instance(Config.ORGID)
         config = {"withInvolvedMetaInfo": True}
-        result = ac.get_view_details(Config.VIEWID, config)
+        result = org.get_view_details(Config.VIEWID, config)
         print(result)
 
 obj = Sample()
@@ -213,10 +225,11 @@ obj.get_view_details(obj.ac)
 ```javascript
 var analyticsClient = require('./AnalyticsClient');
 var ac = new analyticsClient('1000.xxxxxxx', 'xxxxxxx', '1000.xxxxxxx.xxxxxxx');
+var org = ac.getOrgInstance('55522777');
 var viewId = '35130000001055717';
 var config = {withInvolvedMetaInfo: true};
 
-ac.getViewDetails(viewId, config).then((result) => { console.log(result); }).catch((error) => { console.log(error); });
+org.getViewDetails(viewId, config).then((result) => { console.log(result); }).catch((error) => { console.log(error); });
 ```
 
 ## Ruby
@@ -225,6 +238,7 @@ ac.getViewDetails(viewId, config).then((result) => { console.log(result); }).cat
 require 'zoho_analytics_client'
 
 class Config
+  ORGID = "55522777"
   VIEWID = "35130000001055717"
 end
 
@@ -238,8 +252,9 @@ class Sample
   end
 
   def get_view_details
+    org = @ac.get_org_instance(Config::ORGID)
     config = {"withInvolvedMetaInfo" => true}
-    result = @ac.get_view_details(Config::VIEWID, config)
+    result = org.get_view_details(Config::VIEWID, config)
     puts result
   end
 end

@@ -11,6 +11,7 @@ default version is `latest` in `<repo>/manifest.json`.
 | [`zenesis-oas/`](zenesis-oas/README.md) | `vN.N/zenesis-oas/` (and `vN.N/oas/` for `compare` / `to-zenesis`) | `vN.N/oas/` domain files; `overlays/vN.N/` | `make -C tools/zenesis-oas check to-analytics compare VERSION=v2.0` |
 | [`okf/`](okf/README.md) | `vN.N/md/`, `vN.N/zenesis-oas/`, `vN.N/zenesis-oas-samples/`, `vN.N/manifest.json`, `tools/okf/handwritten/vN.N/` | `vN.N/okf/` (deleted and rebuilt) | `python3 tools/okf/build_okf.py --version v2.0 && python3 tools/okf/validate_okf.py v2.0/okf` |
 | [`postman/`](postman/README.md) | `vN.N/okf/references/endpoint-catalog.json`, `vN.N/okf/**`, `vN.N/oas/`, `vN.N/md/`, `vN.N/manifest.json`, `tools/postman/templates/`, `api-reference-links.json` | `vN.N/postman/` (collection + environment) | `python3 tools/postman/build_postman.py --version v2.0` |
+| [`sdkdocs/`](sdkdocs/README.md) | `vN.N/sdk/<lang>/source/`, `tools/sdkdocs/vN.N/snippets.py`, `vN.N/okf/foundations/` | `vN.N/sdk/<lang>/docs/` (deleted and rebuilt) | `python3 tools/sdkdocs/build.py --version v2.0` |
 | [`api-agent/`](api-agent/README.md) | input markdown from anywhere, then everything above | nothing itself; drives the tools above | `python3 tools/api-agent/plan.py in.md` → edit → `python3 tools/api-agent/pipeline.py` |
 
 ## Order of operations
@@ -30,11 +31,19 @@ vN.N/okf                                         build_okf.py, validate_okf.py  
 vN.N/postman                                     build_postman.py                     (reads okf's endpoint catalog + oas examples)
 ```
 
+`sdkdocs` sits outside that chain. It reads the SDK sources in `vN.N/sdk/` rather than the markdown,
+so it neither feeds nor depends on the pipeline — run it when an SDK source or a snippet changed, not
+on every documentation edit.
+
 ## Adding an API version
 
 Create `vN.N/` with `manifest.json`, `README.md`, `md/`, `zenesis-oas/` (with `common/`) and
 `zenesis-oas-samples/`; add the version to the root `manifest.json`; copy
 `tools/okf/handwritten/<previous>/` to `tools/okf/handwritten/vN.N/` and revise it; then run the
-pipeline with `--version vN.N`. The converter's `rules.json` names the `v2.0` common-file URLs in
-`common_ref`; give the new version its own copy of the rules (`--rules`) or extend the Makefile.
+pipeline with `--version vN.N`. If the version ships SDK clients, add `vN.N/sdk/<lang>/` and copy
+`tools/sdkdocs/<previous>/snippets.py` to `tools/sdkdocs/vN.N/snippets.py`, then revise the calls in
+it — that one file is the whole of what `sdkdocs` needs per version.
+
+The converter's `rules.json` names the `v2.0` common-file URLs in `common_ref`; give the new version
+its own copy of the rules (`--rules`) or extend the Makefile.
 Add the version to the matrices in `.github/workflows/validate.yml`.

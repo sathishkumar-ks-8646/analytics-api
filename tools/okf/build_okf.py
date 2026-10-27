@@ -128,7 +128,6 @@ TITLE_MAP = {
  'Create Import Job for an Existing Table': 'Create Import Job for an Existing Table (Asynchronous)',
  'Create Export Job using SQL Query': 'Create Export Job using SQL Query (Asynchronous)',
  'Create Export Job using View ID': 'Create Export Job using View ID (Asynchronous)',
- 'Get Organizations': 'Get Org List',
  'Remove Share': 'Remove Shared Views',
  'Update Shared Details For View': 'Update Shared Details',
  'Get Shared Details For Views': 'Get Shared Details',
@@ -159,9 +158,9 @@ DEFAULT_HTTP = {'7301': 403, '8535': 401, '7005': 500, '7103': 404, '7104': 404,
 
 # How each identifier is obtained (used by foundations/identifiers.md)
 ID_SOURCES = {
- 'ZANALYTICS-ORGID': ('Organization ID', ['Get Org List', 'Get Meta Details From Name']),
- 'ZANALYTICS-DEST-ORGID': ('Destination organization ID for cross-organization copies', ['Get Org List']),
- 'workspace-id': ('Workspace ID', ['Get Meta Details From Name', 'Get All Workspace List', 'Get Owned Workspace List', 'Get Shared Workspace List', 'Create Workspace']),
+ 'ZANALYTICS-ORGID': ('Organization ID, shown in the Zoho Analytics UI under Settings > Organisation', ['Get Meta Details From Name']),
+ 'ZANALYTICS-DEST-ORGID': ('Destination organization ID for cross-organization copies, shown in the Zoho Analytics UI under Settings > Organisation', []),
+ 'workspace-id': ('Workspace ID', ['Get Org Workspaces', 'Get Meta Details From Name', 'Create Workspace']),
  'view-id': ('View ID (table, report, dashboard, query table, etc.)', ['Get Meta Details From Name', 'Get View List', 'Create Table', 'Create Query Table', 'Import Data into a New Table (Synchronous)', 'Create Report', 'Create Dashboard']),
  'column-id': ('Column ID within a table', ['Get Table Metadata', 'Add Column']),
  'folder-id': ('Folder ID within a workspace', ['Get Folder List', 'Create Folder']),
@@ -177,7 +176,7 @@ ID_SOURCES = {
  'model-id': ('AutoML model ID', ['Get AutoML Analysis Details']),
  'deployment-id': ('AutoML model deployment ID', ['Get Deployments For A Model', 'Create AutoML Analysis Deployment']),
  'role-id': ('Custom role ID', []),
- 'dashboard-id': ('Dashboard ID (a view ID whose type is Dashboard)', ['Get All Dashboards', 'Get Owned Dashboards', 'Get Shared Dashboards', 'Create Dashboard', 'Get View List']),
+ 'dashboard-id': ('Dashboard ID (a view ID whose type is Dashboard)', ['Get Org Dashboards', 'Create Dashboard', 'Get View List']),
  'report-id': ('Report ID (a view ID of an analysis view)', ['Get View List', 'Create Report']),
 }
 
@@ -696,7 +695,7 @@ CANONICAL = {
  '7103': ('The organization or workspace addressed by the request does not exist, has been deleted, or is not visible to the caller.', 'Verify the ZANALYTICS-ORGID header and the workspace-id in the request path.'),
  '7104': ('The view (table, report, dashboard, query table) or other named object addressed by the request does not exist in the given workspace.', 'Verify the view-id or the exact, case-sensitive name used in the request.'),
  '7301': ('The request is authenticated, but the user does not hold the role or view permission required for this operation on the requested resource.', 'Ask the workspace or organization administrator to grant the required permission, or call the API as an Account Admin, Organization Admin or Workspace Admin.'),
- '8083': ('The ZANALYTICS-ORGID header is missing from a request that requires it.', 'Send the organization ID in the ZANALYTICS-ORGID header. Obtain it from Get Org List.'),
+ '8083': ('The ZANALYTICS-ORGID header is missing from a request that requires it.', 'Send the organization ID in the ZANALYTICS-ORGID header. It is shown in the Zoho Analytics UI under Settings > Organisation.'),
  '8535': ('The OAuth access token is missing, expired, revoked, or does not carry the scope required by this operation.', 'Regenerate the access token with the required scope (see the endpoint document) and retry.'),
  '8080': ('CONFIG is not valid JSON, was not URL-encoded correctly, contains an unsupported key, or violates a type or length constraint.', 'Stringify and URL-encode the CONFIG object and send only the documented keys with the documented types.'),
 }
@@ -878,7 +877,7 @@ def render_endpoint(ep):
     L.append('\n## Headers\n')
     hrows = [('`Authorization`', '`Zoho-oauthtoken <access-token>`', 'Required', 'OAuth 2.0 access token carrying ' + (', '.join(f'`{s}`' for s in scopes) if scopes else 'the required scope') + '. See [Authentication](/foundations/authentication.md).')]
     if org_hdr != 'not-required':
-        hrows.append(('`ZANALYTICS-ORGID`', '`<org-id>`', 'Required' if org_hdr == 'required' else 'Optional', 'Organization ID. Obtain it from [Get Org List](/domains/organization-management/org-info-and-settings/get-organizations.md). See [Identifiers](/foundations/identifiers.md).'))
+        hrows.append(('`ZANALYTICS-ORGID`', '`<org-id>`', 'Required' if org_hdr == 'required' else 'Optional', 'Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](/foundations/identifiers.md).'))
     else:
         hrows.append(('`ZANALYTICS-ORGID`', '-', 'Not required', 'This API is user-scoped and works across all organizations of the caller.'))
     if op:
@@ -1330,7 +1329,7 @@ def render_identifiers():
 
 All identifiers are numeric but are transmitted as **strings** (JSON strings in responses, plain text in URL paths and headers). Treat them as opaque strings; never parse them as 32-bit integers, because view and workspace IDs exceed that range. Identifiers are stable for the lifetime of the object but differ across data centers and environments, so resolve them at runtime rather than hard-coding them. The recommended bootstrap sequence is:
 
-1. Call [Get Org List](/domains/organization-management/org-info-and-settings/get-organizations.md) to obtain `orgId` for the `ZANALYTICS-ORGID` header.
+1. Read the organization ID from the Zoho Analytics UI (Settings > Organisation) and send it in the `ZANALYTICS-ORGID` header.
 2. Call [Get Meta Details From Name](/domains/organization-management/org-info-and-settings/get-meta-details.md) to resolve a workspace name (and optionally a view name) into `workspaceId` and `viewId`.
 3. Use listing APIs (views, columns, folders, groups, schedules...) to obtain the remaining IDs.
 

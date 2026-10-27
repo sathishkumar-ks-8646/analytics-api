@@ -18,7 +18,7 @@ api:
   group: view-operations
   oauth_scopes:
     - ZohoAnalytics.metadata.read
-  org_id_header: not-required
+  org_id_header: required
   config_parameter:
     location: query
     required: false
@@ -29,6 +29,8 @@ api:
   error_codes:
     - 7104
     - 7301
+    - 8083
+    - 8084
     - 8535
   openapi:
     file: "/references/openapi/views-management-grouped-api.json"
@@ -41,10 +43,10 @@ sources:
     resource: "/references/openapi/views-management-grouped-api.json"
     title: OpenAPI 3 specification - views-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-09T14:14:03Z
+    last_modified: 2026-10-26T11:33:28Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -52,9 +54,9 @@ status: stable
 
 **GET `/restapi/v2/views/{view-id}`** - Get View Details (View Operations / Views Management).
 
-Returns detailed metadata for a single view identified by its view ID. Unlike the Get View List API, this API does not require a workspace ID in the URL — the view is resolved directly by its ID. Optionally returns extended metadata including column definitions and involved views.
+Returns detailed metadata for a single view identified by its view ID. Unlike the Get View List API, this API does not require a workspace ID in the URL — the view is resolved directly by its ID within the organisation named in the `ZANALYTICS-ORGID` header. Optionally returns extended metadata including column definitions and involved views.
 
-> **No workspace ID in the URL:** This endpoint resolves the view globally by `<view-id>`. The workspace is derived from the view's metadata. This is different from all other workspace-scoped APIs in this document.
+> **No workspace ID in the URL:** This endpoint resolves the view by `<view-id>` within the organisation named in `ZANALYTICS-ORGID`. The workspace is derived from the view's metadata. This is different from all other workspace-scoped APIs in this document.
 
 From the OpenAPI specification:
 
@@ -71,7 +73,7 @@ By default only the base attributes are returned. Setting `withInvolvedMetaInfo`
 | URL | `/restapi/v2/views/{view-id}` |
 | Base URL | `https://analyticsapi.zoho.com` (data-center specific, see [Data centers](../../../foundations/data-centers.md)) |
 | OAuth scope | [`ZohoAnalytics.metadata.read`](../../../foundations/oauth-scopes.md#zohoanalyticsmetadataread) |
-| ZANALYTICS-ORGID header | Not required (user-scoped API) |
+| ZANALYTICS-ORGID header | **Required** - Organisation ID that owns the workspace holding the view. |
 | Permission required | The authenticated user must have at least Read Only permission on the view. This includes Account Admins, Organization Admins, Workspace Admins, View Owners, and any user with Read Only or higher access to the view. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `application/json` |
@@ -84,7 +86,7 @@ By default only the base attributes are returned. Setting `withInvolvedMetaInfo`
 | Header | Value | Required | Notes |
 |---|---|---|---|
 | `Authorization` | `Zoho-oauthtoken <access-token>` | Required | OAuth 2.0 access token carrying `ZohoAnalytics.metadata.read`. See [Authentication](../../../foundations/authentication.md). |
-| `ZANALYTICS-ORGID` | - | Not required | This API is user-scoped and works across all organizations of the caller. |
+| `ZANALYTICS-ORGID` | `<org-id>` | Required | Organization ID, shown in the Zoho Analytics UI under Settings > Organisation. See [Identifiers](../../../foundations/identifiers.md). |
 
 ## Path Parameters
 
@@ -191,6 +193,7 @@ HTTP `200` with content type `application/json`. JSON responses use the standard
 GET /restapi/v2/views/137687000000471835 HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 ```
 
 **Case 2 — Get extended metadata for a table (with columns)**
@@ -199,6 +202,7 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 GET /restapi/v2/views/137687000000471835?CONFIG={"withInvolvedMetaInfo":true} HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 ```
 
 **Case 3 — Get details of a tabbed dashboard with tab info**
@@ -207,6 +211,7 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 GET /restapi/v2/views/137687000015400002?CONFIG={"withInvolvedMetaInfo":true} HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 ```
 
 ## Sample Responses
@@ -440,8 +445,10 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 | Code | HTTP | Reason | Solution |
 |---|---|---|---|
 | [7005](../../../foundations/error-codes.md#error-7005) | 500 | Unexpected error on the Zoho Analytics server while processing an otherwise valid request. Not caused by the request payload. | Retry after a short interval. If the error persists, contact Zoho Analytics support quoting the error code and the time of the request. |
-| [7104](../../../foundations/error-codes.md#error-7104) | 404 | View not found. | Verify `<view-id>` is valid and accessible. |
+| [7104](../../../foundations/error-codes.md#error-7104) | 404 | View not found in the organisation named in the header. | Verify `<view-id>` is valid and accessible, and that `ZANALYTICS-ORGID` names the organisation that owns it. |
 | [7301](../../../foundations/error-codes.md#error-7301) | 403 | User does not have Read Only permission on the view. | Ensure the user has been granted at least Read Only access to the view. |
+| [8083](../../../foundations/error-codes.md#error-8083) | 400 | `ORGID_NOT_PRESENT_IN_THE_HEADER` — The `ZANALYTICS-ORGID` header is missing or empty. | Add the `ZANALYTICS-ORGID` header with your Organization ID. |
+| [8084](../../../foundations/error-codes.md#error-8084) | 404 | `ORGID_NOT_EXIST` — No organisation exists with the given ID. | Read the Organization ID from **Settings → Organisation** in the Zoho Analytics UI. |
 | [8535](../../../foundations/error-codes.md#error-8535) | 401 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 # Related
@@ -450,5 +457,5 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Views Management](../overview.md) - the parent API domain.
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
-- Other endpoints in this group: [Save As View](save-as-view.md), [Copy Views](copy-views.md), [Create Similar Views](create-similar-views.md), [Rename View](rename-view.md), [Delete View](delete-view.md), [Get View List](get-views.md), [Get View URL](get-view-url.md), [Get View Dependents](get-view-dependents.md), [Get Recent Views](get-recent-views.md).
+- Other endpoints in this group: [Save As View](save-as-view.md), [Copy Views](copy-views.md), [Create Similar Views](create-similar-views.md), [Rename View](rename-view.md), [Delete View](delete-view.md), [Get View List](get-views.md), [Get View URL](get-view-url.md), [Get View Dependents](get-view-dependents.md).
 - [SDK examples](../../../sdk-examples/views-management/view-operations/get-view-details.md).

@@ -50,10 +50,10 @@ sources:
     resource: "/references/openapi/workspace-management-grouped-api.json"
     title: OpenAPI 3 specification - workspace-management-grouped-api.json
     author: team:zoho-analytics-api-docs
-    last_modified: 2026-10-20T17:34:40Z
+    last_modified: 2026-10-26T11:33:37Z
 generated:
   by: process:build_okf
-  at: 2026-10-23T07:58:54Z
+  at: 2026-10-27T19:31:48Z
 status: stable
 ---
 
@@ -108,7 +108,7 @@ Three identifiers circulate through these APIs and they are not interchangeable.
 
 | Identifier | Where it comes from | What addresses it |
 |---|---|---|
-| **Master workspace ID** | Any workspace you own, via [Get All Workspace List](../workspace-operations/get-all-workspaces.md) | The `<workspace-id>` path segment of seven of the eight APIs. |
+| **Master workspace ID** | Any workspace you own, via [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) | The `<workspace-id>` path segment of seven of the eight APIs. |
 | **Client workspace ID** | [Get Linkable Workspaces](get-linkable-workspaces.md) | `clients[].workspaceIds` on [Link Workspaces](link-workspaces.md) and [Get Workspace Linking Compatibility](get-workspace-linking-compatibility.md). **Nothing else accepts it.** |
 | **Sandbox ID** | Minted by [Link Workspaces](link-workspaces.md); read back from `clients[].workspaces[].sandboxId` of [Get Linked Workspaces For Master Workspace](get-linked-workspaces-for-master-workspace.md) | `sandboxIds` on [Unlink Workspaces](unlink-workspaces.md) and [Get Linked Workspace Sync Details](get-linked-workspace-sync-details.md); `clients[].sandboxId` on [Sync Linked Workspaces](sync-linked-workspaces.md). |
 
@@ -196,7 +196,7 @@ There is no `domainName` CONFIG attribute on any of these APIs. Manage linked wo
 - **Reading deletes stale mappings.** Links pointing at a deleted master or client workspace are purged while the response is built — a `GET` with a persistent side effect.
 - **Grouped by master workspace name.** Two masters sharing a display name collapse into one entry; see [Limitations](overview.md#limitations).
 - **`syncTime` is epoch milliseconds in a string,** `"0"` when the link has never synced.
-- **Dependency chain:** [Get Org List](../../organization-management/org-info-and-settings/get-organizations.md) → `ZANALYTICS-ORGID` → Get Linked Workspaces For Organization → `sandboxId`.
+- **Dependency chain:** Organization ID (Zoho Analytics UI → **Settings → Organisation**) → `ZANALYTICS-ORGID` → Get Linked Workspaces For Organization → `sandboxId`.
 
 ## Get Linked Workspaces For Master Workspace
 
@@ -204,7 +204,7 @@ There is no `domainName` CONFIG attribute on any of these APIs. Manage linked wo
 - **"Not linked" is `{}` and HTTP 200.** An unlinked workspace, a fully filtered result and a workspace that is not a master are indistinguishable. This API never raises [`8246`](../../../foundations/error-codes.md#error-8246).
 - **Same filtering and same housekeeping side effect** as the organisation listing.
 - **This is where a freshly created link first becomes visible.** Because [Link Workspaces](link-workspaces.md) only schedules the work, poll here until the new `sandboxId` appears.
-- **Dependency chain:** [Get All Workspace List](../workspace-operations/get-all-workspaces.md) → `<workspace-id>` → Get Linked Workspaces For Master Workspace → `sandboxId`.
+- **Dependency chain:** [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) → `<workspace-id>` → Get Linked Workspaces For Master Workspace → `sandboxId`.
 
 ## Get Linkable Workspaces
 
@@ -213,7 +213,7 @@ There is no `domainName` CONFIG attribute on any of these APIs. Manage linked wo
 - **The response key is `orgs`; the request key is `clients`.** The two shapes deliberately do not mirror each other — map `orgs[].orgId` → `clients[].orgId` and `orgs[].workspaces[].workspaceId` → `clients[].workspaceIds[]`.
 - **Candidates span every organisation the caller administers,** which is what makes cross-organisation linking possible at all.
 - **`orgId` can be `""`.** When the server could not resolve an organisation ID it returns the organisation name as the grouping key and leaves `orgId` empty; such an entry cannot be used in a write payload.
-- **Dependency chain:** [Get All Workspace List](../workspace-operations/get-all-workspaces.md) → Get Linkable Workspaces → [Get Workspace Linking Compatibility](get-workspace-linking-compatibility.md).
+- **Dependency chain:** [Get Org Workspaces](../../organization-management/org-level-listings/get-org-workspaces.md) → Get Linkable Workspaces → [Get Workspace Linking Compatibility](get-workspace-linking-compatibility.md).
 
 ## Get Workspace Linking Compatibility
 

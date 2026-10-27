@@ -6,75 +6,6 @@
   },
   "actions": [
     {
-      "target": "$.paths['/restapi/v2/workspaces'].get.responses['200'].content['application/json'].examples.ownedOnly",
-      "update": {
-        "description": "Owned only"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces'].get.responses['200'].content['application/json'].examples.ownedOnly",
-      "update": {
-        "summary": "An Account Admin who owns all the workspaces of the organization and has none shared from other organizations."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces'].get.responses['200'].content['application/json'].examples.ownedAndShared",
-      "update": {
-        "description": "Owned and shared"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces'].get.responses['200'].content['application/json'].examples.ownedAndShared",
-      "update": {
-        "summary": "A user who owns a workspace in their own organization and has a workspace from another organization shared with them."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces'].get.responses['200']",
-      "update": {
-        "x-zenesis-statuscodes": [
-          {
-            "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
-          }
-        ]
-      },
-      "x-migration": "Now a Markdown table in the operation description."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces'].get",
-      "update": {
-        "x-zenesis-title": "Get All Workspace List"
-      },
-      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces'].get",
-      "update": {
-        "description": "Returns all workspaces accessible to the authenticated user — both workspaces they own or administer, and workspaces shared with them. The response separates owned and shared workspaces into two distinct arrays.\n\nThis API is scoped to the user and not to the organization. It returns only the workspaces that the requesting user has some level of access to. Account Admins see all the workspaces of their organization in the owned list."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces'].get",
-      "update": {
-        "x-zenesis-sections": {
-          "apiRequestParameters": {
-            "1": {
-              "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>This API combines the results of the Get Owned Workspace List and the Get Shared Workspace List APIs for the requesting user.</li><li>The API is scoped to the user and not to the organization. It returns only the workspaces that the requesting user has some level of access to, across all the organizations. Account Admins see all the workspaces of their organization in the owned list.</li><li>The <b>ZANALYTICS-ORGID</b> header is not required for this API.</li><li>The <b>workspaceId</b> values returned by this API are the primary source of the workspace IDs used in all the workspace specific API calls.</li></ul>\n</span></blockquote>"
-            }
-          }
-        }
-      },
-      "x-migration": "HTML restatement of `description`. Retire it."
-    },
-    {
       "target": "$.paths['/restapi/v2/workspaces'].post.requestBody.content['application/x-www-form-urlencoded'].examples.nameOnly",
       "update": {
         "description": "Name only"
@@ -160,164 +91,7 @@
           "apiRequestParameters": {
             "1": {
               "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>The <b>workspaceName</b> should be unique within the organization. Creating a workspace with a name that is already in use fails with error code 7111.</li><li>The <b>workspaceName</b> can hold a maximum of 50 characters and the <b>workspaceDesc</b> can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.</li><li>When <b>workspaceDesc</b> is omitted, the description is stored as an empty string. It can be updated later using the Rename Workspace API.</li><li>The response data holds only the <b>workspaceId</b>. Use the Get Workspace Info or the Get All Workspace List API to retrieve the complete workspace record.</li><li>The workspace secret key is not generated at creation time. Use the Get Workspace Secret Key API when the key is needed for a cross-organization copy.</li><li>The number of workspaces that can be created depends on the subscription plan of the organization. Reaching the limit fails with error code 7951.</li><li>Organization Admins are allowed to create workspaces within their organization.</li><li>The workspace is created with no tables or views. The content has to be added using the subsequent APIs.</li></ul>\n</span></blockquote>"
-            }
-          }
-        }
-      },
-      "x-migration": "HTML restatement of `description`. Retire it."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/owned'].get.responses['200'].content['application/json'].examples.multipleWorkspaces",
-      "update": {
-        "description": "Multiple workspaces"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/owned'].get.responses['200'].content['application/json'].examples.multipleWorkspaces",
-      "update": {
-        "summary": "The organization holds more than one workspace."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/owned'].get.responses['200'].content['application/json'].examples.noWorkspaces",
-      "update": {
-        "description": "No workspaces"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/owned'].get.responses['200'].content['application/json'].examples.noWorkspaces",
-      "update": {
-        "summary": "The organization holds no workspace and an empty array is returned."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/owned'].get.responses['200']",
-      "update": {
-        "x-zenesis-statuscodes": [
-          {
-            "name": "7301",
-            "description": "User is not the Account Admin. Organization Admins and Workspace Admins cannot call this API.",
-            "resolution": "Use Account Admin credentials."
-          },
-          {
-            "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
-          }
-        ]
-      },
-      "x-migration": "Now a Markdown table in the operation description."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/owned'].get",
-      "update": {
-        "x-zenesis-title": "Get Owned Workspace List"
-      },
-      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/owned'].get",
-      "update": {
-        "description": "Returns all workspaces owned by (created within) the authenticated user's organisation. This is an admin-scoped API — only the Account Admin can call it, and it returns all workspaces in the org regardless of sharing."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/owned'].get",
-      "update": {
-        "x-zenesis-sections": {
-          "apiRequestParameters": {
-            "1": {
-              "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>This API can be invoked only by the Account Admin of the organization. Organization Admins and Workspace Admins invoking this API fail with error code 7301.</li><li>The API returns all the workspaces present in the organization of the requesting Account Admin, including the workspaces that the Account Admin did not create and does not administer directly.</li><li>The organization scope is resolved from the session of the requesting user. The <b>ZANALYTICS-ORGID</b> header is not required for this API.</li><li>The Get All Workspace List API differs from this API. It returns the owned and the shared workspaces of the requesting user across all the organizations, and it can be invoked by any user.</li></ul>\n</span></blockquote>"
-            }
-          }
-        }
-      },
-      "x-migration": "HTML restatement of `description`. Retire it."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get.responses['200'].content['application/json'].examples.sharedFromOtherOrg",
-      "update": {
-        "description": "Shared workspaces"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get.responses['200'].content['application/json'].examples.sharedFromOtherOrg",
-      "update": {
-        "summary": "A workspace from another organization is shared with the requesting user."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get.responses['200'].content['application/json'].examples.noSharedWorkspaces",
-      "update": {
-        "description": "No shared workspaces"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get.responses['200'].content['application/json'].examples.noSharedWorkspaces",
-      "update": {
-        "summary": "No workspace is shared with the requesting user and an empty array is returned."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get.responses['200'].content['application/json'].examples.clientPortalWorkspace",
-      "update": {
-        "description": "Client Portal user"
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get.responses['200'].content['application/json'].examples.clientPortalWorkspace",
-      "update": {
-        "summary": "A Client Portal or white label user retrieving the workspace of their portal."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get.responses['200']",
-      "update": {
-        "x-zenesis-statuscodes": [
-          {
-            "name": "8535",
-            "description": "Invalid or expired OAuth token.",
-            "resolution": "Provide a valid token with scope ZohoAnalytics.metadata.read."
-          }
-        ]
-      },
-      "x-migration": "Now a Markdown table in the operation description."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get",
-      "update": {
-        "x-zenesis-title": "Get Shared Workspace List"
-      },
-      "x-migration": "Identical to `summary`. Make the renderer fall back to it."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get",
-      "update": {
-        "description": "Returns all workspaces that have been shared with the authenticated user from other organisations. Workspaces in the user's own organisation are not included — use Get All Workspace List to see both owned and shared together."
-      },
-      "x-migration": "Re-swaps the example fields for the current renderer."
-    },
-    {
-      "target": "$.paths['/restapi/v2/workspaces/shared'].get",
-      "update": {
-        "x-zenesis-sections": {
-          "apiRequestParameters": {
-            "1": {
-              "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>This API returns only the workspaces shared with the requesting user by users from other organizations. The workspaces present in the organization of the requesting user are not included.</li><li>The result of this API is a subset of the result of the Get All Workspace List API.</li><li>The scope is resolved from the identity of the requesting user. The <b>ZANALYTICS-ORGID</b> header is not required for this API.</li></ul>\n</span></blockquote>"
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>The <b>workspaceName</b> should be unique within the organization. Creating a workspace with a name that is already in use fails with error code 7111.</li><li>The <b>workspaceName</b> can hold a maximum of 50 characters and the <b>workspaceDesc</b> can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.</li><li>When <b>workspaceDesc</b> is omitted, the description is stored as an empty string. It can be updated later using the Rename Workspace API.</li><li>The response data holds only the <b>workspaceId</b>. Use the Get Workspace Info or the Get Org Workspaces API to retrieve the complete workspace record.</li><li>The workspace secret key is not generated at creation time. Use the Get Workspace Secret Key API when the key is needed for a cross-organization copy.</li><li>The number of workspaces that can be created depends on the subscription plan of the organization. Reaching the limit fails with error code 7951.</li><li>Organization Admins are allowed to create workspaces within their organization.</li><li>The workspace is created with no tables or views. The content has to be added using the subsequent APIs.</li></ul>\n</span></blockquote>"
             }
           }
         }
@@ -438,7 +212,7 @@
           "apiRequestParameters": {
             "1": {
               "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>The <b>data.workspaces</b> key of the response holds a single JSONObject and not a JSONArray. This differs from the Get All, the Get Owned and the Get Shared Workspace List APIs.</li><li>Setting <b>withUserRoleInfo</b> to false, which is the default, returns the workspace metadata alone and is the fastest response option.</li><li>Setting <b>withUserRoleInfo</b> to true adds the <b>userRoleInfo</b> object to the response. An Account Admin gets the role name Account Admin with roleId 0 and isCustomRoleUser false, an Organization Admin gets the role name Organization Admin with roleId 0, and a custom role user gets isCustomRoleUser true along with the ID and the display name of the custom role. For a shared user with no workspace level role, the role name may reflect their view level access role.</li><li>The workspace secret key is not returned by this API. Use the Get Workspace Secret Key API to retrieve it.</li><li>This API is available to any user who has at least one view of the workspace shared with them, in addition to the Workspace Admins, the Account Admins and the Organization Admins.</li><li>The <b>ZANALYTICS-ORGID</b> header is not required for this API, as the organization is resolved from the workspace ID.</li><li>As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.</li></ul>\n</span></blockquote>"
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>The <b>data.workspaces</b> key of the response holds a single JSONObject and not a JSONArray. This differs from the Get Org Workspaces API.</li><li>Setting <b>withUserRoleInfo</b> to false, which is the default, returns the workspace metadata alone and is the fastest response option.</li><li>Setting <b>withUserRoleInfo</b> to true adds the <b>userRoleInfo</b> object to the response. An Account Admin gets the role name Account Admin with roleId 0 and isCustomRoleUser false, an Organization Admin gets the role name Organization Admin with roleId 0, and a custom role user gets isCustomRoleUser true along with the ID and the display name of the custom role. For a shared user with no workspace level role, the role name may reflect their view level access role.</li><li>The workspace secret key is not returned by this API. Use the Get Workspace Secret Key API to retrieve it.</li><li>This API is available to any user who has at least one view of the workspace shared with them, in addition to the Workspace Admins, the Account Admins and the Organization Admins.</li><li>The <b>ZANALYTICS-ORGID</b> header is mandatory for this API. The workspace is resolved inside the organization it names, and a workspace of another organization is not found.</li><li>As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.</li></ul>\n</span></blockquote>"
             }
           }
         }
@@ -816,7 +590,7 @@
           "apiRequestParameters": {
             "1": {
               "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Setting <b>regenerateKey</b> to false, which is the default, is safe to invoke repeatedly. The existing key is returned each time, and a key is generated on the first call when none exists.</li><li>Setting <b>regenerateKey</b> to true invalidates the previous key immediately. A cross-organization copy attempted with the old key after regeneration fails with error code 8024. A copy operation that had already started before the regeneration is not affected, as the key is validated only at the start of the copy.</li><li>The workspace secret key is returned only by this API. It is not present in the response of the Get Workspace Info, the Get All Workspace List or any other API.</li><li>Only the Account Admins and the Organization Admins of the organization that owns the workspace can retrieve the key.</li><li>As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.</li></ul>\n</span></blockquote>"
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Setting <b>regenerateKey</b> to false, which is the default, is safe to invoke repeatedly. The existing key is returned each time, and a key is generated on the first call when none exists.</li><li>Setting <b>regenerateKey</b> to true invalidates the previous key immediately. A cross-organization copy attempted with the old key after regeneration fails with error code 8024. A copy operation that had already started before the regeneration is not affected, as the key is validated only at the start of the copy.</li><li>The workspace secret key is returned only by this API. It is not present in the response of the Get Workspace Info, the Get Org Workspaces or any other API.</li><li>Only the Account Admins and the Organization Admins of the organization that owns the workspace can retrieve the key.</li><li>As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.</li></ul>\n</span></blockquote>"
             }
           }
         }
@@ -956,7 +730,7 @@
           "apiRequestParameters": {
             "1": {
               "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Add Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no <b>status</b> or <b>summary</b> JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.</li><li>A user can hold only one default workspace at a time. When the user already holds a different workspace as the default, the previous default is replaced silently and no error is raised.</li><li>This API is idempotent. Invoking it on a workspace that is already the default workspace of the user succeeds without error and makes no change.</li><li>The requesting user should have at least one view of the workspace shared with them. A user with no access to any view of the workspace cannot mark it as the default workspace and the request fails with error code 7301.</li><li>The default preference continues to be stored even when the user loses access to the workspace later. However, the workspace is not presented as accessible until the access is restored.</li><li>After this API is invoked, the workspace is returned with isDefault as true in the response of the Get All Workspace List and the Get Shared Workspace List APIs. Use those APIs to verify the change.</li><li>The preferences are stored per user and per organization. Marking a workspace as the default for one user has no effect on the preferences of any other user.</li><li>Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.</li></ul>\n</span></blockquote>"
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Add Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no <b>status</b> or <b>summary</b> JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.</li><li>A user can hold only one default workspace at a time. When the user already holds a different workspace as the default, the previous default is replaced silently and no error is raised.</li><li>This API is idempotent. Invoking it on a workspace that is already the default workspace of the user succeeds without error and makes no change.</li><li>The requesting user should have at least one view of the workspace shared with them. A user with no access to any view of the workspace cannot mark it as the default workspace and the request fails with error code 7301.</li><li>The default preference continues to be stored even when the user loses access to the workspace later. However, the workspace is not presented as accessible until the access is restored.</li><li>After this API is invoked, the workspace is returned with isDefault as true in the response of the Get Org Workspaces API. Use that API to verify the change.</li><li>The preferences are stored per user and per organization. Marking a workspace as the default for one user has no effect on the preferences of any other user.</li><li>Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.</li></ul>\n</span></blockquote>"
             }
           }
         }
@@ -980,7 +754,7 @@
           {
             "name": "7415",
             "description": "The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces.",
-            "resolution": "Use Get All Workspace List to identify the workspace with isDefault: true, then call this API with that workspace ID."
+            "resolution": "Use Get Org Workspaces to identify the workspace with isDefault: true, then call this API with that workspace ID."
           },
           {
             "name": "8535",
@@ -1001,7 +775,7 @@
     {
       "target": "$.paths['/restapi/v2/workspaces/{workspace-id}/default'].delete",
       "update": {
-        "description": "Removes the default workspace designation from the specified workspace for the calling user. After this operation, the user has no default workspace set.\n\nUnlike the Add Default Workspace API, this API is not idempotent. When the specified workspace is not the current default workspace of the user, the request fails with error code 7415. Verify the current default using the Get All Workspace List API, which returns `isDefault` as true for the current default, before invoking this API."
+        "description": "Removes the default workspace designation from the specified workspace for the calling user. After this operation, the user has no default workspace set.\n\nUnlike the Add Default Workspace API, this API is not idempotent. When the specified workspace is not the current default workspace of the user, the request fails with error code 7415. Verify the current default using the Get Org Workspaces API, which returns `isDefault` as true for the current default, before invoking this API."
       },
       "x-migration": "Re-swaps the example fields for the current renderer."
     },
@@ -1012,7 +786,7 @@
           "apiRequestParameters": {
             "1": {
               "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Remove Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no <b>status</b> or <b>summary</b> JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.</li><li>This API is not idempotent. When the specified workspace is not the current default workspace of the requesting user, the request fails with error code 7415 instead of succeeding silently.</li><li>Use the Get All Workspace List API to confirm that the target workspace holds isDefault as true before invoking this API.</li><li>This behaviour differs from the Add Default Workspace API, which is idempotent, and from the Remove Favourite Workspace API, which succeeds silently when the workspace is not in the favourites.</li><li>After the designation is removed, the user holds no default workspace. A new default has to be set explicitly using the Add Default Workspace API.</li><li>Invoking this API immediately after the Add Default Workspace API succeeds, as the workspace can be set and unset in sequence.</li><li>The requesting user should have at least one view of the workspace shared with them, failing which the request fails with error code 7301.</li><li>The preferences are stored per user and per organization. Removing the default designation for one user has no effect on the preferences of any other user.</li></ul>\n</span></blockquote>"
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul><li>Remove Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no <b>status</b> or <b>summary</b> JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.</li><li>This API is not idempotent. When the specified workspace is not the current default workspace of the requesting user, the request fails with error code 7415 instead of succeeding silently.</li><li>Use the Get Org Workspaces API to confirm that the target workspace holds isDefault as true before invoking this API.</li><li>This behaviour differs from the Add Default Workspace API, which is idempotent, and from the Remove Favourite Workspace API, which succeeds silently when the workspace is not in the favourites.</li><li>After the designation is removed, the user holds no default workspace. A new default has to be set explicitly using the Add Default Workspace API.</li><li>Invoking this API immediately after the Add Default Workspace API succeeds, as the workspace can be set and unset in sequence.</li><li>The requesting user should have at least one view of the workspace shared with them, failing which the request fails with error code 7301.</li><li>The preferences are stored per user and per organization. Removing the default designation for one user has no effect on the preferences of any other user.</li></ul>\n</span></blockquote>"
             }
           }
         }
@@ -3196,26 +2970,6 @@
     },
     {
       "target": "$.components.schemas.ExportTemplateConfig.examples",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
-    },
-    {
-      "target": "$.components.schemas.GetAllWorkspacesResponse.examples",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
-    },
-    {
-      "target": "$.components.schemas.GetOwnedWorkspacesResponse.examples",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
-    },
-    {
-      "target": "$.components.schemas.GetSharedWorkspacesResponse.examples",
-      "remove": true,
-      "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
-    },
-    {
-      "target": "$.components.schemas.WorkspaceSummary.examples",
       "remove": true,
       "x-migration": "Optional. Only needed for byte-identical output; the Zenesis renderer ignores unknown keys."
     },

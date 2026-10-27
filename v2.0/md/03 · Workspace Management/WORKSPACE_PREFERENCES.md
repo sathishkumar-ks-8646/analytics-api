@@ -85,8 +85,8 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **Idempotent** | Calling this API with the workspace that is already the user's default succeeds without error and makes no change. |
 | **Access requirement** | The user must have at least one view shared with them in the workspace (i.e. any path to the workspace). Users with no access to any view in the workspace cannot set it as default (error 7301). |
 | **No CONFIG or request body** | The workspace is identified solely by `<workspace-id>` in the URL. |
-| **`isDefault` flag in list responses** | After calling this API, the workspace appears with `isDefault: true` in Get All Workspace List and Get Shared Workspace List responses. Use those APIs to verify the change. |
-| **Dependency** | `<workspace-id>` → Get All Workspace List or Get Shared Workspace List. |
+| **`isDefault` flag in list responses** | After calling this API, the workspace appears with `isDefault: true` in the [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) response. Use that API to verify the change. |
+| **Dependency** | `<workspace-id>` → [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces). |
 
 ### Error Codes
 
@@ -102,7 +102,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 
 Removes the default workspace designation from the specified workspace for the calling user. After this operation, the user has no default workspace set.
 
-Unlike Add Default Workspace, this API is **not idempotent** — if the specified workspace is not currently the user's default, the call fails with error **7415**. Verify the user's current default using Get All Workspace List (which returns `isDefault: true` for the current default) before calling this API.
+Unlike Add Default Workspace, this API is **not idempotent** — if the specified workspace is not currently the user's default, the call fails with error **7415**. Verify the user's current default using [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) (which returns `isDefault: true` for the current default) before calling this API.
 
 | Attribute | Value |
 |-----------|-------|
@@ -171,11 +171,11 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Aspect | Detail |
 |--------|--------|
 | **Success response has no body** | Remove Default Workspace returns a bare HTTP `204 No Content` on success — no `status`/`summary` JSON to parse. |
-| **NOT idempotent — fails if not currently default** | Unlike Remove Favourite Workspace (which silently no-ops), this API returns error 7415 if the workspace is not the user's current default. Always verify `isDefault: true` in Get All Workspace List before calling. |
+| **NOT idempotent — fails if not currently default** | Unlike Remove Favourite Workspace (which silently no-ops), this API returns error 7415 if the workspace is not the user's current default. Always verify `isDefault: true` in [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) before calling. |
 | **Contrast with Add Default Workspace** | Add Default Workspace is idempotent (calling it twice is safe). Remove Default Workspace is not — the second call on the same workspace will fail with 7415. |
 | **After removal, user has no default workspace** | A new default must be set explicitly using Add Default Workspace. |
 | **No CONFIG or request body** | The workspace is identified solely by `<workspace-id>` in the URL. |
-| **Dependency** | `<workspace-id>` → Get All Workspace List. Confirm `isDefault: true` on the target workspace before calling. |
+| **Dependency** | `<workspace-id>` → [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces). Confirm `isDefault: true` on the target workspace before calling. |
 
 ### Error Codes
 
@@ -183,7 +183,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 |------|--------|----------|
 | 7103 | Workspace not found. | Verify `<workspace-id>`. |
 | 7301 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |
-| 7415 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. | Use Get All Workspace List to identify the workspace with `isDefault: true`, then call this API with that workspace ID. |
+| 7415 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. | Use [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) to identify the workspace with `isDefault: true`, then call this API with that workspace ID. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.update`. |
 
 ---
@@ -252,7 +252,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **Multiple favourites allowed** | There is no limit on the number of workspaces a user can mark as favourite. |
 | **Access requirement** | The user must have at least one view shared with them in the workspace. Without access, the call fails with error 7301. |
 | **No CONFIG or request body** | The workspace is identified solely by `<workspace-id>` in the URL. |
-| **Dependency** | `<workspace-id>` → Get All Workspace List or Get Shared Workspace List. |
+| **Dependency** | `<workspace-id>` → [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces). |
 
 ### Error Codes
 
@@ -325,7 +325,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **Idempotent — no error if not in favourites** | Unlike Remove Default Workspace (which fails with 7415 if not set as default), this API silently succeeds even if the workspace is not currently in the user's favourites. |
 | **Contrast with Remove Default Workspace** | Remove Default Workspace is NOT idempotent; Remove Favourite Workspace IS idempotent. This is the key behavioural asymmetry between the two "remove" operations. |
 | **No CONFIG or request body** | The workspace is identified solely by `<workspace-id>` in the URL. |
-| **Dependency** | `<workspace-id>` → Get All Workspace List or Get Shared Workspace List. |
+| **Dependency** | `<workspace-id>` → [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces). |
 
 ### Error Codes
 
@@ -386,7 +386,7 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Scenario | Behaviour |
 |----------|-----------|
 | Workspace is currently the user's default | Default is removed. The user has no default workspace until they set a new one. |
-| Workspace is **not** the user's current default | **Fails with error 7415.** This is the primary failure case — use Get All Workspace List to confirm `isDefault: true` before calling this API. |
+| Workspace is **not** the user's current default | **Fails with error 7415.** This is the primary failure case — use [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) to confirm `isDefault: true` before calling this API. |
 | Workspace ID is valid but user has no access | Fails with error 7301. |
 | Calling immediately after Add Default | Succeeds — the workspace was just set and can be unset in sequence. |
 

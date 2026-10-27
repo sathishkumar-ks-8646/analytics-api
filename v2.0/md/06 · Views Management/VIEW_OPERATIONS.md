@@ -23,7 +23,6 @@ This document covers V2 REST APIs for managing views within workspaces in Zoho A
 | 7 | [Get View Details](#7-get-view-details) | GET | `/restapi/v2/views/<view-id>` |
 | 8 | [Get View URL](#8-get-view-url) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish` |
 | 9 | [Get View Dependents](#9-get-view-dependents) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/dependents` |
-| 10 | [Get Recent Views](#10-get-recent-views) | GET | `/restapi/v2/recentviews` |
 
 ---
 
@@ -746,17 +745,17 @@ ZANALYTICS-ORGID: 700000123456
 
 ## 7. Get View Details
 
-Returns detailed metadata for a single view identified by its view ID. Unlike the Get View List API, this API does not require a workspace ID in the URL — the view is resolved directly by its ID. Optionally returns extended metadata including column definitions and involved views.
+Returns detailed metadata for a single view identified by its view ID. Unlike the Get View List API, this API does not require a workspace ID in the URL — the view is resolved directly by its ID within the organisation named in the `ZANALYTICS-ORGID` header. Optionally returns extended metadata including column definitions and involved views.
 
 | Attribute | Value |
 |-----------|-------|
 | **Method** | GET |
 | **URL** | `/restapi/v2/views/<view-id>` |
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
-| **ZANALYTICS-ORGID Header** | Not required by this API. However, passing it is harmless and recommended for consistency. |
+| **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID that owns the workspace holding the view. |
 | **Permission Required** | The authenticated user must have at least **Read Only** permission on the view. This includes Account Admins, Organization Admins, Workspace Admins, View Owners, and any user with Read Only or higher access to the view. |
 
-> **No workspace ID in the URL:** This endpoint resolves the view globally by `<view-id>`. The workspace is derived from the view's metadata. This is different from all other workspace-scoped APIs in this document.
+> **No workspace ID in the URL:** This endpoint resolves the view by `<view-id>` within the organisation named in `ZANALYTICS-ORGID`. The workspace is derived from the view's metadata. This is different from all other workspace-scoped APIs in this document.
 
 ### CONFIG Parameter
 
@@ -783,6 +782,7 @@ The CONFIG parameter is optional. When provided, it is a JSON object passed as a
 GET /restapi/v2/views/137687000000471835 HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 ```
 
 **Case 2 — Get extended metadata for a table (with columns)**
@@ -791,6 +791,7 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 GET /restapi/v2/views/137687000000471835?CONFIG={"withInvolvedMetaInfo":true} HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 ```
 
 **Case 3 — Get details of a tabbed dashboard with tab info**
@@ -799,6 +800,7 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 GET /restapi/v2/views/137687000015400002?CONFIG={"withInvolvedMetaInfo":true} HTTP/1.1
 Host: analyticsapi.zoho.com
 Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
+ZANALYTICS-ORGID: 700000123456
 ```
 
 ### Sample Responses
@@ -1077,8 +1079,10 @@ Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
 
 | Code | Reason | Solution |
 |------|--------|----------|
-| 7104 | View not found. | Verify `<view-id>` is valid and accessible. |
+| 7104 | View not found in the organisation named in the header. | Verify `<view-id>` is valid and accessible, and that `ZANALYTICS-ORGID` names the organisation that owns it. |
 | 7301 | User does not have Read Only permission on the view. | Ensure the user has been granted at least Read Only access to the view. |
+| 8083 | `ORGID_NOT_PRESENT_IN_THE_HEADER` — The `ZANALYTICS-ORGID` header is missing or empty. | Add the `ZANALYTICS-ORGID` header with your Organization ID. |
+| 8084 | `ORGID_NOT_EXIST` — No organisation exists with the given ID. | Read the Organization ID from **Settings → Organisation** in the Zoho Analytics UI. |
 | 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
 
 ---
@@ -1371,148 +1375,12 @@ ZANALYTICS-ORGID: 700000123456
 
 ---
 
-## 10. Get Recent Views
-
-Returns a list of views recently accessed by the authenticated user across **all workspaces** the user has access to, sorted by access time (most recently accessed first). This is a user-scoped, cross-workspace API — no workspace ID is required in the URL.
-
-| Attribute | Value |
-|-----------|-------|
-| **Method** | GET |
-| **URL** | `/restapi/v2/recentviews` |
-| **OAuth Scope** | `ZohoAnalytics.metadata.read` |
-| **ZANALYTICS-ORGID Header** | Not required — this API is user-scoped and not tied to a single workspace or organisation. |
-| **Permission Required** | Any authenticated Zoho Analytics user. |
-
-> This API has no CONFIG parameter. All inputs are provided via URL path parameters only. Results are personal to the calling user — different users calling this API see their own respective recent view history.
-
-### Sample Requests
-
-**Case 1 — Get my recent views**
-
-```http
-GET /restapi/v2/recentviews HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy
-```
-
-**Case 2 — Same API, shared user context (only sees views shared with them)**
-
-```http
-GET /restapi/v2/recentviews HTTP/1.1
-Host: analyticsapi.zoho.com
-Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
-```
-
-### Sample Responses
-
-**HTTP 200 OK**
-
-**Case 1 — Workspace Admin with mixed view types across workspaces**
-```json
-{
-  "status": "success",
-  "summary": "Get recent views",
-  "data": {
-    "views": [
-      {
-        "viewId": "137687000000005744",
-        "viewName": "Column Sales",
-        "viewType": "Table",
-        "workspaceId": "137687000000005620",
-        "workspaceName": "Q3 Sales Workspace",
-        "viewLastAccessedTime": "1623165599255"
-      },
-      {
-        "viewId": "137687000001859027",
-        "viewName": "tabular_1",
-        "viewType": "Report",
-        "workspaceId": "137687000001859022",
-        "workspaceName": "DBOwner-Backup",
-        "viewLastAccessedTime": "1622797899143"
-      },
-      {
-        "viewId": "137687000001859035",
-        "viewName": "dashboard1",
-        "viewType": "Dashboard",
-        "workspaceId": "137687000001859022",
-        "workspaceName": "DBOwner-Backup",
-        "viewLastAccessedTime": "1622741330331"
-      },
-      {
-        "viewId": "137687000001859030",
-        "viewName": "summary",
-        "viewType": "SummaryView",
-        "workspaceId": "137687000001859022",
-        "workspaceName": "DBOwner-Backup",
-        "viewLastAccessedTime": "1622741297744"
-      },
-      {
-        "viewId": "137687000001859029",
-        "viewName": "pivot1",
-        "viewType": "Pivot",
-        "workspaceId": "137687000001859022",
-        "workspaceName": "DBOwner-Backup",
-        "viewLastAccessedTime": "1622741261238"
-      }
-    ]
-  }
-}
-```
-
-**Case 2 — Shared user (only sees views accessible to them)**
-```json
-{
-  "status": "success",
-  "summary": "Get recent views",
-  "data": {
-    "views": [
-      {
-        "viewId": "138022000000002005",
-        "viewName": "Sales",
-        "viewType": "Table",
-        "workspaceId": "138022000000002015",
-        "workspaceName": "SharedUser Sales",
-        "viewLastAccessedTime": "1607076349147"
-      },
-      {
-        "viewId": "138022000000002105",
-        "viewName": "Cost Across Years by Region",
-        "viewType": "AnalysisView",
-        "workspaceId": "138022000000002015",
-        "workspaceName": "SharedUser Sales",
-        "viewLastAccessedTime": "1606987675756"
-      }
-    ]
-  }
-}
-```
-
-#### Response Field Reference
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `data.views` | Array | List of recently accessed views, sorted by `viewLastAccessedTime` descending (most recent first). Empty array if the user has no recent view history. |
-| `views[].viewId` | String | Unique ID of the view. |
-| `views[].viewName` | String | Display name of the view. |
-| `views[].viewType` | String | View type string (same format as Get View List API). |
-| `views[].workspaceId` | String | ID of the workspace containing this view. |
-| `views[].workspaceName` | String | Display name of the workspace. Useful for disambiguation when views from multiple workspaces appear in the result. |
-| `views[].viewLastAccessedTime` | String | Epoch milliseconds timestamp of when the calling user last accessed this view. |
-
-### Error Codes
-
-| Code | Reason | Solution |
-|------|--------|----------|
-| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope `ZohoAnalytics.metadata.read`. |
-
----
-
 ## Appendix A – Common HTTP Headers
 
 | Header | Value | Required | Notes |
 |--------|-------|----------|-------|
 | `Authorization` | `Zoho-oauthtoken <oauth-token>` | **Mandatory** | OAuth 2.0 access token of the calling user. |
-| `ZANALYTICS-ORGID` | Organization ID | Required for every API except Get View Details and Get Recent Views | For **[Copy Views](#2-copy-views)**: by default the **destination** org ID; when `ZANALYTICS-DEST-ORGID` is also supplied (Org Admin cross-org scenario), this becomes the caller's own (source) org instead. For the others: org of the workspace in the URL. **Not required** for **[Get View Details](#7-get-view-details)** and **[Get Recent Views](#10-get-recent-views)**. |
+| `ZANALYTICS-ORGID` | Organization ID | **Mandatory** for every API in this document | For **[Copy Views](#2-copy-views)**: by default the **destination** org ID; when `ZANALYTICS-DEST-ORGID` is also supplied (Org Admin cross-org scenario), this becomes the caller's own (source) org instead. For the others: org of the workspace in the URL. For **[Get View Details](#7-get-view-details)** the view must belong to a workspace of this organisation. |
 | `ZANALYTICS-DEST-ORGID` | Destination Organisation ID | Optional — Copy Views only | Used by Organization Admins copying views to a different org they have access to. Set to the destination org ID. When present, overrides destination org resolution and validates the caller is a member of that org. Not required for same-org copies or Account Admin cross-org copies (which use `ZANALYTICS-ORGID` directly as the destination). |
 | `Content-Type` | `application/x-www-form-urlencoded` | Recommended for POST/PUT/DELETE | Save As View, Copy Views, Create Similar Views, Rename View, and Delete View send CONFIG as a form-encoded body parameter. The GET APIs pass CONFIG as a URL query parameter (where applicable). |
 
@@ -1531,7 +1399,6 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 | Get View Details | GET | `ZohoAnalytics.metadata.read` |
 | Get View URL | GET | `ZohoAnalytics.embed.read` |
 | Get View Dependents | GET | `ZohoAnalytics.metadata.read` |
-| Get Recent Views | GET | `ZohoAnalytics.metadata.read` |
 
 ---
 
@@ -1618,6 +1485,8 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 | Getting details of a Dashboard Tab via its `viewId` | Returns the tab's basic info including `parentViewId` pointing to the parent Tabbed Dashboard. Does not return the tab's contained views unless `withInvolvedMetaInfo=true` and the user is a Workspace Admin. |
 | View is a Live Connect table | `isLive: true` is included in the response. `rowCount` returns `0` for live tables regardless of actual remote data volume. |
 | View is a Tabbed Dashboard but user is non-admin with `withInvolvedMetaInfo=true` | `isTabbedDashboard: true` is present, but `tabs` is `null` (admin-only). |
+| `ZANALYTICS-ORGID` is omitted | Request fails with error **8083**. The header is mandatory — the view is resolved within the organisation it names. |
+| `<view-id>` belongs to a workspace of another organisation | Request fails with error **7104**. Send the organisation that owns the workspace holding the view. |
 
 ### Get View URL
 
@@ -1643,14 +1512,3 @@ Authorization: Zoho-oauthtoken 1000.aaaaaa.bbbbbb
 | Query table that is both a parent (references other tables) and a child (referenced by analysis views) | Get View Dependents returns **downstream** views only — those that depend on the QT. It does not list the tables the QT itself depends on (use Get View Details for that). |
 | `<view-id>` belongs to the Trash | Only active (non-trashed) views are returned as dependents. Views that have been moved to Trash are not included. |
 
-### Get Recent Views
-
-| Scenario | Behaviour |
-|----------|-----------|
-| User has never accessed any views | Returns HTTP 200 with an empty `views` array. |
-| Views from multiple workspaces and organisations | All recent views across all the user's accessible workspaces are returned together in a single list, ordered by access time. The `workspaceId` and `workspaceName` fields distinguish the workspace for each view. |
-| A recently accessed view was subsequently deleted | Deleted views are not included in recent views. Only currently active views are returned. |
-| Shared User or Group Member | Only views the user currently has access to appear in the result. If a view was later unshared, it is removed from the recent list. |
-| Calling with different OAuth tokens (different users) | Returns each user's own individual recent view history. The API is strictly per-user. |
-
----
