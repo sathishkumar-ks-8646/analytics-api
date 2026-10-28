@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "zoho_analytics_client"
-  spec.version       = "2.9.0"
+  spec.version       = "2.10.0"
   spec.authors       = ["Zoho Analytics"]
   spec.email         = ["support@zohoanalytics.com"]
 
