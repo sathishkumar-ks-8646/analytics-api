@@ -1,0 +1,2413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>AI agent skills &mdash; Zoho Analytics V2 organization-context migration</title>
+<meta name="description" content="Install this migration as a skill your AI coding agent can use - four Agent Skills, a machine-readable mapping, a scanner and an AGENTS.md, each one copyable and downloadable on its own.">
+<link rel="stylesheet" href="assets/migration.css">
+<script src="assets/migration.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <a class="wordmark" href="index.html">
+      <svg class="zoho-mark" role="img" aria-label="Zoho" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.66 6.897a1.299 1.299 0 0 0-1.205.765l-.642 1.44-.062-.385A1.291 1.291 0 0 0 5.27 7.648l-4.185.678A1.291 1.291 0 0 0 .016 9.807l.678 4.18a1.293 1.293 0 0 0 1.27 1.087c.074 0 .143-.01.216-.017l4.18-.678c.436-.07.784-.351.96-.723l2.933 1.307a1.304 1.304 0 0 0 .988.026c.321-.12.575-.365.716-.678l.28-.629.038.276a1.297 1.297 0 0 0 1.455 1.103l3.712-.501a1.29 1.29 0 0 0 1.03.514h4.236c.713 0 1.29-.58 1.291-1.291V9.545c0-.712-.58-1.291-1.291-1.291h-4.236c-.079 0-.155.008-.23.022a1.309 1.309 0 0 0-.275-.288c-.275-.21-.614-.3-.958-.253l-4.197.571c-.155.021-.3.07-.432.14L9.159 7.01a1.27 1.27 0 0 0-.499-.113zm-.025.705c.077 0 .159.013.24.052l2.971 1.324c-.128.238-.18.508-.142.782l.357 2.596h.002l-.745 1.672a.59.59 0 0 1-.777.296l-3.107-1.385-.004-.041-.41-2.526L8.1 7.95a.589.589 0 0 1 .536-.348zm-3.159.733c.125 0 .245.039.343.112.13.09.21.227.237.382l.234 1.446-.56 1.259a1.27 1.27 0 0 0-.026.987c.12.322.364.575.678.717l.295.131a.585.585 0 0 1-.428.314l-4.185.678a.59.59 0 0 1-.674-.485l-.678-4.18a.588.588 0 0 1 .485-.674l4.185-.678c.03-.004.064-.01.094-.01zm11.705.09a.59.59 0 0 1 .415.173 1.287 1.287 0 0 0-.416.947v4.237c0 .033.003.065.005.097l-3.55.482a.586.586 0 0 1-.66-.502l-.191-1.403.899-2.017a1.29 1.29 0 0 0-.333-1.5l3.754-.51c.026-.004.051-.004.077-.004zm1.3.532h4.227c.326 0 .588.266.588.588v4.237a.589.589 0 0 1-.588.588h-4.237a.564.564 0 0 1-.12-.013c.47-.246.758-.765.684-1.318zm-5.988.309.254.113c.296.133.43.48.296.777l-.432.97-.207-1.465a.58.58 0 0 1 .09-.395zm5.39.538.453 3.325a.583.583 0 0 1-.453.65zM6.496 11.545l.17 1.052a.588.588 0 0 1-.293-.776zm3.985 4.344a.588.588 0 0 0-.612.603c0 .358.244.61.601.61a.582.582 0 0 0 .607-.608c0-.35-.242-.605-.596-.605zm5.545 0a.588.588 0 0 0-.612.603c0 .358.245.61.602.61a.582.582 0 0 0 .606-.608c0-.35-.24-.605-.596-.605zm-8.537.018a.047.047 0 0 0-.048.047v.085c0 .026.021.047.048.047h.52l-.623.9a.052.052 0 0 0-.009.027v.027c0 .026.021.047.048.047h.815a.047.047 0 0 0 .047-.047v-.085a.047.047 0 0 0-.047-.047h-.55l.606-.9a.05.05 0 0 0 .008-.026v-.028a.047.047 0 0 0-.047-.047zm5.303 0a.047.047 0 0 0-.047.047v1.086c0 .026.02.047.047.047h.135a.047.047 0 0 0 .047-.047v-.454h.545v.454c0 .026.02.047.047.047h.134a.047.047 0 0 0 .047-.047v-1.086a.047.047 0 0 0-.047-.047h-.134a.047.047 0 0 0-.047.047v.453h-.545v-.453a.047.047 0 0 0-.047-.047zm-2.324.164c.25 0 .372.194.372.425 0 .219-.109.425-.358.426-.242 0-.375-.197-.375-.419 0-.235.108-.432.36-.432zm5.545 0c.25 0 .372.194.372.425 0 .219-.108.425-.358.426-.242 0-.374-.197-.374-.419 0-.235.108-.432.36-.432z" fill="currentColor"></path></svg>
+      Organization context<span>&nbsp;/ migration</span>
+    </a>
+    <span class="chip">Zoho Analytics API v2</span>
+    <nav class="topnav" aria-label="Guide chapters">
+      <a href="index.html">Start here</a>
+      <a href="01-why-org-context.html">Why</a>
+      <a href="02-whats-changed.html">What changed</a>
+      <a href="03-endpoint-migration.html">Endpoints</a>
+      <a href="04-sdk-migration.html">SDKs</a>
+      <a href="05-knowledge-bases.html">Tools</a>
+      <a href="06-timeline.html">Timeline</a>
+      <a href="07-troubleshooting.html">Troubleshooting</a>
+      <a href="08-agent-skills.html" aria-current="page">Agent skills</a>
+    </nav>
+    <button class="icon-btn nav-toggle" id="nav-toggle" type="button"
+            aria-expanded="false" aria-controls="sidebar"
+            aria-label="Show chapter navigation">&#9776;</button>
+    <button class="icon-btn" id="theme-toggle" type="button"
+            aria-label="Switch colour theme">&#9680;</button>
+  </div>
+</header>
+
+<div class="deadline-bar">
+  <div class="deadline-bar__inner">
+    <span class="chip chip--deadline">Deadline</span>
+    <p>The replaced endpoints are <strong>deprecated</strong>. They stop answering in
+    <strong>March 2027</strong>. <a href="06-timeline.html">See the timeline &rarr;</a></p>
+  </div>
+</div>
+
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidenav" aria-label="Chapters">
+    <h2>Migration guide</h2>
+    <a href="index.html"><span class="n">00</span><span>Start here</span></a>
+    <a href="01-why-org-context.html"><span class="n">01</span><span>Why org context</span></a>
+    <a href="02-whats-changed.html"><span class="n">02</span><span>What changed</span></a>
+    <a href="03-endpoint-migration.html"><span class="n">03</span><span>Endpoint migration</span></a>
+    <a href="04-sdk-migration.html"><span class="n">04</span><span>SDK migration</span></a>
+    <a href="05-knowledge-bases.html"><span class="n">05</span><span>Knowledge bases &amp; tools</span></a>
+    <a href="06-timeline.html"><span class="n">06</span><span>Timeline &amp; deprecation</span></a>
+    <a href="07-troubleshooting.html"><span class="n">07</span><span>Troubleshooting &amp; FAQ</span></a>
+    <a href="08-agent-skills.html" aria-current="page"><span class="n">08</span><span>AI agent skills</span></a>
+    <h2>Source</h2>
+    <a href="08-agent-skills.md"><span class="n">md</span><span>This page as Markdown</span></a>
+    <a href="README.md"><span class="n">&#8212;</span><span>Folder README</span></a>
+    </nav>
+  </aside>
+
+  <main class="doc" id="main">
+<header class="page-head">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <p class="eyebrow">Migration guide &middot; <b>Chapter 08</b></p>
+  <h1>AI agent skills</h1>
+  <p class="lede">Everything in this guide, packaged for the tools you already code with. Copy a single file, download one skill, or take the whole set as an archive.</p>
+</header>
+<div class="note note--info"><div class="note__title">Why this exists</div><p>Chapter 05 asks you to update the artefacts that <em>describe</em> the API. This page is the other direction: it gives your coding agent the migration itself, so the assistant writing your code stops suggesting endpoints that switch off in <strong>March 2027</strong>.</p></div>
+<section id="take-the-whole-set">
+<h2><span class="num">01</span>Take the whole set</h2>
+<div class="asset-all">
+  <div class="asset-all__text">
+    <strong>Everything on this page, in one archive.</strong> The four skills, the mapping, the scanner and <code>AGENTS.md</code>. Unzip it anywhere; the layout is already correct.
+  </div>
+  <a class="asset__btn" href="assets/zoho-analytics-v2-agent-skills.zip" download>Download .zip</a>
+</div>
+<p>For Claude Code and anything else that reads Agent Skills, the four skill directories go in your project's skills folder:</p>
+<pre><code class="lang-bash">unzip zoho-analytics-v2-agent-skills.zip
+cp -r agent/skills/* .claude/skills/</code></pre>
+<p>Install them together. The three task skills reach their shared references through <code>../zoho-analytics-v2-org-context/references/</code>, so a task skill installed on its own still works but loses that material.</p>
+</section>
+<section id="which-one-do-you-need">
+<h2><span class="num">02</span>Which one do you need?</h2>
+<div class="table-wrap"><table><thead><tr><th>You are</th><th class="col-narrow">Take</th></tr></thead><tbody><tr><td>Just getting your agent on the right side of the change</td><td class="col-narrow">The router skill, plus whichever task skill matches your stack</td></tr><tr><td>Calling the REST API over raw HTTP</td><td class="col-narrow"><code>zoho-analytics-v2-endpoint-migration</code></td></tr><tr><td>Using an official SDK in any of the seven languages</td><td class="col-narrow"><code>zoho-analytics-v2-sdk-migration</code></td></tr><tr><td>Looking after specs, collections, RAG indexes or MCP servers</td><td class="col-narrow"><code>zoho-analytics-v2-artifact-migration</code></td></tr><tr><td>On Cursor, Copilot, Codex, Zed or anything that reads <code>AGENTS.md</code></td><td class="col-narrow"><code>AGENTS.md</code> — one file, no skill support needed</td></tr><tr><td>Wanting a number before you plan</td><td class="col-narrow"><code>scan.py</code></td></tr></tbody></table></div>
+</section>
+<section id="the-skills">
+<h2><span class="num">03</span>The skills</h2>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Skill</span><span class="asset__name">zoho-analytics-v2-org-context</span><span class="asset__meta">4.7 KB &middot; 87 lines</span></div><div class="asset__desc"><p><strong>The router.</strong> Carries the four facts every other part depends on — the header is mandatory everywhere, the Organization ID comes from configuration, <code>8083</code>/<code>8084</code> are not retryable, the dashboard listing is paged — then points at the task skill that matches what the user is doing. Install this one even if you only want one of the others.</p></div><div class="asset__path">agent/skills/zoho-analytics-v2-org-context/SKILL.md</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-1">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-1" data-filename="SKILL.md">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-1" aria-expanded="false" aria-controls="asset-1">View source</button></div><pre class="asset__code" id="asset-1" hidden><code class="lang-markdown">---
+name: zoho-analytics-v2-org-context
+description: Migrate code, SDKs and API artefacts off the eight removed Zoho Analytics REST API v2 cross-organization endpoints, which stop answering in March 2027. Use when the user mentions Zoho Analytics organization context, ZANALYTICS-ORGID, error 8083 or 8084, or calls any of /restapi/v2/orgs, /restapi/v2/workspaces, /restapi/v2/workspaces/owned, /restapi/v2/workspaces/shared, /restapi/v2/dashboards, /restapi/v2/dashboards/owned, /restapi/v2/dashboards/shared, /restapi/v2/recentviews, or the SDK methods getOrgs, getWorkspaces, getDashboards or getRecentViews.
+---
+
+# Zoho Analytics v2 — mandatory organization context
+
+Zoho Analytics REST API v2 now requires every call to name the organization it
+applies to. Eight cross-organization endpoints were replaced by three
+organization-scoped ones; two more kept their URL but now require a header.
+
+**The eight removed endpoints stop answering in March 2027.** They still respond
+today, so nothing is broken yet — this is the migration window.
+
+## The facts every part of this migration depends on
+
+1. **`ZANALYTICS-ORGID` is mandatory on every endpoint**, not just the ones below.
+   Add it in your shared HTTP client or request builder once, not per call site.
+2. **The Organization ID comes from configuration, not from an API call.** Read it
+   once from the Zoho Analytics UI → **Settings → Organisation** and store it next
+   to your client ID and refresh token. `GET /restapi/v2/orgs` was the discovery
+   call and has no replacement.
+3. **`8083` means the header is missing. `8084` means the ID is unknown.** Neither
+   is retryable — a retry of the identical request will fail identically.
+4. **`GET /restapi/v2/orgs/dashboards` is paged**, where its predecessors were not.
+   Loop on `pageDetails.hasNextPage`, never on page length.
+
+## Start here
+
+Ask which situation the user is in, or infer it from the code in front of you,
+then read the matching skill. Most migrations need the first two; large
+organizations need all three.
+
+| The user is… | Use |
+|---|---|
+| Calling the REST API directly over HTTP — curl, fetch, requests, a gateway | `zoho-analytics-v2-endpoint-migration` |
+| Using an official SDK — Java, Python, C#, Go, PHP, Node.js, Ruby | `zoho-analytics-v2-sdk-migration` |
+| Maintaining an OpenAPI spec, Postman collection, RAG index or MCP server | `zoho-analytics-v2-artifact-migration` |
+| Looking at a live error right now | `references/troubleshooting.md` first, then the relevant skill above |
+
+If the user has not said, **run the scanner first** — what it finds tells you
+which skills apply, and gives the user a number to work down.
+
+## Find the work before changing anything
+
+```bash
+python3 agent/scan.py /path/to/their/project
+python3 agent/scan.py /path/to/their/project --json   # when you want to parse it
+```
+
+It reports every deprecated path, SDK method and response key with file and line,
+and exits non-zero if anything is in the `error` class. Severities mean:
+
+- **error** — will fail in March 2027. Must change.
+- **warn** — needs a human look. Usually `getWorkspaceDetails` / `getViewDetails`,
+  which are fine *if* they are already called on a `WorkspaceAPI` / `OrgAPI`
+  instance, and broken if they are still on `AnalyticsClient`.
+
+## The data behind all of this
+
+`agent/migration-map.json` holds every mapping as structured data: old → new
+endpoints, old → new SDK methods per language, response field mappings, all 17
+error codes, CONFIG parameters and limits. Read it when you need an exact value
+rather than prose. Do not restate its contents from memory — the user's build
+depends on these being right.
+
+## Reference material
+
+- `references/shared-facts.md` — the four facts above, in full, with the reasoning
+- `references/timeline.md` — what happens when, and how to prove you are done
+- `references/troubleshooting.md` — every error code, symptom-first
+
+The authored source for all of it is the chapter set two directories up
+(`../../../01-why-org-context.md` … `../../../07-troubleshooting.md`). Cite those
+to the user when they want the full explanation with examples.
+
+## Working rules
+
+- **Never suggest a deprecated endpoint or method**, even as an interim step.
+  There is no fallback and no redirect; the URLs and response shapes differ.
+- **Check the HTTP verb before rewriting a `/restapi/v2/workspaces` path.**
+  `POST` on that path is Create Workspace and is completely unaffected. A
+  path-only search and replace will break it.
+- **Re-pointing a dashboard URL is not enough.** The replacement is paged and
+  returns an object where the old one returned an array. Both have to change.
+- **Do not estimate counts or dates.** The deadline is March 2027; the counts are
+  in `migration-map.json`.
+</code></pre></div>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Skill</span><span class="asset__name">zoho-analytics-v2-endpoint-migration</span><span class="asset__meta">6.1 KB &middot; 122 lines</span></div><div class="asset__desc"><p><strong>Chapter 03 as a task.</strong> The old-to-new path table, the response-shape changes that a URL rewrite does not cover, CONFIG parameters and limits, the 100-workspace cap, and the errors to handle. Fires on raw HTTP call sites.</p></div><div class="asset__path">agent/skills/zoho-analytics-v2-endpoint-migration/SKILL.md</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-2">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-2" data-filename="SKILL.md">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-2" aria-expanded="false" aria-controls="asset-2">View source</button></div><pre class="asset__code" id="asset-2" hidden><code class="lang-markdown">---
+name: zoho-analytics-v2-endpoint-migration
+description: Rewrite direct HTTP calls to the removed Zoho Analytics REST API v2 cross-organization endpoints. Use when code calls /restapi/v2/orgs, /restapi/v2/workspaces, /restapi/v2/workspaces/owned, /restapi/v2/workspaces/shared, /restapi/v2/dashboards, /restapi/v2/dashboards/owned, /restapi/v2/dashboards/shared or /restapi/v2/recentviews over raw HTTP, when a response parses ownedWorkspaces, sharedWorkspaces, ownedViews or sharedViews, or when adding the ZANALYTICS-ORGID header to existing requests.
+---
+
+# Endpoint migration — direct HTTP calls
+
+For code that builds Zoho Analytics requests itself: curl, fetch, `requests`,
+an API gateway, a Deluge `invokeurl`. If the user calls through an official SDK,
+use `zoho-analytics-v2-sdk-migration` instead.
+
+Exact paths, CONFIG parameters, field mappings and error codes are in
+`../../migration-map.json`. Read values from there rather than recalling them.
+Full prose with request/response examples: `../../../03-endpoint-migration.md`.
+
+## The mapping
+
+| Old | New |
+|---|---|
+| `GET /restapi/v2/orgs` | **No endpoint.** Org ID comes from configuration |
+| `GET /restapi/v2/workspaces` | `GET /restapi/v2/orgs/workspaces` |
+| `GET /restapi/v2/workspaces/owned` | `GET /restapi/v2/orgs/workspaces` |
+| `GET /restapi/v2/workspaces/shared` | `GET /restapi/v2/orgs/workspaces` |
+| `GET /restapi/v2/dashboards` | `GET /restapi/v2/orgs/dashboards` |
+| `GET /restapi/v2/dashboards/owned` | `GET /restapi/v2/orgs/dashboards` |
+| `GET /restapi/v2/dashboards/shared` | `GET /restapi/v2/orgs/dashboards` |
+| `GET /restapi/v2/recentviews` | `GET /restapi/v2/orgs/recentitems` |
+
+Unchanged URL, header now mandatory: `GET /restapi/v2/workspaces/{workspace-id}`
+and `GET /restapi/v2/views/{view-id}`.
+
+**Unaffected: `POST /restapi/v2/workspaces`** (Create Workspace). It shares a path
+with a removed `GET`. Always check the verb before you rewrite that path.
+
+## Order of work
+
+1. **Put the Organization ID in configuration.** `ZOHO_ANALYTICS_ORG_ID`, next to
+   the client ID and refresh token. Source: UI → **Settings → Organisation**.
+2. **Add `ZANALYTICS-ORGID` in the shared request builder**, once. Every endpoint
+   needs it now, so a per-call-site change is the wrong shape.
+3. **Rewrite the paths** from the table above.
+4. **Fix the response parsing** — this is where the real work is, below.
+5. **Handle `8083` and `8084`** wherever the header is now required.
+
+## Response parsing — the part that is not a URL change
+
+**Workspaces.** `data.ownedWorkspaces[]` and `data.sharedWorkspaces[]` merge into a
+single `data.workspaces[]`. Per-item fields are unchanged. If the UI genuinely
+needs the two buckets, derive them client-side by comparing `createdBy` to the
+caller — but check whether the split is still wanted: within one organization an
+admin sees everything, and for everyone else "shared with me" *is* the whole list.
+
+**Dashboards.** `data.ownedViews[]` and `data.sharedViews[]` merge into
+`data.views[]`, and a new `data.pageDetails` appears. This endpoint is **paged**:
+
+```python
+dashboards, page = [], 1
+while True:
+    r = get("/restapi/v2/orgs/dashboards", config={"pageNo": page, "recordsPerPage": 100})
+    dashboards.extend(r["data"]["views"])
+    if not r["data"]["pageDetails"]["hasNextPage"]:
+        break
+    page += 1
+```
+
+&gt; **Loop on `hasNextPage`, never on page length.** It is computed after duplicates
+&gt; and role-restricted entries are removed, so a page can hold 3 entries when you
+&gt; asked for 100 and still have more pages behind it.
+
+**Recent items.** Response shape is unchanged — but the list is capped at 20,
+scoped to the named organization, and access is checked at workspace level only,
+so an entry can point at a view the caller cannot open. Names come from the
+stored history record and may be stale. It costs **1 API unit**, ten times the
+other two org-level listings; budget for it if you poll.
+
+## The 100-workspace cap
+
+Omitting `workspaceIds` fails with `7476` when the caller can see more than 100
+workspaces. Fix by naming the workspaces in batches of at most 100, taken from
+`GET /restapi/v2/orgs/workspaces` for the same organization, and paging within
+each batch.
+
+`workspaceIds` is **validated, not filtered** — one ID from another organization
+fails the whole request with `7387`, it is not silently skipped.
+
+## CONFIG on the dashboard listing
+
+Stringified JSON, URL-encoded, in the `CONFIG` query parameter. Four keys only;
+anything else is `8542`. `workspaceIds` (≤1,000 entries, ≤10,000 chars),
+`pageNo` (1–1,000), `recordsPerPage` (1–500), `searchKey` (≤100 chars). Limits and
+the error code for each are in `migration-map.json` under `config_parameters`.
+
+## Errors to handle
+
+| Code | Means | Do |
+|---|---|---|
+| `8083` | Header missing or empty | Send it. Never retry unchanged |
+| `8084` | No organization with that ID | Re-read from Settings → Organisation |
+| `7301` | Caller is not an active user of that organization | Use an org they belong to |
+| `7103` / `7104` | Workspace / view not found **in this organization** | Check the header before the ID |
+| `7476` | More than 100 workspaces in scope | Batch `workspaceIds` |
+| `7387` | A `workspaceIds` entry is not in this organization | Build batches from Get Org Workspaces |
+| `7430` / `7431` | Org-level listing switched off for the organization | Use workspace-level APIs, or contact support |
+
+Full table including the eight CONFIG validation codes: `migration-map.json`
+under `error_codes`, or `../../../07-troubleshooting.md`.
+
+## Behaviour that is correct but looks like a bug
+
+- **Empty list, HTTP 200.** Valid — nothing is visible to this caller. An
+  Organization Admin or ordinary user whose primary email is unverified gets an
+  empty list; the Account Admin does not.
+- **`isDefault` on a workspace** means the *caller's* default, not the
+  organization's.
+- **`folderId` is the string `"null"`** when a dashboard is in no folder.
+- **`createdBy` is `""`** when the caller is not an active user of the owning org.
+
+## Checklist
+
+`../../../03-endpoint-migration.md` ends with a checklist written to paste into a
+ticket. Offer it when the user is tracking this as a work item rather than fixing
+one call.
+</code></pre></div>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Skill</span><span class="asset__name">zoho-analytics-v2-sdk-migration</span><span class="asset__meta">6.3 KB &middot; 142 lines</span></div><div class="asset__desc"><p><strong>Chapter 04 as a task.</strong> The ten moved methods, the per-language build error each one produces, and the runtime trap no compiler catches — <code>getOrgDashboards</code> returns an object where the old method returned an array. Fires on SDK code in Java, Python, C#, Go, PHP, Node.js and Ruby.</p></div><div class="asset__path">agent/skills/zoho-analytics-v2-sdk-migration/SKILL.md</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-3">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-3" data-filename="SKILL.md">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-3" aria-expanded="false" aria-controls="asset-3">View source</button></div><pre class="asset__code" id="asset-3" hidden><code class="lang-markdown">---
+name: zoho-analytics-v2-sdk-migration
+description: Fix Zoho Analytics SDK code after the methods moved off AnalyticsClient onto OrgAPI and WorkspaceAPI, in Java, Python, C#, Go, PHP, Node.js and Ruby. Use for build errors such as cannot find symbol getWorkspaces, AttributeError get_workspaces, NoMethodError get_orgs, ac.GetRecentViews undefined, Call to undefined method getDashboards, or TypeError ac.getRecentViews is not a function, and when getOrgDashboards returns an object where the old method returned an array.
+---
+
+# SDK migration — all seven languages
+
+All seven official SDKs changed the same way. Understand the shape once and the
+code is mechanical in every language.
+
+Exact per-language before/after code is in `../../../04-sdk-migration.md`.
+The method map as data, including snake_case variants, is in
+`../../migration-map.json` under `sdk`.
+
+## The shape of the change
+
+`AnalyticsClient` now holds **only configuration and its four factories**. It has
+no organization, which is exactly why the cross-organization methods used to live
+on it — and why they cannot stay now that every endpoint needs one.
+
+```
+AnalyticsClient
+ ├─ OrgAPI         getOrgInstance(orgId)
+ ├─ WorkspaceAPI   getWorkspaceInstance(orgId, workspaceId)
+ ├─ ViewAPI        getViewInstance(orgId, workspaceId, viewId)
+ └─ BulkAPI        getBulkInstance(orgId, workspaceId)
+```
+
+Each instance holds the IDs you gave it and sends `ZANALYTICS-ORGID` on every
+request automatically. **Get an `OrgAPI` first, then call the method on it.**
+That is the whole migration.
+
+## The method map
+
+`ORG` = an `OrgAPI` instance, `WS` = a `WorkspaceAPI` instance. All ten were on
+`AnalyticsClient` before.
+
+| Old | New | Returns |
+|---|---|---|
+| `getOrgs()` | **No replacement** — read the ID from Settings → Organisation | — |
+| `getWorkspaces()` | `ORG.getOrgWorkspaces()` | list |
+| `getOwnedWorkspaces()` | `ORG.getOrgWorkspaces()` | list |
+| `getSharedWorkspaces()` | `ORG.getOrgWorkspaces()` | list |
+| `getDashboards()` | `ORG.getOrgDashboards(config)` | **object**: `views` + `pageDetails` |
+| `getOwnedDashboards()` | `ORG.getOrgDashboards(config)` | **object** |
+| `getSharedDashboards()` | `ORG.getOrgDashboards(config)` | **object** |
+| `getRecentViews()` | `ORG.getOrgRecentItems()` | list |
+| `getWorkspaceDetails(workspaceId)` | `WS.getWorkspaceDetails(config)` | workspace object |
+| `getViewDetails(viewId, config)` | `ORG.getViewDetails(viewId, config)` | view object |
+
+Naming follows each language: camelCase in Java, C#, Go, PHP and Node.js;
+`snake_case` in Python and Ruby (`get_org_workspaces`, `get_org_recent_items`).
+
+**`getWorkspaceDetails` drops its argument** — the `WorkspaceAPI` instance already
+holds the workspace ID. The new `config` argument is optional (`withUserRoleInfo`);
+pass `null` / `{}` / `None` if unused.
+
+**`getViewDetails` keeps its signature** — only the object changes. It lives on
+`OrgAPI` rather than `ViewAPI` because the endpoint resolves a view from the
+organization alone; there is no workspace in its URL.
+
+## Translating a build error
+
+| Language | Message | Fix |
+|---|---|---|
+| Java | `cannot find symbol: method getWorkspaces()` | `ac.getOrgInstance(orgId).getOrgWorkspaces()` |
+| C# | `'IAnalyticsClient' does not contain a definition for 'GetDashboards'` | `ac.GetOrgInstance(orgId).GetOrgDashboards(config)` |
+| Go | `ac.GetRecentViews undefined` | `ZAnalytics.GetOrgInstance(&amp;ac, orgId).GetOrgRecentItems()` |
+| Python | `AttributeError: 'AnalyticsClient' object has no attribute 'get_workspaces'` | `ac.get_org_instance(org_id).get_org_workspaces()` |
+| Ruby | `NoMethodError: undefined method 'get_orgs'` | No replacement — read the ID from the UI |
+| PHP | `Call to undefined method AnalyticsClient::getDashboards()` | `$ac-&gt;getOrgInstance($org_id)-&gt;getOrgDashboards($config)` |
+| Node.js | `TypeError: ac.getRecentViews is not a function` | `ac.getOrgInstance(orgId).getOrgRecentItems()` |
+
+Upgrading the SDK and letting the build fail is the fastest way to find every
+call site in Java, C# and Go.
+
+## The trap the compiler cannot catch
+
+`getOrgDashboards` returns an **object** with `views` and `pageDetails`. The old
+`getDashboards` / `getOwnedDashboards` returned an **array**.
+
+In **Python, Ruby, PHP, Node.js and Go this is a runtime shape change, not a
+compile error.** Search for every place the old return value was iterated
+directly and add `["views"]`. When migrating one of these languages, do this
+pass explicitly — the build will not help you.
+
+The listing is also paged. Always loop on `pageDetails.hasNextPage`:
+
+```python
+def all_dashboards(org, **config):
+    page = 1
+    while True:
+        result = org.get_org_dashboards({**config, "pageNo": page})
+        yield from result["views"]
+        if not result["pageDetails"]["hasNextPage"]:
+            return
+        page += 1
+```
+
+Never loop on `len(views) &lt; recordsPerPage` — `hasNextPage` is computed after
+duplicates and role-restricted entries are removed, so short pages are normal.
+
+## C# specific
+
+`IAnalyticsClient` no longer declares the ten removed methods; `IOrgAPI` gained
+four and `IWorkspaceAPI` gained one. **If tests mock `IAnalyticsClient`, those
+mocks need updating** — the compiler will point at each one.
+
+## Where the Organization ID belongs
+
+Every call needs it, so put it with the other connection settings rather than
+threading it through the call stack:
+
+```python
+# config.py
+ORG_ID = os.environ["ZOHO_ANALYTICS_ORG_ID"]   # Settings → Organisation
+
+# analytics.py
+def org():
+    return _client.get_org_instance(config.ORG_ID)
+
+def workspace(workspace_id):
+    return _client.get_workspace_instance(config.ORG_ID, workspace_id)
+```
+
+## Serving several organizations
+
+The pattern changes from *discover then fan out* to *configure then fan out*.
+Hold a list of organization IDs in configuration and create one `OrgAPI` per
+organization. If the product must cover organizations you cannot know in advance,
+add an "Add organization" step to the setup flow and ask the user for the ID —
+the same way you already ask for a client ID and refresh token. Do not guess IDs.
+
+## Finding the call sites
+
+```bash
+python3 agent/scan.py /path/to/their/project
+```
+
+`sdk-get-workspace-details` and `sdk-get-view-details` report as **warn**, not
+error: they are correct when already called on a `WorkspaceAPI` / `OrgAPI`
+instance. Check what the receiver is before changing either.
+</code></pre></div>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Skill</span><span class="asset__name">zoho-analytics-v2-artifact-migration</span><span class="asset__meta">7.3 KB &middot; 155 lines</span></div><div class="asset__desc"><p><strong>Chapter 05 as a task.</strong> OpenAPI, the OKF bundle and its vector index, Postman, SDK docs, MCP tool definitions, wikis, Deluge and monitoring. Fires when the thing being changed is a contract rather than code.</p></div><div class="asset__path">agent/skills/zoho-analytics-v2-artifact-migration/SKILL.md</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-4">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-4" data-filename="SKILL.md">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-4" aria-expanded="false" aria-controls="asset-4">View source</button></div><pre class="asset__code" id="asset-4" hidden><code class="lang-markdown">---
+name: zoho-analytics-v2-artifact-migration
+description: Refresh the artefacts that describe the Zoho Analytics v2 API after the organization-context change — OpenAPI specs, the OKF knowledge bundle and its vector index, Postman collections, SDK reference docs, MCP server tool definitions, internal wikis, Deluge scripts and monitoring alerts. Use when a spec, collection, RAG index or agent still offers the removed cross-organization endpoints, or when deciding whether to merge or re-import an updated contract.
+---
+
+# Artefact migration — specs, collections, indexes, agents
+
+Code is only half the job. A stale contract does not fail loudly: it quietly
+generates a client, autocompletes a request, or answers a developer's question
+with an endpoint that stops answering in March 2027.
+
+Per-artefact detail: `../../../05-knowledge-bases.md`. The artefact list as data,
+including locations and counts: `../../migration-map.json` under `artifacts`.
+
+## The rule that governs almost all of this
+
+**Replace, do not merge.** Operations were *removed*. Every merge-style update —
+Postman's collection merge, an incremental vector re-index, patching your old
+spec copy — keeps the deleted entries and leaves the old endpoints discoverable.
+Re-import or rebuild from scratch in each case.
+
+## OpenAPI specifications
+
+Source: `v2.0/oas/`. Read by Swagger UI, Redoc, client generators, MCP servers.
+
+Eight operations deleted along with their response schemas; a new
+`Org Level Listings` tag in `org-management-grouped-api.json` with
+`getOrgWorkspaces`, `getOrgDashboards`, `getOrgRecentItems`. The
+`org-id-optional` parameter is gone — every `ZANALYTICS-ORGID` is now
+`"required": true`.
+
+1. Pull the current specs whole. Do not patch the old copy.
+2. Regenerate everything downstream: typed clients, request validators, gateway
+   definitions, mock servers, contract tests.
+3. Confirm the generated client compiles — removed operations become removed
+   methods.
+
+&gt; Typed clients (TypeScript, Java) fail to compile, which is what you want.
+&gt; **Dynamic-language clients do not.** A Python or Ruby wrapper will keep a
+&gt; hand-written method pointing at a dead path. Grep the wrapper too.
+
+## OKF knowledge bundle
+
+Source: `v2.0/okf/`. Read by AI assistants, RAG indexes, `llms.txt` consumers.
+Version `1.7.0` → **`2.0.0`**; 210 → **205** endpoint documents; 39 → **40** groups.
+
+1. Re-ingest the whole bundle. Replace it — the major version bump is the signal.
+2. **Drop the vector index and rebuild it from scratch.** This matters more than
+   it sounds.
+3. Confirm `okf/manifest.json` reports `"version": "2.0.0"` after ingestion.
+
+```bash
+# Prove the old endpoints are gone from the ingested copy — no output is correct
+grep -rl "restapi/v2/recentviews\|dashboards/owned\|workspaces/owned" /path/to/okf/copy
+```
+
+&gt; An incremental re-index adds the three new documents and leaves the eight
+&gt; deleted ones in place. A retrieval query for "list workspaces" then surfaces a
+&gt; dead endpoint **with high confidence**, because the old document is well
+&gt; written and matches well. Users trust it, write the code, and ship an
+&gt; integration that breaks in March 2027. RAG indexes are the worst offender in
+&gt; this entire migration.
+
+## Postman
+
+Source: `v2.0/postman/`. 210 → **205** requests. New folder
+**🏢 Organization Management › Org-Level Listings** with three requests.
+
+1. Import as a **new version**. Postman's merge keeps deleted requests.
+2. Re-import the environment file too.
+3. Set `organization-id` by hand from **Settings → Organisation** — the old
+   bootstrap step (*run Get Org List, copy `orgId`*) no longer exists.
+4. Delete the old fork, or rename it `DEPRECATED — do not use`. Someone on the
+   team has it starred.
+5. If it runs in CI, re-record expected responses — the dashboard listing now
+   returns `pageDetails`, which the assertions have never seen.
+
+## SDK reference documentation
+
+Source: `v2.0/sdk/&lt;lang&gt;/docs/`, generated from doc comments in `&lt;lang&gt;/source/`.
+`reference/analytics-client.md` lost ten methods, `reference/org-api.md` gained
+four, `reference/workspace-api.md` gained one, and the first-call example on
+every getting-started page now creates an `OrgAPI` first.
+
+Re-publish from source if you mirror these internally. If you ship a wrapper
+library, update its README with the same before-and-after — your users read your
+docs, not Zoho's.
+
+## MCP servers and AI agents
+
+Tool definitions are a contract like any other.
+
+| Check | Action |
+|---|---|
+| Tool list | Remove tools backed by the eight removed endpoints. Add three: org workspaces, org dashboards, org recent items |
+| Tool schemas | `ZANALYTICS-ORGID` must be a **required** input on every tool, not optional |
+| Org selection | Decide once: pin the server to one organization at start-up, or make `orgId` required on every tool. **Pinning is simpler and safer** |
+| Pagination | The dashboard tool returns `pageDetails`. Either loop internally and return the full list, or expose `pageNo` and describe `hasNextPage` so the model knows to continue |
+| Tool descriptions | Rewrite anything saying "across all organizations" — that phrasing makes a model reach for the wrong tool |
+| Error handling | Map `8083` and `8084` to an actionable message |
+
+&gt; `8083` means the header is missing — a retry will never fix it. An agent that
+&gt; sees a bare `8083` retries the identical request forever. Translate it in the
+&gt; tool's error path to something like *"This API needs an organization ID. Ask
+&gt; the user which organization to use."*
+
+## Internal wikis, runbooks, onboarding guides
+
+Nothing automated finds these. Budget an hour. Search for the eight paths, the
+SDK method names in both casings, and the old operation titles ("Get Org List",
+"Get All Dashboards", "Get Owned", "Get Shared"). The complete search list is in
+`../../../05-knowledge-bases.md`, and `agent/scan.py` will find them in anything
+stored as files.
+
+**Onboarding guides are the worst case.** A new developer following "step 1: call
+`GET /restapi/v2/orgs` to find your org ID" is stuck on their first morning.
+
+## Deluge and no-code automations
+
+Zoho Creator, Zoho Flow and CRM functions call the API through `invokeurl` with
+hand-written headers — no compiler, no type check. Two changes per script: the
+**URL**, and a **`headers` line** carrying `ZANALYTICS-ORGID`.
+
+```javascript
+orgId = "700000123456";
+headersMap = Map();
+headersMap.put("ZANALYTICS-ORGID", orgId);
+response = invokeurl
+[
+  url :"https://analyticsapi.zoho.com/restapi/v2/orgs/workspaces"
+  type :GET
+  headers:headersMap
+  connection:"analytics_oauth_connection"
+];
+```
+
+Scripts already scoped to one workspace probably send the header already — check,
+do not assume.
+
+## Monitoring — how you prove it is finished
+
+Add a log-based alert on any outbound request matching the eight deprecated
+paths, alerting on count greater than zero. Tag it with the owning team so a hit
+routes to someone who can fix it. The regex list is in `migration-map.json` under
+`scan_patterns.monitoring_regex`.
+
+&gt; **Done means zero for a full billing cycle** — including month-end and
+&gt; quarter-end reporting. Monthly and quarterly jobs are the ones everyone
+&gt; forgets. Do not close the migration ticket on a quiet week.
+
+## Checklist
+
+`../../../05-knowledge-bases.md` ends with a sixteen-line per-artefact checklist.
+Offer it when the user is coordinating this across teams rather than fixing one
+artefact.
+</code></pre></div>
+</section>
+<section id="shared-references">
+<h2><span class="num">04</span>Shared references</h2>
+<p>These sit inside the router skill. An agent loads them on demand rather than carrying them in context, which is why chapters 01, 02, 06 and 07 are references and not skills of their own — their descriptions would match almost any question about the migration and win the trigger away from the chapter that says what to type.</p>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Reference</span><span class="asset__name">shared-facts.md</span><span class="asset__meta">4.1 KB &middot; 89 lines</span></div><div class="asset__desc"><p>Chapters 01 and 02, condensed: what the header does, where the Organization ID lives, what the removed discovery call returned and where each field went, and what did <strong>not</strong> change.</p></div><div class="asset__path">agent/skills/zoho-analytics-v2-org-context/references/shared-facts.md</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-5">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-5" data-filename="shared-facts.md">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-5" aria-expanded="false" aria-controls="asset-5">View source</button></div><pre class="asset__code" id="asset-5" hidden><code class="lang-markdown"># The facts every part of this migration rests on
+
+Condensed from `../../../../01-why-org-context.md` and `../../../../02-whats-changed.md`.
+Read those for the full reasoning and worked examples.
+
+## 1. The header is mandatory everywhere
+
+`ZANALYTICS-ORGID` is now required on **every endpoint in the API**, not only the
+ones this migration renames. Around 200 endpoints already required it; the change
+is that the remaining handful no longer accept its absence.
+
+Add it in the shared HTTP client or request builder, once. If `8083` appears on
+every call at the same time, the shared builder is what was missed.
+
+**Carry the ID as a string.** Organization IDs such as `700000123456` exceed
+32-bit range, and in JavaScript leave safe-integer territory once concatenated
+with other IDs. A silently truncated ID produces `8084` and looks like a typo.
+
+## 2. The Organization ID comes from configuration
+
+`GET /restapi/v2/orgs` was the discovery call. It is removed and **has no API
+replacement** — deliberately. The point of the change is that an application
+*states* its organization rather than discovering one.
+
+Read it once from the Zoho Analytics UI → **Settings → Organisation**, and store
+it next to the client ID and refresh token (`ZOHO_ANALYTICS_ORG_ID`).
+
+Everything else the old endpoint returned is still available, organization-scoped:
+
+| Old field | Where now |
+|---|---|
+| `orgId` | Configuration |
+| `orgName`, `orgDesc` | UI → Settings → Organisation |
+| `planName` | `GET /restapi/v2/subscription` (needs the header) |
+| `numberOfWorkspaces` | Count `data.workspaces` from `GET /restapi/v2/orgs/workspaces` |
+| `role` | `GET /restapi/v2/workspaces/{id}` with `CONFIG={"withUserRoleInfo":true}` |
+| `isDefault` | No equivalent — the application decides now |
+
+**Serving several organizations** changes from *discover then fan out* to
+*configure then fan out*. Hold the list of organization IDs in configuration. If
+the product must cover organizations that cannot be known in advance, add an
+"Add organization" step to the setup flow and ask the user for the ID — the same
+way you already ask for a client ID. Do not guess.
+
+## 3. `8083` and `8084` are not retryable
+
+| Code | Name | Means |
+|---|---|---|
+| `8083` | `ORGID_NOT_PRESENT_IN_THE_HEADER` | The header was missing or empty |
+| `8084` | `ORGID_NOT_EXIST` | No organization has that ID |
+
+Retrying the identical request fails identically. Anything with a retry policy —
+an HTTP client, a job runner, an AI agent — must treat these as terminal and
+surface an actionable message rather than looping.
+
+## 4. The dashboard listing is paged
+
+`GET /restapi/v2/orgs/dashboards` returns `data.views` **and** `data.pageDetails`,
+where its three predecessors returned everything in one response.
+
+Loop on `pageDetails.hasNextPage`. Never on page length — `hasNextPage` is
+computed after duplicates and role-restricted entries have been removed from the
+page, so a page can hold 3 entries when 100 were requested and still have more
+behind it.
+
+In the SDKs this is also a **return-type change**: an object where the old method
+returned an array. In Python, Ruby, PHP, Node.js and Go that is a runtime failure,
+not a compile error.
+
+## What did not change
+
+- **Authentication.** Same OAuth flow, same scopes. `ZohoAnalytics.metadata.read`
+  covers all three new endpoints — the same scope the old ones used.
+- **Data import and export.** Untouched.
+- **`POST /restapi/v2/workspaces`** (Create Workspace). Shares a path with a
+  removed `GET`; check the verb before rewriting that path.
+- **Around 200 other endpoints** that were already organization-scoped.
+- **The response envelope**, error-body shape, and CONFIG conventions.
+
+## Why it was done
+
+The old cross-organization endpoints had four problems, all consequences of not
+naming an organization: the answer was ambiguous when a user belonged to several
+organizations; responses mixed data from different organizations; nothing was
+safe to cache; and the cost of the fan-out was invisible and unbounded.
+
+Useful to explain when a user asks why there is no automatic redirect: the new
+URLs and response shapes differ, so a redirect would break callers just as surely
+as removal does — only silently.
+</code></pre></div>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Reference</span><span class="asset__name">timeline.md</span><span class="asset__meta">3.8 KB &middot; 91 lines</span></div><div class="asset__desc"><p>Chapter 06, condensed: what "deprecated" means in practice, a five-step schedule, and the three checks that together mean you are finished.</p></div><div class="asset__path">agent/skills/zoho-analytics-v2-org-context/references/timeline.md</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-6">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-6" data-filename="timeline.md">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-6" aria-expanded="false" aria-controls="asset-6">View source</button></div><pre class="asset__code" id="asset-6" hidden><code class="lang-markdown"># Timeline, and how to prove the migration is finished
+
+Condensed from `../../../../06-timeline.md`.
+
+## One date
+
+**March 2027.** The eight replaced endpoints stop answering. No extension, no
+opt-out, and no silent fallback — the new URLs and response shapes differ, so a
+redirect would break callers just as surely as removal.
+
+## Where things stand now
+
+- **Both old and new endpoints answer.** Nothing is broken yet. This is the
+  migration window.
+- **The old endpoints are already out of the documentation** — the API reference,
+  the OpenAPI specs, the OKF bundle, the Postman collection and all seven SDKs. A
+  developer reading the docs today will not find them.
+- **The SDKs are ahead of the server.** The methods are gone from all seven SDKs
+  *now*, while the endpoints answer until 2027. Upgrading the SDK breaks the build
+  before anything breaks in production. That is deliberate: it turns a 2027
+  incident into a build-time problem.
+
+## What "deprecated" actually means here
+
+| Question | Answer |
+|---|---|
+| Returns correct data today? | Yes |
+| Will get bug fixes? | No |
+| Will get new fields when the new endpoints do? | No — they will drift apart |
+| Appears in the documentation? | No, already removed |
+| Still exposed by the SDKs? | No, removed from all seven today |
+| Warning header on the response? | Do not rely on one — build your own monitoring |
+| Will the date move? | Plan as though it will not |
+
+Treat anything still calling them as already broken, just not yet failing.
+
+## A sensible schedule
+
+The window is long. Use a short slice of it early rather than a panicked slice
+late — because the expensive part is not the code, it is the **discovery**: the
+scheduled job nobody owns, the Deluge script in a Creator app, the notebook on an
+analyst's laptop. Those surface slowly.
+
+1. **Week 1 — measure exposure.** Run `agent/scan.py`, and add the monitoring
+   alert. You cannot plan until you know how many call sites exist and who owns them.
+2. **Week 2 — configure the Organization ID** and wire `ZANALYTICS-ORGID` into
+   the shared request builder. One edit, most of the surface fixed.
+3. **Weeks 3–4 — migrate the listings.** Do the two *changed* endpoints first
+   (header only), then the listings, where response shapes change.
+4. **Week 5 — refresh the contracts.** OpenAPI, Postman, OKF, MCP tool
+   definitions, the wiki. Skipping this is how the old endpoints creep back in
+   six months later.
+5. **Then — watch the alert** until it is silent across a full billing cycle.
+
+## The three completion checks
+
+All three must pass. "We think we got them all" is not one of them.
+
+**1. The code is clean.**
+
+```bash
+python3 agent/scan.py /path/to/project    # exits 0, no errors reported
+```
+
+A hit on `/restapi/v2/workspaces` is only a problem when the method is `GET`.
+
+**2. The traffic is zero.** The monitoring alert on the eight deprecated paths
+has not fired for a **full billing cycle** — month-end and quarter-end included.
+Monthly and quarterly jobs are the ones everyone forgets. Do not close the ticket
+on a quiet week.
+
+**3. The contracts are fresh.**
+
+```bash
+grep '"version"' /path/to/okf/manifest.json | head -1       # expect 2.0.0
+
+grep -rl "recentviews\|dashboards/owned\|dashboards/shared\|workspaces/owned\|workspaces/shared" \
+  /path/to/openapi /path/to/postman /path/to/okf             # expect no output
+```
+
+## If you are reading this after March 2027
+
+An integration has probably already broken. Smallest fix first:
+
+1. Find the failing call — an explicit failure on one of the eight removed paths.
+2. Get the Organization ID from **Settings → Organisation**.
+3. Add the `ZANALYTICS-ORGID` header, re-point the path, and fix the response
+   parsing. Use `zoho-analytics-v2-endpoint-migration`.
+
+Dashboard listings need the most work: the replacement is paged and returns an
+object rather than an array.
+</code></pre></div>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Reference</span><span class="asset__name">troubleshooting.md</span><span class="asset__meta">5.8 KB &middot; 110 lines</span></div><div class="asset__desc"><p>Chapter 07, condensed: the symptom-first table, every error code with its symbolic name, and the questions people ask first.</p></div><div class="asset__path">agent/skills/zoho-analytics-v2-org-context/references/troubleshooting.md</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-7">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-7" data-filename="troubleshooting.md">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-7" aria-expanded="false" aria-controls="asset-7">View source</button></div><pre class="asset__code" id="asset-7" hidden><code class="lang-markdown"># Troubleshooting — symptom first
+
+Condensed from `../../../../07-troubleshooting.md`, which has the full FAQ.
+Every code as data, with fixes: `../../../migration-map.json` → `error_codes`.
+
+## Start from the symptom
+
+| Symptom | Most likely cause |
+|---|---|
+| `errorCode: 8083` | `ZANALYTICS-ORGID` was not sent |
+| `errorCode: 8084` | The Organization ID is wrong, mistyped, or **silently truncated** |
+| `errorCode: 7301` on a call that used to work | Not a member of the organization named in the header |
+| `errorCode: 7103` on a workspace you know exists | Right workspace, wrong organization |
+| `errorCode: 7104` on a view you know exists | Right view, wrong organization |
+| `errorCode: 7476` | More than 100 workspaces in scope for the dashboard listing |
+| `errorCode: 7387` | A `workspaceIds` entry is not in this organization |
+| 404 / "no such endpoint" | Calling a removed path after March 2027 |
+| Empty list, no error | **Correct** — nothing is visible to this caller |
+| `KeyError: 'ownedWorkspaces'` | Response shape changed — merged into `data.workspaces` |
+| `TypeError: list indices must be integers` | `getOrgDashboards` returns an object, not an array |
+| Only ever 100 dashboards | Not paging — loop on `pageDetails.hasNextPage` |
+| Dashboard list empty for everyone | Access Restrictions, or org-level listing switched off (`7430`/`7431`) |
+| `NoMethodError` / `cannot find symbol` after SDK upgrade | The method moved off `AnalyticsClient` |
+
+## The failure body
+
+```json
+{
+  "status": "failure",
+  "summary": "ORGID_NOT_PRESENT_IN_THE_HEADER",
+  "data": { "errorCode": 8083, "errorMessage": "Organization id is not present in the header." }
+}
+```
+
+**Branch on `data.errorCode`.** `summary` is the symbolic name; `errorMessage` is
+human text and may be localised.
+
+## Header and organization
+
+| Code | Name | Fix |
+|---|---|---|
+| `8083` | `ORGID_NOT_PRESENT_IN_THE_HEADER` | Add the header. If this appears everywhere at once, the shared request builder was missed |
+| `8084` | `ORGID_NOT_EXIST` | Re-read from Settings → Organisation. **Keep the ID a string** |
+| `7301` | `SECURITY_NOT_PERMITTED` | The org exists but the user is not an active member. Also returned when Get Org Dashboards is called through a Client Portal / White Label domain |
+
+&gt; **`8084` is usually a type problem, not a typo.** IDs like `700000123456`
+&gt; exceed 32-bit range. Carry them as strings everywhere; a truncated ID produces
+&gt; `8084` and looks like a mistyped number.
+
+## Not found *in this organization*
+
+| Code | Name | Note |
+|---|---|---|
+| `7103` | — | Workspace not found in the organization you named |
+| `7104` | `META_OBJECT_NOT_PRESENT` | View not found in the organization you named |
+
+Both existed before, but their meaning **narrowed**: they used to mean "does not
+exist anywhere", now "does not exist *here*". Check the header before doubting
+the ID.
+
+## Dashboard listing only
+
+| Code | Name | Fix |
+|---|---|---|
+| `7387` | `DBID_NOT_BELONGS_TO_ZSOID` | A `workspaceIds` entry is foreign or missing. The **whole request** fails; bad IDs are not skipped. Build the list from Get Org Workspaces for the same org |
+| `7430` | `ORG_LEVEL_VIEWS_NOT_ALLOWED` | Org-level listing switched off; you see this code as Account Admin. Use workspace-level APIs or contact support |
+| `7431` | `ORG_LEVEL_VIEWS_NOT_ALLOWED_WL_USERS` | Same setting, reported to everyone else |
+| `7476` | `ORG_LEVEL_VIEWS_WS_MORE_THAN_ALLOWED_LIMIT` | Omitted `workspaceIds` with more than 100 visible workspaces. Batch them |
+
+## CONFIG validation
+
+Rejected by the request filter before the handler runs — these describe the
+request, not the data.
+
+| Code | Name | Fix |
+|---|---|---|
+| `8507` | `MORE_THAN_MAX_LENGTH` | `searchKey` &gt; 100 chars, `workspaceIds` &gt; 10,000 chars, CONFIG &gt; 11,000 chars |
+| `8516` | `UNABLE_TO_PARSE_DATA_TYPE` | Send `{"pageNo": 2}`, not `{"pageNo": "2"}` |
+| `8534` | `JSON_PARSE_ERROR` | Stringify then URL-encode. **Encode once, not twice** |
+| `8539` | `INVALID_VALUE_NOT_ALLOWED` | A value is null/empty/blank — leave the key out instead |
+| `8542` | `EXTRA_KEY_FOUND_IN_JSON` | Only `workspaceIds`, `pageNo`, `recordsPerPage`, `searchKey`. Check for typos like `pageNum` |
+| `8544` | `OUT_OF_RANGE` | `pageNo` 1–1,000, `recordsPerPage` 1–500. `recordsPerPage: 1000` is a common mistake — the cap is 500 |
+| `8547` | `ARRAY_SIZE_OUT_OF_RANGE` | Over 1,000 `workspaceIds`. Stay at or under 100 because of `7476` |
+
+## Authentication
+
+`8535` `INVALID_OAUTHTOKEN` — refresh the token. All three new endpoints need
+`ZohoAnalytics.metadata.read`, the same scope the old ones used, **so this is not
+caused by the migration**. No new OAuth scopes are required.
+
+## Answers people ask for first
+
+- **Can I keep using the old endpoints until 2027?** They answer, but get no
+  fixes and no new fields. Anything still calling them is already unsupported.
+- **Why no automatic redirect?** The URLs and response shapes differ. A redirect
+  would break callers silently instead of loudly.
+- **Where do I get the Organization ID?** UI → **Settings → Organisation**. There
+  is no API for it.
+- **My app serves users across several organizations.** Configure the list of
+  organization IDs and fan out explicitly, one `OrgAPI` per organization.
+- **Why only 100 dashboards?** That is one page. Loop on `hasNextPage`.
+- **How do I tell owned from shared now?** Derive it client-side by comparing
+  `createdBy` to the caller — and check whether the split is still wanted.
+- **Did `isDefault` change?** On a workspace it means the *caller's* default.
+- **Do I need new OAuth scopes?** No.
+- **Does this affect import or export?** No.
+- **Is `POST /restapi/v2/workspaces` affected?** No. Create Workspace is untouched.
+- **Our AI assistant keeps suggesting the old endpoints.** Its index still holds
+  the deleted documents. Drop the vector index and rebuild from the 2.0.0 bundle —
+  see `zoho-analytics-v2-artifact-migration`.
+</code></pre></div>
+</section>
+<section id="data-and-tooling">
+<h2><span class="num">05</span>Data and tooling</h2>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Data</span><span class="asset__name">migration-map.json</span><span class="asset__meta">34.1 KB &middot; 928 lines</span></div><div class="asset__desc"><p><strong>The mapping as data.</strong> Eight replaced endpoints, ten SDK methods in both casings, the three new endpoints with scopes and API units, response field mappings, all seventeen error codes with their symbolic names, CONFIG parameters with limits, and the scan patterns. Point an agent at this when you want an exact value rather than prose — and build your own codemod on it.</p></div><div class="asset__path">agent/migration-map.json</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-8">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-8" data-filename="migration-map.json">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-8" aria-expanded="false" aria-controls="asset-8">View source</button></div><pre class="asset__code" id="asset-8" hidden><code class="lang-json">{
+  "name": "zoho-analytics-v2-mandatory-org-context",
+  "title": "Zoho Analytics REST API v2 — mandatory organization context",
+  "description": "Machine-readable mapping for the v2 move to mandatory organization context. Eight cross-organization endpoints replaced by three organization-scoped ones; two more now require the ZANALYTICS-ORGID header.",
+  "map_version": "1.0.0",
+  "api_version": "v2",
+  "source_of_truth": "The prose chapters in the parent directory. This file restates their tables as data; if the two disagree, the chapters win and this file is wrong.",
+  "deadline": {
+    "removal": "March 2027",
+    "meaning": "The eight replaced endpoints stop answering. No extension, no opt-out, no silent fallback to the new endpoints.",
+    "build_constant": "REMOVAL_DEADLINE in ../build.py"
+  },
+  "header": {
+    "name": "ZANALYTICS-ORGID",
+    "value": "The Organization ID, as a string of digits",
+    "required": true,
+    "applies_to": "Every endpoint in the API, not only the ones listed here",
+    "missing_error": 8083,
+    "unknown_error": 8084
+  },
+  "org_id": {
+    "where_to_find": "Zoho Analytics UI → Settings → Organisation",
+    "no_api_discovery": true,
+    "note": "GET /restapi/v2/orgs was the discovery call and has no replacement. The ID belongs in configuration, next to the client ID and refresh token.",
+    "suggested_env_var": "ZOHO_ANALYTICS_ORG_ID",
+    "example": "700000123456"
+  },
+  "endpoints": {
+    "replaced": [
+      {
+        "old": "GET /restapi/v2/orgs",
+        "new": null,
+        "operation": "Get Org List",
+        "replacement_kind": "configuration",
+        "action": "Read the Organization ID once from Settings → Organisation and store it in configuration.",
+        "anchor": "get-org-list"
+      },
+      {
+        "old": "GET /restapi/v2/workspaces",
+        "new": "GET /restapi/v2/orgs/workspaces",
+        "operation": "Get All Workspace List",
+        "replacement_kind": "endpoint",
+        "note": "GET only. POST on the same path is Create Workspace and is unaffected.",
+        "anchor": "the-three-workspace-listings"
+      },
+      {
+        "old": "GET /restapi/v2/workspaces/owned",
+        "new": "GET /restapi/v2/orgs/workspaces",
+        "operation": "Get Owned Workspaces",
+        "replacement_kind": "endpoint",
+        "anchor": "the-three-workspace-listings"
+      },
+      {
+        "old": "GET /restapi/v2/workspaces/shared",
+        "new": "GET /restapi/v2/orgs/workspaces",
+        "operation": "Get Shared Workspaces",
+        "replacement_kind": "endpoint",
+        "anchor": "the-three-workspace-listings"
+      },
+      {
+        "old": "GET /restapi/v2/dashboards",
+        "new": "GET /restapi/v2/orgs/dashboards",
+        "operation": "Get All Dashboards",
+        "replacement_kind": "endpoint",
+        "note": "The replacement is paged. Re-pointing the URL is not enough.",
+        "anchor": "the-three-dashboard-listings"
+      },
+      {
+        "old": "GET /restapi/v2/dashboards/owned",
+        "new": "GET /restapi/v2/orgs/dashboards",
+        "operation": "Get Owned Dashboards",
+        "replacement_kind": "endpoint",
+        "note": "The replacement is paged, and returns an object rather than an array.",
+        "anchor": "the-three-dashboard-listings"
+      },
+      {
+        "old": "GET /restapi/v2/dashboards/shared",
+        "new": "GET /restapi/v2/orgs/dashboards",
+        "operation": "Get Shared Dashboards",
+        "replacement_kind": "endpoint",
+        "note": "The replacement is paged, and returns an object rather than an array.",
+        "anchor": "the-three-dashboard-listings"
+      },
+      {
+        "old": "GET /restapi/v2/recentviews",
+        "new": "GET /restapi/v2/orgs/recentitems",
+        "operation": "Get Recent Views",
+        "replacement_kind": "endpoint",
+        "note": "Costs 1 API unit, ten times the other two org-level listings.",
+        "anchor": "get-recent-views"
+      }
+    ],
+    "changed_in_place": [
+      {
+        "path": "GET /restapi/v2/workspaces/{workspace-id}",
+        "operation": "Get Workspace Info",
+        "change": "ZANALYTICS-ORGID moved from optional to mandatory. The workspace is now resolved inside the named organization.",
+        "response_unchanged": true,
+        "new_errors": [
+          8083,
+          8084
+        ],
+        "changed_error": {
+          "code": 7103,
+          "before": "workspace not found",
+          "after": "workspace not found in this organization"
+        },
+        "anchor": "get-workspace-info"
+      },
+      {
+        "path": "GET /restapi/v2/views/{view-id}",
+        "operation": "Get View Details",
+        "change": "ZANALYTICS-ORGID moved from optional to mandatory. The view is now resolved inside the named organization.",
+        "response_unchanged": true,
+        "new_errors": [
+          8083,
+          8084
+        ],
+        "changed_error": {
+          "code": 7104,
+          "before": "view not found",
+          "after": "view not found in this organization"
+        },
+        "anchor": "get-view-details"
+      }
+    ],
+    "unaffected": [
+      {
+        "path": "POST /restapi/v2/workspaces",
+        "operation": "Create Workspace",
+        "note": "Shares a path with a removed GET. Do not let a path-based search and replace touch it."
+      }
+    ],
+    "new": [
+      {
+        "path": "GET /restapi/v2/orgs/workspaces",
+        "operation": "Get Org Workspaces",
+        "scope": "ZohoAnalytics.metadata.read",
+        "config": null,
+        "paged": false,
+        "api_units": 0.1,
+        "returns": "data.workspaces[] — one flat array",
+        "permission": "Any active user of the organization",
+        "errors": [
+          7301,
+          8083,
+          8084,
+          8535
+        ]
+      },
+      {
+        "path": "GET /restapi/v2/orgs/dashboards",
+        "operation": "Get Org Dashboards",
+        "scope": "ZohoAnalytics.metadata.read",
+        "config": "optional, URL-encoded JSON in the CONFIG query parameter",
+        "paged": true,
+        "api_units": 0.1,
+        "returns": "data.views[] plus data.pageDetails",
+        "permission": "Any member of the organization. Not available on Client Portal / White Label domains",
+        "errors": [
+          7301,
+          7387,
+          7430,
+          7431,
+          7476,
+          8083,
+          8084,
+          8507,
+          8516,
+          8534,
+          8539,
+          8542,
+          8544,
+          8547
+        ]
+      },
+      {
+        "path": "GET /restapi/v2/orgs/recentitems",
+        "operation": "Get Org Recent Items",
+        "scope": "ZohoAnalytics.metadata.read",
+        "config": null,
+        "paged": false,
+        "api_units": 1,
+        "returns": "data.views[] — at most 20 entries, newest first",
+        "permission": "Any active user of the organization. Only the caller's own history",
+        "errors": [
+          7301,
+          8083,
+          8084,
+          8535
+        ]
+      }
+    ]
+  },
+  "config_parameters": {
+    "GET /restapi/v2/orgs/dashboards": [
+      {
+        "name": "workspaceIds",
+        "type": "array of string",
+        "default": "all visible workspaces",
+        "limits": "0–1,000 entries, 10,000 characters total. Duplicates ignored.",
+        "note": "Validated, not filtered. An ID outside the organization fails the whole request with 7387."
+      },
+      {
+        "name": "pageNo",
+        "type": "integer",
+        "default": 1,
+        "limits": "1–1,000. Outside that: 8544."
+      },
+      {
+        "name": "recordsPerPage",
+        "type": "integer",
+        "default": 100,
+        "limits": "1–500. Outside that: 8544."
+      },
+      {
+        "name": "searchKey",
+        "type": "string",
+        "default": null,
+        "limits": "Max 100 characters. Empty or blank: 8539.",
+        "note": "Name contains this text, matched as one phrase, applied before paging."
+      }
+    ]
+  },
+  "response_fields": [
+    {
+      "endpoint": "GET /restapi/v2/orgs/workspaces",
+      "mappings": [
+        {
+          "old": "data.ownedWorkspaces[]",
+          "new": "data.workspaces[]",
+          "change": "merged"
+        },
+        {
+          "old": "data.sharedWorkspaces[]",
+          "new": "data.workspaces[]",
+          "change": "merged"
+        },
+        {
+          "old": "data.workspaces[]",
+          "new": "data.workspaces[]",
+          "change": "same key, same shape"
+        },
+        {
+          "old": "[].isDefault",
+          "new": "[].isDefault",
+          "change": "meaning clarified — the caller's default workspace"
+        },
+        {
+          "old": "[].orgId",
+          "new": "[].orgId",
+          "change": "always equals the header you sent"
+        },
+        {
+          "old": "[].createdBy",
+          "new": "[].createdBy",
+          "change": "omitted when no address can be resolved"
+        }
+      ]
+    },
+    {
+      "endpoint": "GET /restapi/v2/orgs/dashboards",
+      "mappings": [
+        {
+          "old": "data.ownedViews[]",
+          "new": "data.views[]",
+          "change": "merged"
+        },
+        {
+          "old": "data.sharedViews[]",
+          "new": "data.views[]",
+          "change": "merged"
+        },
+        {
+          "old": "data.views[]",
+          "new": "data.views[]",
+          "change": "same key"
+        },
+        {
+          "old": null,
+          "new": "data.pageDetails.pageNo",
+          "change": "new"
+        },
+        {
+          "old": null,
+          "new": "data.pageDetails.recordsPerPage",
+          "change": "new"
+        },
+        {
+          "old": null,
+          "new": "data.pageDetails.hasNextPage",
+          "change": "new — drives your paging loop"
+        },
+        {
+          "old": "[].folderId",
+          "new": "[].folderId",
+          "change": "the string \"null\" when the dashboard is in no folder"
+        },
+        {
+          "old": "[].createdBy",
+          "new": "[].createdBy",
+          "change": "empty string when the caller is not an active user of the owning organization"
+        },
+        {
+          "old": "[].isFavorite",
+          "new": "[].isFavorite",
+          "change": "belongs to the caller, not the dashboard"
+        },
+        {
+          "old": "[].sharedBy",
+          "new": "[].sharedBy",
+          "change": "omitted when no address can be resolved"
+        }
+      ]
+    },
+    {
+      "endpoint": "GET /restapi/v2/orgs/recentitems",
+      "mappings": [
+        {
+          "old": "data.views[]",
+          "new": "data.views[]",
+          "change": "shape unchanged; scope narrowed to the named organization"
+        }
+      ]
+    }
+  ],
+  "behaviour_changes": [
+    {
+      "id": "dashboards-paged",
+      "severity": "high",
+      "applies_to": "GET /restapi/v2/orgs/dashboards",
+      "summary": "The dashboard listing is paged. Code that assumed one request returned everything must be rewritten, not re-pointed.",
+      "rule": "Loop on pageDetails.hasNextPage. Never loop on len(views) &lt; recordsPerPage — hasNextPage is computed after duplicates and role-restricted entries are removed, so a short page can still have pages behind it."
+    },
+    {
+      "id": "dashboards-return-shape",
+      "severity": "high",
+      "applies_to": "SDK getOrgDashboards",
+      "summary": "getOrgDashboards returns an object containing views and pageDetails, where getDashboards/getOwnedDashboards returned an array.",
+      "rule": "In Python, Ruby, PHP, Node.js and Go this is a runtime shape change, not a compile error. Add [\"views\"] everywhere the old return value was iterated directly."
+    },
+    {
+      "id": "workspace-cap",
+      "severity": "medium",
+      "applies_to": "GET /restapi/v2/orgs/dashboards",
+      "summary": "Omitting workspaceIds fails with 7476 when the caller can see more than 100 workspaces.",
+      "rule": "Build batches of at most 100 workspace IDs from Get Org Workspaces for the same organization, and page within each batch."
+    },
+    {
+      "id": "recent-items-stale",
+      "severity": "low",
+      "applies_to": "GET /restapi/v2/orgs/recentitems",
+      "summary": "Access is checked at workspace level only, and names come from the stored history record.",
+      "rule": "Tolerate an entry pointing at a view the caller can no longer open, and treat viewName/workspaceName as possibly stale."
+    },
+    {
+      "id": "empty-list-is-valid",
+      "severity": "low",
+      "applies_to": "GET /restapi/v2/orgs/workspaces",
+      "summary": "An Organization Admin or ordinary user whose primary email is unverified gets an empty list. The Account Admin does not.",
+      "rule": "HTTP 200 with an empty array means nothing is visible to this caller. It is not an error."
+    }
+  ],
+  "sdk": {
+    "languages": [
+      "java",
+      "python",
+      "csharp",
+      "go",
+      "php",
+      "nodejs",
+      "ruby"
+    ],
+    "shape_of_change": "AnalyticsClient keeps only configuration and its four factories. Get an OrgAPI or WorkspaceAPI first, then call the method on that; the instance sends ZANALYTICS-ORGID automatically.",
+    "factories": [
+      {
+        "factory": "getOrgInstance(orgId)",
+        "returns": "OrgAPI",
+        "holds": "organization"
+      },
+      {
+        "factory": "getWorkspaceInstance(orgId, workspaceId)",
+        "returns": "WorkspaceAPI",
+        "holds": "organization + workspace"
+      },
+      {
+        "factory": "getViewInstance(orgId, workspaceId, viewId)",
+        "returns": "ViewAPI",
+        "holds": "organization + workspace + view"
+      },
+      {
+        "factory": "getBulkInstance(orgId, workspaceId)",
+        "returns": "BulkAPI",
+        "holds": "organization + workspace"
+      }
+    ],
+    "naming": {
+      "camelCase": [
+        "java",
+        "csharp",
+        "go",
+        "php",
+        "nodejs"
+      ],
+      "snake_case": [
+        "python",
+        "ruby"
+      ]
+    },
+    "method_map": [
+      {
+        "old": "getOrgs",
+        "old_snake": "get_orgs",
+        "on": "AnalyticsClient",
+        "new": null,
+        "new_on": null,
+        "returns": null,
+        "action": "No replacement. Read the Organization ID from Settings → Organisation."
+      },
+      {
+        "old": "getWorkspaces",
+        "old_snake": "get_workspaces",
+        "on": "AnalyticsClient",
+        "new": "getOrgWorkspaces",
+        "new_snake": "get_org_workspaces",
+        "new_on": "OrgAPI",
+        "returns": "list of workspaces"
+      },
+      {
+        "old": "getOwnedWorkspaces",
+        "old_snake": "get_owned_workspaces",
+        "on": "AnalyticsClient",
+        "new": "getOrgWorkspaces",
+        "new_snake": "get_org_workspaces",
+        "new_on": "OrgAPI",
+        "returns": "list of workspaces"
+      },
+      {
+        "old": "getSharedWorkspaces",
+        "old_snake": "get_shared_workspaces",
+        "on": "AnalyticsClient",
+        "new": "getOrgWorkspaces",
+        "new_snake": "get_org_workspaces",
+        "new_on": "OrgAPI",
+        "returns": "list of workspaces"
+      },
+      {
+        "old": "getDashboards",
+        "old_snake": "get_dashboards",
+        "on": "AnalyticsClient",
+        "new": "getOrgDashboards",
+        "new_snake": "get_org_dashboards",
+        "new_on": "OrgAPI",
+        "takes_config": true,
+        "returns": "object: views + pageDetails",
+        "shape_change": "dashboards-return-shape"
+      },
+      {
+        "old": "getOwnedDashboards",
+        "old_snake": "get_owned_dashboards",
+        "on": "AnalyticsClient",
+        "new": "getOrgDashboards",
+        "new_snake": "get_org_dashboards",
+        "new_on": "OrgAPI",
+        "takes_config": true,
+        "returns": "object: views + pageDetails",
+        "shape_change": "dashboards-return-shape"
+      },
+      {
+        "old": "getSharedDashboards",
+        "old_snake": "get_shared_dashboards",
+        "on": "AnalyticsClient",
+        "new": "getOrgDashboards",
+        "new_snake": "get_org_dashboards",
+        "new_on": "OrgAPI",
+        "takes_config": true,
+        "returns": "object: views + pageDetails",
+        "shape_change": "dashboards-return-shape"
+      },
+      {
+        "old": "getRecentViews",
+        "old_snake": "get_recent_views",
+        "on": "AnalyticsClient",
+        "new": "getOrgRecentItems",
+        "new_snake": "get_org_recent_items",
+        "new_on": "OrgAPI",
+        "returns": "list of recent items"
+      },
+      {
+        "old": "getWorkspaceDetails",
+        "old_snake": "get_workspace_details",
+        "on": "AnalyticsClient",
+        "new": "getWorkspaceDetails",
+        "new_snake": "get_workspace_details",
+        "new_on": "WorkspaceAPI",
+        "takes_config": true,
+        "returns": "workspace object",
+        "action": "Drop the workspaceId argument — the WorkspaceAPI instance already holds it. The new config argument is optional (withUserRoleInfo)."
+      },
+      {
+        "old": "getViewDetails",
+        "old_snake": "get_view_details",
+        "on": "AnalyticsClient",
+        "new": "getViewDetails",
+        "new_snake": "get_view_details",
+        "new_on": "OrgAPI",
+        "takes_config": true,
+        "returns": "view object",
+        "action": "Signature unchanged — only the object you call it on. It lives on OrgAPI, not ViewAPI, because the endpoint resolves a view from the organization alone."
+      }
+    ],
+    "build_errors": [
+      {
+        "language": "java",
+        "message": "cannot find symbol: method getWorkspaces()",
+        "fix": "ac.getOrgInstance(orgId).getOrgWorkspaces()"
+      },
+      {
+        "language": "csharp",
+        "message": "'IAnalyticsClient' does not contain a definition for 'GetDashboards'",
+        "fix": "ac.GetOrgInstance(orgId).GetOrgDashboards(config)"
+      },
+      {
+        "language": "go",
+        "message": "ac.GetRecentViews undefined (type Client has no field or method GetRecentViews)",
+        "fix": "ZAnalytics.GetOrgInstance(&amp;ac, orgId).GetOrgRecentItems()"
+      },
+      {
+        "language": "python",
+        "message": "AttributeError: 'AnalyticsClient' object has no attribute 'get_workspaces'",
+        "fix": "ac.get_org_instance(org_id).get_org_workspaces()"
+      },
+      {
+        "language": "ruby",
+        "message": "NoMethodError: undefined method 'get_orgs'",
+        "fix": "No replacement — read the ID from the UI"
+      },
+      {
+        "language": "php",
+        "message": "Call to undefined method AnalyticsClient::getDashboards()",
+        "fix": "$ac-&gt;getOrgInstance($org_id)-&gt;getOrgDashboards($config)"
+      },
+      {
+        "language": "nodejs",
+        "message": "TypeError: ac.getRecentViews is not a function",
+        "fix": "ac.getOrgInstance(orgId).getOrgRecentItems()"
+      }
+    ]
+  },
+  "error_codes": [
+    {
+      "code": 7103,
+      "name": null,
+      "applies_to": "Get Workspace Info",
+      "meaning": "Workspace not found in this organization",
+      "fix": "Check the header before you check the ID — the workspace is probably in another organization."
+    },
+    {
+      "code": 7104,
+      "name": "META_OBJECT_NOT_PRESENT",
+      "applies_to": "Get View Details",
+      "meaning": "View not found in this organization",
+      "fix": "Check the header before you check the ID."
+    },
+    {
+      "code": 7301,
+      "name": "SECURITY_NOT_PERMITTED",
+      "applies_to": "all org-level listings",
+      "meaning": "The caller is not an active user of that organization, or the request came through a Client Portal / White Label domain",
+      "fix": "Use an organization the user belongs to, or have an Account Admin add them."
+    },
+    {
+      "code": 7387,
+      "name": "DBID_NOT_BELONGS_TO_ZSOID",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "A workspaceIds entry is not in this organization, or does not exist",
+      "fix": "Take IDs from Get Org Workspaces for the same organization."
+    },
+    {
+      "code": 7430,
+      "name": "ORG_LEVEL_VIEWS_NOT_ALLOWED",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "Org-level view listing is switched off for the organization (reported to the Account Admin)",
+      "fix": "Use the workspace-level APIs, or contact support."
+    },
+    {
+      "code": 7431,
+      "name": "ORG_LEVEL_VIEWS_NOT_ALLOWED_WL_USERS",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "Org-level view listing is switched off (reported to every other caller)",
+      "fix": "Use the workspace-level APIs, or contact your account admin."
+    },
+    {
+      "code": 7476,
+      "name": "ORG_LEVEL_VIEWS_WS_MORE_THAN_ALLOWED_LIMIT",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "More than 100 workspaces in scope",
+      "fix": "Send workspaceIds in batches of at most 100."
+    },
+    {
+      "code": 8083,
+      "name": "ORGID_NOT_PRESENT_IN_THE_HEADER",
+      "applies_to": "every endpoint",
+      "meaning": "ZANALYTICS-ORGID missing or empty",
+      "fix": "Send the header. A retry without it will never succeed.",
+      "agent_message": "This API needs an organization ID. Ask the user which organization to use."
+    },
+    {
+      "code": 8084,
+      "name": "ORGID_NOT_EXIST",
+      "applies_to": "every endpoint",
+      "meaning": "No organization with that ID",
+      "fix": "Re-read the ID from Settings → Organisation."
+    },
+    {
+      "code": 8507,
+      "name": "MORE_THAN_MAX_LENGTH",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "searchKey &gt; 100 chars, workspaceIds &gt; 10,000 chars, or CONFIG &gt; 11,000 chars",
+      "fix": "Shorten, or send fewer IDs per call."
+    },
+    {
+      "code": 8516,
+      "name": "UNABLE_TO_PARSE_DATA_TYPE",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "pageNo or recordsPerPage is not a number",
+      "fix": "Send a plain number, not a string."
+    },
+    {
+      "code": 8534,
+      "name": "JSON_PARSE_ERROR",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "CONFIG is not valid JSON, or workspaceIds is not an array",
+      "fix": "Fix the JSON and URL-encode it."
+    },
+    {
+      "code": 8535,
+      "name": "INVALID_OAUTHTOKEN",
+      "applies_to": "all",
+      "meaning": "Invalid or expired OAuth token",
+      "fix": "Refresh the token; needs ZohoAnalytics.metadata.read."
+    },
+    {
+      "code": 8539,
+      "name": "INVALID_VALUE_NOT_ALLOWED",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "A CONFIG value is null, empty or blank",
+      "fix": "Leave the key out instead of sending an empty value."
+    },
+    {
+      "code": 8542,
+      "name": "EXTRA_KEY_FOUND_IN_JSON",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "CONFIG holds a key other than the four documented ones",
+      "fix": "Remove it."
+    },
+    {
+      "code": 8544,
+      "name": "OUT_OF_RANGE",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "pageNo outside 1–1,000, or recordsPerPage outside 1–500",
+      "fix": "Use a value in range."
+    },
+    {
+      "code": 8547,
+      "name": "ARRAY_SIZE_OUT_OF_RANGE",
+      "applies_to": "Get Org Dashboards",
+      "meaning": "More than 1,000 entries in workspaceIds",
+      "fix": "Send at most 1,000 — in practice no more than 100."
+    }
+  ],
+  "scan_patterns": {
+    "note": "Regular expressions, Python syntax. Each has a severity and the chapter section that explains the fix.",
+    "patterns": [
+      {
+        "id": "path-orgs",
+        "regex": "/restapi/v2/orgs(?![/\\w-])",
+        "severity": "error",
+        "message": "GET /restapi/v2/orgs is removed. Read the Organization ID from Settings → Organisation into configuration.",
+        "chapter": "03-endpoint-migration.md#get-org-list"
+      },
+      {
+        "id": "path-workspaces-list",
+        "regex": "/restapi/v2/workspaces(?![/\\w-])",
+        "severity": "warn",
+        "message": "GET /restapi/v2/workspaces is removed — use GET /restapi/v2/orgs/workspaces. POST on this path is Create Workspace and is unaffected; check the verb before changing it.",
+        "chapter": "03-endpoint-migration.md#the-three-workspace-listings"
+      },
+      {
+        "id": "path-workspaces-owned-shared",
+        "regex": "/restapi/v2/workspaces/(owned|shared)",
+        "severity": "error",
+        "message": "Removed — use GET /restapi/v2/orgs/workspaces, and merge your ownedWorkspaces/sharedWorkspaces parsing into data.workspaces.",
+        "chapter": "03-endpoint-migration.md#the-three-workspace-listings"
+      },
+      {
+        "id": "path-dashboards-list",
+        "regex": "/restapi/v2/dashboards(?![/\\w-])",
+        "severity": "error",
+        "message": "Removed — use GET /restapi/v2/orgs/dashboards. The replacement is paged; add a loop on pageDetails.hasNextPage.",
+        "chapter": "03-endpoint-migration.md#the-three-dashboard-listings"
+      },
+      {
+        "id": "path-dashboards-owned-shared",
+        "regex": "/restapi/v2/dashboards/(owned|shared)",
+        "severity": "error",
+        "message": "Removed — use GET /restapi/v2/orgs/dashboards. Paged, and returns an object rather than an array.",
+        "chapter": "03-endpoint-migration.md#the-three-dashboard-listings"
+      },
+      {
+        "id": "path-recentviews",
+        "regex": "/restapi/v2/recentviews",
+        "severity": "error",
+        "message": "Removed — use GET /restapi/v2/orgs/recentitems. Costs 1 API unit rather than 0.1.",
+        "chapter": "03-endpoint-migration.md#get-recent-views"
+      },
+      {
+        "id": "sdk-get-orgs",
+        "regex": "\\b(getOrgs|get_orgs|GetOrgs)\\s*\\(",
+        "severity": "error",
+        "message": "No replacement. Read the Organization ID from Settings → Organisation into configuration.",
+        "chapter": "04-sdk-migration.md#the-method-map"
+      },
+      {
+        "id": "sdk-get-workspaces",
+        "regex": "\\b(get(Owned|Shared)?Workspaces|get_(owned_|shared_)?workspaces|Get(Owned|Shared)?Workspaces)\\s*\\(",
+        "severity": "error",
+        "message": "Moved off AnalyticsClient — use OrgAPI.getOrgWorkspaces() / get_org_workspaces().",
+        "chapter": "04-sdk-migration.md#the-method-map"
+      },
+      {
+        "id": "sdk-get-dashboards",
+        "regex": "\\b(get(Owned|Shared)?Dashboards|get_(owned_|shared_)?dashboards|Get(Owned|Shared)?Dashboards)\\s*\\(",
+        "severity": "error",
+        "message": "Moved off AnalyticsClient — use OrgAPI.getOrgDashboards(config). Returns an object with views + pageDetails, not an array.",
+        "chapter": "04-sdk-migration.md#the-method-map"
+      },
+      {
+        "id": "sdk-get-recent-views",
+        "regex": "\\b(getRecentViews|get_recent_views|GetRecentViews)\\s*\\(",
+        "severity": "error",
+        "message": "Moved off AnalyticsClient — use OrgAPI.getOrgRecentItems() / get_org_recent_items().",
+        "chapter": "04-sdk-migration.md#the-method-map"
+      },
+      {
+        "id": "sdk-get-workspace-details",
+        "regex": "\\b(getWorkspaceDetails|get_workspace_details|GetWorkspaceDetails)\\s*\\(",
+        "severity": "warn",
+        "message": "Moved from AnalyticsClient to WorkspaceAPI, and the workspaceId argument is dropped. Harmless if you already call it on a WorkspaceAPI instance.",
+        "chapter": "04-sdk-migration.md#getworkspacedetails-moves-to-workspaceapi"
+      },
+      {
+        "id": "sdk-get-view-details",
+        "regex": "\\b(getViewDetails|get_view_details|GetViewDetails)\\s*\\(",
+        "severity": "warn",
+        "message": "Moved from AnalyticsClient to OrgAPI. Signature unchanged. Harmless if you already call it on an OrgAPI instance.",
+        "chapter": "04-sdk-migration.md#getviewdetails-moves-to-orgapi"
+      },
+      {
+        "id": "response-owned-shared-keys",
+        "regex": "\\b(ownedWorkspaces|sharedWorkspaces|ownedViews|sharedViews)\\b",
+        "severity": "error",
+        "message": "These response keys no longer exist. Workspaces merge into data.workspaces; dashboards merge into data.views.",
+        "chapter": "03-endpoint-migration.md#the-three-workspace-listings"
+      },
+      {
+        "id": "docs-old-operation-names",
+        "regex": "Get Org List|Get All Dashboards|Get All Workspace List|Get Owned Workspaces|Get Shared Workspaces|Get Owned Dashboards|Get Shared Dashboards|Get Recent Views",
+        "severity": "warn",
+        "message": "Prose reference to a removed operation. Common in wikis, onboarding guides and Postman folder descriptions.",
+        "chapter": "05-knowledge-bases.md"
+      }
+    ],
+    "monitoring_regex": [
+      "^/restapi/v2/orgs$",
+      "^/restapi/v2/workspaces$",
+      "^/restapi/v2/workspaces/(owned|shared)$",
+      "^/restapi/v2/dashboards$",
+      "^/restapi/v2/dashboards/(owned|shared)$",
+      "^/restapi/v2/recentviews$"
+    ]
+  },
+  "artifacts": [
+    {
+      "id": "oas",
+      "name": "OpenAPI 3.1 specifications",
+      "location": "v2.0/oas/",
+      "read_by": "Swagger UI, Redoc, client generators, MCP servers",
+      "action": "Re-pull whole. Do not patch — operations were removed and a merge leaves them behind. Regenerate every downstream client, validator, gateway definition, mock and contract test.",
+      "chapter": "05-knowledge-bases.md#openapi-specifications"
+    },
+    {
+      "id": "okf",
+      "name": "OKF knowledge bundle",
+      "location": "v2.0/okf/",
+      "read_by": "AI assistants, RAG indexes, llms.txt consumers",
+      "action": "Re-ingest whole and DROP the vector index before rebuilding. An incremental re-index leaves the eight deleted documents retrievable. Confirm manifest.json reports version 2.0.0.",
+      "version_before": "1.7.0",
+      "version_after": "2.0.0",
+      "endpoint_count_before": 210,
+      "endpoint_count_after": 205,
+      "chapter": "05-knowledge-bases.md#the-okf-knowledge-bundle"
+    },
+    {
+      "id": "postman",
+      "name": "Postman collection",
+      "location": "v2.0/postman/",
+      "read_by": "Humans, CI smoke tests",
+      "action": "Import as a NEW version — Postman's merge keeps deleted requests. Re-import the environment, set organization-id by hand from the UI, delete or rename the old fork, and re-record CI assertions for pageDetails.",
+      "request_count_before": 210,
+      "request_count_after": 205,
+      "chapter": "05-knowledge-bases.md#postman"
+    },
+    {
+      "id": "sdk-docs",
+      "name": "SDK reference documentation",
+      "location": "v2.0/sdk/&lt;lang&gt;/docs/",
+      "read_by": "Developers",
+      "action": "Re-publish from source. analytics-client.md lost ten methods; org-api.md gained four; workspace-api.md gained one. Update your wrapper library's README too.",
+      "chapter": "05-knowledge-bases.md#sdk-reference-documentation"
+    },
+    {
+      "id": "mcp",
+      "name": "MCP servers",
+      "location": "your own / third-party",
+      "read_by": "AI agents",
+      "action": "Remove tools backed by the eight removed endpoints, add three, make ZANALYTICS-ORGID a required input on every tool, decide org selection once (pinning is simpler and safer), handle pagination, and rewrite any description saying 'across all organizations'. Map 8083/8084 to an actionable message or agents will retry blindly.",
+      "chapter": "05-knowledge-bases.md#mcp-servers-and-ai-agents"
+    },
+    {
+      "id": "wikis",
+      "name": "Internal wikis, runbooks, onboarding guides",
+      "location": "wherever yours live",
+      "read_by": "Everyone",
+      "action": "Search and fix by hand — nothing automates this. Onboarding guides are the worst offenders: 'step 1, call GET /restapi/v2/orgs' strands a new developer on their first morning.",
+      "chapter": "05-knowledge-bases.md#internal-documentation-wikis-and-runbooks"
+    },
+    {
+      "id": "deluge",
+      "name": "Deluge scripts and no-code automations",
+      "location": "Zoho Creator, Zoho Flow, CRM functions",
+      "read_by": "Automations",
+      "action": "Two changes per script: the URL, and a headers line carrying ZANALYTICS-ORGID. No compiler will catch these.",
+      "chapter": "05-knowledge-bases.md#deluge-scripts-and-no-code-automations"
+    },
+    {
+      "id": "monitoring",
+      "name": "Monitoring and dashboards",
+      "location": "your observability stack",
+      "read_by": "On-call",
+      "action": "Add a log-based alert on the eight deprecated paths, tag it with the owning team, and watch it fall to zero. Done means zero for a full billing cycle, including month-end and quarter-end jobs.",
+      "chapter": "05-knowledge-bases.md#monitoring-prove-you-are-done"
+    }
+  ],
+  "chapters": {
+    "index": {
+      "file": "index.md",
+      "title": "Start here"
+    },
+    "01": {
+      "file": "01-why-org-context.md",
+      "title": "Why organization context is mandatory",
+      "kind": "reference"
+    },
+    "02": {
+      "file": "02-whats-changed.md",
+      "title": "What changed",
+      "kind": "reference"
+    },
+    "03": {
+      "file": "03-endpoint-migration.md",
+      "title": "Endpoint migration",
+      "kind": "task",
+      "skill": "zoho-analytics-v2-endpoint-migration"
+    },
+    "04": {
+      "file": "04-sdk-migration.md",
+      "title": "SDK migration",
+      "kind": "task",
+      "skill": "zoho-analytics-v2-sdk-migration"
+    },
+    "05": {
+      "file": "05-knowledge-bases.md",
+      "title": "Knowledge bases &amp; tools",
+      "kind": "task",
+      "skill": "zoho-analytics-v2-artifact-migration"
+    },
+    "06": {
+      "file": "06-timeline.md",
+      "title": "Timeline &amp; deprecation",
+      "kind": "reference"
+    },
+    "07": {
+      "file": "07-troubleshooting.md",
+      "title": "Troubleshooting &amp; FAQ",
+      "kind": "reference"
+    },
+    "08": {
+      "file": "08-agent-skills.md",
+      "title": "AI agent skills",
+      "kind": "distribution",
+      "note": "Renders every file in agent/ as a copy/download panel, and links the bundled archive."
+    }
+  },
+  "error_codes_note": "Branch on data.errorCode. summary is the symbolic name; errorMessage is human text and may be localised.",
+  "gotchas": [
+    {
+      "id": "org-id-as-string",
+      "summary": "Organization IDs such as 700000123456 exceed 32-bit range, and in JavaScript leave safe-integer territory once concatenated. Carry them as strings everywhere.",
+      "symptom": "8084 that looks like a typo but is a silently truncated ID."
+    },
+    {
+      "id": "workspaces-path-verb",
+      "summary": "GET /restapi/v2/workspaces is removed; POST on the same path is Create Workspace and is unaffected.",
+      "symptom": "A path-only search and replace breaks workspace creation."
+    },
+    {
+      "id": "sdks-ahead-of-server",
+      "summary": "The methods are gone from all seven SDKs today, while the endpoints answer until March 2027. Upgrading the SDK breaks the build before anything breaks in production — deliberately.",
+      "symptom": "Compile errors immediately after an SDK bump."
+    },
+    {
+      "id": "config-double-encoded",
+      "summary": "CONFIG is stringified JSON then URL-encoded. Encode once, not twice.",
+      "symptom": "8534 JSON_PARSE_ERROR on CONFIG that looks correct."
+    }
+  ]
+}
+</code></pre></div>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Script</span><span class="asset__name">scan.py</span><span class="asset__meta">11.5 KB &middot; 305 lines</span></div><div class="asset__desc"><p><strong>The scanner.</strong> Finds every deprecated path, SDK method and response key in a codebase, with file and line. Patterns come from <code>migration-map.json</code>, so it holds no facts of its own. Standard library only.</p>
+<pre><code class="lang-bash">python3 scan.py /path/to/project          # human-readable
+python3 scan.py /path/to/project --json   # for an agent to parse</code></pre>
+<p>Exits non-zero when something will break, so it works as a CI gate. A <code>warn</code> is <code>getWorkspaceDetails</code> or <code>getViewDetails</code> — correct when already called on a <code>WorkspaceAPI</code> or <code>OrgAPI</code> instance, broken when still on <code>AnalyticsClient</code>.</p></div><div class="asset__path">agent/scan.py</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-9">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-9" data-filename="scan.py">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-9" aria-expanded="false" aria-controls="asset-9">View source</button></div><pre class="asset__code" id="asset-9" hidden><code class="lang-python">#!/usr/bin/env python3
+"""Find Zoho Analytics v2 code that still uses the removed cross-organization API.
+
+Every pattern comes from migration-map.json — this script holds no facts of its own.
+
+    python3 scan.py /path/to/your/project          report every hit
+    python3 scan.py /path/to/your/project --json   machine-readable, for an agent
+    python3 scan.py --self-check                   verify the map against the chapters
+
+Exits 1 when anything of severity "error" is found, so it works as a CI gate.
+No third-party dependencies — standard library only, same as build.py.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+MAP_FILE = HERE / "migration-map.json"
+CHAPTERS = HERE.parent
+
+SKIP_DIRS = {
+    ".git", ".hg", ".svn", "node_modules", "vendor", "venv", ".venv", "env",
+    "__pycache__", ".mypy_cache", ".pytest_cache", ".tox", ".gradle", ".idea",
+    ".vscode", "dist", "build", "target", "out", "bin", "obj", "coverage",
+    ".next", ".nuxt", ".terraform", "site-packages",
+}
+
+# Worth scanning: source, config, docs and collections. Everything a stale
+# endpoint can hide in, including the artefacts chapter 05 lists.
+SCAN_SUFFIXES = {
+    ".java", ".py", ".cs", ".go", ".php", ".js", ".jsx", ".ts", ".tsx", ".rb",
+    ".kt", ".scala", ".swift", ".c", ".cpp", ".h", ".rs", ".dg", ".ds",
+    ".json", ".yaml", ".yml", ".toml", ".xml", ".properties", ".env",
+    ".md", ".mdx", ".rst", ".txt", ".adoc", ".html", ".htm",
+    ".sh", ".bash", ".zsh", ".ps1", ".sql", ".tf", ".gradle",
+}
+
+MAX_BYTES = 4 * 1024 * 1024  # skip anything bigger; it is not hand-written code
+
+COLOR = sys.stdout.isatty()
+
+
+def paint(text: str, code: str) -&gt; str:
+    return f"\033[{code}m{text}\033[0m" if COLOR else text
+
+
+def load_map() -&gt; dict:
+    try:
+        return json.loads(MAP_FILE.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        sys.exit(f"error: {MAP_FILE} not found")
+    except json.JSONDecodeError as exc:
+        sys.exit(f"error: {MAP_FILE} is not valid JSON — {exc}")
+
+
+def compile_patterns(data: dict) -&gt; list[dict]:
+    out = []
+    for p in data["scan_patterns"]["patterns"]:
+        try:
+            p = dict(p, compiled=re.compile(p["regex"]))
+        except re.error as exc:
+            sys.exit(f"error: pattern {p['id']} has an invalid regex — {exc}")
+        out.append(p)
+    return out
+
+
+def walk(root: Path):
+    if root.is_file():
+        yield root
+        return
+    for path in sorted(root.rglob("*")):
+        if not path.is_file():
+            continue
+        if any(part in SKIP_DIRS for part in path.parts):
+            continue
+        if path.suffix.lower() not in SCAN_SUFFIXES:
+            continue
+        try:
+            if path.stat().st_size &gt; MAX_BYTES:
+                continue
+        except OSError:
+            continue
+        yield path
+
+
+def scan(root: Path, patterns: list[dict]) -&gt; list[dict]:
+    findings = []
+    for path in walk(root):
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        # Cheap reject: nothing in the map can match a file with no mention
+        # of the API surface at all.
+        if "restapi/v2" not in text and "Workspaces" not in text \
+                and "workspaces" not in text and "ashboard" not in text \
+                and "ecent" not in text and "Orgs" not in text and "orgs" not in text:
+            continue
+        lines = text.splitlines()
+        for number, line in enumerate(lines, start=1):
+            if len(line) &gt; 2000:
+                line = line[:2000]
+            for pattern in patterns:
+                if pattern["compiled"].search(line):
+                    findings.append({
+                        "file": str(path),
+                        "line": number,
+                        "text": line.strip()[:200],
+                        "pattern": pattern["id"],
+                        "severity": pattern["severity"],
+                        "message": pattern["message"],
+                        "chapter": pattern["chapter"],
+                    })
+    return findings
+
+
+def report(findings: list[dict], root: Path, data: dict) -&gt; None:
+    deadline = data["deadline"]["removal"]
+    if not findings:
+        print(paint("✓ No deprecated Zoho Analytics v2 usage found.", "32"))
+        print(f"  Scanned: {root}")
+        return
+
+    errors = [f for f in findings if f["severity"] == "error"]
+    warns = [f for f in findings if f["severity"] != "error"]
+
+    by_pattern: dict[str, list[dict]] = {}
+    for f in findings:
+        by_pattern.setdefault(f["pattern"], []).append(f)
+
+    print(f"Scanned: {root}")
+    print(f"Found {len(findings)} occurrence(s) across {len(by_pattern)} issue type(s).")
+    print(f"The removed endpoints stop answering in {paint(deadline, '1;33')}.\n")
+
+    for pattern_id, group in by_pattern.items():
+        severity = group[0]["severity"]
+        tag = paint("ERROR", "1;31") if severity == "error" else paint("WARN ", "1;33")
+        print(f"{tag} {paint(pattern_id, '1')}  ({len(group)} occurrence(s))")
+        print(f"      {group[0]['message']}")
+        print(f"      → {group[0]['chapter']}")
+        for f in group[:20]:
+            print(f"        {f['file']}:{f['line']}  {f['text']}")
+        if len(group) &gt; 20:
+            print(f"        … and {len(group) - 20} more")
+        print()
+
+    print(f"{len(errors)} error(s), {len(warns)} warning(s).")
+    if warns:
+        print("Warnings are usually fine if the call is already on an OrgAPI or "
+              "WorkspaceAPI instance — check each one.")
+
+
+def self_check(data: dict) -&gt; int:
+    """Verify the map still agrees with the chapters it was derived from.
+
+    This is the drift guard. The chapters are the source of truth; if the map
+    claims an endpoint or method the prose has never heard of, the map is stale.
+    """
+    problems: list[str] = []
+
+    chapter_text: dict[str, str] = {}
+    for key, meta in data["chapters"].items():
+        path = CHAPTERS / meta["file"]
+        if not path.exists():
+            problems.append(f"chapter {key}: {meta['file']} does not exist")
+            continue
+        chapter_text[key] = path.read_text(encoding="utf-8")
+
+    everything = "\n".join(chapter_text.values())
+
+    # 1. The deadline must match build.py's single constant.
+    build_py = CHAPTERS / "build.py"
+    if build_py.exists():
+        match = re.search(r'REMOVAL_DEADLINE\s*=\s*"([^"]+)"', build_py.read_text(encoding="utf-8"))
+        if not match:
+            problems.append("build.py: REMOVAL_DEADLINE not found")
+        elif match.group(1) != data["deadline"]["removal"]:
+            problems.append(
+                f"deadline drift: map says {data['deadline']['removal']!r}, "
+                f"build.py says {match.group(1)!r}"
+            )
+    else:
+        problems.append("build.py not found — cannot verify the deadline")
+
+    # 2. Every old and new endpoint path in the map must appear in the prose.
+    for entry in data["endpoints"]["replaced"]:
+        old_path = entry["old"].split(" ", 1)[1]
+        if old_path not in everything:
+            problems.append(f"endpoint {old_path} is in the map but in no chapter")
+        if entry["new"]:
+            new_path = entry["new"].split(" ", 1)[1]
+            if new_path not in everything:
+                problems.append(f"replacement {new_path} is in the map but in no chapter")
+
+    for entry in data["endpoints"]["new"]:
+        if entry["path"] not in everything:
+            problems.append(f"new endpoint {entry['path']} is in the map but in no chapter")
+
+    # 3. Every SDK method name in the map must appear in chapter 04.
+    sdk_text = chapter_text.get("04", "")
+    for entry in data["sdk"]["method_map"]:
+        if entry["old"] not in sdk_text:
+            problems.append(f"SDK method {entry['old']} is in the map but not in chapter 04")
+        if entry.get("new") and entry["new"] not in sdk_text:
+            problems.append(f"SDK method {entry['new']} is in the map but not in chapter 04")
+
+    # 4. Every error code in the map must appear somewhere in the prose.
+    for entry in data["error_codes"]:
+        if str(entry["code"]) not in everything:
+            problems.append(f"error code {entry['code']} is in the map but in no chapter")
+
+    # 5. Every chapter anchor the patterns point at must resolve.
+    for pattern in data["scan_patterns"]["patterns"]:
+        target = pattern["chapter"]
+        file_part, _, anchor = target.partition("#")
+        path = CHAPTERS / file_part
+        if not path.exists():
+            problems.append(f"pattern {pattern['id']}: {file_part} does not exist")
+            continue
+        if anchor:
+            body = path.read_text(encoding="utf-8")
+            slugs = {slugify(h) for h in re.findall(r"^#{2,4}\s+(.+)$", body, re.M)}
+            if anchor not in slugs:
+                problems.append(f"pattern {pattern['id']}: #{anchor} does not resolve in {file_part}")
+
+    # 6. The patterns must actually fire on the chapters' own "Before" examples.
+    for pattern in data["scan_patterns"]["patterns"]:
+        if not re.compile(pattern["regex"]).search(everything):
+            problems.append(f"pattern {pattern['id']} matches nothing in the guide — probably dead")
+
+    if problems:
+        print(paint(f"✗ {len(problems)} problem(s):", "1;31"))
+        for problem in problems:
+            print(f"  - {problem}")
+        return 1
+
+    counts = (
+        f"{len(data['endpoints']['replaced'])} replaced endpoints, "
+        f"{len(data['sdk']['method_map'])} SDK methods, "
+        f"{len(data['error_codes'])} error codes, "
+        f"{len(data['scan_patterns']['patterns'])} scan patterns"
+    )
+    print(paint("✓ migration-map.json agrees with the chapters.", "32"))
+    print(f"  {counts}")
+    return 0
+
+
+def slugify(heading: str) -&gt; str:
+    """Mirror build.py: strip a leading section number, then slug the rest."""
+    heading = re.sub(r"^\d+\.\s*", "", heading.strip())
+    heading = re.sub(r"`([^`]*)`", r"\1", heading)
+    heading = re.sub(r"&lt;[^&gt;]+&gt;", "", heading)
+    heading = heading.replace("&amp;mdash;", "").replace("—", "")
+    heading = re.sub(r"[^\w\s-]", "", heading.lower())
+    return re.sub(r"[-\s]+", "-", heading).strip("-")
+
+
+def main() -&gt; int:
+    parser = argparse.ArgumentParser(
+        description="Find Zoho Analytics v2 code using the removed cross-organization API.",
+    )
+    parser.add_argument("path", nargs="?", help="file or directory to scan")
+    parser.add_argument("--json", action="store_true", help="emit findings as JSON")
+    parser.add_argument("--self-check", action="store_true",
+                        help="verify migration-map.json against the chapters")
+    args = parser.parse_args()
+
+    data = load_map()
+
+    if args.self_check:
+        return self_check(data)
+
+    if not args.path:
+        parser.error("a path to scan is required (or use --self-check)")
+
+    root = Path(args.path).resolve()
+    if not root.exists():
+        sys.exit(f"error: {root} does not exist")
+
+    findings = scan(root, compile_patterns(data))
+
+    if args.json:
+        print(json.dumps({
+            "scanned": str(root),
+            "deadline": data["deadline"]["removal"],
+            "counts": {
+                "total": len(findings),
+                "error": sum(1 for f in findings if f["severity"] == "error"),
+                "warn": sum(1 for f in findings if f["severity"] != "error"),
+            },
+            "findings": findings,
+        }, indent=2))
+    else:
+        report(findings, root, data)
+
+    return 1 if any(f["severity"] == "error" for f in findings) else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+</code></pre></div>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Instructions</span><span class="asset__name">AGENTS.md</span><span class="asset__meta">3.9 KB &middot; 80 lines</span></div><div class="asset__desc"><p><strong>For agents that do not read <code>SKILL.md</code>.</strong> Cursor, GitHub Copilot, Codex, Zed and others. The same mapping and the same eight rules in one file. Put it at your project root.</p></div><div class="asset__path">agent/AGENTS.md</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-10">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-10" data-filename="AGENTS.md">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-10" aria-expanded="false" aria-controls="asset-10">View source</button></div><pre class="asset__code" id="asset-10" hidden><code class="lang-markdown"># Zoho Analytics REST API v2 — mandatory organization context
+
+Instructions for AI coding agents working on code that calls the Zoho Analytics
+REST API v2. Written for tools that read `AGENTS.md` (Cursor, GitHub Copilot,
+Codex, Zed, Jules and others). Agents that support Agent Skills should load
+`skills/zoho-analytics-v2-org-context/` instead — it carries the same facts with
+task-specific detail.
+
+## What changed
+
+Every call must now name its organization. Eight cross-organization endpoints
+were replaced by three organization-scoped ones; two more kept their URL but now
+require the `ZANALYTICS-ORGID` header.
+
+**The eight removed endpoints stop answering in March 2027.**
+
+| Old | New |
+|---|---|
+| `GET /restapi/v2/orgs` | **No endpoint** — the Org ID goes in configuration |
+| `GET /restapi/v2/workspaces` | `GET /restapi/v2/orgs/workspaces` |
+| `GET /restapi/v2/workspaces/owned` | `GET /restapi/v2/orgs/workspaces` |
+| `GET /restapi/v2/workspaces/shared` | `GET /restapi/v2/orgs/workspaces` |
+| `GET /restapi/v2/dashboards` | `GET /restapi/v2/orgs/dashboards` |
+| `GET /restapi/v2/dashboards/owned` | `GET /restapi/v2/orgs/dashboards` |
+| `GET /restapi/v2/dashboards/shared` | `GET /restapi/v2/orgs/dashboards` |
+| `GET /restapi/v2/recentviews` | `GET /restapi/v2/orgs/recentitems` |
+
+SDK methods moved off `AnalyticsClient`: `getWorkspaces` → `OrgAPI.getOrgWorkspaces`,
+`getDashboards` → `OrgAPI.getOrgDashboards`, `getRecentViews` → `OrgAPI.getOrgRecentItems`,
+`getWorkspaceDetails` → `WorkspaceAPI`, `getViewDetails` → `OrgAPI`, `getOrgs` → removed.
+
+## Rules
+
+1. **Never write a deprecated endpoint or SDK method**, even as an interim step.
+   There is no fallback and no redirect.
+2. **Send `ZANALYTICS-ORGID` on every request.** Add it to the shared HTTP client
+   or request builder, not per call site.
+3. **The Organization ID comes from configuration** (`ZOHO_ANALYTICS_ORG_ID`),
+   read once from the Zoho Analytics UI → Settings → Organisation. There is no
+   API that returns it. Never invent, guess or hardcode one.
+4. **Carry the Organization ID as a string.** These numbers exceed 32-bit range;
+   a truncated ID produces error `8084` and looks like a typo.
+5. **Check the HTTP verb before rewriting `/restapi/v2/workspaces`.** `POST` on
+   that path is Create Workspace and is unaffected.
+6. **`GET /restapi/v2/orgs/dashboards` is paged.** Loop on
+   `pageDetails.hasNextPage` — never on page length. It returns an object with
+   `views` and `pageDetails`, where the old endpoints returned a plain array.
+7. **`8083` and `8084` are terminal.** The header is missing / the ID is unknown.
+   Never retry; surface an actionable message.
+8. **Merged response keys:** `ownedWorkspaces` + `sharedWorkspaces` →
+   `data.workspaces`; `ownedViews` + `sharedViews` → `data.views`.
+
+## Before you change anything
+
+```bash
+python3 agent/scan.py /path/to/project          # every call site, with file:line
+python3 agent/scan.py /path/to/project --json   # same, machine-readable
+```
+
+Exits non-zero when something will break. `warn` findings
+(`getWorkspaceDetails`, `getViewDetails`) are correct when already called on a
+`WorkspaceAPI` / `OrgAPI` instance — check the receiver before editing.
+
+## Exact values
+
+`agent/migration-map.json` holds every mapping as structured data: endpoints, SDK
+methods per language, response fields, all 17 error codes, CONFIG parameters and
+limits. **Read values from there rather than recalling them.**
+
+Full prose, with request and response examples:
+
+| Topic | File |
+|---|---|
+| Why, and the vocabulary | `01-why-org-context.md` |
+| What changed, before and after | `02-whats-changed.md` |
+| Rewriting HTTP calls | `03-endpoint-migration.md` |
+| Java, Python, C#, Go, PHP, Node.js, Ruby | `04-sdk-migration.md` |
+| Specs, Postman, RAG indexes, MCP servers | `05-knowledge-bases.md` |
+| Timeline and completion checks | `06-timeline.md` |
+| Every error code and the FAQ | `07-troubleshooting.md` |
+</code></pre></div>
+<div class="asset"><div class="asset__head"><span class="asset__kind">Readme</span><span class="asset__name">README.md</span><span class="asset__meta">5.6 KB &middot; 127 lines</span></div><div class="asset__desc"><p>How the folder is laid out, why it is four skills rather than eight, and how <code>scan.py --self-check</code> keeps the mapping honest against these chapters.</p></div><div class="asset__path">agent/README.md</div><div class="asset__actions"><button type="button" class="asset__btn" data-asset-copy="asset-11">Copy</button><button type="button" class="asset__btn" data-asset-download="asset-11" data-filename="README.md">Download</button><button type="button" class="asset__btn asset__btn--ghost" data-asset-view="asset-11" aria-expanded="false" aria-controls="asset-11">View source</button></div><pre class="asset__code" id="asset-11" hidden><code class="lang-markdown"># agent/ — the migration guide, for AI agents
+
+The chapters one directory up are written for a developer reading them. This
+folder is the same migration packaged for the tools that developer works with:
+their coding agent, their CI, their editor.
+
+Nothing here is a second source of truth. **The chapters are authoritative**;
+everything in this folder restates them as data or as instructions, and
+`scan.py --self-check` fails if the two drift apart.
+
+```
+agent/
+├── README.md              you are here
+├── AGENTS.md              cross-vendor pointer — Cursor, Copilot, Codex, Zed
+├── migration-map.json     every mapping as structured data
+├── scan.py                finds deprecated usage; also the drift guard
+└── skills/
+    ├── zoho-analytics-v2-org-context/        router + shared references
+    │   ├── SKILL.md
+    │   └── references/
+    │       ├── shared-facts.md               from chapters 01, 02
+    │       ├── timeline.md                   from chapter 06
+    │       └── troubleshooting.md            from chapter 07
+    ├── zoho-analytics-v2-endpoint-migration/ chapter 03 as a task
+    ├── zoho-analytics-v2-sdk-migration/      chapter 04 as a task
+    └── zoho-analytics-v2-artifact-migration/ chapter 05 as a task
+```
+
+## Why four skills and not eight
+
+A skill fires on a **task**. The eight chapters are a mix of tasks and reference
+material, and only three of them are tasks someone sits down to do:
+
+| Chapter | Becomes |
+|---|---|
+| 01 why, 02 what changed | `references/shared-facts.md` |
+| **03 endpoint migration** | **`zoho-analytics-v2-endpoint-migration`** |
+| **04 SDK migration** | **`zoho-analytics-v2-sdk-migration`** |
+| **05 knowledge bases** | **`zoho-analytics-v2-artifact-migration`** |
+| 06 timeline | `references/timeline.md` |
+| 07 troubleshooting | `references/troubleshooting.md` |
+
+The three tasks have non-overlapping triggers — a reader is calling raw HTTP, *or*
+using an SDK, *or* maintaining a spec or collection — so an agent can tell them
+apart. Chapters 01, 02, 06 and 07 would match almost any question about the
+migration, which is exactly why they are references rather than skills: an agent
+reaches them on demand, but they never win a trigger away from the chapter that
+says what to type.
+
+## Using it
+
+**Find the work.** Nothing else should happen first; the result tells you which
+skills apply and gives the user a number to work down.
+
+```bash
+python3 agent/scan.py /path/to/project          # human-readable
+python3 agent/scan.py /path/to/project --json   # for an agent to parse
+```
+
+Exit code is 1 when anything in the `error` class is present, so it works as a CI
+gate. `warn` means a human look is needed — in practice `getWorkspaceDetails` and
+`getViewDetails`, which are correct when already called on a `WorkspaceAPI` or
+`OrgAPI` instance and broken when still on `AnalyticsClient`.
+
+**Install the skills.** Copy the four directories into the project's skills
+folder — for Claude Code, `.claude/skills/`:
+
+```bash
+cp -r agent/skills/* /path/to/project/.claude/skills/
+```
+
+They install as four siblings and expect to stay siblings: the task skills reach
+the shared references through
+`../zoho-analytics-v2-org-context/references/`. Installing only one of the three
+task skills works; installing a task skill *without* the router one costs it
+those references.
+
+The skills also link the chapters through `../../../0N-*.md`, which resolves when
+the whole `v2-mandatory-org-context/` directory travels together. Shipping
+`agent/` on its own leaves those links dangling — package the folder, not the
+subfolder.
+
+**For agents that do not read `SKILL.md`,** put `AGENTS.md` at the project root
+instead. It carries the same rules in one file.
+
+## Keeping it true
+
+`migration-map.json` duplicates facts that already exist in the chapters, which
+is a drift risk — the same risk the chapters' own README warns about for the
+`v2.0/` sources. The guard is:
+
+```bash
+python3 agent/scan.py --self-check
+```
+
+It verifies that the deadline matches `REMOVAL_DEADLINE` in `build.py`, that
+every endpoint path and SDK method in the map appears in the chapter it claims to
+come from, that every error code is documented, that every chapter anchor the
+scan patterns point at resolves, and that no pattern has gone dead. It exits
+non-zero on any of those, so it belongs next to `build.py --check` in CI.
+
+**Run it in the same commit as any chapter edit.** If a fact changes in the
+prose and not here, this is what catches it.
+
+## How this reaches end users
+
+`build.py` renders **`08-agent-skills.md` → `08-agent-skills.html`**, the
+"AI agent skills" tab in the guide. Every file in this folder appears there as a
+panel with **Copy**, **Download** and **View source**, driven by the `:::asset`
+directive, which reads the file at build time and inlines it — there is no
+server and no `fetch()`, so all three work with the guide opened straight from
+the filesystem.
+
+The same build writes **`assets/zoho-analytics-v2-agent-skills.zip`** from this
+whole directory, for users who want the set in one go. The archive is
+deterministic — sorted entries, fixed timestamps — so an unchanged tree
+rebuilds byte-identical and does not churn in git.
+
+Adding a file here puts it in the archive automatically. Giving it a panel on
+the page is one `:::asset` block in `08-agent-skills.md`.
+
+## Still worth doing
+
+**Generate the skills' fact tables from `migration-map.json`** at build time.
+Today the tables are written out in each `SKILL.md` and `--self-check` catches
+drift after the fact; generating them would make drift impossible rather than
+merely detectable.
+</code></pre></div>
+</section>
+<section id="keeping-your-copy-current">
+<h2><span class="num">06</span>Keeping your copy current</h2>
+<p>The scanner doubles as a drift guard:</p>
+<pre><code class="lang-bash">python3 scan.py --self-check</code></pre>
+<p>It checks the deadline against this guide's own constant, that every endpoint path and SDK method in the mapping appears in the chapter it claims to come from, that every error code is documented, and that no scan pattern has gone dead. It exits non-zero on any of those.</p>
+<div class="note note--warn"><div class="note__title">Re-download after a guide update</div><p>These files are generated from the chapters you are reading. If this guide changes, your copy does not. Re-download rather than hand-patching, for the same reason chapter 05 tells you to re-import a Postman collection rather than merge it.</p></div>
+</section>
+    <nav class="pager" aria-label="Chapter">
+      <a href="07-troubleshooting.html"><span class="pager__side">Previous</span>&larr; Troubleshooting &amp; FAQ</a>
+      
+    </nav>
+  </main>
+
+<aside class="toc" aria-label="On this page">
+  <nav>
+    <h2>On this page</h2>
+    <a href="#take-the-whole-set">Take the whole set</a>
+    <a href="#which-one-do-you-need">Which one do you need?</a>
+    <a href="#the-skills">The skills</a>
+    <a href="#shared-references">Shared references</a>
+    <a href="#data-and-tooling">Data and tooling</a>
+    <a href="#keeping-your-copy-current">Keeping your copy current</a>
+  </nav>
+</aside>
+</div>
+
+<footer class="footer">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <div class="footer__inner">
+    <div>
+      <h2>Guide</h2>
+      <a href="index.html">00 &nbsp;Start here</a>
+      <a href="01-why-org-context.html">01 &nbsp;Why org context</a>
+      <a href="02-whats-changed.html">02 &nbsp;What changed</a>
+      <a href="03-endpoint-migration.html">03 &nbsp;Endpoint migration</a>
+      <a href="04-sdk-migration.html">04 &nbsp;SDK migration</a>
+      <a href="05-knowledge-bases.html">05 &nbsp;Knowledge bases &amp; tools</a>
+      <a href="06-timeline.html">06 &nbsp;Timeline &amp; deprecation</a>
+      <a href="07-troubleshooting.html">07 &nbsp;Troubleshooting &amp; FAQ</a>
+      <a href="08-agent-skills.html">08 &nbsp;AI agent skills</a>
+    </div>
+    <div>
+      <h2>Reference</h2>
+      <a href="03-endpoint-migration.html#endpoint-index">Endpoint index</a>
+      <a href="07-troubleshooting.html#error-codes">Error codes</a>
+      <a href="06-timeline.html">Deprecation timeline</a>
+      <a href="01-why-org-context.html#where-to-find-your-organization-id">Find your Organization ID</a>
+    </div>
+    <div class="footer__meta">
+      <h2>About</h2>
+      <p>Migration guide for the Zoho Analytics REST API v2 move to mandatory
+      organization context.</p>
+      <p>Rendered from the Markdown in this folder by <code>build.py</code>.
+      Generated 2026-10-28.</p>
+      <p><strong>Old endpoints are removed in March 2027.</strong></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

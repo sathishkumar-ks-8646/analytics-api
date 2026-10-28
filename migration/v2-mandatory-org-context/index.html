@@ -28,6 +28,7 @@
       <a href="05-knowledge-bases.html">Tools</a>
       <a href="06-timeline.html">Timeline</a>
       <a href="07-troubleshooting.html">Troubleshooting</a>
+      <a href="08-agent-skills.html">Agent skills</a>
     </nav>
     <button class="icon-btn nav-toggle" id="nav-toggle" type="button"
             aria-expanded="false" aria-controls="sidebar"
@@ -80,6 +81,7 @@
     <a href="05-knowledge-bases.html"><span class="n">05</span><span>Knowledge bases &amp; tools</span></a>
     <a href="06-timeline.html"><span class="n">06</span><span>Timeline &amp; deprecation</span></a>
     <a href="07-troubleshooting.html"><span class="n">07</span><span>Troubleshooting &amp; FAQ</span></a>
+    <a href="08-agent-skills.html"><span class="n">08</span><span>AI agent skills</span></a>
     <h2>Source</h2>
     <a href="index.md"><span class="n">md</span><span>This page as Markdown</span></a>
     <a href="README.md"><span class="n">&#8212;</span><span>Folder README</span></a>
@@ -108,7 +110,7 @@
 </section>
 <section id="the-change-in-sixty-seconds">
 <h2><span class="num">02</span>The change in sixty seconds</h2>
-<div class="table-wrap"><table><thead><tr><th class="col-narrow">Status</th><th>Old endpoint</th><th>New endpoint</th></tr></thead><tbody><tr><td>Replaced</td><td class="is-old"><code>GET /restapi/v2/orgs</code></td><td>Read the Organization ID from the Zoho Analytics UI</td></tr><tr><td>Replaced</td><td class="is-old"><code>GET /restapi/v2/workspaces</code></td><td class="is-new"><code>GET /restapi/v2/orgs/workspaces</code></td></tr><tr><td>Replaced</td><td class="is-old"><code>GET /restapi/v2/workspaces/owned</code></td><td class="is-new"><code>GET /restapi/v2/orgs/workspaces</code></td></tr><tr><td>Replaced</td><td class="is-old"><code>GET /restapi/v2/workspaces/shared</code></td><td class="is-new"><code>GET /restapi/v2/orgs/workspaces</code></td></tr><tr><td>Replaced</td><td class="is-old"><code>GET /restapi/v2/dashboards</code></td><td class="is-new"><code>GET /restapi/v2/orgs/dashboards</code></td></tr><tr><td>Replaced</td><td class="is-old"><code>GET /restapi/v2/dashboards/owned</code></td><td class="is-new"><code>GET /restapi/v2/orgs/dashboards</code></td></tr><tr><td>Replaced</td><td class="is-old"><code>GET /restapi/v2/dashboards/shared</code></td><td class="is-new"><code>GET /restapi/v2/orgs/dashboards</code></td></tr><tr><td>Replaced</td><td class="is-old"><code>GET /restapi/v2/recentviews</code></td><td class="is-new"><code>GET /restapi/v2/orgs/recentitems</code></td></tr><tr><td>Changed</td><td><code>GET /restapi/v2/workspaces/{workspace-id}</code></td><td>Same URL — <code>ZANALYTICS-ORGID</code> is now <strong>mandatory</strong></td></tr><tr><td>Changed</td><td><code>GET /restapi/v2/views/{view-id}</code></td><td>Same URL — <code>ZANALYTICS-ORGID</code> is now <strong>mandatory</strong></td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Status</th><th>Old endpoint</th><th>New endpoint</th></tr></thead><tbody><tr><td class="col-narrow">Replaced</td><td class="is-old"><code>GET /restapi/v2/orgs</code></td><td>Read the Organization ID from the Zoho Analytics UI</td></tr><tr><td class="col-narrow">Replaced</td><td class="is-old"><code>GET /restapi/v2/workspaces</code></td><td class="is-new"><code>GET /restapi/v2/orgs/workspaces</code></td></tr><tr><td class="col-narrow">Replaced</td><td class="is-old"><code>GET /restapi/v2/workspaces/owned</code></td><td class="is-new"><code>GET /restapi/v2/orgs/workspaces</code></td></tr><tr><td class="col-narrow">Replaced</td><td class="is-old"><code>GET /restapi/v2/workspaces/shared</code></td><td class="is-new"><code>GET /restapi/v2/orgs/workspaces</code></td></tr><tr><td class="col-narrow">Replaced</td><td class="is-old"><code>GET /restapi/v2/dashboards</code></td><td class="is-new"><code>GET /restapi/v2/orgs/dashboards</code></td></tr><tr><td class="col-narrow">Replaced</td><td class="is-old"><code>GET /restapi/v2/dashboards/owned</code></td><td class="is-new"><code>GET /restapi/v2/orgs/dashboards</code></td></tr><tr><td class="col-narrow">Replaced</td><td class="is-old"><code>GET /restapi/v2/dashboards/shared</code></td><td class="is-new"><code>GET /restapi/v2/orgs/dashboards</code></td></tr><tr><td class="col-narrow">Replaced</td><td class="is-old"><code>GET /restapi/v2/recentviews</code></td><td class="is-new"><code>GET /restapi/v2/orgs/recentitems</code></td></tr><tr><td class="col-narrow">Changed</td><td><code>GET /restapi/v2/workspaces/{workspace-id}</code></td><td>Same URL — <code>ZANALYTICS-ORGID</code> is now <strong>mandatory</strong></td></tr><tr><td class="col-narrow">Changed</td><td><code>GET /restapi/v2/views/{view-id}</code></td><td>Same URL — <code>ZANALYTICS-ORGID</code> is now <strong>mandatory</strong></td></tr></tbody></table></div>
 <p>Eight endpoints became three, because the old set split one idea three ways — <em>all</em>, <em>owned</em> and <em>shared</em>. Inside a single organization that split carries no information: the new listing simply returns everything the caller can reach, and each entry already tells you who owns it and who shared it.</p>
 </section>
 <section id="the-one-rule-to-remember">
@@ -179,7 +181,7 @@ ZANALYTICS-ORGID: 700000123456</code></pre>
 </section>
 <section id="conventions-used-in-this-guide">
 <h2><span class="num">06</span>Conventions used in this guide</h2>
-<div class="table-wrap"><table><thead><tr><th class="col-narrow">Signal</th><th>Meaning</th></tr></thead><tbody><tr><td><span class="tag tag--removed">removed</span></td><td>The endpoint, field or method is deprecated and will be switched off in March 2027.</td></tr><tr><td><span class="tag tag--new">new</span></td><td>The replacement. Use this.</td></tr><tr><td><span class="tag tag--changed">changed</span></td><td>Still exists, still at the same URL, but behaves differently.</td></tr><tr><td><span class="tag tag--info">unchanged</span></td><td>Shown only so you can confirm you do not need to touch it.</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Signal</th><th>Meaning</th></tr></thead><tbody><tr><td class="col-narrow"><span class="tag tag--removed">removed</span></td><td>The endpoint, field or method is deprecated and will be switched off in March 2027.</td></tr><tr><td class="col-narrow"><span class="tag tag--new">new</span></td><td>The replacement. Use this.</td></tr><tr><td class="col-narrow"><span class="tag tag--changed">changed</span></td><td>Still exists, still at the same URL, but behaves differently.</td></tr><tr><td class="col-narrow"><span class="tag tag--info">unchanged</span></td><td>Shown only so you can confirm you do not need to touch it.</td></tr></tbody></table></div>
 <p>Code blocks labelled <strong>Before</strong> show the old call. Blocks labelled <strong>After</strong> show the replacement. Where a response shape changes, both are shown in full — the fields are not always where you expect.</p>
 <p>Every chapter is also available as plain Markdown: the link is in the left-hand rail under <strong>Source</strong>, or just change <code>.html</code> to <code>.md</code> in the address bar.</p>
 </section>
@@ -215,6 +217,7 @@ ZANALYTICS-ORGID: 700000123456</code></pre>
       <a href="05-knowledge-bases.html">05 &nbsp;Knowledge bases &amp; tools</a>
       <a href="06-timeline.html">06 &nbsp;Timeline &amp; deprecation</a>
       <a href="07-troubleshooting.html">07 &nbsp;Troubleshooting &amp; FAQ</a>
+      <a href="08-agent-skills.html">08 &nbsp;AI agent skills</a>
     </div>
     <div>
       <h2>Reference</h2>
@@ -228,7 +231,7 @@ ZANALYTICS-ORGID: 700000123456</code></pre>
       <p>Migration guide for the Zoho Analytics REST API v2 move to mandatory
       organization context.</p>
       <p>Rendered from the Markdown in this folder by <code>build.py</code>.
-      Generated 2026-10-27.</p>
+      Generated 2026-10-28.</p>
       <p><strong>Old endpoints are removed in March 2027.</strong></p>
     </div>
   </div>

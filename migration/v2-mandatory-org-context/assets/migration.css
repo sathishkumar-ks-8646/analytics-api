@@ -204,7 +204,11 @@ code {
   background: var(--inset);
   border: 1px solid var(--rule);
   padding: 0.06em 0.33em;
-  overflow-wrap: anywhere;
+  /* break-word, not anywhere: both break a word only when it cannot fit, but
+     `anywhere` also lets a single character count as the min-content width,
+     which collapses narrow table columns and splits identifiers such as
+     workspaceIds across four lines. */
+  overflow-wrap: break-word;
 }
 a code { color: inherit; background: none; border-color: currentColor; }
 
@@ -562,7 +566,11 @@ td code, th code { background: none; border: 0; padding: 0; white-space: pre-wra
 td p, td ul, td li { max-width: none; }
 td.is-old code { color: var(--sig-removed); text-decoration: line-through; text-decoration-thickness: 1px; }
 td.is-new code { color: var(--sig-new); font-weight: 600; }
+/* Narrow columns size to their content and never wrap. The class sits on every
+   cell in the column, header and body alike, so `width: 1%` shrinks the column
+   to the widest cell rather than to one character. */
 .col-narrow { width: 1%; white-space: nowrap; }
+.col-narrow code { white-space: nowrap; overflow-wrap: normal; }
 
 /* ---------------------------------------------------------- 15. Panels -- */
 
@@ -682,6 +690,104 @@ dl.kv dd { margin: 0; }
 .footer__meta p { max-width: none; }
 .footer__meta p + p { margin-top: 0.5rem; }
 
+/* --------------------------------------------------------- 22. Assets --- */
+/* One downloadable file: what it is, what it does, and the three things you
+   can do with it. Same hairline grid as .panel — square, no shadow — with the
+   action row reading as a toolbar rather than as three loose buttons. */
+
+.asset {
+  border: 1px solid var(--rule);
+  background: var(--paper-2);
+  margin: 1.3rem 0;
+}
+.asset + .asset { margin-top: -1px; }      /* hairlines collapse between cards */
+
+.asset__head {
+  display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap;
+  padding: 0.7rem 0.95rem 0.55rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper-3);
+}
+.asset__kind {
+  font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.11em; text-transform: uppercase;
+  color: var(--sig-info);
+  border: 1px solid color-mix(in srgb, var(--zoho-blue) 40%, var(--rule));
+  padding: 0.08rem 0.4rem; white-space: nowrap; flex: none;
+}
+.asset__name {
+  font-family: var(--font-mono); font-size: 0.93rem; font-weight: 650;
+  color: var(--ink); overflow-wrap: break-word; min-width: 0;
+}
+.asset__meta {
+  margin-left: auto; font-family: var(--font-mono); font-size: 0.68rem;
+  color: var(--ink-3); white-space: nowrap;
+}
+
+.asset__desc { padding: 0.8rem 0.95rem 0; font-size: 0.89rem; color: var(--ink-2); }
+.asset__desc > :last-child { margin-bottom: 0; }
+.asset__desc p { max-width: none; margin: 0 0 0.5rem; }
+.asset__desc ul { margin: 0 0 0.5rem; padding-left: 1.05rem; font-size: 0.86rem; }
+.asset__desc li { max-width: none; }
+
+.asset__path {
+  padding: 0 0.95rem 0.1rem;
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-3);
+  overflow-wrap: break-word;
+}
+
+.asset__actions {
+  display: flex; gap: 0.4rem; flex-wrap: wrap;
+  padding: 0.7rem 0.95rem 0.85rem;
+}
+.asset__btn {
+  font-family: var(--font-body); font-size: 0.72rem; font-weight: 650;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--paper-2); color: var(--ink);
+  border: 1px solid var(--rule-2); padding: 0.34rem 0.75rem;
+  cursor: pointer; transition: background 110ms ease, border-color 110ms ease;
+}
+.asset__btn:hover { background: var(--inset); border-color: var(--ink-3); }
+.asset__btn:focus-visible { outline: 2px solid var(--zoho-blue); outline-offset: 1px; }
+.asset__btn--ghost { color: var(--ink-2); border-style: dashed; }
+.asset__btn[aria-expanded="true"] { background: var(--inset); border-style: solid; }
+.asset__btn.is-done {
+  color: var(--sig-new);
+  border-color: color-mix(in srgb, var(--zoho-green) 45%, var(--rule));
+}
+.asset__btn.is-failed {
+  color: var(--sig-removed);
+  border-color: color-mix(in srgb, var(--zoho-red) 45%, var(--rule));
+}
+
+.asset__code {
+  margin: 0; border-left: 0; border-right: 0; border-bottom: 0;
+  max-height: 26rem; overflow: auto;
+}
+
+/* The whole-bundle call to action: the one green thing on the page. */
+.asset-all {
+  display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap;
+  border: 1px solid var(--rule); border-top: 3px solid var(--zoho-green);
+  background: var(--paper-2); padding: 1rem 1.1rem; margin: 1.3rem 0;
+}
+.asset-all__text { flex: 1 1 16rem; font-size: 0.89rem; color: var(--ink-2); }
+.asset-all__text strong { color: var(--ink); }
+.asset-all .asset__btn {
+  border-color: color-mix(in srgb, var(--zoho-green) 50%, var(--rule));
+  color: var(--sig-new);
+}
+.asset-all .asset__btn:hover { background: var(--wash-new); border-color: var(--sig-new); }
+
+@media (prefers-reduced-motion: reduce) {
+  .asset__btn { transition: none; }
+}
+
+@media (max-width: 560px) {
+  .asset__meta { margin-left: 0; flex-basis: 100%; }
+  .asset__btn { flex: 1 1 auto; text-align: center; }
+}
+
 /* ------------------------------------------------------ 21. Responsive -- */
 
 @media (max-width: 1200px) {
@@ -706,7 +812,9 @@ dl.kv dd { margin: 0; }
 }
 
 @media print {
-  .masthead, .sidebar, .toc, .copy-btn, .filterbar, .pager, .deadline-bar { display: none !important; }
+  .masthead, .sidebar, .toc, .copy-btn, .filterbar, .pager, .deadline-bar,
+  .asset__actions, .asset-all { display: none !important; }
+  .asset__code[hidden] { display: none !important; }
   body { background: #fff; color: #000; }
   .layout { display: block; }
   pre { border: 1px solid #999; background: #fff; color: #000; }

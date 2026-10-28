@@ -28,6 +28,7 @@
       <a href="05-knowledge-bases.html">Tools</a>
       <a href="06-timeline.html" aria-current="page">Timeline</a>
       <a href="07-troubleshooting.html">Troubleshooting</a>
+      <a href="08-agent-skills.html">Agent skills</a>
     </nav>
     <button class="icon-btn nav-toggle" id="nav-toggle" type="button"
             aria-expanded="false" aria-controls="sidebar"
@@ -58,6 +59,7 @@
     <a href="05-knowledge-bases.html"><span class="n">05</span><span>Knowledge bases &amp; tools</span></a>
     <a href="06-timeline.html" aria-current="page"><span class="n">06</span><span>Timeline &amp; deprecation</span></a>
     <a href="07-troubleshooting.html"><span class="n">07</span><span>Troubleshooting &amp; FAQ</span></a>
+    <a href="08-agent-skills.html"><span class="n">08</span><span>AI agent skills</span></a>
     <h2>Source</h2>
     <a href="06-timeline.md"><span class="n">md</span><span>This page as Markdown</span></a>
     <a href="README.md"><span class="n">&#8212;</span><span>Folder README</span></a>
@@ -99,14 +101,14 @@
 </section>
 <section id="what-exactly-goes-away-in-march-2027">
 <h2><span class="num">02</span>What exactly goes away in March 2027</h2>
-<div class="table-wrap"><table><thead><tr><th class="col-narrow">Endpoint</th><th>Status after March 2027</th></tr></thead><tbody><tr><td class="is-old"><code>GET /restapi/v2/orgs</code></td><td>Removed</td></tr><tr><td class="is-old"><code>GET /restapi/v2/workspaces</code></td><td>Removed. <strong><code>POST</code> on the same path keeps working</strong> — Create Workspace is unaffected</td></tr><tr><td class="is-old"><code>GET /restapi/v2/workspaces/owned</code></td><td>Removed</td></tr><tr><td class="is-old"><code>GET /restapi/v2/workspaces/shared</code></td><td>Removed</td></tr><tr><td class="is-old"><code>GET /restapi/v2/dashboards</code></td><td>Removed</td></tr><tr><td class="is-old"><code>GET /restapi/v2/dashboards/owned</code></td><td>Removed</td></tr><tr><td class="is-old"><code>GET /restapi/v2/dashboards/shared</code></td><td>Removed</td></tr><tr><td class="is-old"><code>GET /restapi/v2/recentviews</code></td><td>Removed</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Endpoint</th><th>Status after March 2027</th></tr></thead><tbody><tr><td class="is-old col-narrow"><code>GET /restapi/v2/orgs</code></td><td>Removed</td></tr><tr><td class="is-old col-narrow"><code>GET /restapi/v2/workspaces</code></td><td>Removed. <strong><code>POST</code> on the same path keeps working</strong> — Create Workspace is unaffected</td></tr><tr><td class="is-old col-narrow"><code>GET /restapi/v2/workspaces/owned</code></td><td>Removed</td></tr><tr><td class="is-old col-narrow"><code>GET /restapi/v2/workspaces/shared</code></td><td>Removed</td></tr><tr><td class="is-old col-narrow"><code>GET /restapi/v2/dashboards</code></td><td>Removed</td></tr><tr><td class="is-old col-narrow"><code>GET /restapi/v2/dashboards/owned</code></td><td>Removed</td></tr><tr><td class="is-old col-narrow"><code>GET /restapi/v2/dashboards/shared</code></td><td>Removed</td></tr><tr><td class="is-old col-narrow"><code>GET /restapi/v2/recentviews</code></td><td>Removed</td></tr></tbody></table></div>
 <p>And what does <strong>not</strong> go away:</p>
-<div class="table-wrap"><table><thead><tr><th class="col-narrow">Endpoint</th><th>Status</th></tr></thead><tbody><tr><td><code>GET /restapi/v2/orgs/workspaces</code></td><td>The replacement. Stays.</td></tr><tr><td><code>GET /restapi/v2/orgs/dashboards</code></td><td>The replacement. Stays.</td></tr><tr><td><code>GET /restapi/v2/orgs/recentitems</code></td><td>The replacement. Stays.</td></tr><tr><td><code>GET /restapi/v2/workspaces/{workspace-id}</code></td><td>Stays. Already requires the header.</td></tr><tr><td><code>GET /restapi/v2/views/{view-id}</code></td><td>Stays. Already requires the header.</td></tr><tr><td><code>POST /restapi/v2/workspaces</code></td><td>Stays. Never affected.</td></tr><tr><td>Everything else in v2</td><td>Stays. Around 200 endpoints were already organization-scoped.</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Endpoint</th><th>Status</th></tr></thead><tbody><tr><td class="col-narrow"><code>GET /restapi/v2/orgs/workspaces</code></td><td>The replacement. Stays.</td></tr><tr><td class="col-narrow"><code>GET /restapi/v2/orgs/dashboards</code></td><td>The replacement. Stays.</td></tr><tr><td class="col-narrow"><code>GET /restapi/v2/orgs/recentitems</code></td><td>The replacement. Stays.</td></tr><tr><td class="col-narrow"><code>GET /restapi/v2/workspaces/{workspace-id}</code></td><td>Stays. Already requires the header.</td></tr><tr><td class="col-narrow"><code>GET /restapi/v2/views/{view-id}</code></td><td>Stays. Already requires the header.</td></tr><tr><td class="col-narrow"><code>POST /restapi/v2/workspaces</code></td><td>Stays. Never affected.</td></tr><tr><td class="col-narrow">Everything else in v2</td><td>Stays. Around 200 endpoints were already organization-scoped.</td></tr></tbody></table></div>
 </section>
 <section id="what-deprecated-means-in-practice">
 <h2><span class="num">03</span>What "deprecated" means in practice</h2>
 <p>People read "deprecated" as "still fine for now". It is more specific than that:</p>
-<div class="table-wrap"><table><thead><tr><th class="col-narrow">Question</th><th>Answer</th></tr></thead><tbody><tr><td>Does it still return correct data today?</td><td>Yes.</td></tr><tr><td>Will it get bug fixes?</td><td>No.</td></tr><tr><td>Will it get new fields when the new endpoints do?</td><td>No. They will drift apart.</td></tr><tr><td>Will it appear in the documentation?</td><td>No. It is already removed from the reference.</td></tr><tr><td>Will the SDKs still expose it?</td><td>No. The methods are gone from all seven SDKs today.</td></tr><tr><td>Is there a warning header on the response?</td><td>Do not rely on one. Build your own monitoring — see <a href="#prove-you-are-ready">section 5</a>.</td></tr><tr><td>Will the date move?</td><td>Plan as though it will not.</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Question</th><th>Answer</th></tr></thead><tbody><tr><td class="col-narrow">Does it still return correct data today?</td><td>Yes.</td></tr><tr><td class="col-narrow">Will it get bug fixes?</td><td>No.</td></tr><tr><td class="col-narrow">Will it get new fields when the new endpoints do?</td><td>No. They will drift apart.</td></tr><tr><td class="col-narrow">Will it appear in the documentation?</td><td>No. It is already removed from the reference.</td></tr><tr><td class="col-narrow">Will the SDKs still expose it?</td><td>No. The methods are gone from all seven SDKs today.</td></tr><tr><td class="col-narrow">Is there a warning header on the response?</td><td>Do not rely on one. Build your own monitoring — see <a href="#prove-you-are-ready">section 5</a>.</td></tr><tr><td class="col-narrow">Will the date move?</td><td>Plan as though it will not.</td></tr></tbody></table></div>
 <div class="note note--warn"><div class="note__title">The SDKs are ahead of the server</div><p>The methods were removed from the SDKs <strong>now</strong>, while the endpoints answer until <strong>March 2027</strong>. So if you upgrade the SDK your code stops compiling before anything stops working. That is deliberate: it makes the migration a build-time problem rather than a 2027 incident.</p></div>
 </section>
 <section id="a-sensible-schedule">
@@ -196,6 +198,7 @@ grep -rl "recentviews\|dashboards/owned\|dashboards/shared\|workspaces/owned\|wo
       <a href="05-knowledge-bases.html">05 &nbsp;Knowledge bases &amp; tools</a>
       <a href="06-timeline.html">06 &nbsp;Timeline &amp; deprecation</a>
       <a href="07-troubleshooting.html">07 &nbsp;Troubleshooting &amp; FAQ</a>
+      <a href="08-agent-skills.html">08 &nbsp;AI agent skills</a>
     </div>
     <div>
       <h2>Reference</h2>
@@ -209,7 +212,7 @@ grep -rl "recentviews\|dashboards/owned\|dashboards/shared\|workspaces/owned\|wo
       <p>Migration guide for the Zoho Analytics REST API v2 move to mandatory
       organization context.</p>
       <p>Rendered from the Markdown in this folder by <code>build.py</code>.
-      Generated 2026-10-27.</p>
+      Generated 2026-10-28.</p>
       <p><strong>Old endpoints are removed in March 2027.</strong></p>
     </div>
   </div>

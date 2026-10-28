@@ -68,7 +68,8 @@
 
   /* -------------------------------------------------- copy to clipboard -- */
 
-  Array.prototype.forEach.call(document.querySelectorAll("pre"), function (pre) {
+  /* asset panels carry their own copy button in the action row */
+  Array.prototype.forEach.call(document.querySelectorAll("pre:not(.asset__code)"), function (pre) {
     var btn = document.createElement("button");
     btn.type = "button";
     btn.className = "copy-btn";
@@ -96,6 +97,87 @@
     });
     pre.appendChild(btn);
   });
+
+  /* ------------------------------------------------------ agent assets --- */
+  /* Copy, download and reveal the source of each shipped file. The text is
+     inlined in the page at build time, so all three work with no server and
+     no network — the guide opens straight from the filesystem. */
+
+  function assetText(id) {
+    var pre = document.getElementById(id);
+    return pre ? pre.textContent : "";
+  }
+
+  function flash(btn, label, cls) {
+    var original = btn.dataset.label || btn.textContent;
+    btn.dataset.label = original;
+    btn.textContent = label;
+    btn.classList.add(cls);
+    setTimeout(function () {
+      btn.textContent = original;
+      btn.classList.remove(cls);
+    }, 1600);
+  }
+
+  Array.prototype.forEach.call(
+    document.querySelectorAll("[data-asset-copy]"),
+    function (btn) {
+      btn.addEventListener("click", function () {
+        var text = assetText(btn.getAttribute("data-asset-copy"));
+        var ok = function () { flash(btn, "Copied", "is-done"); };
+        var no = function () { flash(btn, "Failed", "is-failed"); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok, no);
+        } else {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand("copy"); ok(); } catch (e) { no(); }
+          document.body.removeChild(ta);
+        }
+      });
+    }
+  );
+
+  Array.prototype.forEach.call(
+    document.querySelectorAll("[data-asset-download]"),
+    function (btn) {
+      btn.addEventListener("click", function () {
+        var text = assetText(btn.getAttribute("data-asset-download"));
+        var name = btn.getAttribute("data-filename") || "download.txt";
+        try {
+          var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+          flash(btn, "Saved", "is-done");
+        } catch (e) {
+          flash(btn, "Failed", "is-failed");
+        }
+      });
+    }
+  );
+
+  Array.prototype.forEach.call(
+    document.querySelectorAll("[data-asset-view]"),
+    function (btn) {
+      btn.addEventListener("click", function () {
+        var pre = document.getElementById(btn.getAttribute("data-asset-view"));
+        if (!pre) { return; }
+        var open = pre.hidden;
+        pre.hidden = !open;
+        btn.setAttribute("aria-expanded", String(open));
+        btn.textContent = open ? "Hide source" : "View source";
+        btn.dataset.label = btn.textContent;
+      });
+    }
+  );
 
   /* ------------------------------------------------------ table filter --- */
 

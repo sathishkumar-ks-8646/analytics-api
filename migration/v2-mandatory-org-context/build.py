@@ -33,6 +33,7 @@ import argparse
 import html as htmllib
 import re
 import sys
+import zipfile
 from datetime import date
 from pathlib import Path
 
@@ -52,9 +53,18 @@ PAGES = [
     ("05-knowledge-bases",   "05", "Knowledge bases & tools",   "Tools"),
     ("06-timeline",          "06", "Timeline & deprecation",    "Timeline"),
     ("07-troubleshooting",   "07", "Troubleshooting & FAQ",     "Troubleshooting"),
+    ("08-agent-skills",      "08", "AI agent skills",           "Agent skills"),
 ]
 
 REMOVAL_DEADLINE = "March 2027"
+
+# Everything under agent/ is offered for download on the Agent skills page and
+# bundled into one archive. Order is the order the page lists them in.
+AGENT_DIR = HERE / "agent"
+SKILLS_ZIP = HERE / "assets" / "zoho-analytics-v2-agent-skills.zip"
+
+# Language hint per suffix, for the embedded source view.
+ASSET_LANG = {".md": "markdown", ".json": "json", ".py": "python"}
 
 # --------------------------------------------------------------------------
 # Inline markdown
@@ -125,6 +135,10 @@ CALLOUT_TITLES = {
 
 
 class Renderer:
+    # Asset panels need ids unique across the whole page, including the nested
+    # renderers used for their descriptions, so the counter is class-level.
+    _asset_n = 0
+
     def __init__(self, stem: str):
         self.stem = stem
         self.toc: list[tuple[str, str]] = []   # (id, title) for `## N.` sections
@@ -319,25 +333,36 @@ class Renderer:
         head = cells(rows[0])
         body = [cells(r) for r in rows[2:]]
 
+        # A ^ prefix marks the column narrow. The class has to go on every cell
+        # in that column, not just the header: a bare th.col-narrow sets the
+        # column to its minimum width while the body cells stay breakable, and
+        # an identifier like workspaceIds ends up split across four lines.
+        narrow = {i for i, h in enumerate(head) if h.startswith("^")}
+
         out = ['<div class="table-wrap"><table>', "<thead><tr>"]
-        for h in head:
-            cls = ' class="col-narrow"' if h.startswith("^") else ""
+        for i, h in enumerate(head):
+            cls = ' class="col-narrow"' if i in narrow else ""
             out.append("<th%s>%s</th>" % (cls, inline(h.lstrip("^"))))
         out.append("</tr></thead><tbody>")
         for row in body:
             out.append("<tr>")
-            for cell in row:
-                cls = ""
+            for i, cell in enumerate(row):
+                classes = []
                 if cell.startswith("~~") and cell.endswith("~~"):
-                    cls, cell = ' class="is-old"', cell[2:-2]
+                    classes, cell = ["is-old"], cell[2:-2]
                 elif cell.startswith("++") and cell.endswith("++"):
-                    cls, cell = ' class="is-new"', cell[2:-2]
+                    classes, cell = ["is-new"], cell[2:-2]
+                if i in narrow:
+                    classes.append("col-narrow")
+                cls = ' class="%s"' % " ".join(classes) if classes else ""
                 out.append("<td%s>%s</td>" % (cls, inline(cell)))
             out.append("</tr>")
         out.append("</tbody></table></div>")
         return "".join(out)
 
     def callout(self, kind: str, label: str, body: list[str]) -> str:
+        if kind == "asset":
+            return self.asset(label.strip(), body)
         sub = Renderer(self.stem)
         inner = sub.render(body)
         if kind == "sunset":
@@ -348,6 +373,76 @@ class Renderer:
         title = label or CALLOUT_TITLES.get(kind) or ""
         head = '<div class="note__title">%s</div>' % inline(title) if title else ""
         return '<div class="note note--%s">%s%s</div>' % (_esc(kind), head, inner)
+
+    # -- downloadable asset ------------------------------------------------
+    def asset(self, rel: str, body: list[str]) -> str:
+        """Render one downloadable file: description, copy, download, source.
+
+        The file is read and inlined at build time. There is no server and no
+        fetch(), so the text has to be in the page for Copy and Download to
+        work when the guide is opened straight from the filesystem.
+        """
+        path = HERE / rel
+        if not path.exists():
+            raise SystemExit("asset not found: %s" % rel)
+
+        text = path.read_text(encoding="utf-8")
+        size = len(text.encode("utf-8"))
+        kib = "%.1f KB" % (size / 1024) if size >= 1024 else "%d bytes" % size
+        lines = text.count("\n") + (0 if text.endswith("\n") else 1)
+        lang = ASSET_LANG.get(path.suffix, "")
+
+        Renderer._asset_n += 1
+        uid = "asset-%d" % Renderer._asset_n
+
+        name = path.name
+        if name == "SKILL.md":
+            kind = "Skill"
+            # the skill's own directory is what identifies it, not SKILL.md
+            display = path.parent.name
+        elif name in ("AGENTS.md", "README.md"):
+            kind = "Instructions" if name == "AGENTS.md" else "Readme"
+            display = name
+        elif path.suffix == ".json":
+            kind = "Data"
+            display = name
+        elif path.suffix == ".py":
+            kind = "Script"
+            display = name
+        else:
+            kind = "Reference"
+            display = name
+
+        sub = Renderer(self.stem)
+        desc = sub.render(body)
+        cls = ' class="lang-%s"' % _esc(lang) if lang else ""
+
+        return (
+            '<div class="asset">'
+            '<div class="asset__head">'
+            '<span class="asset__kind">%s</span>'
+            '<span class="asset__name">%s</span>'
+            '<span class="asset__meta">%s &middot; %d lines</span>'
+            "</div>"
+            '<div class="asset__desc">%s</div>'
+            '<div class="asset__path">%s</div>'
+            '<div class="asset__actions">'
+            '<button type="button" class="asset__btn" data-asset-copy="%s">Copy</button>'
+            '<button type="button" class="asset__btn" data-asset-download="%s" '
+            'data-filename="%s">Download</button>'
+            '<button type="button" class="asset__btn asset__btn--ghost" '
+            'data-asset-view="%s" aria-expanded="false" aria-controls="%s">'
+            "View source</button>"
+            "</div>"
+            '<pre class="asset__code" id="%s" hidden><code%s>%s</code></pre>'
+            "</div>"
+        ) % (
+            _esc(kind), _esc(display), kib, lines,
+            desc,
+            _esc(rel),
+            uid, uid, _esc(name), uid, uid,
+            uid, cls, _esc(text),
+        )
 
 
 # --------------------------------------------------------------------------
@@ -588,6 +683,31 @@ def hero_for_index() -> str:
 </section>""".format(spine=SPINE)
 
 
+def bundle_skills() -> tuple[int, int]:
+    """Zip agent/ so the page can offer the whole set as one download.
+
+    Deterministic: files sorted, timestamps fixed, so rebuilding an unchanged
+    tree produces a byte-identical archive and does not churn in git.
+    """
+    if not AGENT_DIR.is_dir():
+        raise SystemExit("agent/ not found — nothing to bundle")
+
+    files = sorted(
+        p for p in AGENT_DIR.rglob("*")
+        if p.is_file() and "__pycache__" not in p.parts
+    )
+    SKILLS_ZIP.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(SKILLS_ZIP, "w", zipfile.ZIP_DEFLATED) as zf:
+        for path in files:
+            info = zipfile.ZipInfo(
+                str(path.relative_to(AGENT_DIR.parent)), date_time=(1980, 1, 1, 0, 0, 0)
+            )
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o644 << 16
+            zf.writestr(info, path.read_bytes())
+    return len(files), SKILLS_ZIP.stat().st_size
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--check", action="store_true", help="validate, write nothing")
@@ -637,10 +757,12 @@ def main() -> int:
         elif frag and page in anchors and frag not in anchors[page]:
             problems.append("%s -> dead anchor %s#%s" % (stem, page, frag))
 
+    bundled = None
     if not args.check:
         for stem, out in rendered.items():
             (HERE / (stem + ".html")).write_text(out, encoding="utf-8")
             written += 1
+        bundled = bundle_skills()
 
     verb = "checked" if args.check else "written"
     for stem in stems:
@@ -653,6 +775,9 @@ def main() -> int:
             print("  - " + p)
         return 1
     print("Links     : every internal link and anchor resolves.")
+    if bundled:
+        print("Skills    : %d files bundled into %s (%.1f KB)."
+              % (bundled[0], SKILLS_ZIP.relative_to(HERE), bundled[1] / 1024))
     print("Pages     : %d markdown sources, %d html siblings."
           % (len(rendered), len(rendered) if not args.check else written))
     return 0
