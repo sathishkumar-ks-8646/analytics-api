@@ -7,16 +7,20 @@ patch for corrections. The OKF bundle's own content version is in `vN.N/okf/mani
 
 ## Unreleased
 
-### Added - a consumer-facing migration guide
+### Added - `publish/`, a consumer-facing tree, and the first migration guide in it
 
-`migration/v2-mandatory-org-context/` — eight chapters explaining this change to an external developer:
-why organization context is mandatory, what changed, endpoint-by-endpoint migration with full
-before-and-after payloads, SDK migration for all seven languages, how each knowledge base and tool
-adopts it, the deprecation timeline to **March 2027**, and a troubleshooting/FAQ chapter.
+`publish/` is the first tree in this repository written for API consumers rather than for the
+repository itself. It holds two kinds of copy, split by how long each is read for:
 
-Markdown is the authored form; `build.py` renders an `.html` sibling for each chapter with shared
-navigation, and `--check` validates every internal link and anchor. `migration/` is the first tree in
-this repository written for API consumers rather than for the repository itself.
+- `publish/guides/v2-mandatory-org-context/` — eight chapters explaining this change to an external
+  developer: why organization context is mandatory, what changed, endpoint-by-endpoint migration with
+  full before-and-after payloads, SDK migration for all seven languages, how each knowledge base and
+  tool adopts it, the deprecation timeline to **March 2027**, and a troubleshooting/FAQ chapter.
+  Markdown is the authored form; `build.py` renders an `.html` sibling for each chapter with shared
+  navigation, and `--check` validates every internal link and anchor.
+- `publish/release-notes/2.10.0/` — the two markdown fragments for the hosted Release Notes page,
+  newly added APIs and removed APIs. No build step: they are pasted, in order, under the page's
+  existing "Recent Updates" heading. A later release becomes a sibling directory, not a replacement.
 
 ### Removed - the user-scoped listings that were not bound to an organization
 

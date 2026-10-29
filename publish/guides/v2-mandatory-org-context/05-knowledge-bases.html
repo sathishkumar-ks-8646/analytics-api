@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Knowledge bases &amp; tools &mdash; Zoho Analytics V2 organization-context migration</title>
+<meta name="description" content="How each knowledge base and tool adopts the Zoho Analytics organization-context change - OpenAPI specs, the OKF bundle, Postman, SDK docs, MCP servers, AI assistants, wikis and Deluge scripts.">
+<link rel="stylesheet" href="assets/migration.css">
+<script src="assets/migration.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <a class="wordmark" href="index.html">
+      <svg class="zoho-mark" role="img" aria-label="Zoho" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.66 6.897a1.299 1.299 0 0 0-1.205.765l-.642 1.44-.062-.385A1.291 1.291 0 0 0 5.27 7.648l-4.185.678A1.291 1.291 0 0 0 .016 9.807l.678 4.18a1.293 1.293 0 0 0 1.27 1.087c.074 0 .143-.01.216-.017l4.18-.678c.436-.07.784-.351.96-.723l2.933 1.307a1.304 1.304 0 0 0 .988.026c.321-.12.575-.365.716-.678l.28-.629.038.276a1.297 1.297 0 0 0 1.455 1.103l3.712-.501a1.29 1.29 0 0 0 1.03.514h4.236c.713 0 1.29-.58 1.291-1.291V9.545c0-.712-.58-1.291-1.291-1.291h-4.236c-.079 0-.155.008-.23.022a1.309 1.309 0 0 0-.275-.288c-.275-.21-.614-.3-.958-.253l-4.197.571c-.155.021-.3.07-.432.14L9.159 7.01a1.27 1.27 0 0 0-.499-.113zm-.025.705c.077 0 .159.013.24.052l2.971 1.324c-.128.238-.18.508-.142.782l.357 2.596h.002l-.745 1.672a.59.59 0 0 1-.777.296l-3.107-1.385-.004-.041-.41-2.526L8.1 7.95a.589.589 0 0 1 .536-.348zm-3.159.733c.125 0 .245.039.343.112.13.09.21.227.237.382l.234 1.446-.56 1.259a1.27 1.27 0 0 0-.026.987c.12.322.364.575.678.717l.295.131a.585.585 0 0 1-.428.314l-4.185.678a.59.59 0 0 1-.674-.485l-.678-4.18a.588.588 0 0 1 .485-.674l4.185-.678c.03-.004.064-.01.094-.01zm11.705.09a.59.59 0 0 1 .415.173 1.287 1.287 0 0 0-.416.947v4.237c0 .033.003.065.005.097l-3.55.482a.586.586 0 0 1-.66-.502l-.191-1.403.899-2.017a1.29 1.29 0 0 0-.333-1.5l3.754-.51c.026-.004.051-.004.077-.004zm1.3.532h4.227c.326 0 .588.266.588.588v4.237a.589.589 0 0 1-.588.588h-4.237a.564.564 0 0 1-.12-.013c.47-.246.758-.765.684-1.318zm-5.988.309.254.113c.296.133.43.48.296.777l-.432.97-.207-1.465a.58.58 0 0 1 .09-.395zm5.39.538.453 3.325a.583.583 0 0 1-.453.65zM6.496 11.545l.17 1.052a.588.588 0 0 1-.293-.776zm3.985 4.344a.588.588 0 0 0-.612.603c0 .358.244.61.601.61a.582.582 0 0 0 .607-.608c0-.35-.242-.605-.596-.605zm5.545 0a.588.588 0 0 0-.612.603c0 .358.245.61.602.61a.582.582 0 0 0 .606-.608c0-.35-.24-.605-.596-.605zm-8.537.018a.047.047 0 0 0-.048.047v.085c0 .026.021.047.048.047h.52l-.623.9a.052.052 0 0 0-.009.027v.027c0 .026.021.047.048.047h.815a.047.047 0 0 0 .047-.047v-.085a.047.047 0 0 0-.047-.047h-.55l.606-.9a.05.05 0 0 0 .008-.026v-.028a.047.047 0 0 0-.047-.047zm5.303 0a.047.047 0 0 0-.047.047v1.086c0 .026.02.047.047.047h.135a.047.047 0 0 0 .047-.047v-.454h.545v.454c0 .026.02.047.047.047h.134a.047.047 0 0 0 .047-.047v-1.086a.047.047 0 0 0-.047-.047h-.134a.047.047 0 0 0-.047.047v.453h-.545v-.453a.047.047 0 0 0-.047-.047zm-2.324.164c.25 0 .372.194.372.425 0 .219-.109.425-.358.426-.242 0-.375-.197-.375-.419 0-.235.108-.432.36-.432zm5.545 0c.25 0 .372.194.372.425 0 .219-.108.425-.358.426-.242 0-.374-.197-.374-.419 0-.235.108-.432.36-.432z" fill="currentColor"></path></svg>
+      Organization context<span>&nbsp;/ migration</span>
+    </a>
+    <span class="chip">Zoho Analytics API v2</span>
+    <nav class="topnav" aria-label="Guide chapters">
+      <a href="index.html">Start here</a>
+      <a href="01-why-org-context.html">Why</a>
+      <a href="02-whats-changed.html">What changed</a>
+      <a href="03-endpoint-migration.html">Endpoints</a>
+      <a href="04-sdk-migration.html">SDKs</a>
+      <a href="05-knowledge-bases.html" aria-current="page">Tools</a>
+      <a href="06-timeline.html">Timeline</a>
+      <a href="07-troubleshooting.html">Troubleshooting</a>
+      <a href="08-agent-skills.html">Agent skills</a>
+    </nav>
+    <button class="icon-btn nav-toggle" id="nav-toggle" type="button"
+            aria-expanded="false" aria-controls="sidebar"
+            aria-label="Show chapter navigation">&#9776;</button>
+    <button class="icon-btn" id="theme-toggle" type="button"
+            aria-label="Switch colour theme">&#9680;</button>
+  </div>
+</header>
+
+<div class="deadline-bar">
+  <div class="deadline-bar__inner">
+    <span class="chip chip--sdk">SDK 2.10.0</span>
+    <p>These changes apply from <strong>SDK&nbsp;2.10.0</strong> onwards.
+    <a href="04-sdk-migration.html#which-sdk-version-do-i-need">Which version do I need? &rarr;</a></p>
+    <span class="chip chip--deadline">Deadline</span>
+    <p>The replaced endpoints are <strong>deprecated</strong>. They stop answering in
+    <strong>March 2027</strong>. <a href="06-timeline.html">See the timeline &rarr;</a></p>
+  </div>
+</div>
+
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidenav" aria-label="Chapters">
+    <h2>Migration guide</h2>
+    <a href="index.html"><span class="n">00</span><span>Start here</span></a>
+    <a href="01-why-org-context.html"><span class="n">01</span><span>Why org context</span></a>
+    <a href="02-whats-changed.html"><span class="n">02</span><span>What changed</span></a>
+    <a href="03-endpoint-migration.html"><span class="n">03</span><span>Endpoint migration</span></a>
+    <a href="04-sdk-migration.html"><span class="n">04</span><span>SDK migration</span></a>
+    <a href="05-knowledge-bases.html" aria-current="page"><span class="n">05</span><span>Knowledge bases &amp; tools</span></a>
+    <a href="06-timeline.html"><span class="n">06</span><span>Timeline &amp; deprecation</span></a>
+    <a href="07-troubleshooting.html"><span class="n">07</span><span>Troubleshooting &amp; FAQ</span></a>
+    <a href="08-agent-skills.html"><span class="n">08</span><span>AI agent skills</span></a>
+    <h2>Source</h2>
+    <a href="05-knowledge-bases.md"><span class="n">md</span><span>This page as Markdown</span></a>
+    <a href="README.md"><span class="n">&#8212;</span><span>Folder README</span></a>
+    </nav>
+  </aside>
+
+  <main class="doc" id="main">
+<header class="page-head">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <p class="eyebrow">Migration guide &middot; <b>Chapter 05</b></p>
+  <h1>Knowledge bases &amp; tools</h1>
+  <p class="lede">Code is only half the job. A stale contract — an OpenAPI file, a Postman collection, an AI assistant's knowledge bundle — will keep telling you and your team that the old endpoints exist, long after they stop answering. This chapter lists every artefact that describes the API and says exactly what to do with each.</p>
+</header>
+<div class="note note--danger"><div class="note__title">A stale copy is worse than no copy</div><p>An out-of-date spec does not fail loudly. It quietly generates a client, autocompletes a request or answers a developer's question with an endpoint that is <strong>deprecated and switches off in March 2027</strong>. Refresh every artefact in this chapter before you consider the migration finished.</p></div>
+<section id="the-artefacts-at-a-glance">
+<h2><span class="num">01</span>The artefacts, at a glance</h2>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Artefact</th><th>Where it lives</th><th>Who reads it</th><th>What to do</th></tr></thead><tbody><tr><td class="col-narrow">OpenAPI 3.1 specifications</td><td><code>v2.0/oas/</code></td><td>Swagger UI, Redoc, client generators, MCP servers</td><td>Re-pull; regenerate anything generated from it</td></tr><tr><td class="col-narrow">OKF knowledge bundle</td><td><code>v2.0/okf/</code></td><td>AI assistants, RAG indexes, <code>llms.txt</code> consumers</td><td>Re-ingest; <strong>re-index</strong>, do not merge</td></tr><tr><td class="col-narrow">Postman collection</td><td><code>v2.0/postman/</code></td><td>Humans, CI smoke tests</td><td>Re-import as a new version; delete the old fork</td></tr><tr><td class="col-narrow">SDK reference docs</td><td><code>v2.0/sdk/&lt;lang&gt;/docs/</code></td><td>Developers</td><td>Re-publish from source at 2.10.0</td></tr><tr><td class="col-narrow">Narrative API reference</td><td><code>v2.0/md/</code></td><td>Humans, docs site</td><td>Already updated in this repo</td></tr><tr><td class="col-narrow">MCP servers</td><td>your own / third-party</td><td>AI agents</td><td>Rebuild tool definitions from the new spec</td></tr><tr><td class="col-narrow">Internal wikis, runbooks</td><td>wherever yours live</td><td>Everyone</td><td>Search and fix by hand — nothing does this for you</td></tr><tr><td class="col-narrow">Deluge scripts, no-code flows</td><td>Zoho Creator, Flow, CRM functions</td><td>Automations</td><td>Search and fix by hand</td></tr><tr><td class="col-narrow">Monitoring and dashboards</td><td>your observability stack</td><td>On-call</td><td>Add alerts on the old paths</td></tr></tbody></table></div>
+</section>
+<section id="openapi-specifications">
+<h2><span class="num">02</span>OpenAPI specifications</h2>
+<p><strong>What changed in the spec:</strong></p>
+<ul><li>A new tag, <code>Org Level Listings</code>, inside <code>org-management-grouped-api.json</code>, with three operations: <code>getOrgWorkspaces</code>, <code>getOrgDashboards</code>, <code>getOrgRecentItems</code>.</li><li>Eight operations deleted, together with the schemas only they used — <code>GetOrganizationsResponse</code>, <code>OrgList</code>, <code>Org</code>, <code>GetAllWorkspacesResponse</code>, <code>WorkspaceList</code>, <code>WorkspaceSummary</code>, <code>GetOwnedWorkspacesResponse</code>, <code>GetSharedWorkspacesResponse</code>, <code>GetDashboardsResponse</code>, <code>GetDashboardListResponse</code>, <code>DashboardSummary</code>, <code>GetRecentViewsResponse</code>, <code>RecentView</code> and friends.</li><li>The <code>org-id-optional</code> parameter is gone. Every <code>ZANALYTICS-ORGID</code> parameter in every file is now <code>"required": true</code>.</li><li>New schemas: <code>OrgWorkspace</code>, <code>OrgWorkspaceList</code>, <code>GetOrgWorkspacesResponse</code>, <code>GetOrgDashboardsConfig</code>, <code>OrgDashboardView</code>, <code>OrgDashboardList</code>, <code>OrgDashboardPageDetails</code>, <code>GetOrgDashboardsResponse</code>, <code>OrgRecentItem</code>, <code>OrgRecentItemList</code>, <code>GetOrgRecentItemsResponse</code>.</li></ul>
+<p><strong>What to do:</strong></p>
+<ol><li>Pull the current specifications. Do not patch your old copy — operations were removed, and a merge will leave them behind.</li><li>Regenerate anything generated from them: typed clients, request validators, API gateway definitions, mock servers, contract tests.</li><li>Re-check your generated client compiles. Removed operations become removed methods.</li></ol>
+<div class="note note--warn"><div class="note__title">Generated clients fail silently in dynamic languages</div><p>A TypeScript or Java client will not compile against the new spec until you fix the call sites — good. A Python or Ruby client will happily keep an old method in a hand-written wrapper. Grep the wrapper too.</p></div>
+</section>
+<section id="the-okf-knowledge-bundle">
+<h2><span class="num">03</span>The OKF knowledge bundle</h2>
+<p>The OKF bundle in <code>v2.0/okf/</code> is the machine-readable knowledge base that AI assistants read: one document per endpoint, plus shared foundations, workflows, an error-code catalog and an <code>llms.txt</code> entry point.</p>
+<p><strong>What changed:</strong></p>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Item</th><th>Before</th><th>After</th></tr></thead><tbody><tr><td class="col-narrow">Bundle version</td><td><code>1.3.0</code></td><td><strong><code>2.0.0</code></strong> — a major bump, because endpoints were removed</td></tr><tr><td class="col-narrow">Endpoint documents</td><td>168</td><td><strong>205</strong></td></tr><tr><td class="col-narrow">Groups</td><td>33</td><td><strong>40</strong> — including the new <code>org-level-listings</code> group</td></tr><tr><td class="col-narrow">New documents for this change</td><td>—</td><td><code>domains/organization-management/org-level-listings/{get-org-workspaces,get-org-dashboards,get-org-recent-items}.md</code></td></tr><tr><td class="col-narrow">Deleted documents</td><td>—</td><td><code>get-organizations.md</code>, <code>get-all-workspaces.md</code>, <code>get-owned-workspaces.md</code>, <code>get-shared-workspaces.md</code>, <code>get-dashboards.md</code>, <code>get-owned-dashboards.md</code>, <code>get-shared-dashboards.md</code>, <code>get-recent-views.md</code></td></tr><tr><td class="col-narrow"><code>foundations/identifiers.md</code></td><td>"Obtain <code>orgId</code> from Get Org List"</td><td>"Read it from <strong>Settings → Organisation</strong> in the Zoho Analytics UI"</td></tr><tr><td class="col-narrow"><code>foundations/request-conventions.md</code></td><td>Described a "user-scoped" category of endpoint</td><td>That category no longer exists</td></tr><tr><td class="col-narrow"><code>workflows/bootstrap-identifiers.md</code></td><td>Step 1 called Get Org List</td><td>Step 1 reads the ID from the UI</td></tr></tbody></table></div>
+<p>The endpoint count rises by more than the three replacements because release 2.10.0 documents six other new API groups in the same bundle — data alerts, linked workspaces, workspace backup and restore, security controls, custom roles and tags. They are unrelated to organization context, but they arrive in the same re-ingest.</p>
+<p><strong>What to do:</strong></p>
+<ol><li><strong>Re-ingest the whole bundle.</strong> Replace it; do not merge. The major version bump is the signal.</li><li><strong>Rebuild your vector index from scratch.</strong> This matters more than it sounds. An incremental re-index adds the three new documents but leaves the eight deleted ones in the index, so a retrieval query for "list workspaces" still surfaces a dead endpoint — with high confidence, because the old document is well written.</li><li><strong>Check <code>okf/manifest.json</code> reports <code>"version": "2.0.0"</code></strong> after ingestion. That is your proof the swap happened.</li></ol>
+<pre><code class="lang-bash"># Prove the old endpoints are really gone from your ingested copy
+grep -rl "restapi/v2/recentviews\|dashboards/owned\|workspaces/owned" /path/to/your/okf/copy
+# → no output is the correct result</code></pre>
+<div class="note note--danger"><div class="note__title">Retrieval-augmented assistants are the worst offenders</div><p>A RAG index with both the old and the new documents will confidently recommend <code>GET /restapi/v2/dashboards</code> because that document still exists in the index and matches the query well. Users trust the answer, write the code, and ship an integration that breaks in <strong>March 2027</strong>. Drop the index and rebuild it.</p></div>
+</section>
+<section id="postman">
+<h2><span class="num">04</span>Postman</h2>
+<p><strong>What changed:</strong> the collection has 205 requests instead of 210. There is a new folder, <strong>🏢 Organization Management › Org-Level Listings</strong>, with the three new requests. Eight requests are gone. The collection and folder descriptions no longer tell you to run <em>Get Org List</em> to populate <code>organization-id</code>.</p>
+<p><strong>What to do:</strong></p>
+<ol><li>Import the current collection <strong>as a new version</strong>. Do not merge into your existing fork — Postman's merge keeps deleted requests.</li><li>Re-import the environment file too.</li><li>Set <code>organization-id</code> by hand: Zoho Analytics → <strong>Settings → Organisation</strong>. The old bootstrap step (<em>run Get Org List, copy <code>orgId</code></em>) no longer exists.</li><li>Delete your old fork, or rename it <code>DEPRECATED — do not use</code>. Someone on your team has it starred.</li><li>If you run the collection in CI, re-record expected responses. The dashboard listing now returns <code>pageDetails</code>, which your assertions have not seen before.</li></ol>
+</section>
+<section id="sdk-reference-documentation">
+<h2><span class="num">05</span>SDK reference documentation</h2>
+<p>Each SDK publishes 13 pages under <code>v2.0/sdk/&lt;lang&gt;/docs/</code>, generated from the doc comments in <code>&lt;lang&gt;/source/</code>. The pages described here are the <strong>2.10.0</strong> ones; a mirror built from 2.9.0 still documents the removed methods.</p>
+<p><strong>What changed:</strong> <code>reference/analytics-client.md</code> lost ten methods. <code>reference/org-api.md</code> gained four. <code>reference/workspace-api.md</code> gained one. The <em>first call</em> example on every "getting started" page now creates an <code>OrgAPI</code> first.</p>
+<p><strong>What to do:</strong> if you mirror these docs on an internal developer portal, re-publish them. If you wrote your own wrapper library, update its README with the same before-and-after shown in <a href="04-sdk-migration.html">chapter 04</a> — your users read your docs, not Zoho's.</p>
+</section>
+<section id="mcp-servers-and-ai-agents">
+<h2><span class="num">06</span>MCP servers and AI agents</h2>
+<p>If you expose Zoho Analytics to an AI agent through an MCP server, the tool definitions are a contract like any other.</p>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Check</th><th>Action</th></tr></thead><tbody><tr><td class="col-narrow">Tool list</td><td>Remove tools backed by the eight deprecated endpoints. Add three: org workspaces, org dashboards, org recent items.</td></tr><tr><td class="col-narrow">Tool schemas</td><td><code>ZANALYTICS-ORGID</code> must be a <strong>required</strong> input on every tool, not optional.</td></tr><tr><td class="col-narrow">Org selection</td><td>Decide once: pin the server to a single organization at start-up, or make <code>orgId</code> a required argument on every tool. Pinning is simpler and safer.</td></tr><tr><td class="col-narrow">Pagination</td><td>The dashboard tool now returns <code>pageDetails</code>. Either loop internally and return the full list, or expose <code>pageNo</code> and describe <code>hasNextPage</code> in the tool description so the model knows to continue.</td></tr><tr><td class="col-narrow">Tool descriptions</td><td>Rewrite any description saying "across all organizations". That phrasing will make a model reach for the wrong tool.</td></tr><tr><td class="col-narrow">Error handling</td><td>Map <code>8083</code> and <code>8084</code> to a clear message. An agent that sees a bare <code>8083</code> will usually retry the identical request.</td></tr></tbody></table></div>
+<div class="note note--warn"><div class="note__title">Agents retry blindly on an unexplained error</div><p><code>8083</code> means "you forgot the header" — a retry will never fix it. Translate it in your tool's error path to something actionable, such as <em>"This API needs an organization ID. Ask the user which organization to use."</em></p></div>
+</section>
+<section id="internal-documentation-wikis-and-runbooks">
+<h2><span class="num">07</span>Internal documentation, wikis and runbooks</h2>
+<p>Nothing automated will find these. Budget an hour.</p>
+<p>Search your wiki, onboarding docs, architecture diagrams, Slack canvases, support macros and README files for:</p>
+<pre><code class="lang-text">/restapi/v2/orgs
+/restapi/v2/workspaces/owned
+/restapi/v2/workspaces/shared
+/restapi/v2/dashboards/owned
+/restapi/v2/dashboards/shared
+/restapi/v2/recentviews
+getOrgs            get_orgs
+getWorkspaces      get_workspaces
+getDashboards      get_dashboards
+getRecentViews     get_recent_views
+"Get Org List"     "Get All Dashboards"     "Get All Workspace List"
+"Get Owned"        "Get Shared"</code></pre>
+<p>Pay particular attention to <strong>onboarding guides</strong>. A new developer following "step 1: call <code>GET /restapi/v2/orgs</code> to find your org ID" will be stuck on their first morning.</p>
+</section>
+<section id="deluge-scripts-and-no-code-automations">
+<h2><span class="num">08</span>Deluge scripts and no-code automations</h2>
+<p>Deluge code inside Zoho Creator, Zoho Flow and CRM functions calls the API over <code>invokeurl</code> with hand-written headers, so there is no compiler to catch anything.</p>
+<p><strong>Before</strong></p>
+<pre><code class="lang-javascript">response = invokeurl
+[
+  url :"https://analyticsapi.zoho.com/restapi/v2/workspaces"
+  type :GET
+  connection:"analytics_oauth_connection"
+];
+info response;</code></pre>
+<p><strong>After</strong></p>
+<pre><code class="lang-javascript">orgId = "700000123456";
+headersMap = Map();
+headersMap.put("ZANALYTICS-ORGID", orgId);
+response = invokeurl
+[
+  url :"https://analyticsapi.zoho.com/restapi/v2/orgs/workspaces"
+  type :GET
+  headers:headersMap
+  connection:"analytics_oauth_connection"
+];
+info response;</code></pre>
+<p>Two changes on every script: the <strong>URL</strong> and the <strong><code>headers</code> line</strong>. Scripts that already act on a specific workspace probably have the header already — check, do not assume.</p>
+</section>
+<section id="monitoring-prove-you-are-done">
+<h2><span class="num">09</span>Monitoring: prove you are done</h2>
+<p>The most useful thing you can do today is make the old endpoints visible, so you discover forgotten callers now rather than in 2027.</p>
+<ol><li><strong>Add a log-based alert</strong> on any outbound request whose path matches the eight deprecated routes. Alert on count greater than zero.</li><li><strong>Tag the alert with the owning team</strong>, so a hit routes to someone who can fix it.</li><li><strong>Watch it fall to zero.</strong> That is your completion criterion — not "we think we got them all".</li></ol>
+<pre><code class="lang-text">path =~ "^/restapi/v2/orgs$"
+   or path =~ "^/restapi/v2/workspaces$"            # GET only — POST is Create Workspace
+   or path =~ "^/restapi/v2/workspaces/(owned|shared)$"
+   or path =~ "^/restapi/v2/dashboards$"
+   or path =~ "^/restapi/v2/dashboards/(owned|shared)$"
+   or path =~ "^/restapi/v2/recentviews$"</code></pre>
+<div class="note note--good"><div class="note__title">Done means zero for a full billing cycle</div><p>Monthly and quarterly jobs are the ones everyone forgets. Let the alert stay quiet across a complete cycle — including month-end and quarter-end reporting — before you close the migration ticket.</p></div>
+</section>
+<section id="per-artefact-checklist">
+<h2><span class="num">10</span>Per-artefact checklist</h2>
+<pre><code class="lang-text">[ ] OpenAPI specs re-pulled (not merged)
+[ ] Generated clients regenerated and compiling
+[ ] Contract tests / mock servers rebuilt
+[ ] OKF bundle re-ingested at version 2.0.0
+[ ] Vector index DROPPED and rebuilt, not incrementally updated
+[ ] Postman collection re-imported as a new version
+[ ] Postman environment re-imported; organization-id set from the UI
+[ ] Old Postman fork deleted or renamed DEPRECATED
+[ ] SDK upgraded to 2.10.0 and reference docs re-published on the internal portal
+[ ] Wrapper-library README updated
+[ ] MCP tool list, schemas and descriptions updated
+[ ] MCP: ZANALYTICS-ORGID required, 8083/8084 mapped to a clear message
+[ ] Internal wiki / onboarding guides searched and fixed
+[ ] Deluge scripts and no-code flows updated (URL + headers line)
+[ ] Monitoring alert added on the eight deprecated paths
+[ ] Alert quiet for one full billing cycle</code></pre>
+<hr>
+<p>Next: <a href="06-timeline.html">the deprecation timeline</a> — what happens, and when.</p>
+</section>
+    <nav class="pager" aria-label="Chapter">
+      <a href="04-sdk-migration.html"><span class="pager__side">Previous</span>&larr; SDK migration</a>
+      <a href="06-timeline.html" style="margin-left:auto;text-align:right"><span class="pager__side">Next</span>Timeline &amp; deprecation &rarr;</a>
+    </nav>
+  </main>
+
+<aside class="toc" aria-label="On this page">
+  <nav>
+    <h2>On this page</h2>
+    <a href="#the-artefacts-at-a-glance">The artefacts, at a glance</a>
+    <a href="#openapi-specifications">OpenAPI specifications</a>
+    <a href="#the-okf-knowledge-bundle">The OKF knowledge bundle</a>
+    <a href="#postman">Postman</a>
+    <a href="#sdk-reference-documentation">SDK reference documentation</a>
+    <a href="#mcp-servers-and-ai-agents">MCP servers and AI agents</a>
+    <a href="#internal-documentation-wikis-and-runbooks">Internal documentation, wikis and runbooks</a>
+    <a href="#deluge-scripts-and-no-code-automations">Deluge scripts and no-code automations</a>
+    <a href="#monitoring-prove-you-are-done">Monitoring: prove you are done</a>
+    <a href="#per-artefact-checklist">Per-artefact checklist</a>
+  </nav>
+</aside>
+</div>
+
+<footer class="footer">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <div class="footer__inner">
+    <div>
+      <h2>Guide</h2>
+      <a href="index.html">00 &nbsp;Start here</a>
+      <a href="01-why-org-context.html">01 &nbsp;Why org context</a>
+      <a href="02-whats-changed.html">02 &nbsp;What changed</a>
+      <a href="03-endpoint-migration.html">03 &nbsp;Endpoint migration</a>
+      <a href="04-sdk-migration.html">04 &nbsp;SDK migration</a>
+      <a href="05-knowledge-bases.html">05 &nbsp;Knowledge bases &amp; tools</a>
+      <a href="06-timeline.html">06 &nbsp;Timeline &amp; deprecation</a>
+      <a href="07-troubleshooting.html">07 &nbsp;Troubleshooting &amp; FAQ</a>
+      <a href="08-agent-skills.html">08 &nbsp;AI agent skills</a>
+    </div>
+    <div>
+      <h2>Reference</h2>
+      <a href="03-endpoint-migration.html#endpoint-index">Endpoint index</a>
+      <a href="07-troubleshooting.html#error-codes">Error codes</a>
+      <a href="06-timeline.html">Deprecation timeline</a>
+      <a href="01-why-org-context.html#where-to-find-your-organization-id">Find your Organization ID</a>
+    </div>
+    <div class="footer__meta">
+      <h2>About</h2>
+      <p>Migration guide for the Zoho Analytics REST API v2 move to mandatory
+      organization context.</p>
+      <p>Rendered from the Markdown in this folder by <code>build.py</code>.
+      Generated 2026-10-29.</p>
+      <p><strong>Applies from SDK 2.10.0. Old endpoints are removed in
+      March 2027.</strong></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

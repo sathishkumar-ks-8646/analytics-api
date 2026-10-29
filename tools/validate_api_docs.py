@@ -50,9 +50,9 @@ MD_FOLDER_RE = re.compile(r'^(\d{2}) · (.+)$')
 ROOT_ALLOWED = {
     'tools', '.git', '.github', 'manifest.json', 'README.md', 'CHANGELOG.md',
     'LICENSE.md', 'CLAUDE.md', 'AGENTS.md', 'Makefile', '.gitignore',
-    # consumer-facing migration guides, one folder per breaking change; each has
-    # its own build.py --check and is not part of the version pipeline
-    'migration',
+    # consumer-facing copy: release-notes fragments and migration guides. Each
+    # guide has its own build.py --check; none of it is part of the version pipeline
+    'publish',
 }
 # A version directory holds the authored sources (md, zenesis-oas, zenesis-oas-samples)
 # and the artefacts built from them (oas, okf, postman). Only the sources are checked here;

@@ -37,11 +37,14 @@ analytics-api/
 │   └── sdk/                       the seven SDK clients for this version, built by tools/sdkdocs/
 │       └── <lang>/source · sample · docs    one folder per language: Java, Python, C#, Go, PHP, Node.js, Ruby
 │
-├── migration/                     consumer-facing migration guides, one folder per breaking change
-│   └── v2-mandatory-org-context/  v2: every endpoint now requires ZANALYTICS-ORGID (old ones off March 2027)
-│       ├── README.md              how the guide is built and written
-│       ├── build.py               renders each *.md into an *.html sibling
-│       └── index.md / index.html  start here; 8 chapters, Markdown and HTML
+├── publish/                       consumer-facing copy: what an external developer reads on a release
+│   ├── release-notes/             fragments for the hosted Release Notes page, one folder per version
+│   │   └── 2.10.0/                01-newly-added-apis.md, 02-removed-apis.md; pasted, not built
+│   └── guides/                    migration guides, one folder per breaking change
+│       └── v2-mandatory-org-context/  v2: every endpoint now requires ZANALYTICS-ORGID (old ones off March 2027)
+│           ├── README.md          how the guide is built and written
+│           ├── build.py           renders each *.md into an *.html sibling
+│           └── index.md / index.html  start here; 8 chapters, Markdown and HTML
 │
 └── tools/
     ├── validate_api_docs.py       naming, completeness and integrity of the SOURCES of every version
@@ -51,9 +54,10 @@ analytics-api/
     └── api-agent/                 AI-agent workflow: plan.py, scaffold.py, pipeline.py, AGENT.md
 ```
 
-`migration/` is the one tree that is written **for API consumers rather than for this repository**.
-When a change removes or reshapes an endpoint, the migration guide is how an external developer finds
-out what to do about it. Build and validate it with `python3 build.py --check` inside its folder.
+`publish/` is the one tree that is written **for API consumers rather than for this repository**.
+Release notes announce a change; a migration guide is how an external developer finds out what to do
+about it. Guides build and validate with `python3 build.py --check` inside their own folder; release
+notes are authored markdown with no build step. See `publish/README.md` for who publishes what where.
 
 **Sources are authored; everything else is built from them.** An API fact is corrected in `md/`,
 `zenesis-oas/` and `zenesis-oas-samples/` of its version, and flows outward:

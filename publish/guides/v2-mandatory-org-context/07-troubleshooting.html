@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Troubleshooting &amp; FAQ &mdash; Zoho Analytics V2 organization-context migration</title>
+<meta name="description" content="Every error the Zoho Analytics organization-context migration can produce, what it means in plain words, and the fix - plus the questions people ask first.">
+<link rel="stylesheet" href="assets/migration.css">
+<script src="assets/migration.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <a class="wordmark" href="index.html">
+      <svg class="zoho-mark" role="img" aria-label="Zoho" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.66 6.897a1.299 1.299 0 0 0-1.205.765l-.642 1.44-.062-.385A1.291 1.291 0 0 0 5.27 7.648l-4.185.678A1.291 1.291 0 0 0 .016 9.807l.678 4.18a1.293 1.293 0 0 0 1.27 1.087c.074 0 .143-.01.216-.017l4.18-.678c.436-.07.784-.351.96-.723l2.933 1.307a1.304 1.304 0 0 0 .988.026c.321-.12.575-.365.716-.678l.28-.629.038.276a1.297 1.297 0 0 0 1.455 1.103l3.712-.501a1.29 1.29 0 0 0 1.03.514h4.236c.713 0 1.29-.58 1.291-1.291V9.545c0-.712-.58-1.291-1.291-1.291h-4.236c-.079 0-.155.008-.23.022a1.309 1.309 0 0 0-.275-.288c-.275-.21-.614-.3-.958-.253l-4.197.571c-.155.021-.3.07-.432.14L9.159 7.01a1.27 1.27 0 0 0-.499-.113zm-.025.705c.077 0 .159.013.24.052l2.971 1.324c-.128.238-.18.508-.142.782l.357 2.596h.002l-.745 1.672a.59.59 0 0 1-.777.296l-3.107-1.385-.004-.041-.41-2.526L8.1 7.95a.589.589 0 0 1 .536-.348zm-3.159.733c.125 0 .245.039.343.112.13.09.21.227.237.382l.234 1.446-.56 1.259a1.27 1.27 0 0 0-.026.987c.12.322.364.575.678.717l.295.131a.585.585 0 0 1-.428.314l-4.185.678a.59.59 0 0 1-.674-.485l-.678-4.18a.588.588 0 0 1 .485-.674l4.185-.678c.03-.004.064-.01.094-.01zm11.705.09a.59.59 0 0 1 .415.173 1.287 1.287 0 0 0-.416.947v4.237c0 .033.003.065.005.097l-3.55.482a.586.586 0 0 1-.66-.502l-.191-1.403.899-2.017a1.29 1.29 0 0 0-.333-1.5l3.754-.51c.026-.004.051-.004.077-.004zm1.3.532h4.227c.326 0 .588.266.588.588v4.237a.589.589 0 0 1-.588.588h-4.237a.564.564 0 0 1-.12-.013c.47-.246.758-.765.684-1.318zm-5.988.309.254.113c.296.133.43.48.296.777l-.432.97-.207-1.465a.58.58 0 0 1 .09-.395zm5.39.538.453 3.325a.583.583 0 0 1-.453.65zM6.496 11.545l.17 1.052a.588.588 0 0 1-.293-.776zm3.985 4.344a.588.588 0 0 0-.612.603c0 .358.244.61.601.61a.582.582 0 0 0 .607-.608c0-.35-.242-.605-.596-.605zm5.545 0a.588.588 0 0 0-.612.603c0 .358.245.61.602.61a.582.582 0 0 0 .606-.608c0-.35-.24-.605-.596-.605zm-8.537.018a.047.047 0 0 0-.048.047v.085c0 .026.021.047.048.047h.52l-.623.9a.052.052 0 0 0-.009.027v.027c0 .026.021.047.048.047h.815a.047.047 0 0 0 .047-.047v-.085a.047.047 0 0 0-.047-.047h-.55l.606-.9a.05.05 0 0 0 .008-.026v-.028a.047.047 0 0 0-.047-.047zm5.303 0a.047.047 0 0 0-.047.047v1.086c0 .026.02.047.047.047h.135a.047.047 0 0 0 .047-.047v-.454h.545v.454c0 .026.02.047.047.047h.134a.047.047 0 0 0 .047-.047v-1.086a.047.047 0 0 0-.047-.047h-.134a.047.047 0 0 0-.047.047v.453h-.545v-.453a.047.047 0 0 0-.047-.047zm-2.324.164c.25 0 .372.194.372.425 0 .219-.109.425-.358.426-.242 0-.375-.197-.375-.419 0-.235.108-.432.36-.432zm5.545 0c.25 0 .372.194.372.425 0 .219-.108.425-.358.426-.242 0-.374-.197-.374-.419 0-.235.108-.432.36-.432z" fill="currentColor"></path></svg>
+      Organization context<span>&nbsp;/ migration</span>
+    </a>
+    <span class="chip">Zoho Analytics API v2</span>
+    <nav class="topnav" aria-label="Guide chapters">
+      <a href="index.html">Start here</a>
+      <a href="01-why-org-context.html">Why</a>
+      <a href="02-whats-changed.html">What changed</a>
+      <a href="03-endpoint-migration.html">Endpoints</a>
+      <a href="04-sdk-migration.html">SDKs</a>
+      <a href="05-knowledge-bases.html">Tools</a>
+      <a href="06-timeline.html">Timeline</a>
+      <a href="07-troubleshooting.html" aria-current="page">Troubleshooting</a>
+      <a href="08-agent-skills.html">Agent skills</a>
+    </nav>
+    <button class="icon-btn nav-toggle" id="nav-toggle" type="button"
+            aria-expanded="false" aria-controls="sidebar"
+            aria-label="Show chapter navigation">&#9776;</button>
+    <button class="icon-btn" id="theme-toggle" type="button"
+            aria-label="Switch colour theme">&#9680;</button>
+  </div>
+</header>
+
+<div class="deadline-bar">
+  <div class="deadline-bar__inner">
+    <span class="chip chip--sdk">SDK 2.10.0</span>
+    <p>These changes apply from <strong>SDK&nbsp;2.10.0</strong> onwards.
+    <a href="04-sdk-migration.html#which-sdk-version-do-i-need">Which version do I need? &rarr;</a></p>
+    <span class="chip chip--deadline">Deadline</span>
+    <p>The replaced endpoints are <strong>deprecated</strong>. They stop answering in
+    <strong>March 2027</strong>. <a href="06-timeline.html">See the timeline &rarr;</a></p>
+  </div>
+</div>
+
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidenav" aria-label="Chapters">
+    <h2>Migration guide</h2>
+    <a href="index.html"><span class="n">00</span><span>Start here</span></a>
+    <a href="01-why-org-context.html"><span class="n">01</span><span>Why org context</span></a>
+    <a href="02-whats-changed.html"><span class="n">02</span><span>What changed</span></a>
+    <a href="03-endpoint-migration.html"><span class="n">03</span><span>Endpoint migration</span></a>
+    <a href="04-sdk-migration.html"><span class="n">04</span><span>SDK migration</span></a>
+    <a href="05-knowledge-bases.html"><span class="n">05</span><span>Knowledge bases &amp; tools</span></a>
+    <a href="06-timeline.html"><span class="n">06</span><span>Timeline &amp; deprecation</span></a>
+    <a href="07-troubleshooting.html" aria-current="page"><span class="n">07</span><span>Troubleshooting &amp; FAQ</span></a>
+    <a href="08-agent-skills.html"><span class="n">08</span><span>AI agent skills</span></a>
+    <h2>Source</h2>
+    <a href="07-troubleshooting.md"><span class="n">md</span><span>This page as Markdown</span></a>
+    <a href="README.md"><span class="n">&#8212;</span><span>Folder README</span></a>
+    </nav>
+  </aside>
+
+  <main class="doc" id="main">
+<header class="page-head">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <p class="eyebrow">Migration guide &middot; <b>Chapter 07</b></p>
+  <h1>Troubleshooting &amp; FAQ</h1>
+  <p class="lede">What went wrong, why, and what to type instead.</p>
+</header>
+<section id="symptom-first">
+<h2><span class="num">01</span>Symptom first</h2>
+<p>Start here if you have a failure in front of you.</p>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Symptom</th><th>Most likely cause</th><th>Go to</th></tr></thead><tbody><tr><td class="col-narrow"><code>errorCode: 8083</code></td><td>You did not send <code>ZANALYTICS-ORGID</code></td><td><a href="#error-codes">8083</a></td></tr><tr><td class="col-narrow"><code>errorCode: 8084</code></td><td>The Organization ID is wrong or mistyped</td><td><a href="#error-codes">8084</a></td></tr><tr><td class="col-narrow"><code>errorCode: 7301</code> on a call that used to work</td><td>You are not a member of the organization you named</td><td><a href="#error-codes">7301</a></td></tr><tr><td class="col-narrow"><code>errorCode: 7103</code> on a workspace you know exists</td><td>Right workspace, wrong organization in the header</td><td><a href="#error-codes">7103</a></td></tr><tr><td class="col-narrow"><code>errorCode: 7104</code> on a view you know exists</td><td>Right view, wrong organization in the header</td><td><a href="#error-codes">7104</a></td></tr><tr><td class="col-narrow"><code>errorCode: 7476</code></td><td>More than 100 workspaces in scope for the dashboard listing</td><td><a href="#error-codes">7476</a></td></tr><tr><td class="col-narrow"><code>errorCode: 7387</code></td><td>A <code>workspaceIds</code> entry is not in this organization</td><td><a href="#error-codes">7387</a></td></tr><tr><td class="col-narrow">404 / "no such endpoint"</td><td>You are calling a deprecated path after removal</td><td><a href="06-timeline.html">Timeline</a></td></tr><tr><td class="col-narrow">Empty list, no error</td><td>Correct behaviour — nothing is visible to this caller</td><td><a href="01-why-org-context.html#the-new-model">Why: empty lists</a></td></tr><tr><td class="col-narrow"><code>KeyError: 'ownedWorkspaces'</code></td><td>The response shape changed</td><td><a href="03-endpoint-migration.html#the-three-workspace-listings">Field mapping</a></td></tr><tr><td class="col-narrow"><code>TypeError: list indices must be integers</code></td><td><code>getOrgDashboards</code> returns an object, not an array</td><td><a href="04-sdk-migration.html#errors-your-build-will-throw-and-what-they-mean">Runtime trap</a></td></tr><tr><td class="col-narrow">Only ever 100 dashboards come back</td><td>You are not paging</td><td><a href="#q-why-do-i-only-get-100-dashboards">Paging</a></td></tr><tr><td class="col-narrow">Dashboard list is empty for everyone</td><td>Access Restrictions, or org-level listing switched off</td><td><a href="#error-codes">7430 / 7431</a></td></tr><tr><td class="col-narrow"><code>NoMethodError</code> / <code>cannot find symbol</code> after upgrading to SDK 2.10.0</td><td>The method moved off <code>AnalyticsClient</code></td><td><a href="04-sdk-migration.html#the-method-map">Method map</a></td></tr></tbody></table></div>
+</section>
+<section id="error-codes">
+<h2><span class="num">02</span>Error codes</h2>
+<p>Every code this change can produce. The failure body always looks like this:</p>
+<pre><code class="lang-json">{
+  "status": "failure",
+  "summary": "ORGID_NOT_PRESENT_IN_THE_HEADER",
+  "data": {
+    "errorCode": 8083,
+    "errorMessage": "Organization id is not present in the header."
+  }
+}</code></pre>
+<p>Branch on <code>data.errorCode</code>. <code>summary</code> is the symbolic name; <code>errorMessage</code> is human text and may be localised.</p>
+<h3 id="header-and-organization">Header and organization</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Code</th><th>Name</th><th>In plain words</th><th>Fix</th></tr></thead><tbody><tr><td class="col-narrow"><code>8083</code></td><td><code>ORGID_NOT_PRESENT_IN_THE_HEADER</code></td><td>You did not send <code>ZANALYTICS-ORGID</code>, or sent it empty.</td><td>Add the header. If this appears everywhere at once, you missed the shared request builder.</td></tr><tr><td class="col-narrow"><code>8084</code></td><td><code>ORGID_NOT_EXIST</code></td><td>No organization has that ID. Usually a typo, a truncated number, or an ID from a different data centre.</td><td>Re-read it from <strong>Settings → Organisation</strong>. Keep it a <strong>string</strong> — these numbers overflow a 32-bit integer.</td></tr><tr><td class="col-narrow"><code>7301</code></td><td><code>SECURITY_NOT_PERMITTED</code></td><td>The organization exists, but the authenticated user is not an active member of it. Also returned when Get Org Dashboards is called through a Client Portal / White Label domain.</td><td>Check that the token and the organization belong together. For Client Portal, use the standard API host.</td></tr></tbody></table></div>
+<div class="note note--warn"><div class="note__title">8084 is often a type problem, not a typo</div><p>Organization IDs such as <code>700000123456</code> exceed 32-bit range. In JavaScript they also exceed <code>Number.MAX_SAFE_INTEGER</code> territory once concatenated with other IDs. <strong>Carry them as strings everywhere.</strong> A silently truncated ID produces <code>8084</code> and looks like a typo.</p></div>
+<h3 id="target-not-found-in-this-organization">Target not found in this organization</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Code</th><th>Name</th><th>In plain words</th><th>Fix</th></tr></thead><tbody><tr><td class="col-narrow"><code>7103</code></td><td>—</td><td>The workspace was not found <strong>in the organization you named</strong>.</td><td>The workspace probably lives in a different organization. Check the header before you doubt the ID.</td></tr><tr><td class="col-narrow"><code>7104</code></td><td><code>META_OBJECT_NOT_PRESENT</code></td><td>The view was not found <strong>in the organization you named</strong>.</td><td>Same — check the header first.</td></tr></tbody></table></div>
+<p>These two codes existed before, but their meaning narrowed: they used to mean "does not exist anywhere", and now mean "does not exist <em>here</em>".</p>
+<h3 id="dashboard-listing-only">Dashboard listing only</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Code</th><th>Name</th><th>In plain words</th><th>Fix</th></tr></thead><tbody><tr><td class="col-narrow"><code>7387</code></td><td><code>DBID_NOT_BELONGS_TO_ZSOID</code></td><td>One of the <code>workspaceIds</code> you sent belongs to another organization, or does not exist. The <strong>whole request</strong> fails; bad IDs are not skipped.</td><td>Build the list from <code>Get Org Workspaces</code> for the same organization.</td></tr><tr><td class="col-narrow"><code>7430</code></td><td><code>ORG_LEVEL_VIEWS_NOT_ALLOWED</code></td><td>Org-level view listing is switched off for this organization. You see this code because you are the Account Admin.</td><td>Use the workspace-level view APIs, or contact support to enable it.</td></tr><tr><td class="col-narrow"><code>7431</code></td><td><code>ORG_LEVEL_VIEWS_NOT_ALLOWED_WL_USERS</code></td><td>Same setting, reported to everyone who is not the Account Admin.</td><td>Use the workspace-level APIs, or ask your Account Admin.</td></tr><tr><td class="col-narrow"><code>7476</code></td><td><code>ORG_LEVEL_VIEWS_WS_MORE_THAN_ALLOWED_LIMIT</code></td><td>You omitted <code>workspaceIds</code> and the caller can see more than 100 workspaces.</td><td>Send <code>workspaceIds</code> in batches of 100. See the <a href="03-endpoint-migration.html#the-100-workspace-cap">recipe</a>.</td></tr></tbody></table></div>
+<h3 id="config-validation">CONFIG validation</h3>
+<p>These are rejected by the request filter before the handler runs, so they tell you about the request, not about your data.</p>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Code</th><th>Name</th><th>In plain words</th><th>Fix</th></tr></thead><tbody><tr><td class="col-narrow"><code>8507</code></td><td><code>MORE_THAN_MAX_LENGTH</code></td><td><code>searchKey</code> over 100 characters, <code>workspaceIds</code> over 10,000 characters, or CONFIG over 11,000 characters.</td><td>Shorten it, or send fewer workspace IDs per call.</td></tr><tr><td class="col-narrow"><code>8516</code></td><td><code>UNABLE_TO_PARSE_DATA_TYPE</code></td><td><code>pageNo</code> or <code>recordsPerPage</code> arrived as a string, not a number.</td><td>Send <code>{"pageNo": 2}</code>, not <code>{"pageNo": "2"}</code>.</td></tr><tr><td class="col-narrow"><code>8534</code></td><td><code>JSON_PARSE_ERROR</code></td><td>CONFIG is not valid JSON, or <code>workspaceIds</code> is not an array.</td><td>Stringify the JSON, then URL-encode it. Encode once, not twice.</td></tr><tr><td class="col-narrow"><code>8539</code></td><td><code>INVALID_VALUE_NOT_ALLOWED</code></td><td>A CONFIG value is <code>null</code>, empty or blank — including a single blank <code>workspaceIds</code> entry.</td><td><strong>Leave the key out</strong> rather than sending an empty value.</td></tr><tr><td class="col-narrow"><code>8542</code></td><td><code>EXTRA_KEY_FOUND_IN_JSON</code></td><td>CONFIG has a key other than <code>workspaceIds</code>, <code>pageNo</code>, <code>recordsPerPage</code>, <code>searchKey</code>.</td><td>Remove it. Check for typos such as <code>pageNum</code>.</td></tr><tr><td class="col-narrow"><code>8544</code></td><td><code>OUT_OF_RANGE</code></td><td><code>pageNo</code> outside 1–1,000, or <code>recordsPerPage</code> outside 1–500.</td><td>Clamp before sending. <code>recordsPerPage: 1000</code> is a common mistake — the cap is 500.</td></tr><tr><td class="col-narrow"><code>8547</code></td><td><code>ARRAY_SIZE_OUT_OF_RANGE</code></td><td>More than 1,000 entries in <code>workspaceIds</code>.</td><td>Batch. In practice stay at or under 100 because of <code>7476</code>.</td></tr></tbody></table></div>
+<h3 id="authentication">Authentication</h3>
+<div class="table-wrap"><table><thead><tr><th class="col-narrow">Code</th><th>Name</th><th>Fix</th></tr></thead><tbody><tr><td class="col-narrow"><code>8535</code></td><td><code>INVALID_OAUTHTOKEN</code></td><td>Refresh the token. All three new endpoints need <code>ZohoAnalytics.metadata.read</code> — the same scope the old ones used, so this is not caused by the migration.</td></tr></tbody></table></div>
+</section>
+<section id="frequently-asked-questions">
+<h2><span class="num">03</span>Frequently asked questions</h2>
+<h3 id="q-can-i-just-keep-sending-the-old-endpoints-until-2027">Q. Can I just keep sending the old endpoints until 2027?</h3>
+<p>They will answer until then, so technically yes — and if you stay on SDK 2.9.0 or below, the methods are still there to call. But they get no fixes, no new fields and no support, and SDK 2.10.0 onwards does not expose them, so you are also pinned to an old client. Anything you ship today against a deprecated endpoint is work you have committed to redoing before <strong>March 2027</strong>.</p>
+<h3 id="q-why-was-there-no-automatic-redirect-from-the-old-url-to-the-new-one">Q. Why was there no automatic redirect from the old URL to the new one?</h3>
+<p>Because a redirect would be a lie. <code>GET /restapi/v2/workspaces</code> returned <code>ownedWorkspaces</code> and <code>sharedWorkspaces</code> across every organization; <code>GET /restapi/v2/orgs/workspaces</code> returns <code>workspaces</code> for one. A client following a redirect would get a 200 with a body it cannot parse — a harder failure to diagnose than a clear error.</p>
+<h3 id="q-where-do-i-get-the-organization-id-now">Q. Where do I get the Organization ID now?</h3>
+<p>Zoho Analytics → <strong>Settings → Organisation</strong>. Copy it once into configuration. See <a href="01-why-org-context.html#where-to-find-your-organization-id">chapter 01</a>.</p>
+<h3 id="q-my-application-serves-users-across-several-organizations-what-now">Q. My application serves users across several organizations. What now?</h3>
+<p>Keep a list of Organization IDs in your own configuration or database and loop over it, sending a different <code>ZANALYTICS-ORGID</code> per iteration. The <a href="03-endpoint-migration.html#recipe-i-used-to-list-across-every-organization">fan-out recipe</a> has working code. If you cannot know the organizations in advance, add an "Add organization" step to your setup flow and ask the user for the ID.</p>
+<h3 id="q-why-do-i-only-get-100-dashboards">Q. Why do I only get 100 dashboards?</h3>
+<p><code>recordsPerPage</code> defaults to <strong>100</strong> and the endpoint is paged. Loop while <code>data.pageDetails.hasNextPage</code> is <code>true</code>. Do not stop because a page came back short — <code>hasNextPage</code> is computed after filtering, so a short page can still have more behind it. <a href="03-endpoint-migration.html#paging-correctly">Paging code</a>.</p>
+<h3 id="q-how-do-i-tell-owned-dashboards-from-shared-ones-now">Q. How do I tell owned dashboards from shared ones now?</h3>
+<p><code>sharedBy</code> on each entry holds the email address of whoever shared it with you; it is empty or absent for things you own. Same for workspaces, using <code>createdBy</code>. The information moved from the URL into the row.</p>
+<h3 id="q-isdefault-used-to-mean-the-organizations-default-workspace-did-that-change">Q. <code>isDefault</code> used to mean the organization's default workspace. Did that change?</h3>
+<p>The old reference said that, and it was wrong. <code>isDefault</code> has always been <strong>per user</strong> — it is <code>true</code> for the calling user's own default workspace. The new reference states this explicitly. Do not cache it as a property of the workspace; two users see different values for the same row.</p>
+<h3 id="q-can-i-still-get-a-list-of-every-organization-i-belong-to">Q. Can I still get a list of every organization I belong to?</h3>
+<p>Not from the API. That capability was the thing being removed: the API no longer discovers organizations for you, it acts on the one you name. Read the ID from the UI and configure it.</p>
+<h3 id="q-do-i-need-new-oauth-scopes">Q. Do I need new OAuth scopes?</h3>
+<p>No. All three replacements use <code>ZohoAnalytics.metadata.read</code>, exactly like the endpoints they replace. Existing tokens work unchanged.</p>
+<h3 id="q-does-this-affect-data-import-or-export">Q. Does this affect data import or export?</h3>
+<p>No. Import, export, row operations, schema operations and everything else under <code>/workspaces/{workspace-id}/…</code> already required the header and are untouched.</p>
+<h3 id="q-is-post-restapiv2workspaces-affected">Q. Is <code>POST /restapi/v2/workspaces</code> affected?</h3>
+<p>No. Only the <code>GET</code> on that path was removed. Create Workspace is unchanged. Check the method before acting on a grep hit.</p>
+<h3 id="q-why-did-getviewdetails-move-to-orgapi-rather-than-viewapi">Q. Why did <code>getViewDetails</code> move to <code>OrgAPI</code> rather than <code>ViewAPI</code>?</h3>
+<p>A <code>ViewAPI</code> instance is constructed from an organization <strong>and a workspace and a view</strong>. The Get View Details endpoint has no workspace in its URL — it resolves the view from the organization alone. <code>OrgAPI</code> carries exactly an organization, so it is the honest home. Putting it on <code>ViewAPI</code> would force you to supply a workspace ID the endpoint never uses.</p>
+<h3 id="q-why-did-getworkspacedetails-lose-its-workspaceid-argument">Q. Why did <code>getWorkspaceDetails</code> lose its <code>workspaceId</code> argument?</h3>
+<p>Because <code>WorkspaceAPI</code> already holds it: you passed it to <code>getWorkspaceInstance(orgId, workspaceId)</code>. Passing it again would let the two disagree. The method gained an optional <code>config</code> argument instead, for <code>withUserRoleInfo</code>.</p>
+<h3 id="q-what-happens-to-recent-items-i-viewed-in-my-other-organizations">Q. What happens to recent items I viewed in my other organizations?</h3>
+<p>They are still there, in those organizations. Call <code>GET /restapi/v2/orgs/recentitems</code> once per organization with the matching header. The list is capped at 20 entries <strong>per organization</strong>.</p>
+<h3 id="q-the-new-recent-items-list-points-at-a-view-i-cannot-open-bug">Q. The new recent-items list points at a view I cannot open. Bug?</h3>
+<p>No — documented behaviour. Recent items are filtered by <em>workspace</em> visibility only, with no view-level check. Treat <code>viewId</code> as a hint and handle a refusal when you open it.</p>
+<h3 id="q-our-ai-assistant-keeps-suggesting-the-old-endpoints">Q. Our AI assistant keeps suggesting the old endpoints.</h3>
+<p>Its knowledge index still contains the deleted documents. An incremental re-index adds the new ones but does not remove the old. <strong>Drop the index and rebuild it</strong> from OKF bundle <code>2.0.0</code>. See <a href="05-knowledge-bases.html#the-okf-knowledge-bundle">chapter 05</a>.</p>
+<h3 id="q-how-do-i-know-when-i-am-finished">Q. How do I know when I am finished?</h3>
+<p>Three things, all true at once: the grep is clean, the monitoring alert on the deprecated paths has been silent for a full billing cycle, and every contract copy (OpenAPI, Postman, OKF, MCP) has been refreshed. <a href="06-timeline.html#prove-you-are-ready">The full check</a>.</p>
+</section>
+<section id="still-stuck">
+<h2><span class="num">04</span>Still stuck</h2>
+<ol><li>Re-read the <a href="03-endpoint-migration.html">endpoint section</a> for the specific call. The field mapping tables catch most parsing failures.</li><li>Reproduce the call with <code>curl</code>, with the header written out by hand. That separates "my code is wrong" from "my request is wrong".</li></ol>
+<pre><code class="lang-bash">curl -s "https://analyticsapi.zoho.com/restapi/v2/orgs/workspaces" \
+  -H 'ZANALYTICS-ORGID: 700000123456' \
+  -H 'Authorization: Zoho-oauthtoken 1000.xxxxxx.yyyyyy'</code></pre>
+<ol><li>If that works and your code does not, the difference is in your client — usually a missing header, a double-encoded CONFIG, or an Organization ID that became a number somewhere.</li></ol>
+<div class="sunset"><span class="sunset__icon">Deprecated</span><div><p>A last reminder: the eight endpoints this guide replaces are <strong>deprecated</strong> and stop answering in <strong>March 2027</strong>. If you are reading this page because something broke, check the <a href="06-timeline.html">timeline</a> first — the fix may simply be that the endpoint no longer exists.</p></div></div>
+<hr>
+<p>Back to <a href="index.html">the start</a>.</p>
+</section>
+    <nav class="pager" aria-label="Chapter">
+      <a href="06-timeline.html"><span class="pager__side">Previous</span>&larr; Timeline &amp; deprecation</a>
+      <a href="08-agent-skills.html" style="margin-left:auto;text-align:right"><span class="pager__side">Next</span>AI agent skills &rarr;</a>
+    </nav>
+  </main>
+
+<aside class="toc" aria-label="On this page">
+  <nav>
+    <h2>On this page</h2>
+    <a href="#symptom-first">Symptom first</a>
+    <a href="#error-codes">Error codes</a>
+    <a href="#frequently-asked-questions">Frequently asked questions</a>
+    <a href="#still-stuck">Still stuck</a>
+  </nav>
+</aside>
+</div>
+
+<footer class="footer">
+  <div class="spine"><i></i><i></i><i></i><i></i></div>
+  <div class="footer__inner">
+    <div>
+      <h2>Guide</h2>
+      <a href="index.html">00 &nbsp;Start here</a>
+      <a href="01-why-org-context.html">01 &nbsp;Why org context</a>
+      <a href="02-whats-changed.html">02 &nbsp;What changed</a>
+      <a href="03-endpoint-migration.html">03 &nbsp;Endpoint migration</a>
+      <a href="04-sdk-migration.html">04 &nbsp;SDK migration</a>
+      <a href="05-knowledge-bases.html">05 &nbsp;Knowledge bases &amp; tools</a>
+      <a href="06-timeline.html">06 &nbsp;Timeline &amp; deprecation</a>
+      <a href="07-troubleshooting.html">07 &nbsp;Troubleshooting &amp; FAQ</a>
+      <a href="08-agent-skills.html">08 &nbsp;AI agent skills</a>
+    </div>
+    <div>
+      <h2>Reference</h2>
+      <a href="03-endpoint-migration.html#endpoint-index">Endpoint index</a>
+      <a href="07-troubleshooting.html#error-codes">Error codes</a>
+      <a href="06-timeline.html">Deprecation timeline</a>
+      <a href="01-why-org-context.html#where-to-find-your-organization-id">Find your Organization ID</a>
+    </div>
+    <div class="footer__meta">
+      <h2>About</h2>
+      <p>Migration guide for the Zoho Analytics REST API v2 move to mandatory
+      organization context.</p>
+      <p>Rendered from the Markdown in this folder by <code>build.py</code>.
+      Generated 2026-10-29.</p>
+      <p><strong>Applies from SDK 2.10.0. Old endpoints are removed in
+      March 2027.</strong></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
