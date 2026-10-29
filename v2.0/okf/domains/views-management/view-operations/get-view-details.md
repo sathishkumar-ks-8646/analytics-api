@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/views/{view-id}"
   domain: views-management
   group: view-operations
+  api_units:
+    api_id: 3013
+    action: GET_VIEW_DETAILS
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -77,6 +85,8 @@ By default only the base attributes are returned. Setting `withInvolvedMetaInfo`
 | Permission required | The authenticated user must have at least Read Only permission on the view. This includes Account Admins, Organization Admins, Workspace Admins, View Owners, and any user with Read Only or higher access to the view. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_VIEW_DETAILS` (api-id `3013`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`views-management-grouped-api.json`](../../../references/openapi/views-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1views~1{view-id}/get`; CONFIG schema `GetViewDetailsConfig`; response schema `GetViewDetailsResponse` |
 
 # Request
@@ -459,3 +469,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Save As View](save-as-view.md), [Copy Views](copy-views.md), [Create Similar Views](create-similar-views.md), [Rename View](rename-view.md), [Delete View](delete-view.md), [Get View List](get-views.md), [Get View URL](get-view-url.md), [Get View Dependents](get-view-dependents.md).
 - [SDK examples](../../../sdk-examples/views-management/view-operations/get-view-details.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

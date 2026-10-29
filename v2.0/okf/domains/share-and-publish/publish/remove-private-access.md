@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink"
   domain: share-and-publish
   group: publish
+  api_units:
+    api_id: 5012
+    action: REMOVE_PRIVATE_PERMISSION
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.embed.delete
   org_id_header: required
@@ -72,6 +80,8 @@ Removes the view's **Private URL** entirely — the private key, the associated 
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Publish permission on the workspace, or any user with Share permission on the view. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 204 with no body |
+| API units | 1 unit per request - action `REMOVE_PRIVATE_PERMISSION` (api-id `5012`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`share-publish-grouped-api.json`](../../../references/openapi/share-publish-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1privatelink/delete` |
 
 # Request
@@ -188,3 +198,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Make View Public](make-views-public.md), [Remove Public Permission](remove-public-permission.md), [Get Private URL](get-private-url.md), [Create Private URL](create-private-url.md), [Get Publish Configurations](get-publish-configurations.md), [Update Publish Configurations](update-publish-configurations.md).
 - [SDK examples](../../../sdk-examples/share-and-publish/publish/remove-private-access.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

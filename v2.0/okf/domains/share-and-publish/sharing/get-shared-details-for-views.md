@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/share/shareddetails"
   domain: share-and-publish
   group: sharing
+  api_units:
+    api_id: 4010
+    action: GET_SHARED_DETAILS_FOR_VIEW
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.share.read
   org_id_header: required
@@ -66,6 +74,8 @@ Returns detailed share information — per user and per group, including permiss
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Share permission on all of the specified viewIds. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - **mandatory** |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_SHARED_DETAILS_FOR_VIEW` (api-id `4010`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`share-publish-grouped-api.json`](../../../references/openapi/share-publish-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1share~1shareddetails/get`; CONFIG schema `GetSharedDetailsConfig`; response schema `GetSharedDetailsResponse` |
 
 # Request
@@ -364,3 +374,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Workspace Shared Details](get-workspace-shared-details.md), [Share Views](share-views.md), [Update Shared Details](update-shared-details-for-view.md), [Remove Shared Views](remove-share.md), [Get My Permissions](get-user-permissions.md).
 - [SDK examples](../../../sdk-examples/share-and-publish/sharing/get-shared-details-for-views.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

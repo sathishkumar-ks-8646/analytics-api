@@ -17,26 +17,44 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/emailschedules"
       doc: "/domains/schedules-and-alerts/email-schedules/get-email-schedules.md"
+      api_units: 1
+      api_units_action: GET EMAIL SCHEDULES
+      api_units_category: METADATA
     - operation_id: createEmailSchedule
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/emailschedules"
       doc: "/domains/schedules-and-alerts/email-schedules/create-email-schedule.md"
+      api_units: 3
+      api_units_action: CREATE_EMAIL_SCHEDULE
+      api_units_category: METADATA
     - operation_id: updateEmailSchedule
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}"
       doc: "/domains/schedules-and-alerts/email-schedules/update-email-schedule.md"
+      api_units: 3
+      api_units_action: UPDATE_EMAIL_SCHEDULE
+      api_units_category: METADATA
     - operation_id: deleteEmailSchedule
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}"
       doc: "/domains/schedules-and-alerts/email-schedules/delete-email-schedule.md"
+      api_units: 3
+      api_units_action: DELETE_EMAIL_SCHEDULE
+      api_units_category: METADATA
     - operation_id: changeEmailScheduleStatus
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status"
       doc: "/domains/schedules-and-alerts/email-schedules/change-email-schedule-status.md"
+      api_units: 1
+      api_units_action: CHANGE_EMAIL_SCHEDULE_STATUS
+      api_units_category: METADATA
     - operation_id: triggerEmailSchedule
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}"
       doc: "/domains/schedules-and-alerts/email-schedules/trigger-email-schedule.md"
+      api_units: 1
+      api_units_action: TRIGGER_EMAIL_SCHEDULE
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
@@ -57,14 +75,14 @@ APIs for creating, updating, triggering, and deleting email schedules, and retri
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Email Schedules](get-email-schedules.md) | GET | `/restapi/v2/workspaces/{workspace-id}/emailschedules` | `getEmailSchedules` | `ZohoAnalytics.metadata.read` | 200 |
-| [Create Email Schedule](create-email-schedule.md) | POST | `/restapi/v2/workspaces/{workspace-id}/emailschedules` | `createEmailSchedule` | `ZohoAnalytics.modeling.create` | 200 |
-| [Update Email Schedule](update-email-schedule.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `updateEmailSchedule` | `ZohoAnalytics.modeling.update` | 200 |
-| [Delete Email Schedule](delete-email-schedule.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `deleteEmailSchedule` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Change Email Schedule Status](change-email-schedule-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status` | `changeEmailScheduleStatus` | `ZohoAnalytics.modeling.update` | 204 |
-| [Trigger Email Schedule](trigger-email-schedule.md) | POST | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `triggerEmailSchedule` | `ZohoAnalytics.modeling.create` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Email Schedules](get-email-schedules.md) | GET | `/restapi/v2/workspaces/{workspace-id}/emailschedules` | `getEmailSchedules` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Create Email Schedule](create-email-schedule.md) | POST | `/restapi/v2/workspaces/{workspace-id}/emailschedules` | `createEmailSchedule` | `ZohoAnalytics.modeling.create` | 200 | 3 |
+| [Update Email Schedule](update-email-schedule.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `updateEmailSchedule` | `ZohoAnalytics.modeling.update` | 200 | 3 |
+| [Delete Email Schedule](delete-email-schedule.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `deleteEmailSchedule` | `ZohoAnalytics.modeling.delete` | 204 | 3 |
+| [Change Email Schedule Status](change-email-schedule-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}/status` | `changeEmailScheduleStatus` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Trigger Email Schedule](trigger-email-schedule.md) | POST | `/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}` | `triggerEmailSchedule` | `ZohoAnalytics.modeling.create` | 204 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

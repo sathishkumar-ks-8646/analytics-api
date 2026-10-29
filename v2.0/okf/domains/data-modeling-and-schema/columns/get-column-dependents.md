@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/dependents"
   domain: data-modeling-and-schema
   group: columns
+  api_units:
+    api_id: 3030
+    action: GET_COLUMN_DEPENDENTS
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -69,6 +77,8 @@ Returns all views, custom formula columns, and aggregate formulas that depend on
 | Permission required | The authenticated user must be a Workspace Admin of the specified workspace. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_COLUMN_DEPENDENTS` (api-id `3030`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-modeling-schema-grouped-api.json`](../../../references/openapi/data-modeling-schema-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1{column-id}~1dependents/get`; response schema `GetColumnDependentsResponse` |
 
 # Request
@@ -236,3 +246,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Add Column](add-column.md), [Rename Column](rename-column.md), [Delete Column](delete-column.md), [Hide Columns](hide-columns.md), [Show Columns](show-columns.md), [Sort Data by Columns](sort-data-by-columns.md), [Reorder Columns](reorder-columns.md).
 - [SDK examples](../../../sdk-examples/data-modeling-and-schema/columns/get-column-dependents.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

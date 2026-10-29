@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embedurls"
   domain: share-and-publish
   group: embed-url
+  api_units:
+    api_id: 5017
+    action: FETCH_ALL_EMBED_URLS
+    category: METADATA
+    units: 0.5
+    units_basis: per_request
+    units_note: "0.5 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.embed.read
   org_id_header: required
@@ -63,6 +71,8 @@ Lists the embed URLs that have been issued for a view, together with the permiss
 | Permission required | The authenticated user must be an Account Admin or Organization Admin of the organization. The caller must also hold Publish permission or Make Public permission on the view, and the organization or workspace must be enabled for Embedded Analytics, otherwise 8023. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.5 units per request - action `FETCH_ALL_EMBED_URLS` (api-id `5017`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | Not present in the OpenAPI files (markdown reference only). |
 
 # Request
@@ -359,3 +369,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Embed URL](get-embed-url.md), [Delete Embed URL](delete-embed-url.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

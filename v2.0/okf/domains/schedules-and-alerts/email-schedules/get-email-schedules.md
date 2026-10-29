@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/emailschedules"
   domain: schedules-and-alerts
   group: email-schedules
+  api_units:
+    api_id: 3038
+    action: GET EMAIL SCHEDULES
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -69,6 +77,8 @@ Returns every email schedule defined in the workspace, with its name, run period
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Email Schedule permission on the workspace. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 1 unit per request - action `GET EMAIL SCHEDULES` (api-id `3038`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`schedules-alerts-grouped-api.json`](../../../references/openapi/schedules-alerts-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1emailschedules/get`; response schema `GetEmailSchedulesResponse` |
 
 # Request
@@ -235,3 +245,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Email Schedule](create-email-schedule.md), [Update Email Schedule](update-email-schedule.md), [Delete Email Schedule](delete-email-schedule.md), [Change Email Schedule Status](change-email-schedule-status.md), [Trigger Email Schedule](trigger-email-schedule.md).
 - [SDK examples](../../../sdk-examples/schedules-and-alerts/email-schedules/get-email-schedules.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

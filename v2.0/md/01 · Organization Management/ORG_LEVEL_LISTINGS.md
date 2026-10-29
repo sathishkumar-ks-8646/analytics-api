@@ -28,11 +28,11 @@ An org-level listing answers "what can **I** see in this organisation?" without 
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Org Workspaces](#1-get-org-workspaces) | GET | `/restapi/v2/orgs/workspaces` |
-| 2 | [Get Org Dashboards](#2-get-org-dashboards) | GET | `/restapi/v2/orgs/dashboards` |
-| 3 | [Get Org Recent Items](#3-get-org-recent-items) | GET | `/restapi/v2/orgs/recentitems` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Org Workspaces](#1-get-org-workspaces) | GET | `/restapi/v2/orgs/workspaces` | 0.1 |
+| 2 | [Get Org Dashboards](#2-get-org-dashboards) | GET | `/restapi/v2/orgs/dashboards` | 0.1 |
+| 3 | [Get Org Recent Items](#3-get-org-recent-items) | GET | `/restapi/v2/orgs/recentitems` | 0.1 |
 
 > **Note:** all three are read-only. There is no `POST`, `PUT` or `DELETE` on these paths.
 
@@ -113,6 +113,8 @@ Returns the workspaces of one organisation that the caller can reach. Supplies t
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation whose workspaces are listed. |
 | **Permission Required** | The authenticated user must be an active user of the organisation. Account Admins and Organization Admins see every active workspace; other users see only the workspaces shared with them. |
+| **API Units** | 0.1 units per request — gateway action `GET_WORKSPACES` (api-id `3043`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -247,6 +249,8 @@ Returns the dashboards of one organisation that the caller can read, across all 
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation whose dashboards are listed. |
 | **Permission Required** | The authenticated user must be a member of the organisation. Only dashboards the user may read are returned. Not available on Client Portal / White Label domains (`7301`). |
+| **API Units** | 0.1 units per request — gateway action `GET_ORG_DASHBOARDS` (api-id `3044`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -488,6 +492,8 @@ Returns the views the caller opened most recently in one organisation, of any vi
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation whose recent items are listed. |
 | **Permission Required** | The authenticated user must be an active user of the organisation. Only the caller's own history is returned. |
+| **API Units** | 0.1 units per request — gateway action `GET_RECENT_VIEWS` (api-id `3007`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -718,3 +724,36 @@ ZANALYTICS-ORGID: 700000123456
 | `searchKey` | — | ✔ | — |
 
 > Only [Get Org Dashboards](#2-get-org-dashboards) takes a CONFIG.
+
+---
+
+## Appendix G – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Org Workspaces](#1-get-org-workspaces) | `GET_WORKSPACES` (3043) | METADATA | 0.1 | per request |
+| 2 | [Get Org Dashboards](#2-get-org-dashboards) | `GET_ORG_DASHBOARDS` (3044) | METADATA | 0.1 | per request |
+| 3 | [Get Org Recent Items](#3-get-org-recent-items) | `GET_RECENT_VIEWS` (3007) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

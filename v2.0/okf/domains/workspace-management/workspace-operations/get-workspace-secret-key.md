@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/secretkey"
   domain: workspace-management
   group: workspace-operations
+  api_units:
+    api_id: 3011
+    action: GET_WORKSPACE_SECRETKEY
+    category: METADATA
+    units: 0.5
+    units_basis: per_request
+    units_note: "0.5 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -69,6 +77,8 @@ The key can optionally be regenerated, which invalidates the previous key. Any p
 | Permission required | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.5 units per request - action `GET_WORKSPACE_SECRETKEY` (api-id `3011`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`workspace-management-grouped-api.json`](../../../references/openapi/workspace-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1secretkey/get`; CONFIG schema `GetWorkspaceSecretKeyConfig`; response schema `GetWorkspaceSecretKeyResponse` |
 
 # Request
@@ -185,3 +195,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Workspace](create-workspace.md), [Copy Workspace](copy-workspace.md), [Rename Workspace](rename-workspace.md), [Delete Workspace](delete-workspace.md), [Export as Template](export-as-template.md), [Get Workspace Info](get-workspace-details.md).
 - [SDK examples](../../../sdk-examples/workspace-management/workspace-operations/get-workspace-secret-key.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

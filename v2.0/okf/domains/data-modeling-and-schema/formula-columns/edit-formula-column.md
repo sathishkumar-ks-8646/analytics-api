@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas/{formula-id}"
   domain: data-modeling-and-schema
   group: formula-columns
+  api_units:
+    api_id: 2042
+    action: EDIT_FORMULA_COLUMN
+    category: METADATA
+    units: 15
+    units_basis: per_request
+    units_note: "15 units per request"
+    category_frequency_limit: 60 requests/minute
+    endpoint_throttle: "20 requests per user per minute, 10-minute lockout on breach"
   oauth_scopes:
     - ZohoAnalytics.modeling.update
   org_id_header: required
@@ -85,6 +94,8 @@ The new expression replaces the previous one entirely - there is no partial upda
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 204 with no body |
 | Rate limit | 20 requests per user per minute (10-minute lockout on breach). See [Rate limits](../../../foundations/rate-limits-and-quotas.md). |
+| API units | 15 units per request - action `EDIT_FORMULA_COLUMN` (api-id `2042`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization; this endpoint is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-modeling-schema-grouped-api.json`](../../../references/openapi/data-modeling-schema-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1customformulas~1{formula-id}/put`; CONFIG schema `EditFormulaColumnConfig` |
 
 # Request
@@ -226,3 +237,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Custom Formulas](get-custom-formula-list.md), [Add Custom Formula](add-formula-column.md), [Delete Custom Formula](delete-formula-column.md), [Copy Custom Formulas](copy-formulas.md).
 - [SDK examples](../../../sdk-examples/data-modeling-and-schema/formula-columns/edit-formula-column.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

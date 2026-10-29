@@ -10,6 +10,20 @@
       "url": "https://analyticsapi.zoho.com"
     }
   ],
+  "x-api-unit-categories": {
+    "description": "Every call deducts API units from the organization's plan allowance and is counted against the per-minute request ceiling of its unit category. A unit cost with a row basis is charged pro rata as (rowsProcessed / rowsBasis) * units, without rounding up to a whole block. The per-minute ceilings below are the base configuration; an organization's effective ceiling is the base value scaled by a plan-specific multiplier.",
+    "categories": {
+      "DML": {
+        "frequencyLimitPerMinute": 100
+      },
+      "BULK": {
+        "frequencyLimitPerMinute": 40
+      },
+      "METADATA": {
+        "frequencyLimitPerMinute": 60
+      }
+    }
+  },
   "tags": [
     {
       "name": "Table & Schema",
@@ -306,6 +320,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2006,
+          "action": "CREATE_TABLE",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -560,6 +587,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 3053,
+          "action": "GET_TABLE_METADATA",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiResponseParameters": {
             "1": {
@@ -791,6 +831,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2013,
+          "action": "ADD_COLUMN",
+          "units": {
+            "category": "METADATA",
+            "cost": 15,
+            "basis": "request",
+            "note": "15 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-doc": {
           "show": true,
           "usecaseTags": {
@@ -926,6 +979,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2014,
+          "action": "RENAME_COLUMN",
+          "units": {
+            "category": "METADATA",
+            "cost": 5,
+            "basis": "request",
+            "note": "5 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -1038,6 +1104,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2015,
+          "action": "DELETE_COLUMN",
+          "units": {
+            "category": "METADATA",
+            "cost": 10,
+            "basis": "request",
+            "note": "10 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -1162,6 +1241,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2063,
+          "action": "REORDER_COLUMNS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -1281,6 +1373,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2018,
+          "action": "HIDE_COLUMNS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -1392,6 +1497,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2019,
+          "action": "SHOW_COLUMNS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -1527,6 +1645,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 3030,
+          "action": "GET_COLUMN_DEPENDENTS",
+          "units": {
+            "category": "METADATA",
+            "cost": 0.1,
+            "basis": "request",
+            "note": "0.1 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiResponseParameters": {
             "1": {
@@ -1659,6 +1790,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2064,
+          "action": "SORT_DATA_BY_COLUMNS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -1809,6 +1953,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2016,
+          "action": "ADD_LOOKUP",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -1921,6 +2078,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2017,
+          "action": "REMOVE_LOOKUP",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -2079,6 +2249,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 3064,
+          "action": "GET_QUERY_TABLES",
+          "units": {
+            "category": "METADATA",
+            "cost": 0.1,
+            "basis": "request",
+            "note": "0.1 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -2274,11 +2457,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2037,
+          "action": "CREATE_QT",
+          "units": {
+            "category": "METADATA",
+            "cost": 15,
+            "basis": "request",
+            "note": "15 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
-              "threshold": 7,
-              "lock-period": 300
+              "threshold": 20,
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -2286,7 +2481,7 @@
           "apiRequestParameters": {
             "1": {
               "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul>\n<li>The SQL statement is parsed and validated synchronously at creation time. Syntax errors, unknown tables or columns and unsupported constructs are rejected before the query table is created, and there is no separate draft or asynchronous validation step.</li>\n<li>Every table or view named in the FROM and JOIN clauses must already exist in the same workspace and must be referred to by its display name.</li>\n<li>queryTableName must be unique within the workspace. A duplicate query table or view name is rejected.</li>\n<li>The response returns only viewId. Call the Get Query Table Details API afterwards to retrieve the derived column list and data types, because they are inferred from the SELECT clause rather than specified by the caller.</li>\n<li>A query table whose source is a spatial file type is not supported and returns error 7399.</li>\n<li>When the same SQL query is submitted concurrently, for example because of a network retry, the second request may be delayed or rejected to avoid creating a duplicate query table.</li>\n<li>This API is throttled at 7 requests per user per minute, with a five-minute lockout when the limit is breached, and at 15 requests per minute across the service. Space out bulk creation calls accordingly.</li>\n<li>Obtain folderId from the Get Folder List API and the source table names from the Get View List API.</li>\n</ul>\n</span></blockquote>"
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul>\n<li>The SQL statement is parsed and validated synchronously at creation time. Syntax errors, unknown tables or columns and unsupported constructs are rejected before the query table is created, and there is no separate draft or asynchronous validation step.</li>\n<li>Every table or view named in the FROM and JOIN clauses must already exist in the same workspace and must be referred to by its display name.</li>\n<li>queryTableName must be unique within the workspace. A duplicate query table or view name is rejected.</li>\n<li>The response returns only viewId. Call the Get Query Table Details API afterwards to retrieve the derived column list and data types, because they are inferred from the SELECT clause rather than specified by the caller.</li>\n<li>A query table whose source is a spatial file type is not supported and returns error 7399.</li>\n<li>When the same SQL query is submitted concurrently, for example because of a network retry, the second request may be delayed or rejected to avoid creating a duplicate query table.</li>\n<li>This API is throttled at 20 requests per user per minute, with a ten-minute lockout when the limit is breached, and at 15 requests per minute across the service. Space out bulk creation calls accordingly.</li>\n<li>Obtain folderId from the Get Folder List API and the source table names from the Get View List API.</li>\n</ul>\n</span></blockquote>"
             }
           }
         }
@@ -2432,11 +2627,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2038,
+          "action": "EDIT_QT",
+          "units": {
+            "category": "METADATA",
+            "cost": 15,
+            "basis": "request",
+            "note": "15 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
-              "threshold": 7,
-              "lock-period": 300
+              "threshold": 20,
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -2444,7 +2651,7 @@
           "apiRequestParameters": {
             "1": {
               "type": "editor",
-              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul>\n<li>This API returns HTTP 204 No Content with no response body on success. There is no status or summary key to parse - treat the HTTP status code as the sole success indicator.</li>\n<li>sqlQuery is mandatory even when the intent is only to move the query table to another folder. Fetch the current statement using the Get Query Table Details API and resend it unchanged in that case.</li>\n<li>The new statement replaces the previous one completely. There is no partial or incremental update of individual clauses.</li>\n<li>When the new statement selects a different set of columns, whether added, removed, renamed or retyped, the column list of the query table is recomputed and any report or dashboard built on a removed or renamed column breaks. Inspect the current schema through Get Query Table Details before making structural changes.</li>\n<li>The request is rejected with error 7429 when another schema-changing operation is already in progress on the query table.</li>\n<li>This API cannot rename the query table or change its description. Only the SQL statement and the folder can be updated here.</li>\n<li>This API is throttled at 7 requests per user per minute, with a five-minute lockout when the limit is breached, and at 15 requests per minute across the service.</li>\n<li>Call the Get Query Table Details API afterwards to confirm the updated column schema.</li>\n</ul>\n</span></blockquote>"
+              "value": "<blockquote>Note:<br>\n<span style=\"font-weight:normal;\">\n<ul>\n<li>This API returns HTTP 204 No Content with no response body on success. There is no status or summary key to parse - treat the HTTP status code as the sole success indicator.</li>\n<li>sqlQuery is mandatory even when the intent is only to move the query table to another folder. Fetch the current statement using the Get Query Table Details API and resend it unchanged in that case.</li>\n<li>The new statement replaces the previous one completely. There is no partial or incremental update of individual clauses.</li>\n<li>When the new statement selects a different set of columns, whether added, removed, renamed or retyped, the column list of the query table is recomputed and any report or dashboard built on a removed or renamed column breaks. Inspect the current schema through Get Query Table Details before making structural changes.</li>\n<li>The request is rejected with error 7429 when another schema-changing operation is already in progress on the query table.</li>\n<li>This API cannot rename the query table or change its description. Only the SQL statement and the folder can be updated here.</li>\n<li>This API is throttled at 20 requests per user per minute, with a ten-minute lockout when the limit is breached, and at 15 requests per minute across the service.</li>\n<li>Call the Get Query Table Details API afterwards to confirm the updated column schema.</li>\n</ul>\n</span></blockquote>"
             }
           }
         }
@@ -2668,6 +2875,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 3047,
+          "action": "GET_QUERYTABLE_DETAILS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiResponseParameters": {
             "1": {
@@ -2851,11 +3071,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2041,
+          "action": "ADD_FORMULA_COLUMN",
+          "units": {
+            "category": "METADATA",
+            "cost": 15,
+            "basis": "request",
+            "note": "15 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 20,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -2959,11 +3191,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 3036,
+          "action": "GET_FORMULA_COLUMN",
+          "units": {
+            "category": "METADATA",
+            "cost": 0.1,
+            "basis": "request",
+            "note": "0.1 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 30,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -3089,6 +3333,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2021,
+          "action": "COPY_FORMULAS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -3250,11 +3507,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2042,
+          "action": "EDIT_FORMULA_COLUMN",
+          "units": {
+            "category": "METADATA",
+            "cost": 15,
+            "basis": "request",
+            "note": "15 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 20,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -3383,11 +3652,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2043,
+          "action": "DELETE_FORMULA_COLUMN",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 30,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -3565,11 +3846,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2044,
+          "action": "ADD_AGG_FORMULA",
+          "units": {
+            "category": "METADATA",
+            "cost": 5,
+            "basis": "request",
+            "note": "5 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 20,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -3680,11 +3973,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 3037,
+          "action": "GET AGGREGATE FORMULA",
+          "units": {
+            "category": "METADATA",
+            "cost": 0.1,
+            "basis": "request",
+            "note": "0.1 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 30,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -3845,11 +4150,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2045,
+          "action": "EDIT_AGG_FORMULA",
+          "units": {
+            "category": "METADATA",
+            "cost": 5,
+            "basis": "request",
+            "note": "5 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 20,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -3973,11 +4290,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2046,
+          "action": "DELETE AGG FORMULA",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 20,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         },
@@ -4074,6 +4403,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 3041,
+          "action": "GET_AGGREGATE_FORMULA_VALUE",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -4211,6 +4553,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 3040,
+          "action": "GET_AGGREGATE_FORMULA_DEPENDENTS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiResponseParameters": {
             "1": {
@@ -4330,6 +4685,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 3039,
+          "action": "GET_AGGREGATE_FORMULAS_IN_WORKSPACE",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -4598,6 +4966,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2025,
+          "action": "CREATE_VARIABLE",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -4702,6 +5083,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2028,
+          "action": "GET_VARIABLES",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -4969,6 +5363,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2026,
+          "action": "UPDATE_VARIABLE",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -5045,6 +5452,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2027,
+          "action": "DELETE_VARIABLE",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -5216,6 +5636,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2029,
+          "action": "GET_VARIABLE_DETAILS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {

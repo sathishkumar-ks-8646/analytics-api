@@ -17,18 +17,30 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/querytables"
       doc: "/domains/data-modeling-and-schema/query-tables/get-query-tables.md"
+      api_units: 0.1
+      api_units_action: GET_QUERY_TABLES
+      api_units_category: METADATA
     - operation_id: createQueryTable
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/querytables"
       doc: "/domains/data-modeling-and-schema/query-tables/create-query-table.md"
+      api_units: 15
+      api_units_action: CREATE_QT
+      api_units_category: METADATA
     - operation_id: editQueryTable
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}"
       doc: "/domains/data-modeling-and-schema/query-tables/edit-query-table.md"
+      api_units: 15
+      api_units_action: EDIT_QT
+      api_units_category: METADATA
     - operation_id: getQueryTableDetails
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}"
       doc: "/domains/data-modeling-and-schema/query-tables/get-query-table-details.md"
+      api_units: 1
+      api_units_action: GET_QUERYTABLE_DETAILS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
@@ -49,12 +61,12 @@ APIs for creating, editing, and retrieving query table details.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Query Tables](get-query-tables.md) | GET | `/restapi/v2/workspaces/{workspace-id}/querytables` | `getQueryTables` | `ZohoAnalytics.metadata.read` | 200 |
-| [Create Query Table](create-query-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/querytables` | `createQueryTable` | `ZohoAnalytics.modeling.create` | 200 |
-| [Edit Query Table](edit-query-table.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}` | `editQueryTable` | `ZohoAnalytics.modeling.update` | 204 |
-| [Get Query Table Details](get-query-table-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}` | `getQueryTableDetails` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Query Tables](get-query-tables.md) | GET | `/restapi/v2/workspaces/{workspace-id}/querytables` | `getQueryTables` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
+| [Create Query Table](create-query-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/querytables` | `createQueryTable` | `ZohoAnalytics.modeling.create` | 200 | 15 |
+| [Edit Query Table](edit-query-table.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}` | `editQueryTable` | `ZohoAnalytics.modeling.update` | 204 | 15 |
+| [Get Query Table Details](get-query-table-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}` | `getQueryTableDetails` | `ZohoAnalytics.metadata.read` | 200 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 
@@ -62,7 +74,7 @@ All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header
 
 A **Query Table** (also called a **SQL View** or **QT**) is a view whose data is computed by executing a custom SQL query at query time rather than storing raw imported data. It allows joining, aggregating, and transforming data from one or more existing tables in the workspace using standard SQL syntax.
 
-> **Rate Limited:** Create Query Table and Edit Query Table are throttled — a maximum of 7 requests per user per minute (5-minute lockout on breach) and 15 requests per minute service-wide. Design your integration to batch or space out query table creation/edit calls accordingly.
+> **Rate Limited:** Create Query Table and Edit Query Table are throttled — a maximum of 20 requests per user per minute (10-minute lockout on breach) and 15 requests per minute service-wide. Design your integration to batch or space out query table creation/edit calls accordingly.
 
 ---
 

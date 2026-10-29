@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/autoanalyse"
   domain: views-management
   group: auto-analysis
+  api_units:
+    api_id: 2023
+    action: AUTO_ANALYSIS_VIEW
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.modeling.create
   org_id_header: required
@@ -78,6 +86,8 @@ The operation tracks completion state — once auto analysis has been run succes
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - optional |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 200 - `application/json` |
+| API units | 1 unit per request - action `AUTO_ANALYSIS_VIEW` (api-id `2023`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`views-management-grouped-api.json`](../../../references/openapi/views-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1autoanalyse/post`; CONFIG schema `AutoAnalyseViewConfig`; response schema `AutoAnalyseResponse` |
 
 # Request
@@ -239,3 +249,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Auto Analyse Column](auto-analyse-column.md).
 - [SDK examples](../../../sdk-examples/views-management/auto-analysis/auto-analyse-view.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

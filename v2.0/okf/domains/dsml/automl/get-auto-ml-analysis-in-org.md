@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/automl/analysis"
   domain: dsml
   group: automl
+  api_units:
+    api_id: 3054
+    action: GET_AUTOML_ANALYSIS_IN_ORGANIZATION
+    category: METADATA
+    units: 2
+    units_basis: per_request
+    units_note: "2 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -68,6 +76,8 @@ Returns every AutoML analysis across **all workspaces** in the organization, eac
 | Permission required | The authenticated user must be an Account Admin or Organization Admin of the organization. A Workspace Admin is not sufficient. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 2 units per request - action `GET_AUTOML_ANALYSIS_IN_ORGANIZATION` (api-id `3054`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`dsml-grouped-api.json`](../../../references/openapi/dsml-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1automl~1analysis/get`; response schema `GetAutoMLAnalysisInOrgResponse` |
 
 # Request
@@ -227,3 +237,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get AutoML Analysis In Workspace](get-auto-ml-analysis-in-workspace.md), [Get AutoML Analysis Details](get-auto-ml-analysis-details.md), [Get Deployments For A Model](get-deployments-for-model.md), [Create AutoML Analysis](create-auto-ml-analysis.md), [Delete AutoML Analysis](delete-auto-ml-analysis.md), [Delete AutoML Analysis Model](delete-auto-ml-analysis-model.md), [Create AutoML Analysis Deployment](create-auto-ml-analysis-deployment.md), [Run AutoML Analysis](run-auto-ml-analysis.md), [Delete AutoML Analysis Model Deployment](delete-auto-ml-analysis-model-deployment.md), [AutoML What If Analysis](auto-ml-what-if-analysis.md).
 - [SDK examples](../../../sdk-examples/dsml/automl/get-auto-ml-analysis-in-org.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

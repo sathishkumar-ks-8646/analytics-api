@@ -17,26 +17,44 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/slides"
       doc: "/domains/share-and-publish/slideshow-management/get-slideshows.md"
+      api_units: 1
+      api_units_action: GET_SLIDE_LIST
+      api_units_category: METADATA
     - operation_id: getSlideshowUrl
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish"
       doc: "/domains/share-and-publish/slideshow-management/get-slideshow-url.md"
+      api_units: 1
+      api_units_action: GET_SLIDE_URL
+      api_units_category: METADATA
     - operation_id: getSlideshowDetails
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}"
       doc: "/domains/share-and-publish/slideshow-management/get-slideshow-details.md"
+      api_units: 1
+      api_units_action: GET_SLIDE_INFO
+      api_units_category: METADATA
     - operation_id: createSlideshow
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/slides"
       doc: "/domains/share-and-publish/slideshow-management/create-slideshow.md"
+      api_units: 2
+      api_units_action: CREATE_SLIDE_SHOW
+      api_units_category: METADATA
     - operation_id: updateSlideshow
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}"
       doc: "/domains/share-and-publish/slideshow-management/update-slideshow.md"
+      api_units: 2
+      api_units_action: UPDATE_SLIDE_SHOW
+      api_units_category: METADATA
     - operation_id: deleteSlideshow
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}"
       doc: "/domains/share-and-publish/slideshow-management/delete-slideshow.md"
+      api_units: 2
+      api_units_action: DELETE_SLIDE_SHOW
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
@@ -57,14 +75,14 @@ APIs for creating, updating, deleting, and listing slideshows and their URLs.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Slide List](get-slideshows.md) | GET | `/restapi/v2/workspaces/{workspace-id}/slides` | `getSlideshows` | `ZohoAnalytics.embed.read` | 200 |
-| [Get Slide URL](get-slideshow-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish` | `getSlideshowUrl` | `ZohoAnalytics.embed.read` | 200 |
-| [Get Slide Info](get-slideshow-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}` | `getSlideshowDetails` | `ZohoAnalytics.embed.read` | 200 |
-| [Create Slide Show](create-slideshow.md) | POST | `/restapi/v2/workspaces/{workspace-id}/slides` | `createSlideshow` | `ZohoAnalytics.embed.create` | 200 |
-| [Update Slide Show](update-slideshow.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}` | `updateSlideshow` | `ZohoAnalytics.embed.update` | 204 |
-| [Delete Slide Show](delete-slideshow.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}` | `deleteSlideshow` | `ZohoAnalytics.embed.delete` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Slide List](get-slideshows.md) | GET | `/restapi/v2/workspaces/{workspace-id}/slides` | `getSlideshows` | `ZohoAnalytics.embed.read` | 200 | 1 |
+| [Get Slide URL](get-slideshow-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}/publish` | `getSlideshowUrl` | `ZohoAnalytics.embed.read` | 200 | 1 |
+| [Get Slide Info](get-slideshow-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}` | `getSlideshowDetails` | `ZohoAnalytics.embed.read` | 200 | 1 |
+| [Create Slide Show](create-slideshow.md) | POST | `/restapi/v2/workspaces/{workspace-id}/slides` | `createSlideshow` | `ZohoAnalytics.embed.create` | 200 | 2 |
+| [Update Slide Show](update-slideshow.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}` | `updateSlideshow` | `ZohoAnalytics.embed.update` | 204 | 2 |
+| [Delete Slide Show](delete-slideshow.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}` | `deleteSlideshow` | `ZohoAnalytics.embed.delete` | 204 | 2 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

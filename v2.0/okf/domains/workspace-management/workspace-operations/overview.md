@@ -17,30 +17,51 @@ api:
       method: POST
       path: "/restapi/v2/workspaces"
       doc: "/domains/workspace-management/workspace-operations/create-workspace.md"
+      api_units: 1
+      api_units_action: CREATE_WORKSPACE
+      api_units_category: METADATA
     - operation_id: copyWorkspace
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}"
       doc: "/domains/workspace-management/workspace-operations/copy-workspace.md"
+      api_units: variable
+      api_units_action: COPY_WORKSPACE_WO_DATA
+      api_units_category: METADATA
     - operation_id: renameWorkspace
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}"
       doc: "/domains/workspace-management/workspace-operations/rename-workspace.md"
+      api_units: 1
+      api_units_action: RENAME_WORKSPACE
+      api_units_category: METADATA
     - operation_id: deleteWorkspace
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}"
       doc: "/domains/workspace-management/workspace-operations/delete-workspace.md"
+      api_units: 1
+      api_units_action: DELETE_WORKSPACE
+      api_units_category: METADATA
     - operation_id: exportAsTemplate
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/template/data"
       doc: "/domains/workspace-management/workspace-operations/export-as-template.md"
+      api_units: 5
+      api_units_action: EXPORT_AS_TEMPLATE
+      api_units_category: METADATA
     - operation_id: getWorkspaceSecretKey
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/secretkey"
       doc: "/domains/workspace-management/workspace-operations/get-workspace-secret-key.md"
+      api_units: 0.5
+      api_units_action: GET_WORKSPACE_SECRETKEY
+      api_units_category: METADATA
     - operation_id: getWorkspaceDetails
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}"
       doc: "/domains/workspace-management/workspace-operations/get-workspace-details.md"
+      api_units: 0.1
+      api_units_action: GET_WORKSPACE_DETAILS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
@@ -65,15 +86,15 @@ APIs that manage the lifecycle and the metadata of workspaces, covering the crea
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Create Workspace](create-workspace.md) | POST | `/restapi/v2/workspaces` | `createWorkspace` | `ZohoAnalytics.modeling.create` | 200 |
-| [Copy Workspace](copy-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}` | `copyWorkspace` | `ZohoAnalytics.modeling.create` | 200 |
-| [Rename Workspace](rename-workspace.md) | PUT | `/restapi/v2/workspaces/{workspace-id}` | `renameWorkspace` | `ZohoAnalytics.modeling.update` | 204 |
-| [Delete Workspace](delete-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}` | `deleteWorkspace` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Export as Template](export-as-template.md) | GET | `/restapi/v2/workspaces/{workspace-id}/template/data` | `exportAsTemplate` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Workspace Secret Key](get-workspace-secret-key.md) | GET | `/restapi/v2/workspaces/{workspace-id}/secretkey` | `getWorkspaceSecretKey` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Workspace Info](get-workspace-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}` | `getWorkspaceDetails` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Create Workspace](create-workspace.md) | POST | `/restapi/v2/workspaces` | `createWorkspace` | `ZohoAnalytics.modeling.create` | 200 | 1 |
+| [Copy Workspace](copy-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}` | `copyWorkspace` | `ZohoAnalytics.modeling.create` | 200 | variable |
+| [Rename Workspace](rename-workspace.md) | PUT | `/restapi/v2/workspaces/{workspace-id}` | `renameWorkspace` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Delete Workspace](delete-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}` | `deleteWorkspace` | `ZohoAnalytics.modeling.delete` | 204 | 1 |
+| [Export as Template](export-as-template.md) | GET | `/restapi/v2/workspaces/{workspace-id}/template/data` | `exportAsTemplate` | `ZohoAnalytics.metadata.read` | 200 | 5 |
+| [Get Workspace Secret Key](get-workspace-secret-key.md) | GET | `/restapi/v2/workspaces/{workspace-id}/secretkey` | `getWorkspaceSecretKey` | `ZohoAnalytics.metadata.read` | 200 | 0.5 |
+| [Get Workspace Info](get-workspace-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}` | `getWorkspaceDetails` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

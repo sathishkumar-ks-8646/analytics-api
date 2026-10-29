@@ -17,10 +17,16 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/wlaccess"
       doc: "/domains/workspace-management/domain-and-white-label/enable-domain-workspace.md"
+      api_units: 0.1
+      api_units_action: ENABLE_DOMAIN_WORKSPACE
+      api_units_category: METADATA
     - operation_id: disableDomainWorkspace
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/wlaccess"
       doc: "/domains/workspace-management/domain-and-white-label/disable-domain-workspace.md"
+      api_units: 0.1
+      api_units_action: DISABLE_DOMAIN_WORKSPACE
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
@@ -43,10 +49,10 @@ APIs that control whether a workspace is reachable through the White Label or Cl
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Enable Workspace for Domain Access](enable-domain-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `enableDomainWorkspace` | `ZohoAnalytics.metadata.update` | 204 |
-| [Disable Workspace for Domain Access](disable-domain-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `disableDomainWorkspace` | `ZohoAnalytics.metadata.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Enable Workspace for Domain Access](enable-domain-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `enableDomainWorkspace` | `ZohoAnalytics.metadata.update` | 204 | 0.1 |
+| [Disable Workspace for Domain Access](disable-domain-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/wlaccess` | `disableDomainWorkspace` | `ZohoAnalytics.metadata.update` | 204 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

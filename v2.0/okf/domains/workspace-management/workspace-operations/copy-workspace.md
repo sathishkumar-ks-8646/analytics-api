@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}"
   domain: workspace-management
   group: workspace-operations
+  api_units:
+    api_id: 2002
+    action: COPY_WORKSPACE_WO_DATA
+    category: METADATA
+    units: 25
+    units_basis: per_request
+    units_variable: true
+    units_note: "25 units per request when `copyData` is false; when `copyData` is true, 25 units plus 1 unit per 1000 rows copied"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.modeling.create
   org_id_header: required
@@ -81,6 +90,8 @@ Creates a copy of an existing workspace. The copy can be placed in the **same or
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 200 - `application/json` |
 | ZANALYTICS-DEST-ORGID Header | **Optional** — Used by Organization Admins who have admin access in multiple organisations. Set this to the **destination** organisation ID when it differs from the org resolved from `ZANALYTICS-ORGID`. When present, the system validates that the caller is a member of the specified destination org and uses it as the target for the copy. When absent, the destination org defaults to the caller's own resolved organisation. |
+| API units | 25 units per request when `copyData` is false; when `copyData` is true, 25 units plus 1 unit per 1000 rows copied - action `COPY_WORKSPACE_WO_DATA` (api-id `2002`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`workspace-management-grouped-api.json`](../../../references/openapi/workspace-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}/post`; CONFIG schema `CopyWorkspaceConfig`; response schema `CopyWorkspaceResponse` |
 
 # Request
@@ -247,3 +258,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Workspace](create-workspace.md), [Rename Workspace](rename-workspace.md), [Delete Workspace](delete-workspace.md), [Export as Template](export-as-template.md), [Get Workspace Secret Key](get-workspace-secret-key.md), [Get Workspace Info](get-workspace-details.md).
 - [SDK examples](../../../sdk-examples/workspace-management/workspace-operations/copy-workspace.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

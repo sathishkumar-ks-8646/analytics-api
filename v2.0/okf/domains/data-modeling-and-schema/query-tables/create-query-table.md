@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/querytables"
   domain: data-modeling-and-schema
   group: query-tables
+  api_units:
+    api_id: 2037
+    action: CREATE_QT
+    category: METADATA
+    units: 15
+    units_basis: per_request
+    units_note: "15 units per request"
+    category_frequency_limit: 60 requests/minute
+    endpoint_throttle: "20 requests per user per minute, 10-minute lockout on breach"
   oauth_scopes:
     - ZohoAnalytics.modeling.create
   org_id_header: required
@@ -27,7 +36,7 @@ api:
   response_content_types:
     - application/json
   permission_required: "The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Query Table permission on the workspace."
-  rate_limit: "7 requests/user/minute (5-minute lockout on breach); 15 requests/minute service-wide."
+  rate_limit: "20 requests/user/minute (10-minute lockout on breach); 15 requests/minute service-wide."
   error_codes:
     - 7301
     - 7399
@@ -87,7 +96,9 @@ The columns of the query table and their data types are derived from the SELECT 
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - **mandatory** |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 200 - `application/json` |
-| Rate limit | 7 requests/user/minute (5-minute lockout on breach); 15 requests/minute service-wide. See [Rate limits](../../../foundations/rate-limits-and-quotas.md). |
+| Rate limit | 20 requests/user/minute (10-minute lockout on breach); 15 requests/minute service-wide. See [Rate limits](../../../foundations/rate-limits-and-quotas.md). |
+| API units | 15 units per request - action `CREATE_QT` (api-id `2037`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization; this endpoint is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-modeling-schema-grouped-api.json`](../../../references/openapi/data-modeling-schema-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1querytables/post`; CONFIG schema `CreateQueryTableConfig`; response schema `CreateQueryTableResponse` |
 
 # Request
@@ -123,7 +134,7 @@ The columns of the query table and their data types are derived from the SELECT 
 - The response returns only viewId. Call the Get Query Table Details API afterwards to retrieve the derived column list and data types, because they are inferred from the SELECT clause rather than specified by the caller.
 - A query table whose source is a spatial file type is not supported and returns error 7399.
 - When the same SQL query is submitted concurrently, for example because of a network retry, the second request may be delayed or rejected to avoid creating a duplicate query table.
-- This API is throttled at 7 requests per user per minute, with a five-minute lockout when the limit is breached, and at 15 requests per minute across the service. Space out bulk creation calls accordingly.
+- This API is throttled at 20 requests per user per minute, with a ten-minute lockout when the limit is breached, and at 15 requests per minute across the service. Space out bulk creation calls accordingly.
 - Obtain folderId from the Get Folder List API and the source table names from the Get View List API.
 
 # Response
@@ -243,3 +254,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Query Tables](get-query-tables.md), [Edit Query Table](edit-query-table.md), [Get Query Table Details](get-query-table-details.md).
 - [SDK examples](../../../sdk-examples/data-modeling-and-schema/query-tables/create-query-table.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

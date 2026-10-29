@@ -84,8 +84,12 @@ these documents into vendor-neutral OpenAPI:
 | `x-zenesis-shared-note`, `x-zenesis-shared-notes` | Dropped |
 | `x-zenesis-sections` | Folded into the operation description under a "Notes" heading |
 | `x-zenesis-statuscodes` | Folded into the description as an "Error codes" table |
-| `x-zenesis-security` | Folded into the description as "Rate limit" |
+| `x-zenesis-security` | Folded into the description as "Rate limit" - the unit cost, the category ceiling and each throttle, one bullet apiece |
 | `x-zenesis-enums-desc` | Rewritten to `x-enumDescriptions` and `x-enum-varnames` |
+
+One root-level key is also in use and is **not** a `x-zenesis-*` key: `x-api-unit-categories`, described
+in [API units and frequency limits](#api-units-and-frequency-limits) below. It is already
+vendor-neutral, so the converter passes it through unchanged and no rule is needed for it.
 
 **Introducing an eleventh key is a two-repository change.** `python3 tools/validate_api_docs.py` (run
 from the repository root) fails on any `x-zenesis-*` key it does not know, because the converter would
@@ -93,10 +97,81 @@ otherwise either warn and stall a release or - if the policy is ever relaxed - d
 silently. Add the key to `KNOWN_VENDOR_KEYS` in `tools/validate_api_docs.py` here and a rule to
 `rules.json` there, in that order.
 
+## API units and frequency limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a
+**per-minute request ceiling**. Both are keyed off the internal gateway action (`api-id`) that the
+request's method and path resolve to, so both live on the operation, in `x-zenesis-security` - the key
+that already owned "how often may I call this". No eleventh vendor key was introduced.
+
+```jsonc
+"x-zenesis-security": {
+  "api-id": 2037,                                  // gateway action id - the join key
+  "action": "CREATE_QT",                           // gateway action name
+  "units": {
+    "category": "METADATA",                        // DML | BULK | METADATA
+    "cost": 15,
+    "basis": "request",                            // "request" or "rows"
+    "rows-basis": 1000,                            // present only when basis is "rows"
+    "variable": true,                              // present only when the cost depends on the payload
+    "note": "15 units per request"
+  },
+  "frequency": { "category-limit-per-minute": 60 },
+  "throttles": [                                   // present only when the URL carries a throttle
+    { "duration": 60, "threshold": 20, "lock-period": 600, "per-user": true }
+  ]
+}
+```
+
+The three category ceilings are stated once per document, at the root:
+
+```jsonc
+"x-api-unit-categories": {
+  "description": "…how the cost is computed…",
+  "categories": {
+    "DML":      { "frequencyLimitPerMinute": 100 },
+    "BULK":     { "frequencyLimitPerMinute": 40  },
+    "METADATA": { "frequencyLimitPerMinute": 60  }
+  }
+}
+```
+
+**Derived, not authored.** The source of truth is two configuration files in the product repository:
+
+| File | What it supplies |
+|---|---|
+| `webapps/db/WEB-INF/gatewayxmls/zagateway-restapi.xml` | `<api TYPE LIMIT>` - the unit category and its per-minute ceiling. `<action ID NAME UNITS ROWS>` - the per-`api-id` cost. `ROWS="1000"` means the cost is per 1000 rows. |
+| `webapps/db/WEB-INF/securityxmls/security-restapi.xml` | `<url api-id method path>` - binds each `api-id` to a method and path (a missing `method` means GET). `duration` / `threshold` / `lock-period` / `user` - the per-endpoint throttle, in **minutes**; `x-zenesis-security` carries them in **seconds**. |
+
+The `<internal-services>` and `<units-exempted-apis>` blocks of the gateway configuration are
+internal-only and are excluded. The cost formula, from `ZAAPIUnitsHandler.getUnitsSpendForAPICall`, is
+`units = (rowsProcessed / rowsBasis) * cost` when a row basis is set and `cost` otherwise - never
+rounded up to a whole block. Four operation families resolve to a `0`-cost action and charge against a
+second action chosen from the payload (export format, `importType`, `copyData`); for those,
+`units.variable` is `true` and `units.note` spells out the real cost.
+
+### What the converter must emit
+
+The published documents in [`../oas/`](../oas/) carry the same facts in two places, because a cost is
+both something a human reads and something a rate limiter configures:
+
+- `x-api-units` on each operation - the machine-readable form, camelCase, no `zenesis` prefix, same
+  shape as the block above with `windowSeconds` / `lockPeriodSeconds` / `perUser` on the throttle.
+- A `**Rate limit**` section in the operation `description`, one bullet for the unit cost, one for the
+  category ceiling and one per throttle. The throttle bullet reads
+  `Up to {threshold} requests [per user ]per {duration} seconds. Exceeding this blocks further calls
+  for {lock-period} seconds.` - the `per user` clause appears only when `per-user` is true, and the
+  second sentence only when a lock period is set.
+- `x-api-unit-categories` at the document root, passed through unchanged.
+
 ## When editing
 
 - Keep the JSON valid and the indentation as the exporter writes it (two spaces, no trailing newline),
   so diffs stay readable.
+- Unit costs, categories, ceilings and throttles are derived, not authored. If a cost or a throttle
+  changes, it changes in `zagateway-restapi.xml` or `security-restapi.xml` first; regenerate
+  `x-zenesis-security` here and the `x-api-units` and `**Rate limit**` output in
+  [`../oas/`](../oas/) from the same pass, so the two never disagree.
 - A correction made downstream in the published OpenAPI (zoho/analytics-oas) comes back here through
   `make to-zenesis` in the converter, which carries the edit into these files and rebuilds
   `x-zenesis-enums-desc` from `x-enumDescriptions`. Prose that the converter folded into a description

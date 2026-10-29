@@ -10,6 +10,20 @@
       "url": "https://analyticsapi.zoho.com"
     }
   ],
+  "x-api-unit-categories": {
+    "description": "Every call deducts API units from the organization's plan allowance and is counted against the per-minute request ceiling of its unit category. A unit cost with a row basis is charged pro rata as (rowsProcessed / rowsBasis) * units, without rounding up to a whole block. The per-minute ceilings below are the base configuration; an organization's effective ceiling is the base value scaled by a plan-specific multiplier.",
+    "categories": {
+      "DML": {
+        "frequencyLimitPerMinute": 100
+      },
+      "BULK": {
+        "frequencyLimitPerMinute": 40
+      },
+      "METADATA": {
+        "frequencyLimitPerMinute": 60
+      }
+    }
+  },
   "tags": [
     {
       "name": "Email Schedules",
@@ -25,7 +39,7 @@
       "post": {
         "operationId": "createEmailSchedule",
         "summary": "Create Email Schedule",
-        "description": "Creates a new recurring email schedule in the workspace and returns its ID.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — A view in viewIds does not exist. | Verify the IDs via Get View List. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, the user lacks Create Email Schedule permission, or lacks Export permission on a view in viewIds. | Call from the standard API host with the required permissions. |\n| 7319 | OBJIDNOTBELONGSTODB — A view in viewIds belongs to a different workspace. | Include only views from . |\n| 7832 | INVALIDEXPORTTYPE — exportType is not one of the supported formats. | Use CSV, XLS, PDF, HTML, or IMG. |\n| 8000 | DUPLICATESCHEDULE — A schedule with this scheduleName already exists in the workspace. | Choose a different name. |\n| 8001 | MAILCOUNTPERSCHEDEXCEED — Too many recipients for a single schedule. | Reduce the recipient list, or split it across schedules. |\n| 8009 | MAILMULTIVIEWMAXCOUNTEXCEEEDED — Too many views in one schedule. | Reduce viewIds, or split across schedules. |\n| 8030 | EMAILEXPORTDISABLEDINORG — Email export is disabled for this organization. | Ask the Organization Admin to enable export in Security Controls. |\n| 8031 | UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains. | Use trusted-domain addresses, or ask the Organization Admin to add the domain. |\n| 8032 | EMAILINGVIEWDISABLED — Emailing this view is disabled. | Check the view's and workspace's export settings. |\n| 8033 | MAILSCHSELECTATLEASTONEEMAILID — No recipient could be resolved from emailIds, groupIds, and cc. | Supply at least one address or a non-empty group. |\n| 8034 | ONLYONEDASHBOARDISALLOWEDPERSCH — More than one view scheduled where the first is a dashboard. | Schedule the dashboard on its own. |\n| 8035 | EXPORTFORMATSALLOWEDFORDASHBOARD — Dashboard scheduled with a format other than PDF/HTML. | Use PDF or HTML. |\n| 8036 | EXPORTFORMATSALLOWEDFORCHART — IMG requested for a view that is not a chart. | Use IMG only for chart views. |\n| 8037 | ONLYONEVIEWISALLOWEDFORXLS — XLS requested with more than one view. | Send exactly one view, or choose another format. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — A scheduleDetails value is out of range (e.g. hour outside 0–23, minute not a multiple of 5, weekDays outside 1–7, months outside 1–12, skipFrequency beyond the limit for the chosen frequency). | The error message names the attribute and its permitted range; correct the value. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Creates a new recurring email schedule in the workspace and returns its ID.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7104 | METAOBJECTNOTPRESENT — A view in viewIds does not exist. | Verify the IDs via Get View List. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, the user lacks Create Email Schedule permission, or lacks Export permission on a view in viewIds. | Call from the standard API host with the required permissions. |\n| 7319 | OBJIDNOTBELONGSTODB — A view in viewIds belongs to a different workspace. | Include only views from . |\n| 7832 | INVALIDEXPORTTYPE — exportType is not one of the supported formats. | Use CSV, XLS, PDF, HTML, or IMG. |\n| 8000 | DUPLICATESCHEDULE — A schedule with this scheduleName already exists in the workspace. | Choose a different name. |\n| 8001 | MAILCOUNTPERSCHEDEXCEED — Too many recipients for a single schedule. | Reduce the recipient list, or split it across schedules. |\n| 8009 | MAILMULTIVIEWMAXCOUNTEXCEEEDED — Too many views in one schedule. | Reduce viewIds, or split across schedules. |\n| 8030 | EMAILEXPORTDISABLEDINORG — Email export is disabled for this organization. | Ask the Organization Admin to enable export in Security Controls. |\n| 8031 | UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains. | Use trusted-domain addresses, or ask the Organization Admin to add the domain. |\n| 8032 | EMAILINGVIEWDISABLED — Emailing this view is disabled. | Check the view's and workspace's export settings. |\n| 8033 | MAILSCHSELECTATLEASTONEEMAILID — No recipient could be resolved from emailIds, groupIds, and cc. | Supply at least one address or a non-empty group. |\n| 8034 | ONLYONEDASHBOARDISALLOWEDPERSCH — More than one view scheduled where the first is a dashboard. | Schedule the dashboard on its own. |\n| 8035 | EXPORTFORMATSALLOWEDFORDASHBOARD — Dashboard scheduled with a format other than PDF/HTML. | Use PDF or HTML. |\n| 8036 | EXPORTFORMATSALLOWEDFORCHART — IMG requested for a view that is not a chart. | Use IMG only for chart views. |\n| 8037 | ONLYONEVIEWISALLOWEDFORXLS — XLS requested with more than one view. | Send exactly one view, or choose another format. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — A scheduleDetails value is out of range (e.g. hour outside 0–23, minute not a multiple of 5, weekDays outside 1–7, months outside 1–12, skipFrequency beyond the limit for the chosen frequency). | The error message names the attribute and its permitted range; correct the value. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "tags": [
           "Email Schedules"
         ],
@@ -191,12 +205,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2050,
+          "action": "CREATE_EMAIL_SCHEDULE",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "get": {
         "operationId": "getEmailSchedules",
         "summary": "Get Email Schedules",
-        "description": "Returns every email schedule defined in the workspace, with its name, run period, enabled state, creator, and the views it delivers. This is the discovery call for <schedule-id>, which the other five APIs need.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain (where this API is disabled), or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host as an Account Admin, Organization Admin, Workspace Admin, or a user with Create Email Schedule permission. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns every email schedule defined in the workspace, with its name, run period, enabled state, creator, and the views it delivers. This is the discovery call for <schedule-id>, which the other five APIs need.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain (where this API is disabled), or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host as an Account Admin, Organization Admin, Workspace Admin, or a user with Create Email Schedule permission. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Email Schedules"
         ],
@@ -280,6 +303,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3038,
+          "action": "GET EMAIL SCHEDULES",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -287,7 +319,7 @@
       "post": {
         "operationId": "triggerEmailSchedule",
         "summary": "Trigger Email Schedule",
-        "description": "Runs a schedule immediately — the \"send now\" action. This sends real email to every configured recipient, using the schedule's stored configuration.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7106 | METAOBJECTNOTPRESENT — The schedule has no surviving views to send. | Recreate the schedule against existing views. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . | Re-resolve the current ID via Get Email Schedules. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or the caller may not act on it. | Verify the ID belongs to this workspace. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8030 | EMAILEXPORTDISABLEDINORG — Email export is disabled for this organization. | Ask the Organization Admin to enable export in Security Controls. |\n| 8032 | EMAILINGVIEWDISABLED — Emailing is disabled for a view in this schedule. | Check the view's and workspace's export settings. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Runs a schedule immediately — the \"send now\" action. This sends real email to every configured recipient, using the schedule's stored configuration.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7106 | METAOBJECTNOTPRESENT — The schedule has no surviving views to send. | Recreate the schedule against existing views. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . | Re-resolve the current ID via Get Email Schedules. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or the caller may not act on it. | Verify the ID belongs to this workspace. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8030 | EMAILEXPORTDISABLEDINORG — Email export is disabled for this organization. | Ask the Organization Admin to enable export in Security Controls. |\n| 8032 | EMAILINGVIEWDISABLED — Emailing is disabled for a view in this schedule. | Check the view's and workspace's export settings. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "tags": [
           "Email Schedules"
         ],
@@ -319,12 +351,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2054,
+          "action": "TRIGGER_EMAIL_SCHEDULE",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "put": {
         "operationId": "updateEmailSchedule",
         "summary": "Update Email Schedule",
-        "description": "Updates an existing schedule's name, run period, recipients, or email content. Read Schedule ID Lifecycle first — this call can replace the schedule's ID.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . Commonly a stale ID after an earlier update regenerated it. | Re-resolve the current ID via Get Email Schedules. |\n| 8000 | DUPLICATESCHEDULE — Another schedule in the workspace already uses the requested scheduleName. | Choose a different name. |\n| 8001 | MAILCOUNTPERSCHEDEXCEED — Too many recipients after the update. | Reduce the recipient list. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or a custom-role user attempted to edit a schedule they do not own. | Verify the ID belongs to this workspace; otherwise have the schedule's creator or an admin perform the update. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8031 | UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains. | Use trusted-domain addresses. |\n| 8033 | MAILSCHSELECTATLEASTONEEMAILID — The update would leave the schedule with no recipients. | Keep at least one address or non-empty group. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — A scheduleDetails value is out of range. | The error message names the attribute and its permitted range. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A delivered view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
+        "description": "Updates an existing schedule's name, run period, recipients, or email content. Read Schedule ID Lifecycle first — this call can replace the schedule's ID.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . Commonly a stale ID after an earlier update regenerated it. | Re-resolve the current ID via Get Email Schedules. |\n| 8000 | DUPLICATESCHEDULE — Another schedule in the workspace already uses the requested scheduleName. | Choose a different name. |\n| 8001 | MAILCOUNTPERSCHEDEXCEED — Too many recipients after the update. | Reduce the recipient list. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or a custom-role user attempted to edit a schedule they do not own. | Verify the ID belongs to this workspace; otherwise have the schedule's creator or an admin perform the update. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8031 | UNTRUSTEDEMAILIDS — A recipient address is outside the organization's trusted domains. | Use trusted-domain addresses. |\n| 8033 | MAILSCHSELECTATLEASTONEEMAILID — The update would leave the schedule with no recipients. | Keep at least one address or non-empty group. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — A scheduleDetails value is out of range. | The error message names the attribute and its permitted range. |\n| 8241 | SYSTEMTAGDATAWARNINGV2VALIDATIONCONFIRMATION — A delivered view carries a restricted DATAWARNING system tag. | Review the warning, then resend with \"validateSystemTags\": false. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
         "tags": [
           "Email Schedules"
         ],
@@ -451,12 +492,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2051,
+          "action": "UPDATE_EMAIL_SCHEDULE",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "delete": {
         "operationId": "deleteEmailSchedule",
         "summary": "Delete Email Schedule",
-        "description": "Permanently deletes an email schedule. The views it delivered are unaffected; only the schedule and its pending runs are removed.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . | Nothing to delete; re-check via Get Email Schedules. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or a custom-role user attempted to delete a schedule they do not own. | Verify the ID belongs to this workspace; otherwise have the creator or an admin delete it. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
+        "description": "Permanently deletes an email schedule. The views it delivered are unaffected; only the schedule and its pending runs are removed.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . | Nothing to delete; re-check via Get Email Schedules. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or a custom-role user attempted to delete a schedule they do not own. | Verify the ID belongs to this workspace; otherwise have the creator or an admin delete it. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "tags": [
           "Email Schedules"
         ],
@@ -488,6 +538,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2052,
+          "action": "DELETE_EMAIL_SCHEDULE",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -495,7 +554,7 @@
       "put": {
         "operationId": "changeEmailScheduleStatus",
         "summary": "Change Email Schedule Status",
-        "description": "Activates or deactivates a schedule without deleting it. A deactivated schedule keeps its configuration and ID but stops running automatically.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . | Re-resolve the current ID via Get Email Schedules. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or the caller may not act on it. | Verify the ID belongs to this workspace. |\n| 8003 | ALLSCHRUNERROR — The schedule could not be activated. | Check that the schedule's views still exist and that the organization is within its schedule quota. |\n| 8004 | ALLSCHPAUSEERROR — The schedule could not be deactivated. | Retry; if it persists, verify the schedule still exists. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — operation is neither activate nor deactivate. | Send exactly activate or deactivate. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
+        "description": "Activates or deactivates a schedule without deleting it. A deactivated schedule keeps its configuration and ID but stops running automatically.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Request came through a Client Portal / White Label domain, or the user lacks Create Email Schedule permission on the workspace. | Call from the standard API host with the required permission. |\n| 7812 | SCHEDULEDELETED — No schedule exists with the given . | Re-resolve the current ID via Get Email Schedules. |\n| 8002 | SCHMAILACTIONNOTSUPPORTED — The schedule is not in this workspace, or the caller may not act on it. | Verify the ID belongs to this workspace. |\n| 8003 | ALLSCHRUNERROR — The schedule could not be activated. | Check that the schedule's views still exist and that the organization is within its schedule quota. |\n| 8004 | ALLSCHPAUSEERROR — The schedule could not be deactivated. | Retry; if it persists, verify the schedule still exists. |\n| 8005 | SCHNOTINWS — The schedule does not belong to the specified workspace. | Ensure and are consistent. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — operation is neither activate nor deactivate. | Send exactly activate or deactivate. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
         "tags": [
           "Email Schedules"
         ],
@@ -570,6 +629,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2053,
+          "action": "CHANGE_EMAIL_SCHEDULE_STATUS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -577,7 +645,7 @@
       "get": {
         "operationId": "getAlertsInWorkspace",
         "summary": "Get Alerts In Workspace",
-        "description": "Returns every alert defined anywhere in the workspace, with its name, the view it watches, its enabled state, audit stamps, and the outcome of its last run. This is the broadest discovery call for <alert-id>.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither a Workspace Admin nor a custom-role user with Manage Data Alerts, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as an admin or a user with Manage Data Alerts, and call from the standard API host unless the workspace is bound to your custom domain. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns every alert defined anywhere in the workspace, with its name, the view it watches, its enabled state, audit stamps, and the outcome of its last run. This is the broadest discovery call for <alert-id>.\n\n**Rate limit**\n\n- Costs 2 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither a Workspace Admin nor a custom-role user with Manage Data Alerts, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as an admin or a user with Manage Data Alerts, and call from the standard API host unless the workspace is bound to your custom domain. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Data Alerts"
         ],
@@ -672,12 +740,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3091,
+          "action": "GET_ALERTS_IN_WORKSPACE",
+          "category": "METADATA",
+          "units": 2,
+          "unitsBasis": "perRequest",
+          "unitsNote": "2 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "delete": {
         "operationId": "deleteAlerts",
         "summary": "Delete Alerts",
-        "description": "Deletes one or more alerts in a workspace. Every id is validated before anything is removed, so the call is all-or-nothing.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller may not act on at least one of the listed alerts, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or list only alerts you own, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - At least one alert's view does not belong to the workspace in the URL. | Delete alerts from the workspace that owns them. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8078 | EMPTY_JSON_ATTRIBUTE_FOUND - alertIds was sent with an empty value. | Send an array of id strings, or omit the call. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - alertIds is missing from CONFIG. | Add alertIds. |\n| 8080 | INVALID_JSON_CONFIGURATION - An alertIds entry is not a JSON string. | Quote every id: [\"137687000010815003\"]. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent. | Send CONFIG as a URL-encoded form body on the DELETE request. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
+        "description": "Deletes one or more alerts in a workspace. Every id is validated before anything is removed, so the call is all-or-nothing.\n\n**Rate limit**\n\n- Costs 2 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller may not act on at least one of the listed alerts, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or list only alerts you own, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - At least one alert's view does not belong to the workspace in the URL. | Delete alerts from the workspace that owns them. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8078 | EMPTY_JSON_ATTRIBUTE_FOUND - alertIds was sent with an empty value. | Send an array of id strings, or omit the call. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - alertIds is missing from CONFIG. | Add alertIds. |\n| 8080 | INVALID_JSON_CONFIGURATION - An alertIds entry is not a JSON string. | Quote every id: [\"137687000010815003\"]. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent. | Send CONFIG as a URL-encoded form body on the DELETE request. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "tags": [
           "Data Alerts"
         ],
@@ -743,6 +820,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2085,
+          "action": "DELETE_ALERTS",
+          "category": "METADATA",
+          "units": 2,
+          "unitsBasis": "perRequest",
+          "unitsNote": "2 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -750,7 +836,7 @@
       "get": {
         "operationId": "getAlertsInView",
         "summary": "Get Alerts In View",
-        "description": "Returns the alerts configured on one report. The response entries are identical in shape to Get Alerts In Workspace, narrowed to a single <view-id>.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | META_OBJECT_NOT_PRESENT - View not found. | Verify via Get View List. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the alerts configured on one report. The response entries are identical in shape to Get Alerts In Workspace, narrowed to a single <view-id>.\n\n**Rate limit**\n\n- Costs 0.5 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | META_OBJECT_NOT_PRESENT - View not found. | Verify via Get View List. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Data Alerts"
         ],
@@ -831,12 +917,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3092,
+          "action": "GET_ALERTS_IN_VIEW",
+          "category": "METADATA",
+          "units": 0.5,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.5 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "post": {
         "operationId": "createAlert",
         "summary": "Create Alert",
-        "description": "Creates an alert on the specified report and returns its id. The view must be a Chart (AnalysisView), Pivot or SummaryView; the alert is created live, with its schedule registered immediately.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | META_OBJECT_NOT_PRESENT - View not found. | Verify via Get View List. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8078 | EMPTY_JSON_ATTRIBUTE_FOUND - A mandatory CONFIG attribute was sent with an empty value. | Give the named attribute a non-empty value. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - A mandatory attribute is missing: alertName, scheduleDetails, rules, summaryType on a Pivot view, conditionExpression with more than one rule, or attachmentType when includeReport is true. | Add the named attribute. |\n| 8080 | INVALID_JSON_CONFIGURATION - An attribute that must be a JSON string was sent as another type, typically viewColumnIndex, rowAxis, columnAxis or a values entry sent as a bare number. | Quote numeric identifiers and rule values: \"viewColumnIndex\": \"2\", \"values\": [\"1000\"]. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8119 | INVALID_VALUE_FOR_ATTRIBUTE - A value is outside its permitted set: an operator or type not in the column's allowedOperators / allowedRuleTypes, an unknown summaryType or messageType, an attachmentType other than inline / attachment, or a scheduleDetails number out of range (hour, minute, interval, weekDays, monthDays, months, weekOfMonth, dayOfWeek). | Take operators and rule types from Get View Metadata For Alert and keep schedule numbers within the ranges in scheduleDetails Fields. |\n| 8241 | SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION - The view carries a restricted Data Warning system tag and the alert attaches the report to an e-mail. HTTP 409. | Resolve the data warning, or resend with \"validateSystemTags\": false. |\n| 8245 | INVALID_VIEW_TYPE_FOR_OPERATION - The view is not a Chart, Pivot Table or Summary View. | Create the alert on a supported report type. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or a templated attribute is below its minimum occurrence. | Send CONFIG as a URL-encoded form parameter containing a valid JSON object. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Creates an alert on the specified report and returns its id. The view must be a Chart (AnalysisView), Pivot or SummaryView; the alert is created live, with its schedule registered immediately.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | META_OBJECT_NOT_PRESENT - View not found. | Verify via Get View List. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8078 | EMPTY_JSON_ATTRIBUTE_FOUND - A mandatory CONFIG attribute was sent with an empty value. | Give the named attribute a non-empty value. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - A mandatory attribute is missing: alertName, scheduleDetails, rules, summaryType on a Pivot view, conditionExpression with more than one rule, or attachmentType when includeReport is true. | Add the named attribute. |\n| 8080 | INVALID_JSON_CONFIGURATION - An attribute that must be a JSON string was sent as another type, typically viewColumnIndex, rowAxis, columnAxis or a values entry sent as a bare number. | Quote numeric identifiers and rule values: \"viewColumnIndex\": \"2\", \"values\": [\"1000\"]. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8119 | INVALID_VALUE_FOR_ATTRIBUTE - A value is outside its permitted set: an operator or type not in the column's allowedOperators / allowedRuleTypes, an unknown summaryType or messageType, an attachmentType other than inline / attachment, or a scheduleDetails number out of range (hour, minute, interval, weekDays, monthDays, months, weekOfMonth, dayOfWeek). | Take operators and rule types from Get View Metadata For Alert and keep schedule numbers within the ranges in scheduleDetails Fields. |\n| 8241 | SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION - The view carries a restricted Data Warning system tag and the alert attaches the report to an e-mail. HTTP 409. | Resolve the data warning, or resend with \"validateSystemTags\": false. |\n| 8245 | INVALID_VIEW_TYPE_FOR_OPERATION - The view is not a Chart, Pivot Table or Summary View. | Create the alert on a supported report type. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or a templated attribute is below its minimum occurrence. | Send CONFIG as a URL-encoded form parameter containing a valid JSON object. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "tags": [
           "Data Alerts"
         ],
@@ -1226,6 +1321,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2083,
+          "action": "CREATE_ALERT",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1233,7 +1337,7 @@
       "get": {
         "operationId": "getViewMetadataForAlert",
         "summary": "Get View Metadata For Alert",
-        "description": "Returns everything needed to construct a rule for a report: its alertable columns with their viewColumnIndex, the operator and rule-type catalogues each column permits, the chart thresholds on each column, and the view-level anomaly definitions. This is the only source of viewColumnIndex - call it before every Create Alert or Update Alert.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | META_OBJECT_NOT_PRESENT - View not found. | Verify via Get View List. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8245 | INVALID_VIEW_TYPE_FOR_OPERATION - The view is not a Chart, Pivot Table or Summary View. | Alerts are supported only on those three report types; pick a different view. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns everything needed to construct a rule for a report: its alertable columns with their viewColumnIndex, the operator and rule-type catalogues each column permits, the chart thresholds on each column, and the view-level anomaly definitions. This is the only source of viewColumnIndex - call it before every Create Alert or Update Alert.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | META_OBJECT_NOT_PRESENT - View not found. | Verify via Get View List. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a holder of CREATEALERT on this view, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner or a user with Manage Data Alerts on that view, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8245 | INVALID_VIEW_TYPE_FOR_OPERATION - The view is not a Chart, Pivot Table or Summary View. | Alerts are supported only on those three report types; pick a different view. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Data Alerts"
         ],
@@ -1413,6 +1517,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3093,
+          "action": "GET_VIEW_METADATA_FOR_ALERT",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1420,7 +1533,7 @@
       "get": {
         "operationId": "getAlertConfiguration",
         "summary": "Get Alert Configuration",
-        "description": "Returns one alert's complete configuration in exactly the CONFIG shape that Create Alert and Update Alert accept, so the response can be edited and posted straight back. This is the intended starting point for any edit.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns one alert's complete configuration in exactly the CONFIG shape that Create Alert and Update Alert accept, so the response can be edited and posted straight back. This is the intended starting point for any edit.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Data Alerts"
         ],
@@ -1558,12 +1671,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3094,
+          "action": "GET_ALERT_CONFIGURATION",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "put": {
         "operationId": "updateAlert",
         "summary": "Update Alert",
-        "description": "Replaces an existing alert's configuration. The CONFIG body is the same shape as Create Alert and is treated as a full replacement - not a patch. It is also the only API that accepts the Zoho Flow mapping attributes.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8245 | INVALID_VIEW_TYPE_FOR_OPERATION - The alert's view is no longer a Chart, Pivot Table or Summary View. | The report has been converted to an unsupported type; recreate the alert elsewhere. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent. | Send CONFIG as a URL-encoded form parameter containing a valid JSON object. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
+        "description": "Replaces an existing alert's configuration. The CONFIG body is the same shape as Create Alert and is treated as a full replacement - not a patch. It is also the only API that accepts the Zoho Flow mapping attributes.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8245 | INVALID_VIEW_TYPE_FOR_OPERATION - The alert's view is no longer a Chart, Pivot Table or Summary View. | The report has been converted to an unsupported type; recreate the alert elsewhere. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent. | Send CONFIG as a URL-encoded form parameter containing a valid JSON object. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
         "tags": [
           "Data Alerts"
         ],
@@ -1752,6 +1874,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2084,
+          "action": "UPDATE_ALERT",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1759,7 +1890,7 @@
       "put": {
         "operationId": "changeAlertStatus",
         "summary": "Change Alert Status",
-        "description": "Enables (resumes) or pauses one or more alerts without altering their configuration. One request sets one state for every id it lists.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller may not act on at least one of the listed alerts, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or list only alerts you own, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - At least one alert's view does not belong to the workspace in the URL. | Change status from the workspace that owns the alerts. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8078 | EMPTY_JSON_ATTRIBUTE_FOUND - alertIds or enabled was sent with an empty value. | Provide a non-empty value for both attributes. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - alertIds or enabled is missing from CONFIG. | Add the missing attribute. |\n| 8080 | INVALID_JSON_CONFIGURATION - enabled is not a boolean, or an alertIds entry is not a JSON string. | Send \"enabled\": true / false and quote every id. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent. | Send CONFIG as a URL-encoded form parameter containing a valid JSON object. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
+        "description": "Enables (resumes) or pauses one or more alerts without altering their configuration. One request sets one state for every id it lists.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller may not act on at least one of the listed alerts, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or list only alerts you own, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - At least one alert's view does not belong to the workspace in the URL. | Change status from the workspace that owns the alerts. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8078 | EMPTY_JSON_ATTRIBUTE_FOUND - alertIds or enabled was sent with an empty value. | Provide a non-empty value for both attributes. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - alertIds or enabled is missing from CONFIG. | Add the missing attribute. |\n| 8080 | INVALID_JSON_CONFIGURATION - enabled is not a boolean, or an alertIds entry is not a JSON string. | Send \"enabled\": true / false and quote every id. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent. | Send CONFIG as a URL-encoded form parameter containing a valid JSON object. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
         "tags": [
           "Data Alerts"
         ],
@@ -1838,6 +1969,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2086,
+          "action": "CHANGE_ALERT_STATUS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1845,7 +1985,7 @@
       "post": {
         "operationId": "runAlert",
         "summary": "Run Alert",
-        "description": "Queues an off-schedule evaluation of one alert. The alert is evaluated against live data and, if its condition is met, every configured channel delivers for real. There is no dry-run mode.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6079 | ALERT_NOTSUPPORTED - The organisation's plan allows no alert schedules. | Upgrade the plan, or add alert-schedule add-ons. |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object. | Send a valid, URL-encoded JSON object, or omit CONFIG entirely. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8241 | SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION - The alert attaches a report from a view carrying a restricted Data Warning tag. HTTP 409. | Resolve the data warning, or resend with \"validateSystemTags\": false. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Queues an off-schedule evaluation of one alert. The alert is evaluated against live data and, if its condition is met, every configured channel delivers for real. There is no dry-run mode.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6079 | ALERT_NOTSUPPORTED - The organisation's plan allows no alert schedules. | Upgrade the plan, or add alert-schedule add-ons. |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object. | Send a valid, URL-encoded JSON object, or omit CONFIG entirely. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8241 | SYSTEM_TAG_DATA_WARNING_V2_VALIDATION_CONFIRMATION - The alert attaches a report from a view carrying a restricted Data Warning tag. HTTP 409. | Resolve the data warning, or resend with \"validateSystemTags\": false. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "tags": [
           "Data Alerts"
         ],
@@ -1908,6 +2048,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2087,
+          "action": "RUN_ALERT",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1915,7 +2064,7 @@
       "get": {
         "operationId": "getAlertEvents",
         "summary": "Get Alert Events",
-        "description": "Returns the audit trail of one alert's evaluations - when each ran, and whether it triggered, did not trigger, or failed. This is the only machine-readable source of an alert's outcome, and the only paginated API in this family.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object. | Send a valid, URL-encoded JSON object, or omit CONFIG entirely. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8119 | INVALID_VALUE_FOR_ATTRIBUTE - fromDate is later than toDate, or a status entry is not one of triggered, notTriggered, error, or pageNo / recordsPerPage is outside its declared range. | Correct the range, the filter values, or the paging numbers. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the audit trail of one alert's evaluations - when each ran, and whether it triggered, did not trigger, or failed. This is the only machine-readable source of an alert's outcome, and the only paginated API in this family.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is neither the DB Owner nor a custom-role user permitted to act on this alert, or the request arrived through a custom domain the workspace is not bound to. | Authenticate as the DB Owner, or as the alert's owner with Manage Data Alerts, from the standard API host. |\n| 7319 | OBJID_NOT_BELONGS_TO_DB - The alert's view does not belong to the workspace in the URL. | Make and consistent. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not belong to the organisation in ZANALYTICS-ORGID. | Send the organisation id that owns the workspace. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use a domain you have purchased from Zoho Analytics, or the standard API host. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object. | Send a valid, URL-encoded JSON object, or omit CONFIG entirely. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8119 | INVALID_VALUE_FOR_ATTRIBUTE - fromDate is later than toDate, or a status entry is not one of triggered, notTriggered, error, or pageNo / recordsPerPage is outside its declared range. | Correct the range, the filter values, or the paging numbers. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Data Alerts"
         ],
@@ -2030,6 +2179,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3095,
+          "action": "GET_ALERT_EVENTS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     }

@@ -17,26 +17,44 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/backups"
       doc: "/domains/workspace-management/workspace-backup-and-restore/get-workspace-backups.md"
+      api_units: 1
+      api_units_action: GET_WORKSPACE_BACKUPS
+      api_units_category: METADATA
     - operation_id: backupWorkspaceNow
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/backups"
       doc: "/domains/workspace-management/workspace-backup-and-restore/backup-workspace-now.md"
+      api_units: 5
+      api_units_action: BACKUP_WORKSPACE_NOW
+      api_units_category: METADATA
     - operation_id: downloadWorkspaceBackup
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download"
       doc: "/domains/workspace-management/workspace-backup-and-restore/download-workspace-backup.md"
+      api_units: 1
+      api_units_action: DOWNLOAD_WORKSPACE_BACKUP
+      api_units_category: METADATA
     - operation_id: restoreWorkspaceFromBackup
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore"
       doc: "/domains/workspace-management/workspace-backup-and-restore/restore-workspace-from-backup.md"
+      api_units: 10
+      api_units_action: RESTORE_WORKSPACE_BACKUP
+      api_units_category: METADATA
     - operation_id: getWorkspaceBackupStatus
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status"
       doc: "/domains/workspace-management/workspace-backup-and-restore/get-workspace-backup-status.md"
+      api_units: 0.5
+      api_units_action: GET_WORKSPACE_BACKUP_STATUS
+      api_units_category: METADATA
     - operation_id: getWorkspaceRestoreStatus
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status"
       doc: "/domains/workspace-management/workspace-backup-and-restore/get-workspace-restore-status.md"
+      api_units: 0.5
+      api_units_action: GET_WORKSPACE_RESTORE_STATUS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
@@ -57,14 +75,14 @@ APIs for listing and triggering workspace backups, downloading a backup, restori
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Workspace Backups](get-workspace-backups.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups` | `getWorkspaceBackups` | `ZohoAnalytics.metadata.read` | 200 |
-| [Backup Workspace Now](backup-workspace-now.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups` | `backupWorkspaceNow` | `ZohoAnalytics.metadata.create` | 200 |
-| [Download Workspace Backup](download-workspace-backup.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download` | `downloadWorkspaceBackup` | `ZohoAnalytics.metadata.read` | 200 |
-| [Restore Workspace from Backup](restore-workspace-from-backup.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore` | `restoreWorkspaceFromBackup` | `ZohoAnalytics.metadata.create` | 200 |
-| [Get Workspace Backup Status](get-workspace-backup-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status` | `getWorkspaceBackupStatus` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Workspace Restore Status](get-workspace-restore-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status` | `getWorkspaceRestoreStatus` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Workspace Backups](get-workspace-backups.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups` | `getWorkspaceBackups` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Backup Workspace Now](backup-workspace-now.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups` | `backupWorkspaceNow` | `ZohoAnalytics.metadata.create` | 200 | 5 |
+| [Download Workspace Backup](download-workspace-backup.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/download` | `downloadWorkspaceBackup` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Restore Workspace from Backup](restore-workspace-from-backup.md) | POST | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/restore` | `restoreWorkspaceFromBackup` | `ZohoAnalytics.metadata.create` | 200 | 10 |
+| [Get Workspace Backup Status](get-workspace-backup-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/backups/{backup-id}/status` | `getWorkspaceBackupStatus` | `ZohoAnalytics.metadata.read` | 200 | 0.5 |
+| [Get Workspace Restore Status](get-workspace-restore-status.md) | GET | `/restapi/v2/workspaces/{workspace-id}/restores/{restore-id}/status` | `getWorkspaceRestoreStatus` | `ZohoAnalytics.metadata.read` | 200 | 0.5 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

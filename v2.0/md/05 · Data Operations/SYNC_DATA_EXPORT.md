@@ -29,9 +29,9 @@ These are rejected with `8133` regardless of format, filter or column selection 
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Export Data from a View](#1-export-data-from-a-view) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/data` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Export Data from a View](#1-export-data-from-a-view) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/data` | variable |
 
 > **Note on naming:** This API is published as **"Export Data from a View"**. It is the view-scoped synchronous export. A sibling endpoint, `GET /restapi/v2/workspaces/<workspace-id>/data`, exports the result of an ad-hoc SQL query instead of a saved view; it takes a different CONFIG (built around a `sqlQuery` attribute) and is documented separately.
 
@@ -200,6 +200,8 @@ Exports the data of a view and returns the generated file in the response body.
 | **CONFIG** | Optional — omitting it exports the whole view as CSV with defaults |
 | **Success Status** | `200 OK`, body is the exported file |
 | **Content-Type** | Varies with `responseFormat` — see [Response Structure by Format](#response-structure-by-format) |
+| **API Units** | Variable — the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard) — gateway action `INITIATE_EXPORT` (api-id `7001`), **BULK** unit category. |
+| **Frequency Limit** | 40 requests/minute shared across every **BULK**-category call of the organisation. |
 
 **Path parameters**
 
@@ -929,3 +931,38 @@ Defaults: `leftHeader` `1`, `centerHeader` `0`, `rightHeader` `2`, `leftFooter` 
 | `columnWidthRatio` | – | – | – | – | ✓ | ✓ | – |
 | `imageFormat`, `width`, `height` | – | – | – | – | – | – | ✓ |
 | `title`, `description`, `legend` | – | – | – | – | – | – | ✓ |
+
+---
+
+## Appendix G – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Export Data from a View](#1-export-data-from-a-view) | `INITIATE_EXPORT` (7001) | BULK | variable | depends on payload — see the notes below |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | Yes |
+| `METADATA` | 60 | — |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### Variable costs in this document
+
+- **Export Data from a View** (`INITIATE_EXPORT`, 7001): Variable — the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

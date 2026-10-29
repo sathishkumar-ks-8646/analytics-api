@@ -12,12 +12,12 @@ These APIs manage per-user workspace preferences — marking a workspace as the 
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Add Default Workspace](#1-add-default-workspace) | POST | `/restapi/v2/workspaces/<workspace-id>/default` |
-| 2 | [Remove Default Workspace](#2-remove-default-workspace) | DELETE | `/restapi/v2/workspaces/<workspace-id>/default` |
-| 3 | [Add Favourite Workspace](#3-add-favourite-workspace) | POST | `/restapi/v2/workspaces/<workspace-id>/favorite` |
-| 4 | [Remove Favourite Workspace](#4-remove-favourite-workspace) | DELETE | `/restapi/v2/workspaces/<workspace-id>/favorite` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Add Default Workspace](#1-add-default-workspace) | POST | `/restapi/v2/workspaces/<workspace-id>/default` | 0.1 |
+| 2 | [Remove Default Workspace](#2-remove-default-workspace) | DELETE | `/restapi/v2/workspaces/<workspace-id>/default` | 0.1 |
+| 3 | [Add Favourite Workspace](#3-add-favourite-workspace) | POST | `/restapi/v2/workspaces/<workspace-id>/favorite` | 0.1 |
+| 4 | [Remove Favourite Workspace](#4-remove-favourite-workspace) | DELETE | `/restapi/v2/workspaces/<workspace-id>/favorite` | 0.1 |
 
 ---
 
@@ -34,6 +34,8 @@ A user can have only one default workspace at a time. If the user already has a 
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. |
+| **API Units** | 0.1 units per request — gateway action `ADD_DEFAULT_WORKSPACE` (api-id `3019`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
@@ -111,6 +113,8 @@ Unlike Add Default Workspace, this API is **not idempotent** — if the specifie
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. |
+| **API Units** | 0.1 units per request — gateway action `REMOVE_DEFAULT_WORKSPACE` (api-id `3020`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
@@ -201,6 +205,8 @@ A user can favourite multiple workspaces simultaneously — there is no exclusiv
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. |
+| **API Units** | 0.1 units per request — gateway action `ADD_FAVOURITE_WORKSPACE` (api-id `3015`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
@@ -275,6 +281,8 @@ Removes the specified workspace from the calling user's list of favourite worksp
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. |
+| **API Units** | 0.1 units per request — gateway action `REMOVE_FAVOURITE_WORKSPACE` (api-id `3016`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
@@ -412,3 +420,37 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Portal user adding a default/favourite workspace | Preferences are stored scoped to the portal user's organisation namespace. Portal users and standard Zoho Analytics users maintain separate preference stores even if they access the same workspace. |
 | Portal user accessing via custom domain URL | The workspace must be accessible via that portal domain (shared with the portal user). If the workspace is not accessible in the portal domain context, the access check fails with 7301. |
 | Account Admin (Client Portal Admin) managing preferences | Uses the standard Zoho Analytics namespace. The admin's preferences are independent of portal user preferences. |
+
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Add Default Workspace](#1-add-default-workspace) | `ADD_DEFAULT_WORKSPACE` (3019) | METADATA | 0.1 | per request |
+| 2 | [Remove Default Workspace](#2-remove-default-workspace) | `REMOVE_DEFAULT_WORKSPACE` (3020) | METADATA | 0.1 | per request |
+| 3 | [Add Favourite Workspace](#3-add-favourite-workspace) | `ADD_FAVOURITE_WORKSPACE` (3015) | METADATA | 0.1 | per request |
+| 4 | [Remove Favourite Workspace](#4-remove-favourite-workspace) | `REMOVE_FAVOURITE_WORKSPACE` (3016) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

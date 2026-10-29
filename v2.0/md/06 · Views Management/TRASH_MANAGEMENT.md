@@ -11,11 +11,11 @@ This document describes the V2 **Trash View** REST APIs of Zoho Analytics — li
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Trash Views](#1-get-trash-views) | GET | `/restapi/v2/workspaces/<workspace-id>/trash` |
-| 2 | [Restore Trash View](#2-restore-trash-view) | POST | `/restapi/v2/workspaces/<workspace-id>/trash/<view-id>` |
-| 3 | [Delete Trash View](#3-delete-trash-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/trash/<view-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Trash Views](#1-get-trash-views) | GET | `/restapi/v2/workspaces/<workspace-id>/trash` | 1 |
+| 2 | [Restore Trash View](#2-restore-trash-view) | POST | `/restapi/v2/workspaces/<workspace-id>/trash/<view-id>` | 3 |
+| 3 | [Delete Trash View](#3-delete-trash-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/trash/<view-id>` | 3 |
 
 ---
 
@@ -28,6 +28,8 @@ This document describes the V2 **Trash View** REST APIs of Zoho Analytics — li
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **Permission Required** | The authenticated user must be an **Account Admin** or **Organization Admin**, or a **Workspace Admin**, or a **Shared User**, or a **Group Member**, or any user with **Read** permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_TRASH_VIEWS` (api-id `3035`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -244,6 +246,8 @@ When a trashed view is a Live Connect report and the current plan does not suppo
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **Permission Required** | The authenticated user must be an **Account Admin** or **Organization Admin**, or a **Workspace Admin**, or the **View Owner** (the user who owned the view before it was trashed). |
+| **API Units** | 3 units per request — gateway action `RESTORE_TRASH_VIEW` (api-id `2039`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -331,6 +335,8 @@ HTTP/1.1 204 No Content
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **Permission Required** | The authenticated user must be an **Account Admin** or **Organization Admin**, or a **Workspace Admin**, or the **View Owner** (the user who owned the view before it was trashed). |
+| **API Units** | 3 units per request — gateway action `DELETE_TRASH_VIEW` (api-id `2040`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > ⚠️ **This operation is permanent and irreversible.** Once a view is deleted from trash, it cannot be recovered. Ensure you mean to permanently delete the view and not restore it.
 
@@ -557,3 +563,36 @@ product_Vs_sales → AnalysisView (7617000032567467, child of Sales)
 | **Restoring a view whose folder was also deleted** | If the original folder containing the view was deleted, the view is restored to the workspace root folder. The folder does not need to be restored first. |
 | **Partial restore with `withDependents=true`** | The `withDependents=true` flag on Restore brings back the immediate parent chain (parent table, its columns, formulas, relations, connectors). Sibling views that also depended on the same parent are **not** automatically restored — only the specified view and its required ancestors. |
 | **Bulk deletion order** | When deleting multiple views manually (multiple DELETE calls), delete leaf views (analysis views, pivots) before parent tables. This avoids triggering error `7942` unexpectedly. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Trash Views](#1-get-trash-views) | `GET_TRASH_VIEWS` (3035) | METADATA | 1 | per request |
+| 2 | [Restore Trash View](#2-restore-trash-view) | `RESTORE_TRASH_VIEW` (2039) | METADATA | 3 | per request |
+| 3 | [Delete Trash View](#3-delete-trash-view) | `DELETE_TRASH_VIEW` (2040) | METADATA | 3 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

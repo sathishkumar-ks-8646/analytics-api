@@ -16,15 +16,15 @@ Unlike a [custom formula column](FORMULA_COLUMNS.md) (which computes a value per
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Aggregate Formula](#1-get-aggregate-formula) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/aggregateformulas` |
-| 2 | [Add Aggregate Formula](#2-add-aggregate-formula) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/aggregateformulas` |
-| 3 | [Edit Aggregate Formula](#3-edit-aggregate-formula) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/aggregateformulas/<formula-id>` |
-| 4 | [Delete Aggregate Formula](#4-delete-aggregate-formula) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/aggregateformulas/<formula-id>` |
-| 5 | [Get Unified Metrics in Workspace](#5-get-unified-metrics-in-workspace) | GET | `/restapi/v2/workspaces/<workspace-id>/aggregateformulas` |
-| 6 | [Get Aggregate Formula Dependents](#6-get-aggregate-formula-dependents) | GET | `/restapi/v2/workspaces/<workspace-id>/aggregateformulas/<formula-id>/dependents` |
-| 7 | [Get Aggregate Formula Value](#7-get-aggregate-formula-value) | GET | `/restapi/v2/workspaces/<workspace-id>/aggregateformulas/<formula-id>/value` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Aggregate Formula](#1-get-aggregate-formula) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/aggregateformulas` | 0.1 |
+| 2 | [Add Aggregate Formula](#2-add-aggregate-formula) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/aggregateformulas` | 5 |
+| 3 | [Edit Aggregate Formula](#3-edit-aggregate-formula) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/aggregateformulas/<formula-id>` | 5 |
+| 4 | [Delete Aggregate Formula](#4-delete-aggregate-formula) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/aggregateformulas/<formula-id>` | 1 |
+| 5 | [Get Unified Metrics in Workspace](#5-get-unified-metrics-in-workspace) | GET | `/restapi/v2/workspaces/<workspace-id>/aggregateformulas` | 1 |
+| 6 | [Get Aggregate Formula Dependents](#6-get-aggregate-formula-dependents) | GET | `/restapi/v2/workspaces/<workspace-id>/aggregateformulas/<formula-id>/dependents` | 1 |
+| 7 | [Get Aggregate Formula Value](#7-get-aggregate-formula-value) | GET | `/restapi/v2/workspaces/<workspace-id>/aggregateformulas/<formula-id>/value` | 1 |
 
 > **Note on naming:** Get Aggregate Formula, Add Aggregate Formula, Edit Aggregate Formula, and Delete Aggregate Formula are scoped to a specific view (`/views/<view-id>/aggregateformulas`) and are used to manage aggregate formulas owned by that view. Get Unified Metrics in Workspace, Get Aggregate Formula Dependents, and Get Aggregate Formula Value are scoped to the entire workspace (`/aggregateformulas`, without a `<view-id>`) and are used to browse, audit, and evaluate any aggregate formula in the workspace regardless of which view owns it.
 
@@ -42,6 +42,8 @@ Returns the list of aggregate formulas defined on the specified view.
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 30 requests per user per minute (10-minute lockout on breach). |
+| **API Units** | 0.1 units per request — gateway action `GET AGGREGATE FORMULA` (api-id `3037`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 30 requests per user per minute, 10-minute lockout on breach. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -158,6 +160,8 @@ Creates a new aggregate formula owned by the specified view.
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 20 requests per user per minute (10-minute lockout on breach). |
+| **API Units** | 5 units per request — gateway action `ADD_AGG_FORMULA` (api-id `2044`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameters
 
@@ -274,6 +278,8 @@ Updates an existing aggregate formula. Unlike [Edit Custom Formula](FORMULA_COLU
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 20 requests per user per minute (10-minute lockout on breach). |
+| **API Units** | 5 units per request — gateway action `EDIT_AGG_FORMULA` (api-id `2045`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameters
 
@@ -376,6 +382,8 @@ Permanently deletes an aggregate formula from the specified view. By default, de
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 20 requests per user per minute (10-minute lockout on breach). |
+| **API Units** | 1 unit per request — gateway action `DELETE AGG FORMULA` (api-id `2046`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameters
 
@@ -467,6 +475,8 @@ Returns the full list of aggregate formulas (Unified Metrics) across **every** v
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Read permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_AGGREGATE_FORMULAS_IN_WORKSPACE` (api-id `3039`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -599,6 +609,8 @@ Returns all views, dashboards, and other aggregate formulas that depend on the s
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Read permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_AGGREGATE_FORMULA_DEPENDENTS` (api-id `3040`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -745,6 +757,8 @@ Computes and returns the current live value of the specified aggregate formula b
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Read permission on the workspace **and** access to the columns/tables involved in the formula. |
+| **API Units** | 1 unit per request — gateway action `GET_AGGREGATE_FORMULA_VALUE` (api-id `3041`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -913,3 +927,51 @@ ZANALYTICS-ORGID: 700000123456
 | **Expression redaction is permission-based, not role-based** | Whether `expression` is visible depends on whether the specific calling user has edit permission on that specific formula (which may vary formula-by-formula for custom-role users), not simply their broad role (Admin/Shared/Group). |
 | **Empty response bodies are common for mutating calls** | Edit Aggregate Formula and Delete Aggregate Formula both return HTTP **204 No Content** with no JSON body at all — treat the 2xx status code as the success indicator, not the presence/absence of a `status` field. |
 | **`formulaValue` is always serialized as a string** | Regardless of whether the aggregate's `subtypeId` indicates `NUMBER` or `DECIMAL_NUMBER`, the value in Get Aggregate Formula Value is returned as a JSON string, not a native number — parse accordingly. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Aggregate Formula](#1-get-aggregate-formula) | `GET AGGREGATE FORMULA` (3037) | METADATA | 0.1 | per request |
+| 2 | [Add Aggregate Formula](#2-add-aggregate-formula) | `ADD_AGG_FORMULA` (2044) | METADATA | 5 | per request |
+| 3 | [Edit Aggregate Formula](#3-edit-aggregate-formula) | `EDIT_AGG_FORMULA` (2045) | METADATA | 5 | per request |
+| 4 | [Delete Aggregate Formula](#4-delete-aggregate-formula) | `DELETE AGG FORMULA` (2046) | METADATA | 1 | per request |
+| 5 | [Get Unified Metrics in Workspace](#5-get-unified-metrics-in-workspace) | `GET_AGGREGATE_FORMULAS_IN_WORKSPACE` (3039) | METADATA | 1 | per request |
+| 6 | [Get Aggregate Formula Dependents](#6-get-aggregate-formula-dependents) | `GET_AGGREGATE_FORMULA_DEPENDENTS` (3040) | METADATA | 1 | per request |
+| 7 | [Get Aggregate Formula Value](#7-get-aggregate-formula-value) | `GET_AGGREGATE_FORMULA_VALUE` (3041) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### API-specific throttles
+
+These APIs carry an extra threshold on top of the category ceiling. Crossing it locks the caller out of that API for the lock period.
+
+| API Name | Throttle |
+|----------|----------|
+| [Get Aggregate Formula](#1-get-aggregate-formula) | 30 requests per user per minute, 10-minute lockout on breach |
+| [Add Aggregate Formula](#2-add-aggregate-formula) | 20 requests per user per minute, 10-minute lockout on breach |
+| [Edit Aggregate Formula](#3-edit-aggregate-formula) | 20 requests per user per minute, 10-minute lockout on breach |
+| [Delete Aggregate Formula](#4-delete-aggregate-formula) | 20 requests per user per minute, 10-minute lockout on breach |
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

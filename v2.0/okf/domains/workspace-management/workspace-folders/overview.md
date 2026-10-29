@@ -17,34 +17,58 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/folders"
       doc: "/domains/workspace-management/workspace-folders/get-folders.md"
+      api_units: 0.1
+      api_units_action: GET_FOLDERS
+      api_units_category: METADATA
     - operation_id: createFolder
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/folders"
       doc: "/domains/workspace-management/workspace-folders/create-folder.md"
+      api_units: 1
+      api_units_action: CREATE_FOLDER
+      api_units_category: METADATA
     - operation_id: renameFolder
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}"
       doc: "/domains/workspace-management/workspace-folders/rename-folder.md"
+      api_units: 1
+      api_units_action: RENAME_FOLDER
+      api_units_category: METADATA
     - operation_id: deleteFolder
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}"
       doc: "/domains/workspace-management/workspace-folders/delete-folder.md"
+      api_units: 1
+      api_units_action: DELETE_FOLDER
+      api_units_category: METADATA
     - operation_id: changeFolderHierarchy
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/move"
       doc: "/domains/workspace-management/workspace-folders/change-folder-hierarchy.md"
+      api_units: 1
+      api_units_action: CHANGE_FOLDER_HIERARCHY
+      api_units_category: METADATA
     - operation_id: changeFolderPosition
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/reorder"
       doc: "/domains/workspace-management/workspace-folders/change-folder-position.md"
+      api_units: 1
+      api_units_action: CHANGE_FOLDER_POSITION
+      api_units_category: METADATA
     - operation_id: moveViewsToFolder
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/movetofolder"
       doc: "/domains/workspace-management/workspace-folders/move-views-to-folder.md"
+      api_units: 1
+      api_units_action: MOVE_VIEWS_TO_FOLDER
+      api_units_category: METADATA
     - operation_id: makeDefaultFolder
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/default"
       doc: "/domains/workspace-management/workspace-folders/make-default-folder.md"
+      api_units: 1
+      api_units_action: MAKE_DEFAULT_FOLDER
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
@@ -73,16 +97,16 @@ APIs that manage the folders of a workspace, covering the creation, renaming, de
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Folder List](get-folders.md) | GET | `/restapi/v2/workspaces/{workspace-id}/folders` | `getFolders` | `ZohoAnalytics.metadata.read` | 200 |
-| [Create Folder](create-folder.md) | POST | `/restapi/v2/workspaces/{workspace-id}/folders` | `createFolder` | `ZohoAnalytics.modeling.create` | 200 |
-| [Rename Folder](rename-folder.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}` | `renameFolder` | `ZohoAnalytics.modeling.update` | 204 |
-| [Delete Folder](delete-folder.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}` | `deleteFolder` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Change Folder Hierarchy](change-folder-hierarchy.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/move` | `changeFolderHierarchy` | `ZohoAnalytics.modeling.update` | 204 |
-| [Change Folder Position](change-folder-position.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/reorder` | `changeFolderPosition` | `ZohoAnalytics.modeling.update` | 204 |
-| [Move Views To Folder](move-views-to-folder.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/movetofolder` | `moveViewsToFolder` | `ZohoAnalytics.modeling.update` | 204 |
-| [Make Default Folder](make-default-folder.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/default` | `makeDefaultFolder` | `ZohoAnalytics.modeling.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Folder List](get-folders.md) | GET | `/restapi/v2/workspaces/{workspace-id}/folders` | `getFolders` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
+| [Create Folder](create-folder.md) | POST | `/restapi/v2/workspaces/{workspace-id}/folders` | `createFolder` | `ZohoAnalytics.modeling.create` | 200 | 1 |
+| [Rename Folder](rename-folder.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}` | `renameFolder` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Delete Folder](delete-folder.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}` | `deleteFolder` | `ZohoAnalytics.modeling.delete` | 204 | 1 |
+| [Change Folder Hierarchy](change-folder-hierarchy.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/move` | `changeFolderHierarchy` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Change Folder Position](change-folder-position.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/reorder` | `changeFolderPosition` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Move Views To Folder](move-views-to-folder.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/movetofolder` | `moveViewsToFolder` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Make Default Folder](make-default-folder.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/folders/{folder-id}/default` | `makeDefaultFolder` | `ZohoAnalytics.modeling.update` | 204 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

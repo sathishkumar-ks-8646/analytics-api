@@ -18,11 +18,11 @@ of them.
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Create Dashboard](#1-create-dashboard) | POST | `/restapi/v2/workspaces/<workspace-id>/dashboards` |
-| 2 | [Read Dashboard Metadata](#2-read-dashboard-metadata) | GET | `/restapi/v2/workspaces/<workspace-id>/dashboards/<dashboard-id>/metadata` |
-| 3 | [Update Dashboard](#3-update-dashboard) | PUT | `/restapi/v2/workspaces/<workspace-id>/dashboards/<dashboard-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Create Dashboard](#1-create-dashboard) | POST | `/restapi/v2/workspaces/<workspace-id>/dashboards` | 5 |
+| 2 | [Read Dashboard Metadata](#2-read-dashboard-metadata) | GET | `/restapi/v2/workspaces/<workspace-id>/dashboards/<dashboard-id>/metadata` | 1 |
+| 3 | [Update Dashboard](#3-update-dashboard) | PUT | `/restapi/v2/workspaces/<workspace-id>/dashboards/<dashboard-id>` | 5 |
 
 ---
 
@@ -170,6 +170,8 @@ Creates a dashboard in the given workspace and returns its ID.
 | **Permission Required** | Workspace Admin / Organization Admin, or a shared or group user holding **Create Report** permission on the workspace. A Custom Role user must have the Create Report permission explicitly granted, otherwise the call is rejected before any validation runs. |
 | **Custom domain** | Permitted, but only when the target workspace is mapped to the calling white-label domain. A mismatch raises **7301**. |
 | **Throttle** | 10 requests per minute per user; 10-minute lock-out on breach. |
+| **API Units** | 5 units per request — gateway action `CREATE_DASHBOARD` (api-id `2060`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 10 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameter
 
@@ -440,7 +442,9 @@ that [Update Dashboard](#3-update-dashboard) requires.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **Permission Required** | **Read Only** or higher on the dashboard. Owners, Workspace Admins, Organization Admins, shared users and group members with read access all qualify. |
 | **Custom domain** | Permitted when the workspace is mapped to the calling domain. |
-| **Throttle** | 20 requests per minute per user. |
+| **Throttle** | 20 requests per minute per user; 10-minute lock-out on breach. |
+| **API Units** | 1 unit per request — gateway action `GET_DASHBOARD_METADATA` (api-id `2061`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameter
 
@@ -598,6 +602,8 @@ Replaces one or more sections of an existing dashboard.
 | **Permission Required** | **Design Modify** on the dashboard — the owner, a Workspace Admin, an Organization Admin, or a shared user granted edit rights. |
 | **Custom domain** | Permitted when the workspace is mapped to the calling domain. |
 | **Throttle** | 10 requests per minute per user; 10-minute lock-out on breach. |
+| **API Units** | 5 units per request — gateway action `UPDATE_DASHBOARD` (api-id `2062`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 10 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameter
 
@@ -758,3 +764,46 @@ different triggers are:
 | A `USERFILTERS` card narrower than 80 units | **7512**, not 7480 — the per-type minimum width for the filter panel is the full grid. |
 | Dashboard contains only `USERFILTERS` cards | **9001** `DASHBOARD_EMPTY`. |
 | Create fails after partial validation | Nothing is written. Create validates the whole CONFIG before persisting, and Update runs inside a transaction. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Create Dashboard](#1-create-dashboard) | `CREATE_DASHBOARD` (2060) | METADATA | 5 | per request |
+| 2 | [Read Dashboard Metadata](#2-read-dashboard-metadata) | `GET_DASHBOARD_METADATA` (2061) | METADATA | 1 | per request |
+| 3 | [Update Dashboard](#3-update-dashboard) | `UPDATE_DASHBOARD` (2062) | METADATA | 5 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### API-specific throttles
+
+These APIs carry an extra threshold on top of the category ceiling. Crossing it locks the caller out of that API for the lock period.
+
+| API Name | Throttle |
+|----------|----------|
+| [Create Dashboard](#1-create-dashboard) | 10 requests per user per minute, 10-minute lockout on breach |
+| [Read Dashboard Metadata](#2-read-dashboard-metadata) | 20 requests per user per minute, 10-minute lockout on breach |
+| [Update Dashboard](#3-update-dashboard) | 10 requests per user per minute, 10-minute lockout on breach |
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

@@ -8,15 +8,15 @@ These APIs manage the lifecycle and metadata of workspaces — creating, copying
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Create Workspace](#1-create-workspace) | POST | `/restapi/v2/workspaces` |
-| 2 | [Copy Workspace](#2-copy-workspace) | POST | `/restapi/v2/workspaces/<workspace-id>` |
-| 3 | [Rename Workspace](#3-rename-workspace) | PUT | `/restapi/v2/workspaces/<workspace-id>` |
-| 4 | [Delete Workspace](#4-delete-workspace) | DELETE | `/restapi/v2/workspaces/<workspace-id>` |
-| 5 | [Export as Template](#5-export-as-template) | GET | `/restapi/v2/workspaces/<workspace-id>/template/data` |
-| 6 | [Get Workspace Secret Key](#6-get-workspace-secret-key) | GET | `/restapi/v2/workspaces/<workspace-id>/secretkey` |
-| 7 | [Get Workspace Info](#7-get-workspace-info) | GET | `/restapi/v2/workspaces/<workspace-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Create Workspace](#1-create-workspace) | POST | `/restapi/v2/workspaces` | 1 |
+| 2 | [Copy Workspace](#2-copy-workspace) | POST | `/restapi/v2/workspaces/<workspace-id>` | variable |
+| 3 | [Rename Workspace](#3-rename-workspace) | PUT | `/restapi/v2/workspaces/<workspace-id>` | 1 |
+| 4 | [Delete Workspace](#4-delete-workspace) | DELETE | `/restapi/v2/workspaces/<workspace-id>` | 1 |
+| 5 | [Export as Template](#5-export-as-template) | GET | `/restapi/v2/workspaces/<workspace-id>/template/data` | 5 |
+| 6 | [Get Workspace Secret Key](#6-get-workspace-secret-key) | GET | `/restapi/v2/workspaces/<workspace-id>/secretkey` | 0.5 |
+| 7 | [Get Workspace Info](#7-get-workspace-info) | GET | `/restapi/v2/workspaces/<workspace-id>` | 0.1 |
 
 ---
 
@@ -31,6 +31,8 @@ Creates a new empty workspace in the specified organisation. The workspace is cr
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID in which the workspace will be created. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the target organisation. |
+| **API Units** | 1 unit per request — gateway action `CREATE_WORKSPACE` (api-id `2001`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -126,6 +128,8 @@ Creates a copy of an existing workspace. The copy can be placed in the **same or
 | **ZANALYTICS-ORGID Header** | **Mandatory** — For same-org copies: the workspace's own organisation ID. For cross-org copies by Account Admin: the **destination** organisation ID. For cross-org copies by Org Admin: the caller's own (source) organisation ID — use `ZANALYTICS-DEST-ORGID` to specify the destination separately. |
 | **ZANALYTICS-DEST-ORGID Header** | **Optional** — Used by Organization Admins who have admin access in multiple organisations. Set this to the **destination** organisation ID when it differs from the org resolved from `ZANALYTICS-ORGID`. When present, the system validates that the caller is a member of the specified destination org and uses it as the target for the copy. When absent, the destination org defaults to the caller's own resolved organisation. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the **destination** organisation. |
+| **API Units** | 25 units per request when `copyData` is false; when `copyData` is true, 25 units plus 1 unit per 1000 rows copied — gateway action `COPY_WORKSPACE_WO_DATA` (api-id `2002`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -250,6 +254,8 @@ Updates the name and/or description of an existing workspace. Both fields are re
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. |
+| **API Units** | 1 unit per request — gateway action `RENAME_WORKSPACE` (api-id `2004`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -340,6 +346,8 @@ Permanently deletes the specified workspace and all of its contents — tables, 
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. |
+| **API Units** | 1 unit per request — gateway action `DELETE_WORKSPACE` (api-id `2005`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. An optional CONFIG envelope is accepted but has no documented fields; deletion always proceeds with defaults.
 
@@ -399,6 +407,8 @@ Exports selected views from the specified workspace as a reusable template file.
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 5 units per request — gateway action `EXPORT_AS_TEMPLATE` (api-id `3032`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -489,6 +499,8 @@ The key can optionally be regenerated, which invalidates the previous key. Any p
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. |
+| **API Units** | 0.5 units per request — gateway action `GET_WORKSPACE_SECRETKEY` (api-id `3011`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -571,6 +583,8 @@ Returns metadata for the specified workspace. The calling user must have at leas
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID that owns the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 0.1 units per request — gateway action `GET_WORKSPACE_DETAILS` (api-id `3012`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -834,3 +848,44 @@ ZANALYTICS-ORGID: 700000789012
 |-----|---------|--------------|------------------|
 | [Get Org Workspaces](../01%20%C2%B7%20Organization%20Management/ORG_LEVEL_LISTINGS.md#1-get-org-workspaces) | Workspaces of one organisation that the caller can reach | Any active user of the organisation | **Mandatory** |
 | Get Workspace Info | Single workspace details | Workspace Admin, shared user, or any user with view access | **Mandatory** |
+
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Create Workspace](#1-create-workspace) | `CREATE_WORKSPACE` (2001) | METADATA | 1 | per request |
+| 2 | [Copy Workspace](#2-copy-workspace) | `COPY_WORKSPACE_WO_DATA` (2002) | METADATA | variable | depends on payload — see the notes below |
+| 3 | [Rename Workspace](#3-rename-workspace) | `RENAME_WORKSPACE` (2004) | METADATA | 1 | per request |
+| 4 | [Delete Workspace](#4-delete-workspace) | `DELETE_WORKSPACE` (2005) | METADATA | 1 | per request |
+| 5 | [Export as Template](#5-export-as-template) | `EXPORT_AS_TEMPLATE` (3032) | METADATA | 5 | per request |
+| 6 | [Get Workspace Secret Key](#6-get-workspace-secret-key) | `GET_WORKSPACE_SECRETKEY` (3011) | METADATA | 0.5 | per request |
+| 7 | [Get Workspace Info](#7-get-workspace-info) | `GET_WORKSPACE_DETAILS` (3012) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### Variable costs in this document
+
+- **Copy Workspace** (`COPY_WORKSPACE_WO_DATA`, 2002): 25 units per request when `copyData` is false; when `copyData` is true, 25 units plus 1 unit per 1000 rows copied
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

@@ -10,6 +10,20 @@
       "url": "https://analyticsapi.zoho.com"
     }
   ],
+  "x-api-unit-categories": {
+    "description": "Every call deducts API units from the organization's plan allowance and is counted against the per-minute request ceiling of its unit category. A unit cost with a row basis is charged pro rata as (rowsProcessed / rowsBasis) * units, without rounding up to a whole block. The per-minute ceilings below are the base configuration; an organization's effective ceiling is the base value scaled by a plan-specific multiplier.",
+    "categories": {
+      "DML": {
+        "frequencyLimitPerMinute": 100
+      },
+      "BULK": {
+        "frequencyLimitPerMinute": 40
+      },
+      "METADATA": {
+        "frequencyLimitPerMinute": 60
+      }
+    }
+  },
   "tags": [
     {
       "name": "Reports",
@@ -682,6 +696,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 2031,
+          "action": "CREATE_ANALYSISVIEW",
+          "units": {
+            "category": "METADATA",
+            "cost": 5,
+            "basis": "request",
+            "note": "5 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -1141,6 +1168,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 2032,
+          "action": "UPDATE_ANALYSISVIEW",
+          "units": {
+            "category": "METADATA",
+            "cost": 5,
+            "basis": "request",
+            "note": "5 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -1335,6 +1375,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 3052,
+          "action": "GET_REPORT_METADATA",
+          "units": {
+            "category": "METADATA",
+            "cost": 0.1,
+            "basis": "request",
+            "note": "0.1 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }
@@ -1712,11 +1765,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2060,
+          "action": "CREATE_DASHBOARD",
+          "units": {
+            "category": "METADATA",
+            "cost": 5,
+            "basis": "request",
+            "note": "5 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 10,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         }
@@ -2015,10 +2080,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2061,
+          "action": "GET_DASHBOARD_METADATA",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
-              "threshold": 20
+              "threshold": 20,
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         }
@@ -2374,11 +2452,23 @@
           }
         },
         "x-zenesis-security": {
+          "api-id": 2062,
+          "action": "UPDATE_DASHBOARD",
+          "units": {
+            "category": "METADATA",
+            "cost": 5,
+            "basis": "request",
+            "note": "5 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
           "throttles": [
             {
               "duration": 60,
               "threshold": 10,
-              "lock-period": 600
+              "lock-period": 600,
+              "per-user": true
             }
           ]
         }

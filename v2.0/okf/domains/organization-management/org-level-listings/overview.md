@@ -17,14 +17,23 @@ api:
       method: GET
       path: "/restapi/v2/orgs/workspaces"
       doc: "/domains/organization-management/org-level-listings/get-org-workspaces.md"
+      api_units: 0.1
+      api_units_action: GET_WORKSPACES
+      api_units_category: METADATA
     - operation_id: getOrgDashboards
       method: GET
       path: "/restapi/v2/orgs/dashboards"
       doc: "/domains/organization-management/org-level-listings/get-org-dashboards.md"
+      api_units: 0.1
+      api_units_action: GET_ORG_DASHBOARDS
+      api_units_category: METADATA
     - operation_id: getOrgRecentItems
       method: GET
       path: "/restapi/v2/orgs/recentitems"
       doc: "/domains/organization-management/org-level-listings/get-org-recent-items.md"
+      api_units: 0.1
+      api_units_action: GET_RECENT_VIEWS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/org-management-grouped-api.json"
@@ -43,11 +52,11 @@ This document covers the V2 **Org-Level Listing** REST APIs of Zoho Analytics â€
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Org Workspaces](get-org-workspaces.md) | GET | `/restapi/v2/orgs/workspaces` | `getOrgWorkspaces` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Org Dashboards](get-org-dashboards.md) | GET | `/restapi/v2/orgs/dashboards` | `getOrgDashboards` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Org Recent Items](get-org-recent-items.md) | GET | `/restapi/v2/orgs/recentitems` | `getOrgRecentItems` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Org Workspaces](get-org-workspaces.md) | GET | `/restapi/v2/orgs/workspaces` | `getOrgWorkspaces` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
+| [Get Org Dashboards](get-org-dashboards.md) | GET | `/restapi/v2/orgs/dashboards` | `getOrgDashboards` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
+| [Get Org Recent Items](get-org-recent-items.md) | GET | `/restapi/v2/orgs/recentitems` | `getOrgRecentItems` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

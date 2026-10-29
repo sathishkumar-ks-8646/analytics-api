@@ -10,6 +10,20 @@
       "url": "https://analyticsapi.zoho.com"
     }
   ],
+  "x-api-unit-categories": {
+    "description": "Every call deducts API units from the organization's plan allowance and is counted against the per-minute request ceiling of its unit category. A unit cost with a row basis is charged pro rata as (rowsProcessed / rowsBasis) * units, without rounding up to a whole block. The per-minute ceilings below are the base configuration; an organization's effective ceiling is the base value scaled by a plan-specific multiplier.",
+    "categories": {
+      "DML": {
+        "frequencyLimitPerMinute": 100
+      },
+      "BULK": {
+        "frequencyLimitPerMinute": 40
+      },
+      "METADATA": {
+        "frequencyLimitPerMinute": 60
+      }
+    }
+  },
   "tags": [
     {
       "name": "Org Info & Settings",
@@ -31,7 +45,7 @@
           "Org Level Listings"
         ],
         "summary": "Get Org Workspaces",
-        "description": "Returns the workspaces of one organisation that the calling user can reach. The organisation is chosen with the `ZANALYTICS-ORGID` header and everything else is worked out from the identity of the caller.\n\nAn Account Admin or an Organization Admin receives every active workspace of the organisation; every other user receives only the workspaces shared with them. The result is therefore per caller: the same URL and header return different lists for different tokens. The `workspaceId` values returned here are the input of the Get Org Dashboards API and of every workspace-scoped API.\n\n**Notes**\n\n> Note:\n>\n> - The list is ordered with the newest workspace first, by creation time. There is no sort parameter and no paging - the whole list is returned in one response.\n> - **isDefault** belongs to the caller, not to the workspace. At most one entry is true, and none is when the caller has no default workspace or the default is in another organisation. Do not store it as a workspace attribute.\n> - **workspaceId**, **orgId** and **createdTime** are JSON strings. Keep them as strings and do not parse the IDs as 32-bit integers.\n> - Some builds return additional fields. Ignore unrecognised keys rather than validating against a closed schema.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | The caller is not an active user of the organisation named in the header. | Use the organisation the user belongs to, or ask an Account Admin to add the user to the organisation. |\n| 8083 | The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | No organisation exists with the given ID. | Read the Organization ID from Settings > Organisation in the Zoho Analytics UI. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the workspaces of one organisation that the calling user can reach. The organisation is chosen with the `ZANALYTICS-ORGID` header and everything else is worked out from the identity of the caller.\n\nAn Account Admin or an Organization Admin receives every active workspace of the organisation; every other user receives only the workspaces shared with them. The result is therefore per caller: the same URL and header return different lists for different tokens. The `workspaceId` values returned here are the input of the Get Org Dashboards API and of every workspace-scoped API.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - The list is ordered with the newest workspace first, by creation time. There is no sort parameter and no paging - the whole list is returned in one response.\n> - **isDefault** belongs to the caller, not to the workspace. At most one entry is true, and none is when the caller has no default workspace or the default is in another organisation. Do not store it as a workspace attribute.\n> - **workspaceId**, **orgId** and **createdTime** are JSON strings. Keep them as strings and do not parse the IDs as 32-bit integers.\n> - Some builds return additional fields. Ignore unrecognised keys rather than validating against a closed schema.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | The caller is not an active user of the organisation named in the header. | Use the organisation the user belongs to, or ask an Account Admin to add the user to the organisation. |\n| 8083 | The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | No organisation exists with the given ID. | Read the Organization ID from Settings > Organisation in the Zoho Analytics UI. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getOrgWorkspaces",
         "parameters": [
           {
@@ -105,6 +119,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3043,
+          "action": "GET_WORKSPACES",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -114,7 +137,7 @@
           "Org Level Listings"
         ],
         "summary": "Get Org Dashboards",
-        "description": "Returns the dashboards of one organisation that the calling user may read, across all of the workspaces the caller can see or across the workspaces named in `workspaceIds`. The result is paged and is ordered with the most recently modified dashboard first.\n\nVisibility follows the permissions of the caller: a dashboard is returned only when the caller administers its workspace, holds a custom role in it, or the dashboard has been shared with them or made public. Account Admins, Organization Admins and workspace admins see every dashboard in their workspaces. The API is not available on a Client Portal or White Label domain.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | The caller is not a member of the organisation named in the header, or the request came through a Client Portal or White Label domain. | Call from the standard API host as a member of the organisation named in the header. |\n| 7387 | A workspaceIds entry does not belong to the organisation in the header, or does not exist. | Take the workspace IDs from the Get Org Workspaces API for the same organisation. |\n| 7430 | Org-level view listing is blocked for the organisation. This code is reported to the Account Admin. | Use the workspace-level APIs, or contact support. |\n| 7431 | Org-level view listing is blocked for the organisation. This code is reported to every caller other than the Account Admin. | Use the workspace-level APIs, or contact the account admin. |\n| 7476 | More workspaces are in scope than the limit allows. | Send workspaceIds listing the workspaces you want, within the limit. |\n| 8083 | The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | No organisation exists with the given ID. | Read the Organization ID from Settings > Organisation in the Zoho Analytics UI. |\n| 8507 | searchKey exceeds 100 characters, workspaceIds exceeds 10,000 characters, or CONFIG exceeds 11,000 characters. | Shorten the value, or send fewer workspace IDs per call. |\n| 8516 | pageNo or recordsPerPage is not a number. | Send a plain number. |\n| 8534 | CONFIG is not valid JSON, or workspaceIds is not an array. | Fix the JSON and URL encode it correctly, and send workspaceIds as an array of strings. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |\n| 8539 | CONFIG is sent empty, or a CONFIG value - searchKey, pageNo, recordsPerPage, workspaceIds or one of its entries - is null or an empty or blank string. | Leave the key out instead of sending an empty value, and send only non-empty workspace IDs. |\n| 8542 | CONFIG holds a key other than workspaceIds, pageNo, recordsPerPage and searchKey. | Remove the key. |\n| 8544 | pageNo is outside 1 to 1,000, or recordsPerPage is outside 1 to 500. | Use a value inside the range. |\n| 8547 | workspaceIds holds more than 1,000 entries. | Send at most 1,000 IDs, and in practice no more than the workspace limit allows. |",
+        "description": "Returns the dashboards of one organisation that the calling user may read, across all of the workspaces the caller can see or across the workspaces named in `workspaceIds`. The result is paged and is ordered with the most recently modified dashboard first.\n\nVisibility follows the permissions of the caller: a dashboard is returned only when the caller administers its workspace, holds a custom role in it, or the dashboard has been shared with them or made public. Account Admins, Organization Admins and workspace admins see every dashboard in their workspaces. The API is not available on a Client Portal or White Label domain.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | The caller is not a member of the organisation named in the header, or the request came through a Client Portal or White Label domain. | Call from the standard API host as a member of the organisation named in the header. |\n| 7387 | A workspaceIds entry does not belong to the organisation in the header, or does not exist. | Take the workspace IDs from the Get Org Workspaces API for the same organisation. |\n| 7430 | Org-level view listing is blocked for the organisation. This code is reported to the Account Admin. | Use the workspace-level APIs, or contact support. |\n| 7431 | Org-level view listing is blocked for the organisation. This code is reported to every caller other than the Account Admin. | Use the workspace-level APIs, or contact the account admin. |\n| 7476 | More workspaces are in scope than the limit allows. | Send workspaceIds listing the workspaces you want, within the limit. |\n| 8083 | The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | No organisation exists with the given ID. | Read the Organization ID from Settings > Organisation in the Zoho Analytics UI. |\n| 8507 | searchKey exceeds 100 characters, workspaceIds exceeds 10,000 characters, or CONFIG exceeds 11,000 characters. | Shorten the value, or send fewer workspace IDs per call. |\n| 8516 | pageNo or recordsPerPage is not a number. | Send a plain number. |\n| 8534 | CONFIG is not valid JSON, or workspaceIds is not an array. | Fix the JSON and URL encode it correctly, and send workspaceIds as an array of strings. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |\n| 8539 | CONFIG is sent empty, or a CONFIG value - searchKey, pageNo, recordsPerPage, workspaceIds or one of its entries - is null or an empty or blank string. | Leave the key out instead of sending an empty value, and send only non-empty workspace IDs. |\n| 8542 | CONFIG holds a key other than workspaceIds, pageNo, recordsPerPage and searchKey. | Remove the key. |\n| 8544 | pageNo is outside 1 to 1,000, or recordsPerPage is outside 1 to 500. | Use a value inside the range. |\n| 8547 | workspaceIds holds more than 1,000 entries. | Send at most 1,000 IDs, and in practice no more than the workspace limit allows. |",
         "operationId": "getOrgDashboards",
         "parameters": [
           {
@@ -244,6 +267,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3044,
+          "action": "GET_ORG_DASHBOARDS",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -253,7 +285,7 @@
           "Org Level Listings"
         ],
         "summary": "Get Org Recent Items",
-        "description": "Returns the views the calling user opened most recently in one organisation, of any view type, newest first. At most 20 items are returned.\n\nThe API reads the own history of the caller and keeps the entries whose workspace is visible to them. It applies no view-level check, so an entry can refer to a view the caller can no longer open; treat the `viewId` as a hint and handle a refusal when you open it.\n\n**Notes**\n\n> Note:\n>\n> - Each user has an independent list. The request cannot read the recent items of another user.\n> - Entries are kept when their workspace is visible to the caller, exactly as the Get Org Workspaces API works it out. This API does not re-check view-level access, so an entry can refer to a view the caller can no longer open.\n> - At most 20 entries are returned, newest first. There is no paging, no limit attribute and no type filter.\n> - When the caller has no visible workspace in the organisation the list is empty; the existence of the organisation is still checked and an unknown ID fails with error 8084.\n> - The call costs 1 API unit, ten times the cost of the other org-level listings.\n> - The call is allowed on a Client Portal or White Label domain, where the entries are limited to the workspaces enabled for that domain.\n\n> Note:\n>\n> - Tables, reports, dashboards and the other view types appear together in one list.\n> - **viewName** and **workspaceName** are stored in the recent-items record and are not looked up live.\n> - **summary** reads Get recent views, the same text as the workspace-level recent-views listing. The endpoint is told apart by its URL rather than by **summary**.\n> - Some builds return additional fields. Ignore unrecognised keys rather than validating against a closed schema.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | The caller is not an active user of the organisation named in the header. | Use the organisation the user belongs to, or ask an Account Admin to add the user to the organisation. |\n| 8083 | The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | No organisation exists with the given ID. | Read the Organization ID from Settings > Organisation in the Zoho Analytics UI. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the views the calling user opened most recently in one organisation, of any view type, newest first. At most 20 items are returned.\n\nThe API reads the own history of the caller and keeps the entries whose workspace is visible to them. It applies no view-level check, so an entry can refer to a view the caller can no longer open; treat the `viewId` as a hint and handle a refusal when you open it.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Each user has an independent list. The request cannot read the recent items of another user.\n> - Entries are kept when their workspace is visible to the caller, exactly as the Get Org Workspaces API works it out. This API does not re-check view-level access, so an entry can refer to a view the caller can no longer open.\n> - At most 20 entries are returned, newest first. There is no paging, no limit attribute and no type filter.\n> - When the caller has no visible workspace in the organisation the list is empty; the existence of the organisation is still checked and an unknown ID fails with error 8084.\n> - The call costs 1 API unit, ten times the cost of the other org-level listings.\n> - The call is allowed on a Client Portal or White Label domain, where the entries are limited to the workspaces enabled for that domain.\n\n> Note:\n>\n> - Tables, reports, dashboards and the other view types appear together in one list.\n> - **viewName** and **workspaceName** are stored in the recent-items record and are not looked up live.\n> - **summary** reads Get recent views, the same text as the workspace-level recent-views listing. The endpoint is told apart by its URL rather than by **summary**.\n> - Some builds return additional fields. Ignore unrecognised keys rather than validating against a closed schema.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | The caller is not an active user of the organisation named in the header. | Use the organisation the user belongs to, or ask an Account Admin to add the user to the organisation. |\n| 8083 | The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | No organisation exists with the given ID. | Read the Organization ID from Settings > Organisation in the Zoho Analytics UI. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getOrgRecentItems",
         "parameters": [
           {
@@ -333,6 +365,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3007,
+          "action": "GET_RECENT_VIEWS",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -342,7 +383,7 @@
           "Org Info & Settings"
         ],
         "summary": "Get Resource Details",
-        "description": "Returns the current resource allocation and usage statistics for the specified organisation. This includes metrics such as user seats, row limits, API units, scheduled imports, and other plan-governed resources. Useful for monitoring usage against plan limits.\n\nThe authenticated user must be an Account Admin or an Organization Admin of the organisation sent in the `ZANALYTICS-ORGID` header.\n\n**Notes**\n\n> Note:\n>\n> - This API is restricted to Account Admins and Organization Admins. A Workspace Admin or a regular user receives error code 7301.\n> - `allocated` returns `Unlimited` when the plan places no cap on the resource. `remaining` is then also returned as `Unlimited`.\n> - `used` returns `null` when usage tracking for the resource is asynchronous or not yet computed, as happens with `archivedrows`. `remaining` is then calculated from `allocated` assuming zero usage.\n> - API unit consumption is tracked at sub-unit precision, so the `used` and `remaining` values of `apiUnits` can hold decimal values.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Organisation not found. | Verify the ZANALYTICS-ORGID header value. |\n| 7301 | User is not an Account Admin or Organization Admin of the specified organisation. | Only Account Admins and Organization Admins can view resource details. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.usermanagement.read. |",
+        "description": "Returns the current resource allocation and usage statistics for the specified organisation. This includes metrics such as user seats, row limits, API units, scheduled imports, and other plan-governed resources. Useful for monitoring usage against plan limits.\n\nThe authenticated user must be an Account Admin or an Organization Admin of the organisation sent in the `ZANALYTICS-ORGID` header.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - This API is restricted to Account Admins and Organization Admins. A Workspace Admin or a regular user receives error code 7301.\n> - `allocated` returns `Unlimited` when the plan places no cap on the resource. `remaining` is then also returned as `Unlimited`.\n> - `used` returns `null` when usage tracking for the resource is asynchronous or not yet computed, as happens with `archivedrows`. `remaining` is then calculated from `allocated` assuming zero usage.\n> - API unit consumption is tracked at sub-unit precision, so the `used` and `remaining` values of `apiUnits` can hold decimal values.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Organisation not found. | Verify the ZANALYTICS-ORGID header value. |\n| 7301 | User is not an Account Admin or Organization Admin of the specified organisation. | Only Account Admins and Organization Admins can view resource details. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.usermanagement.read. |",
         "operationId": "getResourceDetails",
         "security": [
           {
@@ -513,6 +554,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 6008,
+          "action": "GET_RESOURCE_DETAILS",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -522,7 +572,7 @@
           "Org Info & Settings"
         ],
         "summary": "Get Subscription Details",
-        "description": "Returns the current subscription plan, add-on details, billing date, and trial status for the specified organisation.\n\nThe authenticated user must be an Account Admin or an Organization Admin of the organisation sent in the `ZANALYTICS-ORGID` header.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Organisation not found. | Verify the ZANALYTICS-ORGID header value. |\n| 7301 | User is not an Account Admin or Organization Admin of the specified organisation. | Only Account Admins and Organization Admins can view subscription details. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.usermanagement.read. |",
+        "description": "Returns the current subscription plan, add-on details, billing date, and trial status for the specified organisation.\n\nThe authenticated user must be an Account Admin or an Organization Admin of the organisation sent in the `ZANALYTICS-ORGID` header.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Organisation not found. | Verify the ZANALYTICS-ORGID header value. |\n| 7301 | User is not an Account Admin or Organization Admin of the specified organisation. | Only Account Admins and Organization Admins can view subscription details. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.usermanagement.read. |",
         "operationId": "getSubscriptionDetails",
         "security": [
           {
@@ -604,6 +654,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 6006,
+          "action": "GET_SUBSCRIPTION_DETAILS",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -613,7 +672,7 @@
           "Org Info & Settings"
         ],
         "summary": "Get Meta Details From Name",
-        "description": "Resolves a workspace (and optionally a view) by name to return its numeric IDs. This is useful when you know the human-readable names of a workspace and view but need their IDs to call other workspace-scoped or view-scoped APIs.\n\n- When only `workspaceName` is sent, the response holds the workspace ID, the workspace description, and the organisation ID.\n- When both `workspaceName` and `viewName` are sent, the response additionally holds the ID, description, and type of the view.\n\n**Notes**\n\n> Note:\n>\n> - Workspace names are unique within an organisation and view names are unique within a workspace. The match is exact and case sensitive, so `Sales Analytics` and `sales analytics` are treated as different names.\n> - The lookup is scoped to the organisation sent in the `ZANALYTICS-ORGID` header. A workspace of the same name in a different organisation is not found, and the request fails with error code 7104.\n> - When `viewName` is sent and the view does not exist in the workspace, the request fails with error code 7104. Workspace metadata is not returned in failure responses.\n> - When `viewName` is sent, permission is checked against the view. If the view is not accessible to the user, the request fails with error code 7301 even when the user can see the workspace.\n> - A workspace-only lookup succeeds only when at least one view in the workspace is shared with the user. If the workspace holds views but none are shared with the user, the request fails with error code 7301.\n> - This API is the recommended way to bootstrap name-based integrations. Resolve `workspaceId` and `viewId` here and pass them to downstream APIs, instead of hard-coding numeric IDs that can change across environments.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Organisation not found. | Verify the ZANALYTICS-ORGID header value. |\n| 7104 | Workspace or view not found by the provided name. | Verify the exact spelling and case of workspaceName and viewName. Names are case-sensitive. |\n| 7301 | User does not have Read access on the workspace or view. | Ensure the workspace or view is shared with the user, or the user has Workspace Admin / Account Admin / Organization Admin role. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Resolves a workspace (and optionally a view) by name to return its numeric IDs. This is useful when you know the human-readable names of a workspace and view but need their IDs to call other workspace-scoped or view-scoped APIs.\n\n- When only `workspaceName` is sent, the response holds the workspace ID, the workspace description, and the organisation ID.\n- When both `workspaceName` and `viewName` are sent, the response additionally holds the ID, description, and type of the view.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Workspace names are unique within an organisation and view names are unique within a workspace. The match is exact and case sensitive, so `Sales Analytics` and `sales analytics` are treated as different names.\n> - The lookup is scoped to the organisation sent in the `ZANALYTICS-ORGID` header. A workspace of the same name in a different organisation is not found, and the request fails with error code 7104.\n> - When `viewName` is sent and the view does not exist in the workspace, the request fails with error code 7104. Workspace metadata is not returned in failure responses.\n> - When `viewName` is sent, permission is checked against the view. If the view is not accessible to the user, the request fails with error code 7301 even when the user can see the workspace.\n> - A workspace-only lookup succeeds only when at least one view in the workspace is shared with the user. If the workspace holds views but none are shared with the user, the request fails with error code 7301.\n> - This API is the recommended way to bootstrap name-based integrations. Resolve `workspaceId` and `viewId` here and pass them to downstream APIs, instead of hard-coding numeric IDs that can change across environments.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Organisation not found. | Verify the ZANALYTICS-ORGID header value. |\n| 7104 | Workspace or view not found by the provided name. | Verify the exact spelling and case of workspaceName and viewName. Names are case-sensitive. |\n| 7301 | User does not have Read access on the workspace or view. | Ensure the workspace or view is shared with the user, or the user has Workspace Admin / Account Admin / Organization Admin role. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getMetaDetails",
         "security": [
           {
@@ -712,6 +771,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3021,
+          "action": "GET_META_DETAILS",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -719,7 +787,7 @@
       "get": {
         "operationId": "getOrgAccessRestrictions",
         "summary": "Get Org Access Restrictions",
-        "description": "Returns the organisation's access restriction settings: the master switch and the five sections. Feeds Update Org Access Restrictions and supplies the values to copy when overriding a workspace.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the organisation's access restriction settings: the master switch and the five sections. Feeds Update Org Access Restrictions and supplies the values to copy when overriding a workspace.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Security Controls"
         ],
@@ -825,12 +893,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3067,
+          "action": "GET_ORG_ACCESS_RESTRICTIONS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "put": {
         "operationId": "updateOrgAccessRestrictions",
         "summary": "Update Org Access Restrictions",
-        "description": "Switches the organisation's access restrictions on or off and updates any of the five sections. Returns no body. Read the current state first with Get Org Access Restrictions.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG is present but empty. | Send a JSON object in CONFIG. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not valid JSON, or it contains neither accessRestrictionEnabled nor a non-empty section. | Send valid JSON with at least one attribute to change. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8192 | TRUSTED_DOMAINS_WITHOUT_DOMAIN_RESTRICTION - trustedDomains was sent for a section whose domain restriction is off or is being switched off. | Send domainRestrictionEnabled: true with the list, or send domainRestrictionEnabled: false with trustedDomains: [] to clear it. |\n| 8193 | TRUSTED_DOMAINS_EMPTY - The domain restriction is on, or being switched on, but the section has no trusted domains. | Send at least one domain in trustedDomains, or switch the restriction off. |\n| 8194 | DOMAIN_RESTRICTION_NOT_ALLOWED_WHEN_DISABLED - Domain attributes were sent for privateLinks, publicViews or emailViews while that feature is disabled or is being disabled. | Enable the feature in the same request, or remove the domain attributes. |\n| 8195 | EMAIL_NOT_ALLOWED_WHEN_EXPORT_DISABLED - emailViews was sent while export is disabled or is being disabled, and email views would stay enabled. | Enable export in the same request, or send emailViews: {\"enabled\": false} when disabling export. |\n| 8196 | ACCESS_RESTRICTION_DISABLED - Access restriction is off for the organisation and the request carries sections without turning it on, including accessRestrictionEnabled: false sent with sections while it is already off. | Include accessRestrictionEnabled: true in the same request. |\n| 8200 | SECTIONS_NOT_ALLOWED_WHEN_DISABLING_ACCESS_RESTRICTION - accessRestrictionEnabled: false was sent together with a non-empty section. | Send accessRestrictionEnabled: false on its own. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Switches the organisation's access restrictions on or off and updates any of the five sections. Returns no body. Read the current state first with Get Org Access Restrictions.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG is present but empty. | Send a JSON object in CONFIG. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not valid JSON, or it contains neither accessRestrictionEnabled nor a non-empty section. | Send valid JSON with at least one attribute to change. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8192 | TRUSTED_DOMAINS_WITHOUT_DOMAIN_RESTRICTION - trustedDomains was sent for a section whose domain restriction is off or is being switched off. | Send domainRestrictionEnabled: true with the list, or send domainRestrictionEnabled: false with trustedDomains: [] to clear it. |\n| 8193 | TRUSTED_DOMAINS_EMPTY - The domain restriction is on, or being switched on, but the section has no trusted domains. | Send at least one domain in trustedDomains, or switch the restriction off. |\n| 8194 | DOMAIN_RESTRICTION_NOT_ALLOWED_WHEN_DISABLED - Domain attributes were sent for privateLinks, publicViews or emailViews while that feature is disabled or is being disabled. | Enable the feature in the same request, or remove the domain attributes. |\n| 8195 | EMAIL_NOT_ALLOWED_WHEN_EXPORT_DISABLED - emailViews was sent while export is disabled or is being disabled, and email views would stay enabled. | Enable export in the same request, or send emailViews: {\"enabled\": false} when disabling export. |\n| 8196 | ACCESS_RESTRICTION_DISABLED - Access restriction is off for the organisation and the request carries sections without turning it on, including accessRestrictionEnabled: false sent with sections while it is already off. | Include accessRestrictionEnabled: true in the same request. |\n| 8200 | SECTIONS_NOT_ALLOWED_WHEN_DISABLING_ACCESS_RESTRICTION - accessRestrictionEnabled: false was sent together with a non-empty section. | Send accessRestrictionEnabled: false on its own. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "tags": [
           "Security Controls"
         ],
@@ -918,6 +995,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3068,
+          "action": "UPDATE_ORG_ACCESS_RESTRICTIONS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -925,7 +1011,7 @@
       "get": {
         "operationId": "getWorkspaceAccessRestrictions",
         "summary": "Get Workspace Access Restrictions",
-        "description": "Returns the access restriction settings in effect for one workspace and whether they come from the organisation or from the workspace. Feeds Update Workspace Access Restrictions.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not exist in the organisation named in ZANALYTICS-ORGID. | Verify and that the ZANALYTICS-ORGID header matches the organisation that owns it. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the access restriction settings in effect for one workspace and whether they come from the organisation or from the workspace. Feeds Update Workspace Access Restrictions.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not exist in the organisation named in ZANALYTICS-ORGID. | Verify and that the ZANALYTICS-ORGID header matches the organisation that owns it. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Security Controls"
         ],
@@ -1036,12 +1122,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3069,
+          "action": "GET_WORKSPACE_ACCESS_RESTRICTIONS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "put": {
         "operationId": "updateWorkspaceAccessRestrictions",
         "summary": "Update Workspace Access Restrictions",
-        "description": "Switches one workspace between following the organisation and having its own settings, and updates the workspace's own sections. Returns no body. Read the current state first with Get Workspace Access Restrictions, and read Organisation and Workspace Settings Lifecycle before the first override.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not exist in the organisation named in ZANALYTICS-ORGID. | Verify and that the ZANALYTICS-ORGID header matches the organisation that owns it. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG is present but empty. | Send a JSON object in CONFIG. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not valid JSON, or the workspace follows the organisation and the request has neither useOrganizationSettings nor a non-empty section. | Send valid JSON with at least one attribute to change. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8192 | TRUSTED_DOMAINS_WITHOUT_DOMAIN_RESTRICTION - trustedDomains was sent for a section whose domain restriction is off or is being switched off. | Send domainRestrictionEnabled: true with the list, or send domainRestrictionEnabled: false with trustedDomains: [] to clear it. |\n| 8193 | TRUSTED_DOMAINS_EMPTY - The domain restriction is on, or being switched on, but the section has no trusted domains. | Send at least one domain in trustedDomains, or switch the restriction off. |\n| 8194 | DOMAIN_RESTRICTION_NOT_ALLOWED_WHEN_DISABLED - Domain attributes were sent for privateLinks, publicViews or emailViews while that feature is disabled or is being disabled. | Enable the feature in the same request, or remove the domain attributes. |\n| 8195 | EMAIL_NOT_ALLOWED_WHEN_EXPORT_DISABLED - emailViews was sent while export is disabled or is being disabled, and email views would stay enabled. | Enable export in the same request, or send emailViews: {\"enabled\": false} when disabling export. |\n| 8197 | ORG_ACCESS_RESTRICTION_NOT_ENABLED - The organisation's accessRestrictionEnabled is false. | Enable access restrictions for the organisation with Update Org Access Restrictions, then retry. |\n| 8198 | SECTIONS_NOT_ALLOWED_WHEN_APPLYING_ORG_SETTINGS - useOrganizationSettings: true was sent together with a non-empty section. | Send useOrganizationSettings: true on its own. |\n| 8199 | WORKSPACE_SETTINGS_NOT_ENABLED - The workspace follows the organisation, and the request would update it without useOrganizationSettings: false. | Send useOrganizationSettings: false in the same request to give the workspace its own settings. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Switches one workspace between following the organisation and having its own settings, and updates the workspace's own sections. Returns no body. Read the current state first with Get Workspace Access Restrictions, and read Organisation and Workspace Settings Lifecycle before the first override.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - The workspace does not exist in the organisation named in ZANALYTICS-ORGID. | Verify and that the ZANALYTICS-ORGID header matches the organisation that owns it. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG is present but empty. | Send a JSON object in CONFIG. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not valid JSON, or the workspace follows the organisation and the request has neither useOrganizationSettings nor a non-empty section. | Send valid JSON with at least one attribute to change. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8192 | TRUSTED_DOMAINS_WITHOUT_DOMAIN_RESTRICTION - trustedDomains was sent for a section whose domain restriction is off or is being switched off. | Send domainRestrictionEnabled: true with the list, or send domainRestrictionEnabled: false with trustedDomains: [] to clear it. |\n| 8193 | TRUSTED_DOMAINS_EMPTY - The domain restriction is on, or being switched on, but the section has no trusted domains. | Send at least one domain in trustedDomains, or switch the restriction off. |\n| 8194 | DOMAIN_RESTRICTION_NOT_ALLOWED_WHEN_DISABLED - Domain attributes were sent for privateLinks, publicViews or emailViews while that feature is disabled or is being disabled. | Enable the feature in the same request, or remove the domain attributes. |\n| 8195 | EMAIL_NOT_ALLOWED_WHEN_EXPORT_DISABLED - emailViews was sent while export is disabled or is being disabled, and email views would stay enabled. | Enable export in the same request, or send emailViews: {\"enabled\": false} when disabling export. |\n| 8197 | ORG_ACCESS_RESTRICTION_NOT_ENABLED - The organisation's accessRestrictionEnabled is false. | Enable access restrictions for the organisation with Update Org Access Restrictions, then retry. |\n| 8198 | SECTIONS_NOT_ALLOWED_WHEN_APPLYING_ORG_SETTINGS - useOrganizationSettings: true was sent together with a non-empty section. | Send useOrganizationSettings: true on its own. |\n| 8199 | WORKSPACE_SETTINGS_NOT_ENABLED - The workspace follows the organisation, and the request would update it without useOrganizationSettings: false. | Send useOrganizationSettings: false in the same request to give the workspace its own settings. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "tags": [
           "Security Controls"
         ],
@@ -1150,6 +1245,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3070,
+          "action": "UPDATE_WORKSPACE_ACCESS_RESTRICTIONS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     }

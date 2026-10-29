@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}"
   domain: data-modeling-and-schema
   group: workspace-variables
+  api_units:
+    api_id: 2027
+    action: DELETE_VARIABLE
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.modeling.delete
   org_id_header: required
@@ -77,6 +85,8 @@ The deletion is blocked when the variable is still referred to by a formula, a r
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 204 with no body |
+| API units | 1 unit per request - action `DELETE_VARIABLE` (api-id `2027`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-modeling-schema-grouped-api.json`](../../../references/openapi/data-modeling-schema-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1variables~1{variable-id}/delete` |
 
 # Request
@@ -182,3 +192,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Variable](create-variable.md), [Edit Variable](update-variable.md), [Get Variables](get-variables.md), [Get Variable Details](get-variable-details.md).
 - [SDK examples](../../../sdk-examples/data-modeling-and-schema/workspace-variables/delete-variable.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

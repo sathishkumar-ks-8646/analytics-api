@@ -17,14 +17,23 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/trash"
       doc: "/domains/views-management/trash-management/get-trash-views.md"
+      api_units: 1
+      api_units_action: GET_TRASH_VIEWS
+      api_units_category: METADATA
     - operation_id: restoreTrashView
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/trash/{view-id}"
       doc: "/domains/views-management/trash-management/restore-trash-view.md"
+      api_units: 3
+      api_units_action: RESTORE_TRASH_VIEW
+      api_units_category: METADATA
     - operation_id: deleteTrashView
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/trash/{view-id}"
       doc: "/domains/views-management/trash-management/delete-trash-view.md"
+      api_units: 3
+      api_units_action: DELETE_TRASH_VIEW
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
@@ -52,11 +61,11 @@ APIs to list the views available in the trash of a workspace, restore a trashed 
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Trash Views](get-trash-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/trash` | `getTrashViews` | `ZohoAnalytics.metadata.read` | 200 |
-| [Restore Trash View](restore-trash-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/trash/{view-id}` | `restoreTrashView` | `ZohoAnalytics.modeling.create` | 204 |
-| [Delete Trash View](delete-trash-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/trash/{view-id}` | `deleteTrashView` | `ZohoAnalytics.modeling.delete` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Trash Views](get-trash-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/trash` | `getTrashViews` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Restore Trash View](restore-trash-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/trash/{view-id}` | `restoreTrashView` | `ZohoAnalytics.modeling.create` | 204 | 3 |
+| [Delete Trash View](delete-trash-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/trash/{view-id}` | `deleteTrashView` | `ZohoAnalytics.modeling.delete` | 204 | 3 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

@@ -17,26 +17,44 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/share"
       doc: "/domains/share-and-publish/sharing/get-workspace-shared-details.md"
+      api_units: 3
+      api_units_action: GET_WORKSPACE_SHARE_INFO
+      api_units_category: METADATA
     - operation_id: shareViews
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/share"
       doc: "/domains/share-and-publish/sharing/share-views.md"
+      api_units: 5
+      api_units_action: SHARE_VIEWS
+      api_units_category: METADATA
     - operation_id: UpdateSharedDetailsForView
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share"
       doc: "/domains/share-and-publish/sharing/update-shared-details-for-view.md"
+      api_units: 0.1
+      api_units_action: UPDATE_SHARED_DETAILS_FOR_VIEW
+      api_units_category: METADATA
     - operation_id: getSharedDetailsForViews
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/share/shareddetails"
       doc: "/domains/share-and-publish/sharing/get-shared-details-for-views.md"
+      api_units: 0.1
+      api_units_action: GET_SHARED_DETAILS_FOR_VIEW
+      api_units_category: METADATA
     - operation_id: removeShare
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/share"
       doc: "/domains/share-and-publish/sharing/remove-share.md"
+      api_units: 5
+      api_units_action: REMOVE_SHARE
+      api_units_category: METADATA
     - operation_id: getUserPermissions
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions"
       doc: "/domains/share-and-publish/sharing/get-user-permissions.md"
+      api_units: 0.1
+      api_units_action: GET_MY_PERMISSIONS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
@@ -57,14 +75,14 @@ APIs for sharing workspaces and views with users, and retrieving share details a
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Workspace Shared Details](get-workspace-shared-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share` | `getWorkspaceSharedDetails` | `ZohoAnalytics.share.read` | 200 |
-| [Share Views](share-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/share` | `shareViews` | `ZohoAnalytics.share.create` | 204 |
-| [Update Shared Details](update-shared-details-for-view.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share` | `UpdateSharedDetailsForView` | `ZohoAnalytics.share.update` | 204 |
-| [Get Shared Details](get-shared-details-for-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share/shareddetails` | `getSharedDetailsForViews` | `ZohoAnalytics.share.read` | 200 |
-| [Remove Shared Views](remove-share.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/share` | `removeShare` | `ZohoAnalytics.share.delete` | 204 |
-| [Get My Permissions](get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions` | `getUserPermissions` | `ZohoAnalytics.share.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Workspace Shared Details](get-workspace-shared-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share` | `getWorkspaceSharedDetails` | `ZohoAnalytics.share.read` | 200 | 3 |
+| [Share Views](share-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/share` | `shareViews` | `ZohoAnalytics.share.create` | 204 | 5 |
+| [Update Shared Details](update-shared-details-for-view.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share` | `UpdateSharedDetailsForView` | `ZohoAnalytics.share.update` | 204 | 0.1 |
+| [Get Shared Details](get-shared-details-for-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/share/shareddetails` | `getSharedDetailsForViews` | `ZohoAnalytics.share.read` | 200 | 0.1 |
+| [Remove Shared Views](remove-share.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/share` | `removeShare` | `ZohoAnalytics.share.delete` | 204 | 5 |
+| [Get My Permissions](get-user-permissions.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/share/userpermissions` | `getUserPermissions` | `ZohoAnalytics.share.read` | 200 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

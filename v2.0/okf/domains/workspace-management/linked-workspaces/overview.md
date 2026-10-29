@@ -17,34 +17,58 @@ api:
       method: GET
       path: "/restapi/v2/linkedworkspaces"
       doc: "/domains/workspace-management/linked-workspaces/get-linked-workspaces-for-organization.md"
+      api_units: 1
+      api_units_action: GET_LINKED_WORKSPACES_FOR_ORGANIZATION
+      api_units_category: METADATA
     - operation_id: getLinkedWorkspacesForMasterWorkspace
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces"
       doc: "/domains/workspace-management/linked-workspaces/get-linked-workspaces-for-master-workspace.md"
+      api_units: 1
+      api_units_action: GET_LINKED_WORKSPACES_FOR_MASTER_WORKSPACE
+      api_units_category: METADATA
     - operation_id: getLinkableWorkspaces
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable"
       doc: "/domains/workspace-management/linked-workspaces/get-linkable-workspaces.md"
+      api_units: 1
+      api_units_action: GET_LINKABLE_WORKSPACES
+      api_units_category: METADATA
     - operation_id: getWorkspaceLinkingCompatibility
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility"
       doc: "/domains/workspace-management/linked-workspaces/get-workspace-linking-compatibility.md"
+      api_units: 1
+      api_units_action: GET_WORKSPACE_LINKING_COMPATIBILITY
+      api_units_category: METADATA
     - operation_id: linkWorkspaces
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces"
       doc: "/domains/workspace-management/linked-workspaces/link-workspaces.md"
+      api_units: 3
+      api_units_action: LINK_WORKSPACES
+      api_units_category: METADATA
     - operation_id: syncLinkedWorkspaces
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync"
       doc: "/domains/workspace-management/linked-workspaces/sync-linked-workspaces.md"
+      api_units: 3
+      api_units_action: SYNC_LINKED_WORKSPACES
+      api_units_category: METADATA
     - operation_id: getLinkedWorkspaceSyncDetails
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync"
       doc: "/domains/workspace-management/linked-workspaces/get-linked-workspace-sync-details.md"
+      api_units: 1
+      api_units_action: GET_LINKED_WORKSPACE_SYNC_DETAILS
+      api_units_category: METADATA
     - operation_id: unlinkWorkspaces
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/linkedworkspaces"
       doc: "/domains/workspace-management/linked-workspaces/unlink-workspaces.md"
+      api_units: 3
+      api_units_action: UNLINK_WORKSPACES
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
@@ -65,16 +89,16 @@ APIs for listing, linking, syncing and unlinking client workspaces against a mas
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Linked Workspaces For Organization](get-linked-workspaces-for-organization.md) | GET | `/restapi/v2/linkedworkspaces` | `getLinkedWorkspacesForOrganization` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Linked Workspaces For Master Workspace](get-linked-workspaces-for-master-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `getLinkedWorkspacesForMasterWorkspace` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Linkable Workspaces](get-linkable-workspaces.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable` | `getLinkableWorkspaces` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Workspace Linking Compatibility](get-workspace-linking-compatibility.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility` | `getWorkspaceLinkingCompatibility` | `ZohoAnalytics.metadata.read` | 200 |
-| [Link Workspaces](link-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `linkWorkspaces` | `ZohoAnalytics.modeling.create` | 204 |
-| [Sync Linked Workspaces](sync-linked-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `syncLinkedWorkspaces` | `ZohoAnalytics.modeling.create` | 204 |
-| [Get Linked Workspace Sync Details](get-linked-workspace-sync-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `getLinkedWorkspaceSyncDetails` | `ZohoAnalytics.metadata.read` | 200 |
-| [Unlink Workspaces](unlink-workspaces.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `unlinkWorkspaces` | `ZohoAnalytics.modeling.delete` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Linked Workspaces For Organization](get-linked-workspaces-for-organization.md) | GET | `/restapi/v2/linkedworkspaces` | `getLinkedWorkspacesForOrganization` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Get Linked Workspaces For Master Workspace](get-linked-workspaces-for-master-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `getLinkedWorkspacesForMasterWorkspace` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Get Linkable Workspaces](get-linkable-workspaces.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/linkable` | `getLinkableWorkspaces` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Get Workspace Linking Compatibility](get-workspace-linking-compatibility.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/compatibility` | `getWorkspaceLinkingCompatibility` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Link Workspaces](link-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `linkWorkspaces` | `ZohoAnalytics.modeling.create` | 204 | 3 |
+| [Sync Linked Workspaces](sync-linked-workspaces.md) | POST | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `syncLinkedWorkspaces` | `ZohoAnalytics.modeling.create` | 204 | 3 |
+| [Get Linked Workspace Sync Details](get-linked-workspace-sync-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces/sync` | `getLinkedWorkspaceSyncDetails` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Unlink Workspaces](unlink-workspaces.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/linkedworkspaces` | `unlinkWorkspaces` | `ZohoAnalytics.modeling.delete` | 204 | 3 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

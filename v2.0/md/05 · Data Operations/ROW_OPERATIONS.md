@@ -27,11 +27,11 @@ They operate strictly on **tables**. A report, dashboard, query table, or any ot
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Add Row](#1-add-row) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/rows` |
-| 2 | [Update Row](#2-update-row) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/rows` |
-| 3 | [Delete Row](#3-delete-row) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/rows` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Add Row](#1-add-row) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/rows` | 0.1 |
+| 2 | [Update Row](#2-update-row) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/rows` | 0.3 |
+| 3 | [Delete Row](#3-delete-row) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/rows` | 0.1 |
 
 ---
 
@@ -79,6 +79,8 @@ Inserts a single row into a table.
 | **OAuth Scope** | `ZohoAnalytics.data.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with Add Row permission on the view. |
+| **API Units** | 0.1 units per request — gateway action `ADD_ROW` (api-id `1001`), **DML** unit category. |
+| **Frequency Limit** | 100 requests/minute shared across every **DML**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -260,6 +262,8 @@ Updates the rows of a table that match a filter, or every row. Can optionally in
 | **OAuth Scope** | `ZohoAnalytics.data.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with Update Row permission on the view. When `addIfNotExist` triggers an insert, **Add Row permission is additionally required**. |
+| **API Units** | 0.3 units per request — gateway action `UPDATE_ROW` (api-id `1002`), **DML** unit category. |
+| **Frequency Limit** | 100 requests/minute shared across every **DML**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -476,6 +480,8 @@ Deletes the rows of a table that match a filter, or every row.
 | **OAuth Scope** | `ZohoAnalytics.data.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with **Delete All Rows** permission on the view. |
+| **API Units** | 0.1 units per request — gateway action `DELETE_ROW` (api-id `1003`), **DML** unit category. |
+| **Frequency Limit** | 100 requests/minute shared across every **DML**-category call of the organisation. |
 
 > **Note on the permission.** This API is gated on the **Delete All Rows** permission, not the row-level Delete Row permission — and that holds even when `criteria` targets a single row. A user granted only Delete Row on a shared view cannot call this API and receives `7301`.
 
@@ -697,3 +703,36 @@ CONFIG=%7B%22columns%22%3A%7B%22Region%22%3A%22East%22%2C%22Sales%22%3A%221000%2
 | **`newRowAdded` is conditionally present** | It appears only on an [Update Row](#2-update-row) call where `addIfNotExist` triggered an insert, and is then always `true`. Test for the key, not for a `false` value. |
 | **Response field names differ per operation** | Insert returns `addedColumns`; update returns `updatedColumns` + `updatedRows`; an `addIfNotExist` insert returns `updatedColumns` + `updatedRows: 0` + `newRowAdded`; delete returns `deletedRows`. There is no single common data shape across the three. |
 | **No row identifiers are returned** | None of the three responses includes a row ID, primary key, or row number — only the values applied and the counts affected. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Add Row](#1-add-row) | `ADD_ROW` (1001) | DML | 0.1 | per request |
+| 2 | [Update Row](#2-update-row) | `UPDATE_ROW` (1002) | DML | 0.3 | per request |
+| 3 | [Delete Row](#3-delete-row) | `DELETE_ROW` (1003) | DML | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | Yes |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | — |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

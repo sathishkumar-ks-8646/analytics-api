@@ -10,16 +10,16 @@ These APIs manage users and administrators at the **workspace level** — contro
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Workspace Users](#1-get-workspace-users) | GET | `/restapi/v2/workspaces/<workspace-id>/users` |
-| 2 | [Add Workspace Users](#2-add-workspace-users) | POST | `/restapi/v2/workspaces/<workspace-id>/users` |
-| 3 | [Remove Workspace Users](#3-remove-workspace-users) | DELETE | `/restapi/v2/workspaces/<workspace-id>/users` |
-| 4 | [Change Workspace Users Status](#4-change-workspace-users-status) | PUT | `/restapi/v2/workspaces/<workspace-id>/users/status` |
-| 5 | [Change Workspace Users Role](#5-change-workspace-users-role) | PUT | `/restapi/v2/workspaces/<workspace-id>/users/role` |
-| 6 | [Get Workspace Admins](#6-get-workspace-admins) | GET | `/restapi/v2/workspaces/<workspace-id>/admins` |
-| 7 | [Add Workspace Admins](#7-add-workspace-admins) | POST | `/restapi/v2/workspaces/<workspace-id>/admins` |
-| 8 | [Remove Workspace Admins](#8-remove-workspace-admins) | DELETE | `/restapi/v2/workspaces/<workspace-id>/admins` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Workspace Users](#1-get-workspace-users) | GET | `/restapi/v2/workspaces/<workspace-id>/users` | 1 |
+| 2 | [Add Workspace Users](#2-add-workspace-users) | POST | `/restapi/v2/workspaces/<workspace-id>/users` | 0.5 |
+| 3 | [Remove Workspace Users](#3-remove-workspace-users) | DELETE | `/restapi/v2/workspaces/<workspace-id>/users` | 1 |
+| 4 | [Change Workspace Users Status](#4-change-workspace-users-status) | PUT | `/restapi/v2/workspaces/<workspace-id>/users/status` | 0.5 |
+| 5 | [Change Workspace Users Role](#5-change-workspace-users-role) | PUT | `/restapi/v2/workspaces/<workspace-id>/users/role` | 1 |
+| 6 | [Get Workspace Admins](#6-get-workspace-admins) | GET | `/restapi/v2/workspaces/<workspace-id>/admins` | 0.1 |
+| 7 | [Add Workspace Admins](#7-add-workspace-admins) | POST | `/restapi/v2/workspaces/<workspace-id>/admins` | 5 |
+| 8 | [Remove Workspace Admins](#8-remove-workspace-admins) | DELETE | `/restapi/v2/workspaces/<workspace-id>/admins` | 5 |
 
 ---
 
@@ -36,6 +36,8 @@ The response includes the Account Admin, Organisation Admins, Workspace Admins, 
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 1 unit per request — gateway action `GET_WORKSPACE_USERS` (api-id `6009`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -173,6 +175,8 @@ Adds one or more users to the specified workspace with a given workspace-level r
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 0.5 units per request — gateway action `ADD_WORKSPACE_USERS` (api-id `6010`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -305,6 +309,8 @@ Removes one or more users from the specified workspace. Removed users lose all a
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 1 unit per request — gateway action `REMOVE_WORKSPACE_USERS` (api-id `6011`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -403,6 +409,8 @@ Activates or deactivates one or more users in the specified workspace. The `oper
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the **Account Admin** of the organisation that owns the workspace. |
+| **API Units** | 0.5 units per request — gateway action `CHANGE_WORKSPACE_USERS_STATUS` (api-id `6012`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -517,6 +525,8 @@ Changes the workspace-level role of one or more users in the specified workspace
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. |
+| **API Units** | 1 unit per request — gateway action `CHANGE_WORKSPACE_USERS_ROLE` (api-id `6013`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -648,6 +658,8 @@ Returns the list of users who currently hold the **Workspace Admin** role in the
 | **OAuth Scope** | `ZohoAnalytics.share.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. |
+| **API Units** | 0.1 units per request — gateway action `GET_WORKSPACE_ADMINS` (api-id `4004`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -781,6 +793,8 @@ Grants the Workspace Admin role to one or more users in the specified workspace.
 | **OAuth Scope** | `ZohoAnalytics.share.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. |
+| **API Units** | 5 units per request — gateway action `ADD_WORKSPACE_ADMINS` (api-id `4005`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -877,6 +891,8 @@ Revokes the Workspace Admin role from one or more users in the specified workspa
 | **OAuth Scope** | `ZohoAnalytics.share.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. |
+| **API Units** | 5 units per request — gateway action `REMOVE_WORKSPACE_ADMINS` (api-id `4006`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -1088,3 +1104,41 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Get Workspace Admins — Client Portal Admin | Response contains two groups in `workspaceAdmins`: one for the standard domain and one for the portal domain, each with `domainName`. |
 | Bulk Add/Change Role with mixed portal domains | Use the `users` array in bulk mode, setting `domainName` per group. Each group is processed in its own portal context. |
 | Portal user operations without specifying `domainName` | Operations are attempted in the standard domain. Portal-only users do not exist in the standard domain and will not be found. Always specify `domainName` when the user was added via a portal. |
+
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Workspace Users](#1-get-workspace-users) | `GET_WORKSPACE_USERS` (6009) | METADATA | 1 | per request |
+| 2 | [Add Workspace Users](#2-add-workspace-users) | `ADD_WORKSPACE_USERS` (6010) | METADATA | 0.5 | per request |
+| 3 | [Remove Workspace Users](#3-remove-workspace-users) | `REMOVE_WORKSPACE_USERS` (6011) | METADATA | 1 | per request |
+| 4 | [Change Workspace Users Status](#4-change-workspace-users-status) | `CHANGE_WORKSPACE_USERS_STATUS` (6012) | METADATA | 0.5 | per request |
+| 5 | [Change Workspace Users Role](#5-change-workspace-users-role) | `CHANGE_WORKSPACE_USERS_ROLE` (6013) | METADATA | 1 | per request |
+| 6 | [Get Workspace Admins](#6-get-workspace-admins) | `GET_WORKSPACE_ADMINS` (4004) | METADATA | 0.1 | per request |
+| 7 | [Add Workspace Admins](#7-add-workspace-admins) | `ADD_WORKSPACE_ADMINS` (4005) | METADATA | 5 | per request |
+| 8 | [Remove Workspace Admins](#8-remove-workspace-admins) | `REMOVE_WORKSPACE_ADMINS` (4006) | METADATA | 5 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

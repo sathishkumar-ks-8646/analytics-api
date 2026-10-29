@@ -17,10 +17,16 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/autoanalyse"
       doc: "/domains/views-management/auto-analysis/auto-analyse-view.md"
+      api_units: 1
+      api_units_action: AUTO_ANALYSIS_VIEW
+      api_units_category: METADATA
     - operation_id: autoAnalyseColumn
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/autoanalyse"
       doc: "/domains/views-management/auto-analysis/auto-analyse-column.md"
+      api_units: 1
+      api_units_action: AUTO_ANALYSIS_COLUMN
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
@@ -45,10 +51,10 @@ APIs to automatically generate a curated set of views - charts, pivot tables and
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Auto Analyse View](auto-analyse-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/autoanalyse` | `autoAnalyseView` | `ZohoAnalytics.modeling.create` | 200 |
-| [Auto Analyse Column](auto-analyse-column.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/autoanalyse` | `autoAnalyseColumn` | `ZohoAnalytics.modeling.create` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Auto Analyse View](auto-analyse-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/autoanalyse` | `autoAnalyseView` | `ZohoAnalytics.modeling.create` | 200 | 1 |
+| [Auto Analyse Column](auto-analyse-column.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/autoanalyse` | `autoAnalyseColumn` | `ZohoAnalytics.modeling.create` | 200 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

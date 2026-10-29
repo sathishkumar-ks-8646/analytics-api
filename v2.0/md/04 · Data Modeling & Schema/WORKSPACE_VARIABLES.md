@@ -16,13 +16,13 @@ Each variable can additionally carry **per-user (or per-portal-domain) overrides
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Create Variable](#1-create-variable) | POST | `/restapi/v2/workspaces/<workspace-id>/variables` |
-| 2 | [Edit Variable](#2-edit-variable) | PUT | `/restapi/v2/workspaces/<workspace-id>/variables/<variable-id>` |
-| 3 | [Delete Variable](#3-delete-variable) | DELETE | `/restapi/v2/workspaces/<workspace-id>/variables/<variable-id>` |
-| 4 | [Get Variables](#4-get-variables) | GET | `/restapi/v2/workspaces/<workspace-id>/variables` |
-| 5 | [Get Variable Details](#5-get-variable-details) | GET | `/restapi/v2/workspaces/<workspace-id>/variables/<variable-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Create Variable](#1-create-variable) | POST | `/restapi/v2/workspaces/<workspace-id>/variables` | 1 |
+| 2 | [Edit Variable](#2-edit-variable) | PUT | `/restapi/v2/workspaces/<workspace-id>/variables/<variable-id>` | 1 |
+| 3 | [Delete Variable](#3-delete-variable) | DELETE | `/restapi/v2/workspaces/<workspace-id>/variables/<variable-id>` | 1 |
+| 4 | [Get Variables](#4-get-variables) | GET | `/restapi/v2/workspaces/<workspace-id>/variables` | 1 |
+| 5 | [Get Variable Details](#5-get-variable-details) | GET | `/restapi/v2/workspaces/<workspace-id>/variables/<variable-id>` | 1 |
 
 > **Note on naming:** The two read APIs are documented here as **"Get Variables"** and **"Get Variable Details"** respectively (renamed from "Get Variable List" and "Get Variable Details" for consistency with this API's summary text and the rest of this documentation suite).
 
@@ -39,6 +39,8 @@ Creates a new workspace variable.
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
+| **API Units** | 1 unit per request — gateway action `CREATE_VARIABLE` (api-id `2025`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -226,6 +228,8 @@ Updates an existing workspace variable. This API takes the **same CONFIG attribu
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
+| **API Units** | 1 unit per request — gateway action `UPDATE_VARIABLE` (api-id `2026`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -316,6 +320,8 @@ Permanently deletes a workspace variable.
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
+| **API Units** | 1 unit per request — gateway action `DELETE_VARIABLE` (api-id `2027`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -383,6 +389,8 @@ Returns a summary list of all variables defined in the workspace.
 | **OAuth Scope** | `ZohoAnalytics.modeling.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_VARIABLES` (api-id `2028`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -494,6 +502,8 @@ Returns the full definition of a specific variable, including its values/range, 
 | **OAuth Scope** | `ZohoAnalytics.modeling.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_VARIABLE_DETAILS` (api-id `2029`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -744,3 +754,38 @@ ZANALYTICS-ORGID: 700000123456
 | **`defaultData` presence is conditional on `variableType`** | Only List (`0`) and Range (`1`) type variables have a `defaultData` object; All Values (`3`) type variables omit it entirely, both in requests (it is ignored/rejected if sent) and in Get Variable Details responses. |
 | **Empty response bodies are common for mutating calls** | Edit Variable and Delete Variable both return HTTP **204 No Content** with no JSON body at all — treat the 2xx status code as the success indicator, not the presence/absence of a `status` field. |
 | **Variables are referenced by name, not ID, in downstream APIs** | Unlike columns or formulas (referenced by ID in dependents/value APIs), workspace variables are referenced inside formula expressions and SQL queries using their `variableName` wrapped in `${...}` syntax — the `variableId` returned by these APIs is only used for managing the variable definition itself (Edit/Delete/Get Details), not for embedding it elsewhere. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Create Variable](#1-create-variable) | `CREATE_VARIABLE` (2025) | METADATA | 1 | per request |
+| 2 | [Edit Variable](#2-edit-variable) | `UPDATE_VARIABLE` (2026) | METADATA | 1 | per request |
+| 3 | [Delete Variable](#3-delete-variable) | `DELETE_VARIABLE` (2027) | METADATA | 1 | per request |
+| 4 | [Get Variables](#4-get-variables) | `GET_VARIABLES` (2028) | METADATA | 1 | per request |
+| 5 | [Get Variable Details](#5-get-variable-details) | `GET_VARIABLE_DETAILS` (2029) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

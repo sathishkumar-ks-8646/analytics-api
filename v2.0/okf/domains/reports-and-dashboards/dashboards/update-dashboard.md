@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}"
   domain: reports-and-dashboards
   group: dashboards
+  api_units:
+    api_id: 2062
+    action: UPDATE_DASHBOARD
+    category: METADATA
+    units: 5
+    units_basis: per_request
+    units_note: "5 units per request"
+    category_frequency_limit: 60 requests/minute
+    endpoint_throttle: "10 requests per user per minute, 10-minute lockout on breach"
   oauth_scopes:
     - ZohoAnalytics.modeling.update
   org_id_header: required
@@ -109,6 +118,8 @@ Permission required: Design Modify on the dashboard — the owner, a Workspace A
 | Content-Type | `application/x-www-form-urlencoded` |
 | Custom domain | Permitted when the workspace is mapped to the calling domain. |
 | Throttle | 10 requests per minute per user; 10-minute lock-out on breach. |
+| API units | 5 units per request - action `UPDATE_DASHBOARD` (api-id `2062`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization; this endpoint is additionally throttled to 10 requests per user per minute, 10-minute lockout on breach. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`reports-dashboards-grouped-api.json`](../../../references/openapi/reports-dashboards-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}/put`; CONFIG schema `UpdateDashboardConfig` |
 
 # Request
@@ -302,3 +313,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Dashboard](create-dashboard.md), [Read Dashboard Metadata](get-dashboard-metadata.md).
 - [SDK examples](../../../sdk-examples/reports-and-dashboards/dashboards/update-dashboard.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

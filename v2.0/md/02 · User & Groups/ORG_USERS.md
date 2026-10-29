@@ -10,15 +10,15 @@ These APIs allow Account Admins and Organization Admins to manage the users who 
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Users](#1-get-users) | GET | `/restapi/v2/users` |
-| 2 | [Add Users](#2-add-users) | POST | `/restapi/v2/users` |
-| 3 | [Remove Users](#3-remove-users) | DELETE | `/restapi/v2/users` |
-| 4 | [Activate Users](#4-activate-users) | PUT | `/restapi/v2/users/active` |
-| 5 | [Deactivate Users](#5-deactivate-users) | PUT | `/restapi/v2/users/inactive` |
-| 6 | [Change User Role](#6-change-user-role) | PUT | `/restapi/v2/users/role` |
-| 7 | [Get Org Admins](#7-get-org-admins) | GET | `/restapi/v2/orgadmins` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Users](#1-get-users) | GET | `/restapi/v2/users` | 1 |
+| 2 | [Add Users](#2-add-users) | POST | `/restapi/v2/users` | 0.1 |
+| 3 | [Remove Users](#3-remove-users) | DELETE | `/restapi/v2/users` | 0.1 |
+| 4 | [Activate Users](#4-activate-users) | PUT | `/restapi/v2/users/active` | 0.1 |
+| 5 | [Deactivate Users](#5-deactivate-users) | PUT | `/restapi/v2/users/inactive` | 0.1 |
+| 6 | [Change User Role](#6-change-user-role) | PUT | `/restapi/v2/users/role` | 0.1 |
+| 7 | [Get Org Admins](#7-get-org-admins) | GET | `/restapi/v2/orgadmins` | 0.1 |
 
 ---
 
@@ -33,6 +33,8 @@ Returns the list of all users who are members of the specified organisation, alo
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID whose user list to retrieve. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
+| **API Units** | 1 unit per request — gateway action `GET_ORG_USERS` (api-id `6001`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -213,6 +215,8 @@ Adds one or more users to the specified organisation. The invited users receive 
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID to add users to. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
+| **API Units** | 0.1 units per request — gateway action `ADD_ORG_USERS` (api-id `6002`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -335,6 +339,8 @@ Removes one or more users from the specified organisation. Removed users immedia
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID to remove users from. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
+| **API Units** | 0.1 units per request — gateway action `REMOVE_ORG_USERS` (api-id `6003`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -427,6 +433,8 @@ Reactivates one or more previously deactivated users in the specified organisati
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID where users should be activated. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
+| **API Units** | 0.1 units per request — gateway action `ACTIVATE_ORG_USERS` (api-id `6004`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -518,6 +526,8 @@ Deactivates one or more users in the specified organisation. Deactivated users c
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID where users should be deactivated. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
+| **API Units** | 0.1 units per request — gateway action `DEACTIVATE_ORG_USERS` (api-id `6005`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -610,6 +620,8 @@ Changes the org-level role of one or more users in the specified organisation. R
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID where the role change should apply. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
+| **API Units** | 0.1 units per request — gateway action `CHANGE_USER_ROLE` (api-id `6007`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -726,6 +738,8 @@ Returns the list of email addresses of users who currently hold the **Organizati
 | **OAuth Scope** | `ZohoAnalytics.share.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID whose Org Admins to retrieve. |
 | **Permission Required** | The authenticated user must be the **Account Admin** of the specified organisation. |
+| **API Units** | 0.1 units per request — gateway action `GET_ORG_ADMINS` (api-id `4001`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -912,3 +926,40 @@ ZANALYTICS-ORGID: 700000123456
 | A user added via a portal domain — can they access the main org? | No. Portal-domain users are scoped to their portal. They access analytics only through the portal's branded URL. They do not appear as standard org members on `analytics.zoho.com`. |
 | Remove a portal user without specifying `domainName` | The user is looked up in the default (standard) org context. If they were added via a portal domain only and do not exist in the standard org, the request fails with error **8114**. Always specify `domainName` when managing portal-scoped users. |
 | Multiple client portals under the same org | Each portal domain is managed independently. Specify the target `domainName` in each API call. A user can be a member of multiple portals simultaneously — their membership in one portal is unaffected by operations on another. |
+
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Users](#1-get-users) | `GET_ORG_USERS` (6001) | METADATA | 1 | per request |
+| 2 | [Add Users](#2-add-users) | `ADD_ORG_USERS` (6002) | METADATA | 0.1 | per request |
+| 3 | [Remove Users](#3-remove-users) | `REMOVE_ORG_USERS` (6003) | METADATA | 0.1 | per request |
+| 4 | [Activate Users](#4-activate-users) | `ACTIVATE_ORG_USERS` (6004) | METADATA | 0.1 | per request |
+| 5 | [Deactivate Users](#5-deactivate-users) | `DEACTIVATE_ORG_USERS` (6005) | METADATA | 0.1 | per request |
+| 6 | [Change User Role](#6-change-user-role) | `CHANGE_USER_ROLE` (6007) | METADATA | 0.1 | per request |
+| 7 | [Get Org Admins](#7-get-org-admins) | `GET_ORG_ADMINS` (4001) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

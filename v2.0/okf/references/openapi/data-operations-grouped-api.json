@@ -10,6 +10,20 @@
       "url": "https://analyticsapi.zoho.com"
     }
   ],
+  "x-api-unit-categories": {
+    "description": "Every call deducts API units from the organization's plan allowance and is counted against the per-minute request ceiling of its unit category. A unit cost with a row basis is charged pro rata as (rowsProcessed / rowsBasis) * units, without rounding up to a whole block. The per-minute ceilings below are the base configuration; an organization's effective ceiling is the base value scaled by a plan-specific multiplier.",
+    "categories": {
+      "DML": {
+        "frequencyLimitPerMinute": 100
+      },
+      "BULK": {
+        "frequencyLimitPerMinute": 40
+      },
+      "METADATA": {
+        "frequencyLimitPerMinute": 60
+      }
+    }
+  },
   "tags": [
     {
       "name": "Row Operations",
@@ -223,6 +237,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 1001,
+          "action": "ADD_ROW",
+          "units": {
+            "category": "DML",
+            "cost": 0.1,
+            "basis": "request",
+            "note": "0.1 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 100
+          }
         }
       },
       "put": {
@@ -434,6 +461,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 1002,
+          "action": "UPDATE_ROW",
+          "units": {
+            "category": "DML",
+            "cost": 0.3,
+            "basis": "request",
+            "note": "0.3 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 100
+          }
         }
       },
       "delete": {
@@ -599,6 +639,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 1003,
+          "action": "DELETE_ROW",
+          "units": {
+            "category": "DML",
+            "cost": 0.1,
+            "basis": "request",
+            "note": "0.1 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 100
           }
         }
       }
@@ -831,6 +884,20 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 8001,
+          "action": "INITIATE_IMPORT",
+          "units": {
+            "category": "BULK",
+            "cost": 0,
+            "basis": "request",
+            "variable": true,
+            "note": "Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)"
+          },
+          "frequency": {
+            "category-limit-per-minute": 40
           }
         },
         "x-zenesis-doc": {
@@ -1115,6 +1182,20 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 8001,
+          "action": "INITIATE_IMPORT",
+          "units": {
+            "category": "BULK",
+            "cost": 0,
+            "basis": "request",
+            "variable": true,
+            "note": "Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)"
+          },
+          "frequency": {
+            "category-limit-per-minute": 40
           }
         },
         "x-zenesis-doc": {
@@ -1471,6 +1552,20 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 7001,
+          "action": "INITIATE_EXPORT",
+          "units": {
+            "category": "BULK",
+            "cost": 0,
+            "basis": "request",
+            "variable": true,
+            "note": "Variable — the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)"
+          },
+          "frequency": {
+            "category-limit-per-minute": 40
+          }
+        },
         "x-zenesis-doc": {
           "show": true,
           "usecaseTags": {
@@ -1733,6 +1828,20 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 8001,
+          "action": "INITIATE_IMPORT",
+          "units": {
+            "category": "BULK",
+            "cost": 0,
+            "basis": "request",
+            "variable": true,
+            "note": "Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)"
+          },
+          "frequency": {
+            "category-limit-per-minute": 40
           }
         },
         "x-zenesis-doc": {
@@ -2092,6 +2201,20 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 7001,
+          "action": "INITIATE_EXPORT",
+          "units": {
+            "category": "BULK",
+            "cost": 0,
+            "basis": "request",
+            "variable": true,
+            "note": "Variable — the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)"
+          },
+          "frequency": {
+            "category-limit-per-minute": 40
+          }
+        },
         "x-zenesis-doc": {
           "show": true,
           "usecaseTags": {
@@ -2371,6 +2494,20 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 8001,
+          "action": "INITIATE_IMPORT",
+          "units": {
+            "category": "BULK",
+            "cost": 0,
+            "basis": "request",
+            "variable": true,
+            "note": "Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)"
+          },
+          "frequency": {
+            "category-limit-per-minute": 40
           }
         },
         "x-zenesis-doc": {
@@ -2733,6 +2870,20 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 7001,
+          "action": "INITIATE_EXPORT",
+          "units": {
+            "category": "BULK",
+            "cost": 0,
+            "basis": "request",
+            "variable": true,
+            "note": "Variable — the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)"
+          },
+          "frequency": {
+            "category-limit-per-minute": 40
+          }
+        },
         "x-zenesis-doc": {
           "show": true,
           "usecaseTags": {
@@ -3016,6 +3167,20 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 8005,
+          "action": "BATCH_IMPORT_FILE_UPLOAD",
+          "units": {
+            "category": "BULK",
+            "cost": 0,
+            "basis": "request",
+            "variable": true,
+            "note": "Variable — the batch upload requests themselves cost 0; units are charged once, on the rows imported by the final batch, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)"
+          },
+          "frequency": {
+            "category-limit-per-minute": 40
           }
         },
         "x-zenesis-sections": {
@@ -3305,6 +3470,20 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 8005,
+          "action": "BATCH_IMPORT_FILE_UPLOAD",
+          "units": {
+            "category": "BULK",
+            "cost": 0,
+            "basis": "request",
+            "variable": true,
+            "note": "Variable — the batch upload requests themselves cost 0; units are charged once, on the rows imported by the final batch, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)"
+          },
+          "frequency": {
+            "category-limit-per-minute": 40
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -3417,6 +3596,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 9003,
+          "action": "IMPORT_JOB_STATUS",
+          "units": {
+            "category": "METADATA",
+            "cost": 0,
+            "basis": "request",
+            "note": "0 - no API units are deducted"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -3495,6 +3687,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 9001,
+          "action": "EXPORT_JOB_STATUS",
+          "units": {
+            "category": "METADATA",
+            "cost": 0,
+            "basis": "request",
+            "note": "0 - no API units are deducted"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }
@@ -3578,6 +3783,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 9002,
+          "action": "DOWNLOAD_FILE",
+          "units": {
+            "category": "METADATA",
+            "cost": 0,
+            "basis": "request",
+            "note": "0 - no API units are deducted"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         },
         "x-zenesis-sections": {
@@ -3677,6 +3895,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3027,
+          "action": "GET_LAST_IMPORT_DETAILS",
+          "units": {
+            "category": "METADATA",
+            "cost": 0.1,
+            "basis": "request",
+            "note": "0.1 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -3749,6 +3980,27 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3026,
+          "action": "REFETCH_DATA",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
+          "throttles": [
+            {
+              "duration": 60,
+              "threshold": 5,
+              "lock-period": 300,
+              "per-user": false
+            }
+          ]
         },
         "requestBody": {
           "required": false,
@@ -3868,6 +4120,27 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3025,
+          "action": "SYNC_DATA",
+          "units": {
+            "category": "METADATA",
+            "cost": 5,
+            "basis": "request",
+            "note": "5 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          },
+          "throttles": [
+            {
+              "duration": 60,
+              "threshold": 5,
+              "lock-period": 300,
+              "per-user": false
+            }
+          ]
         },
         "requestBody": {
           "required": false,
@@ -4073,6 +4346,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3028,
+          "action": "UPDATE_DATASOURCE_CONNECTION",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -4217,6 +4503,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 3024,
+          "action": "GET_DATASOURCES",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }

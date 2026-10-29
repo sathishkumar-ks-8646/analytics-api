@@ -17,30 +17,51 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public"
       doc: "/domains/share-and-publish/publish/make-views-public.md"
+      api_units: 1
+      api_units_action: MAKE_VIEW_PUBLIC
+      api_units_category: METADATA
     - operation_id: removePublicPermission
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public"
       doc: "/domains/share-and-publish/publish/remove-public-permission.md"
+      api_units: 1
+      api_units_action: REMOVE_PUBLIC_VIEW
+      api_units_category: METADATA
     - operation_id: getPrivateUrl
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink"
       doc: "/domains/share-and-publish/publish/get-private-url.md"
+      api_units: 0.1
+      api_units_action: GET_PRIVATE_URL
+      api_units_category: METADATA
     - operation_id: createPrivateUrl
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink"
       doc: "/domains/share-and-publish/publish/create-private-url.md"
+      api_units: 1
+      api_units_action: CREATE_PRIVATE_URL
+      api_units_category: METADATA
     - operation_id: removePrivateAccess
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink"
       doc: "/domains/share-and-publish/publish/remove-private-access.md"
+      api_units: 1
+      api_units_action: REMOVE_PRIVATE_PERMISSION
+      api_units_category: METADATA
     - operation_id: getPublishConfigurations
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config"
       doc: "/domains/share-and-publish/publish/get-publish-configurations.md"
+      api_units: 0.1
+      api_units_action: GET_PUBLISH_CONFIGURATIONS
+      api_units_category: METADATA
     - operation_id: updatePublishConfigurations
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config"
       doc: "/domains/share-and-publish/publish/update-publish-configurations.md"
+      api_units: 0.5
+      api_units_action: UPDATE_PUBLISH_CONFIGURATIONS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
@@ -61,15 +82,15 @@ APIs for making views public, managing private URLs, and updating publish config
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Make View Public](make-views-public.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public` | `makeViewsPublic` | `ZohoAnalytics.embed.create` | 200 |
-| [Remove Public Permission](remove-public-permission.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public` | `removePublicPermission` | `ZohoAnalytics.embed.delete` | 204 |
-| [Get Private URL](get-private-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink` | `getPrivateUrl` | `ZohoAnalytics.embed.read` | 200 |
-| [Create Private URL](create-private-url.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink` | `createPrivateUrl` | `ZohoAnalytics.embed.update` | 200 |
-| [Remove Private Access](remove-private-access.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink` | `removePrivateAccess` | `ZohoAnalytics.embed.delete` | 204 |
-| [Get Publish Configurations](get-publish-configurations.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config` | `getPublishConfigurations` | `ZohoAnalytics.embed.read` | 200 |
-| [Update Publish Configurations](update-publish-configurations.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config` | `updatePublishConfigurations` | `ZohoAnalytics.embed.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Make View Public](make-views-public.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public` | `makeViewsPublic` | `ZohoAnalytics.embed.create` | 200 | 1 |
+| [Remove Public Permission](remove-public-permission.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/public` | `removePublicPermission` | `ZohoAnalytics.embed.delete` | 204 | 1 |
+| [Get Private URL](get-private-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink` | `getPrivateUrl` | `ZohoAnalytics.embed.read` | 200 | 0.1 |
+| [Create Private URL](create-private-url.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink` | `createPrivateUrl` | `ZohoAnalytics.embed.update` | 200 | 1 |
+| [Remove Private Access](remove-private-access.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/privatelink` | `removePrivateAccess` | `ZohoAnalytics.embed.delete` | 204 | 1 |
+| [Get Publish Configurations](get-publish-configurations.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config` | `getPublishConfigurations` | `ZohoAnalytics.embed.read` | 200 | 0.1 |
+| [Update Publish Configurations](update-publish-configurations.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/config` | `updatePublishConfigurations` | `ZohoAnalytics.embed.update` | 204 | 0.5 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

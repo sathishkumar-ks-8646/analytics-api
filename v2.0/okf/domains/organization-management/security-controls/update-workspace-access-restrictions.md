@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions"
   domain: organization-management
   group: security-controls
+  api_units:
+    api_id: 3070
+    action: UPDATE_WORKSPACE_ACCESS_RESTRICTIONS
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.update
   org_id_header: required
@@ -79,6 +87,8 @@ Switches one workspace between following the organisation and having its own set
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - **mandatory** |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 204 with no body |
+| API units | 1 unit per request - action `UPDATE_WORKSPACE_ACCESS_RESTRICTIONS` (api-id `3070`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`org-management-grouped-api.json`](../../../references/openapi/org-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1security-controls~1workspaces~1{workspace-id}~1access-restrictions/put`; CONFIG schema `UpdateWorkspaceAccessRestrictionsConfig` |
 
 # Request
@@ -316,3 +326,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Org Access Restrictions](get-org-access-restrictions.md), [Update Org Access Restrictions](update-org-access-restrictions.md), [Get Workspace Access Restrictions](get-workspace-access-restrictions.md).
 - [SDK examples](../../../sdk-examples/organization-management/security-controls/update-workspace-access-restrictions.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

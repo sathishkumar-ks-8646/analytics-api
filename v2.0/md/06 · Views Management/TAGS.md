@@ -21,18 +21,18 @@ Associations are a plain many-to-many relationship: one tag can label many views
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Tags List](#1-get-tags-list) | GET | `/restapi/v2/workspaces/<workspace-id>/tags` |
-| 2 | [Get Tagged Views](#2-get-tagged-views) | GET | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>/views` |
-| 3 | [Get View Tags](#3-get-view-tags) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/tags` |
-| 4 | [Create Tag](#4-create-tag) | POST | `/restapi/v2/workspaces/<workspace-id>/tags` |
-| 5 | [Update Tag](#5-update-tag) | PUT | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>` |
-| 6 | [Delete Tag](#6-delete-tag) | DELETE | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>` |
-| 7 | [Add Tag To Multiple Views](#7-add-tag-to-multiple-views) | POST | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>/views` |
-| 8 | [Remove Tag From Multiple Views](#8-remove-tag-from-multiple-views) | DELETE | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>/views` |
-| 9 | [Add Multiple Tags To View](#9-add-multiple-tags-to-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/tags` |
-| 10 | [Remove Multiple Tags From View](#10-remove-multiple-tags-from-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/tags` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Tags List](#1-get-tags-list) | GET | `/restapi/v2/workspaces/<workspace-id>/tags` | 0.5 |
+| 2 | [Get Tagged Views](#2-get-tagged-views) | GET | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>/views` | 0.5 |
+| 3 | [Get View Tags](#3-get-view-tags) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/tags` | 0.5 |
+| 4 | [Create Tag](#4-create-tag) | POST | `/restapi/v2/workspaces/<workspace-id>/tags` | 0.5 |
+| 5 | [Update Tag](#5-update-tag) | PUT | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>` | 0.5 |
+| 6 | [Delete Tag](#6-delete-tag) | DELETE | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>` | 0.5 |
+| 7 | [Add Tag To Multiple Views](#7-add-tag-to-multiple-views) | POST | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>/views` | 0.5 |
+| 8 | [Remove Tag From Multiple Views](#8-remove-tag-from-multiple-views) | DELETE | `/restapi/v2/workspaces/<workspace-id>/tags/<tag-id>/views` | 0.5 |
+| 9 | [Add Multiple Tags To View](#9-add-multiple-tags-to-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/tags` | 0.5 |
+| 10 | [Remove Multiple Tags From View](#10-remove-multiple-tags-from-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/tags` | 0.5 |
 
 > Notes that apply to all ten APIs:
 > - All require the `ZANALYTICS-ORGID` header.
@@ -213,6 +213,8 @@ Returns every tag that exists in the workspace.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
+| **API Units** | 0.5 units per request — gateway action `GET_TAGS` (api-id `3071`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -344,6 +346,8 @@ Returns the views that carry a given tag.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Optional |
 | **Success Status** | `200 OK` with a JSON body |
+| **API Units** | 0.5 units per request — gateway action `GET_TAGGED_VIEWS` (api-id `3072`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -518,6 +522,8 @@ Returns the tags attached to a given view.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
+| **API Units** | 0.5 units per request — gateway action `GET_VIEW_TAGS` (api-id `3073`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -633,6 +639,8 @@ Creates one tag in the workspace.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | `200 OK` with a JSON body carrying `data.tagId` |
+| **API Units** | 0.5 units per request — gateway action `CREATE_TAG` (api-id `2073`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -778,6 +786,8 @@ Renames a tag, recolours it, or both.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 0.5 units per request — gateway action `UPDATE_TAG` (api-id `2074`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -917,6 +927,8 @@ Deletes a tag and every association it has.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 0.5 units per request — gateway action `DELETE_TAG` (api-id `2075`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -1012,6 +1024,8 @@ Attaches **one tag** to a batch of views.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 0.5 units per request — gateway action `ADD_TAG_TO_VIEWS` (api-id `2076`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -1144,6 +1158,8 @@ Detaches **one tag** from a batch of views, or from every view at once.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 0.5 units per request — gateway action `REMOVE_TAG_FROM_VIEWS` (api-id `2077`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -1283,6 +1299,8 @@ Attaches a batch of **tags** to one view.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 0.5 units per request — gateway action `ADD_TAGS_TO_VIEW` (api-id `2078`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -1411,6 +1429,8 @@ Detaches a batch of **tags** from one view, or clears the view entirely.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 0.5 units per request — gateway action `REMOVE_TAGS_FROM_VIEW` (api-id `2079`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -1763,3 +1783,43 @@ GET /restapi/v2/workspaces/320873000000419001/tags/320873000000425158/views?CONF
 7. Deleting a view removes every association that view had.
 8. Renaming or recolouring a tag leaves all associations intact.
 9. Tags carry no permissions. Attaching one neither grants nor restricts access to the view.
+
+---
+
+## Appendix H – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Tags List](#1-get-tags-list) | `GET_TAGS` (3071) | METADATA | 0.5 | per request |
+| 2 | [Get Tagged Views](#2-get-tagged-views) | `GET_TAGGED_VIEWS` (3072) | METADATA | 0.5 | per request |
+| 3 | [Get View Tags](#3-get-view-tags) | `GET_VIEW_TAGS` (3073) | METADATA | 0.5 | per request |
+| 4 | [Create Tag](#4-create-tag) | `CREATE_TAG` (2073) | METADATA | 0.5 | per request |
+| 5 | [Update Tag](#5-update-tag) | `UPDATE_TAG` (2074) | METADATA | 0.5 | per request |
+| 6 | [Delete Tag](#6-delete-tag) | `DELETE_TAG` (2075) | METADATA | 0.5 | per request |
+| 7 | [Add Tag To Multiple Views](#7-add-tag-to-multiple-views) | `ADD_TAG_TO_VIEWS` (2076) | METADATA | 0.5 | per request |
+| 8 | [Remove Tag From Multiple Views](#8-remove-tag-from-multiple-views) | `REMOVE_TAG_FROM_VIEWS` (2077) | METADATA | 0.5 | per request |
+| 9 | [Add Multiple Tags To View](#9-add-multiple-tags-to-view) | `ADD_TAGS_TO_VIEW` (2078) | METADATA | 0.5 | per request |
+| 10 | [Remove Multiple Tags From View](#10-remove-multiple-tags-from-view) | `REMOVE_TAGS_FROM_VIEW` (2079) | METADATA | 0.5 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

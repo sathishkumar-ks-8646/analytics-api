@@ -10,6 +10,20 @@
       "url": "https://analyticsapi.zoho.com"
     }
   ],
+  "x-api-unit-categories": {
+    "description": "Every call deducts API units from the organization's plan allowance and is counted against the per-minute request ceiling of its unit category. A unit cost with a row basis is charged pro rata as (rowsProcessed / rowsBasis) * units, without rounding up to a whole block. The per-minute ceilings below are the base configuration; an organization's effective ceiling is the base value scaled by a plan-specific multiplier.",
+    "categories": {
+      "DML": {
+        "frequencyLimitPerMinute": 100
+      },
+      "BULK": {
+        "frequencyLimitPerMinute": 40
+      },
+      "METADATA": {
+        "frequencyLimitPerMinute": 60
+      }
+    }
+  },
   "tags": [
     {
       "name": "Email Schedules",
@@ -290,6 +304,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2050,
+          "action": "CREATE_EMAIL_SCHEDULE",
+          "units": {
+            "category": "METADATA",
+            "cost": 3,
+            "basis": "request",
+            "note": "3 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -408,6 +435,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3038,
+          "action": "GET EMAIL SCHEDULES",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -494,6 +534,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2054,
+          "action": "TRIGGER_EMAIL_SCHEDULE",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       },
@@ -691,6 +744,19 @@
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
         },
+        "x-zenesis-security": {
+          "api-id": 2051,
+          "action": "UPDATE_EMAIL_SCHEDULE",
+          "units": {
+            "category": "METADATA",
+            "cost": 3,
+            "basis": "request",
+            "note": "3 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
+        },
         "x-zenesis-sections": {
           "apiRequestParameters": {
             "1": {
@@ -771,6 +837,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2052,
+          "action": "DELETE_EMAIL_SCHEDULE",
+          "units": {
+            "category": "METADATA",
+            "cost": 3,
+            "basis": "request",
+            "note": "3 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }
@@ -901,6 +980,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2053,
+          "action": "CHANGE_EMAIL_SCHEDULE_STATUS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }
@@ -1037,6 +1129,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3091,
+          "action": "GET_ALERTS_IN_WORKSPACE",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       },
       "delete": {
@@ -1165,6 +1270,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2085,
+          "action": "DELETE_ALERTS",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }
@@ -1296,6 +1414,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 3092,
+          "action": "GET_ALERTS_IN_VIEW",
+          "units": {
+            "category": "METADATA",
+            "cost": 0.5,
+            "basis": "request",
+            "note": "0.5 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       },
@@ -1770,6 +1901,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 2083,
+          "action": "CREATE_ALERT",
+          "units": {
+            "category": "METADATA",
+            "cost": 3,
+            "basis": "request",
+            "note": "3 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -2005,6 +2149,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3093,
+          "action": "GET_VIEW_METADATA_FOR_ALERT",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -2187,6 +2344,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 3094,
+          "action": "GET_ALERT_CONFIGURATION",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       },
@@ -2430,6 +2600,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 2084,
+          "action": "UPDATE_ALERT",
+          "units": {
+            "category": "METADATA",
+            "cost": 3,
+            "basis": "request",
+            "note": "3 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -2574,6 +2757,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 2086,
+          "action": "CHANGE_ALERT_STATUS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -2696,6 +2892,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2087,
+          "action": "RUN_ALERT",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }
@@ -2866,6 +3075,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 3095,
+          "action": "GET_ALERT_EVENTS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }

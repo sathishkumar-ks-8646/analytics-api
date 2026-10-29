@@ -28,16 +28,16 @@ Workspace linking lets one **master** workspace act as the design source for any
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Linked Workspaces For Organization](#1-get-linked-workspaces-for-organization) | GET | `/restapi/v2/linkedworkspaces` |
-| 2 | [Get Linked Workspaces For Master Workspace](#2-get-linked-workspaces-for-master-workspace) | GET | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces` |
-| 3 | [Get Linkable Workspaces](#3-get-linkable-workspaces) | GET | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/linkable` |
-| 4 | [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility) | GET | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/compatibility` |
-| 5 | [Link Workspaces](#5-link-workspaces) | POST | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces` |
-| 6 | [Sync Linked Workspaces](#6-sync-linked-workspaces) | POST | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/sync` |
-| 7 | [Get Linked Workspace Sync Details](#7-get-linked-workspace-sync-details) | GET | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/sync` |
-| 8 | [Unlink Workspaces](#8-unlink-workspaces) | DELETE | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Linked Workspaces For Organization](#1-get-linked-workspaces-for-organization) | GET | `/restapi/v2/linkedworkspaces` | 1 |
+| 2 | [Get Linked Workspaces For Master Workspace](#2-get-linked-workspaces-for-master-workspace) | GET | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces` | 1 |
+| 3 | [Get Linkable Workspaces](#3-get-linkable-workspaces) | GET | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/linkable` | 1 |
+| 4 | [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility) | GET | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/compatibility` | 1 |
+| 5 | [Link Workspaces](#5-link-workspaces) | POST | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces` | 3 |
+| 6 | [Sync Linked Workspaces](#6-sync-linked-workspaces) | POST | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/sync` | 3 |
+| 7 | [Get Linked Workspace Sync Details](#7-get-linked-workspace-sync-details) | GET | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces/sync` | 1 |
+| 8 | [Unlink Workspaces](#8-unlink-workspaces) | DELETE | `/restapi/v2/workspaces/<workspace-id>/linkedworkspaces` | 3 |
 
 > **Note on method overloading:** two paths serve two operations each. `/workspaces/<workspace-id>/linkedworkspaces` lists links on `GET`, creates them on `POST` and removes them on `DELETE`; `/workspaces/<workspace-id>/linkedworkspaces/sync` reports sync state on `GET` and triggers a real sync on `POST`. Sending `POST` where you meant `GET` pushes the master's design into live client workspaces.
 >
@@ -142,6 +142,8 @@ Returns every master↔client link in the organisation named by `ZANALYTICS-ORGI
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID whose master workspaces are listed. |
 | **Permission Required** | The authenticated user must be an Account Admin or an Organization Admin of the organisation in `ZANALYTICS-ORGID`. Individual links are additionally filtered to those whose master **and** client organisations the caller administers. |
+| **API Units** | 1 unit per request — gateway action `GET_LINKED_WORKSPACES_FOR_ORGANIZATION` (api-id `3086`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -311,6 +313,8 @@ Returns the links of a single master workspace, in the same shape as one entry o
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the master workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or an Organization Admin of the organisation in `ZANALYTICS-ORGID` **and** of the organisation that owns `<workspace-id>`. Individual client entries are further filtered to organisations the caller administers. |
+| **API Units** | 1 unit per request — gateway action `GET_LINKED_WORKSPACES_FOR_MASTER_WORKSPACE` (api-id `3087`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -465,6 +469,8 @@ Returns, grouped by organisation, the workspaces the caller may offer as link ca
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the master workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or an Organization Admin of the organisation in `ZANALYTICS-ORGID` **and** of the organisation that owns `<workspace-id>`. Candidates are drawn only from organisations the caller administers. |
+| **API Units** | 1 unit per request — gateway action `GET_LINKABLE_WORKSPACES` (api-id `3088`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -603,6 +609,8 @@ Runs the full linking validation against a set of candidate client workspaces **
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the master workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or an Organization Admin of the organisation in `ZANALYTICS-ORGID`, of the organisation that owns `<workspace-id>`, **and of every organisation named in `clients[].orgId`**. |
+| **API Units** | 1 unit per request — gateway action `GET_WORKSPACE_LINKING_COMPATIBILITY` (api-id `3089`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -840,6 +848,8 @@ Links one or more client workspaces to a master. The request is validated for co
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the master workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or an Organization Admin of the organisation in `ZANALYTICS-ORGID`, of the organisation that owns `<workspace-id>`, **and of every organisation named in `clients[].orgId`**. |
+| **API Units** | 3 units per request — gateway action `LINK_WORKSPACES` (api-id `2080`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1025,6 +1035,8 @@ Pushes the master workspace's design to its linked clients. The request either s
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the master workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or an Organization Admin of the organisation in `ZANALYTICS-ORGID` and of the organisation that owns `<workspace-id>`. When `masterViewIds` is used, the caller must additionally administer the organisation owning each listed view's workspace. |
+| **API Units** | 3 units per request — gateway action `SYNC_LINKED_WORKSPACES` (api-id `2082`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1228,6 +1240,8 @@ Returns, per linked sandbox, what the last sync did entity by entity and what is
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the master workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or an Organization Admin of the organisation in `ZANALYTICS-ORGID` and of the organisation that owns `<workspace-id>`. |
+| **API Units** | 1 unit per request — gateway action `GET_LINKED_WORKSPACE_SYNC_DETAILS` (api-id `3090`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1468,6 +1482,8 @@ Removes links between a master workspace and its clients, either all of them or 
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the master workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or an Organization Admin of the organisation in `ZANALYTICS-ORGID` and of the organisation that owns `<workspace-id>`. |
+| **API Units** | 3 units per request — gateway action `UNLINK_WORKSPACES` (api-id `2081`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1847,3 +1863,41 @@ Only five APIs accept CONFIG. `✔` means the attribute is accepted; `—` means
 `clients` carries different members depending on the API: `orgId` + `workspaceIds` for [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility) and [Link Workspaces](#5-link-workspaces), `sandboxId` + `scope` + `masterViewIds` for [Sync Linked Workspaces](#6-sync-linked-workspaces). The two shapes are not interchangeable.
 
 [Get Linked Workspaces For Organization](#1-get-linked-workspaces-for-organization), [Get Linked Workspaces For Master Workspace](#2-get-linked-workspaces-for-master-workspace) and [Get Linkable Workspaces](#3-get-linkable-workspaces) take no CONFIG at all.
+
+---
+
+## Appendix G – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Linked Workspaces For Organization](#1-get-linked-workspaces-for-organization) | `GET_LINKED_WORKSPACES_FOR_ORGANIZATION` (3086) | METADATA | 1 | per request |
+| 2 | [Get Linked Workspaces For Master Workspace](#2-get-linked-workspaces-for-master-workspace) | `GET_LINKED_WORKSPACES_FOR_MASTER_WORKSPACE` (3087) | METADATA | 1 | per request |
+| 3 | [Get Linkable Workspaces](#3-get-linkable-workspaces) | `GET_LINKABLE_WORKSPACES` (3088) | METADATA | 1 | per request |
+| 4 | [Get Workspace Linking Compatibility](#4-get-workspace-linking-compatibility) | `GET_WORKSPACE_LINKING_COMPATIBILITY` (3089) | METADATA | 1 | per request |
+| 5 | [Link Workspaces](#5-link-workspaces) | `LINK_WORKSPACES` (2080) | METADATA | 3 | per request |
+| 6 | [Sync Linked Workspaces](#6-sync-linked-workspaces) | `SYNC_LINKED_WORKSPACES` (2082) | METADATA | 3 | per request |
+| 7 | [Get Linked Workspace Sync Details](#7-get-linked-workspace-sync-details) | `GET_LINKED_WORKSPACE_SYNC_DETAILS` (3090) | METADATA | 1 | per request |
+| 8 | [Unlink Workspaces](#8-unlink-workspaces) | `UNLINK_WORKSPACES` (2081) | METADATA | 3 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

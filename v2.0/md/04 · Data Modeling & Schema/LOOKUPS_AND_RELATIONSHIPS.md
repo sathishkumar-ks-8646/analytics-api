@@ -21,10 +21,10 @@ Once a lookup is established, multi-table reports, pivot tables, and query table
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Add Lookup](#1-add-lookup) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>/lookup` |
-| 2 | [Remove Lookup](#2-remove-lookup) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>/lookup` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Add Lookup](#1-add-lookup) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>/lookup` | 1 |
+| 2 | [Remove Lookup](#2-remove-lookup) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>/lookup` | 2 |
 
 ---
 
@@ -39,6 +39,8 @@ Creates a lookup relationship from the specified child column to a column in a r
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `ADD_LOOKUP` (api-id `2016`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### URL Parameters
 
@@ -162,6 +164,8 @@ By default, if any reports, charts, pivot tables, or query tables depend on this
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the workspace. |
+| **API Units** | 2 units per request — gateway action `REMOVE_LOOKUP` (api-id `2017`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### URL Parameters
 
@@ -303,3 +307,35 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **Relationship reflection** | After Add Lookup, the Schema View in the Zoho Analytics UI shows a line between the child and reference tables. After Remove Lookup, this line disappears. |
 | **`referenceViewId` and `referenceColumnId` in CONFIG are long integers** | Unlike `columnIds` in Hide/Show Columns (which are strings), these values are passed as unquoted numbers in CONFIG: `{"referenceViewId": 7617000000509100, "referenceColumnId": 7617000000509105}`. |
 | **Impact on multi-table reports** | Lookups enable cross-table analysis. Adding a lookup makes it possible to drag columns from both tables into a single report. Removing a lookup breaks any report that currently joins the two tables via that column. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Add Lookup](#1-add-lookup) | `ADD_LOOKUP` (2016) | METADATA | 1 | per request |
+| 2 | [Remove Lookup](#2-remove-lookup) | `REMOVE_LOOKUP` (2017) | METADATA | 2 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

@@ -17,14 +17,23 @@ api:
       method: GET
       path: "/restapi/v2/resources"
       doc: "/domains/organization-management/org-info-and-settings/get-resource-details.md"
+      api_units: 0.1
+      api_units_action: GET_RESOURCE_DETAILS
+      api_units_category: METADATA
     - operation_id: getSubscriptionDetails
       method: GET
       path: "/restapi/v2/subscription"
       doc: "/domains/organization-management/org-info-and-settings/get-subscription-details.md"
+      api_units: 0.1
+      api_units_action: GET_SUBSCRIPTION_DETAILS
+      api_units_category: METADATA
     - operation_id: getMetaDetails
       method: GET
       path: "/restapi/v2/metadetails"
       doc: "/domains/organization-management/org-info-and-settings/get-meta-details.md"
+      api_units: 0.1
+      api_units_action: GET_META_DETAILS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/org-management-grouped-api.json"
@@ -47,11 +56,11 @@ APIs for retrieving organisation information, resource usage, subscription detai
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Resource Details](get-resource-details.md) | GET | `/restapi/v2/resources` | `getResourceDetails` | `ZohoAnalytics.usermanagement.read` | 200 |
-| [Get Subscription Details](get-subscription-details.md) | GET | `/restapi/v2/subscription` | `getSubscriptionDetails` | `ZohoAnalytics.usermanagement.read` | 200 |
-| [Get Meta Details From Name](get-meta-details.md) | GET | `/restapi/v2/metadetails` | `getMetaDetails` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Resource Details](get-resource-details.md) | GET | `/restapi/v2/resources` | `getResourceDetails` | `ZohoAnalytics.usermanagement.read` | 200 | 0.1 |
+| [Get Subscription Details](get-subscription-details.md) | GET | `/restapi/v2/subscription` | `getSubscriptionDetails` | `ZohoAnalytics.usermanagement.read` | 200 | 0.1 |
+| [Get Meta Details From Name](get-meta-details.md) | GET | `/restapi/v2/metadetails` | `getMetaDetails` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/linkedworkspaces"
   domain: workspace-management
   group: linked-workspaces
+  api_units:
+    api_id: 3086
+    action: GET_LINKED_WORKSPACES_FOR_ORGANIZATION
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -70,6 +78,8 @@ Returns every master↔client link in the organisation named by `ZANALYTICS-ORGI
 | Permission required | The authenticated user must be an Account Admin or an Organization Admin of the organisation in ZANALYTICS-ORGID. Individual links are additionally filtered to those whose master and client organisations the caller administers. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 1 unit per request - action `GET_LINKED_WORKSPACES_FOR_ORGANIZATION` (api-id `3086`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`workspace-management-grouped-api.json`](../../../references/openapi/workspace-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1linkedworkspaces/get`; response schema `GetLinkedWorkspacesForOrganizationResponse` |
 
 # Request
@@ -265,3 +275,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Linked Workspaces For Master Workspace](get-linked-workspaces-for-master-workspace.md), [Get Linkable Workspaces](get-linkable-workspaces.md), [Get Workspace Linking Compatibility](get-workspace-linking-compatibility.md), [Link Workspaces](link-workspaces.md), [Sync Linked Workspaces](sync-linked-workspaces.md), [Get Linked Workspace Sync Details](get-linked-workspace-sync-details.md), [Unlink Workspaces](unlink-workspaces.md).
 - [SDK examples](../../../sdk-examples/workspace-management/linked-workspaces/get-linked-workspaces-for-organization.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

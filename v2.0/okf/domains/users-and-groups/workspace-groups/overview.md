@@ -17,30 +17,51 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/groups"
       doc: "/domains/users-and-groups/workspace-groups/get-groups.md"
+      api_units: 0.1
+      api_units_action: GET_GROUPS
+      api_units_category: METADATA
     - operation_id: createGroup
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/groups"
       doc: "/domains/users-and-groups/workspace-groups/create-group.md"
+      api_units: 1
+      api_units_action: CREATE_GROUP
+      api_units_category: METADATA
     - operation_id: renameGroup
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/groups/{group-id}"
       doc: "/domains/users-and-groups/workspace-groups/rename-group.md"
+      api_units: 0.1
+      api_units_action: RENAME_GROUP
+      api_units_category: METADATA
     - operation_id: addGroupMembers
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members"
       doc: "/domains/users-and-groups/workspace-groups/add-group-members.md"
+      api_units: 0.1
+      api_units_action: ADD_GROUP_MEMBERS
+      api_units_category: METADATA
     - operation_id: removeGroupMembers
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members"
       doc: "/domains/users-and-groups/workspace-groups/remove-group-members.md"
+      api_units: 0.1
+      api_units_action: REMOVE_GROUP_MEMBERS
+      api_units_category: METADATA
     - operation_id: deleteGroup
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/groups/{group-id}"
       doc: "/domains/users-and-groups/workspace-groups/delete-group.md"
+      api_units: 1
+      api_units_action: DELETE_GROUP
+      api_units_category: METADATA
     - operation_id: getGroupDetails
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/groups/{group-id}"
       doc: "/domains/users-and-groups/workspace-groups/get-group-details.md"
+      api_units: 0.1
+      api_units_action: GET_GROUP_DETAILS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
@@ -71,15 +92,15 @@ Groups are scoped to a single workspace, and their members must already be users
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Group List](get-groups.md) | GET | `/restapi/v2/workspaces/{workspace-id}/groups` | `getGroups` | `ZohoAnalytics.share.read` | 200 |
-| [Create Group](create-group.md) | POST | `/restapi/v2/workspaces/{workspace-id}/groups` | `createGroup` | `ZohoAnalytics.share.create` | 200 |
-| [Rename Group](rename-group.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `renameGroup` | `ZohoAnalytics.share.update` | 204 |
-| [Add Group Members](add-group-members.md) | POST | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members` | `addGroupMembers` | `ZohoAnalytics.share.create` | 204 |
-| [Remove Group Members](remove-group-members.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members` | `removeGroupMembers` | `ZohoAnalytics.share.delete` | 204 |
-| [Delete Group](delete-group.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `deleteGroup` | `ZohoAnalytics.share.delete` | 204 |
-| [Get Group Details](get-group-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `getGroupDetails` | `ZohoAnalytics.share.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Group List](get-groups.md) | GET | `/restapi/v2/workspaces/{workspace-id}/groups` | `getGroups` | `ZohoAnalytics.share.read` | 200 | 0.1 |
+| [Create Group](create-group.md) | POST | `/restapi/v2/workspaces/{workspace-id}/groups` | `createGroup` | `ZohoAnalytics.share.create` | 200 | 1 |
+| [Rename Group](rename-group.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `renameGroup` | `ZohoAnalytics.share.update` | 204 | 0.1 |
+| [Add Group Members](add-group-members.md) | POST | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members` | `addGroupMembers` | `ZohoAnalytics.share.create` | 204 | 0.1 |
+| [Remove Group Members](remove-group-members.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}/members` | `removeGroupMembers` | `ZohoAnalytics.share.delete` | 204 | 0.1 |
+| [Delete Group](delete-group.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `deleteGroup` | `ZohoAnalytics.share.delete` | 204 | 1 |
+| [Get Group Details](get-group-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/groups/{group-id}` | `getGroupDetails` | `ZohoAnalytics.share.read` | 200 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

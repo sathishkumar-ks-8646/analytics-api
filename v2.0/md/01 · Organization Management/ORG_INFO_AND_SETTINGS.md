@@ -6,11 +6,11 @@ These APIs provide information about the resource usage, subscription plan, and 
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Resource Details](#1-get-resource-details) | GET | `/restapi/v2/resources` |
-| 2 | [Get Subscription Details](#2-get-subscription-details) | GET | `/restapi/v2/subscription` |
-| 3 | [Get Meta Details From Name](#3-get-meta-details-from-name) | GET | `/restapi/v2/metadetails` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Resource Details](#1-get-resource-details) | GET | `/restapi/v2/resources` | 0.1 |
+| 2 | [Get Subscription Details](#2-get-subscription-details) | GET | `/restapi/v2/subscription` | 0.1 |
+| 3 | [Get Meta Details From Name](#3-get-meta-details-from-name) | GET | `/restapi/v2/metadetails` | 0.1 |
 
 ---
 
@@ -25,6 +25,8 @@ Returns the current resource allocation and usage statistics for the specified o
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID to fetch resource details for. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
+| **API Units** | 0.1 units per request — gateway action `GET_RESOURCE_DETAILS` (api-id `6008`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -172,6 +174,8 @@ Returns the current subscription plan, add-on details, billing date, and trial s
 | **OAuth Scope** | `ZohoAnalytics.usermanagement.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID to fetch subscription details for. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. |
+| **API Units** | 0.1 units per request — gateway action `GET_SUBSCRIPTION_DETAILS` (api-id `6006`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -284,6 +288,8 @@ Resolves a workspace (and optionally a view) **by name** to return its numeric I
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID in which the workspace exists. |
 | **Permission Required** | The authenticated user must have at least Read access on the specified workspace (for workspace-only lookup), or Read access on the specific view (for view lookup). Workspace Admins, Account Admins, Organization Admins, and any user with at least one shared view in the workspace can call this API. |
+| **API Units** | 0.1 units per request — gateway action `GET_META_DETAILS` (api-id `3021`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -474,3 +480,36 @@ ZANALYTICS-ORGID: 700000789012
 | User has access to the workspace but not the specific view | When `viewName` is in CONFIG, security is checked specifically against the view. If the view is not accessible to the user, the request fails with error **7301** even if the user can see the workspace. |
 | User is a shared user with access to only one view in the workspace | Workspace-only lookup (no `viewName`) succeeds only if the user has any view shared with them in that workspace. If the workspace has views but none are shared with the user, the request fails with **7301**. |
 | Using this API to bootstrap other API calls | This is the recommended approach for name-based integrations. Call Get Meta Details From Name to resolve `workspaceId` and `viewId`, then pass those IDs to downstream APIs (Get View Details, Export Data, etc.). This avoids hard-coding numeric IDs which can change across environments. |
+
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Resource Details](#1-get-resource-details) | `GET_RESOURCE_DETAILS` (6008) | METADATA | 0.1 | per request |
+| 2 | [Get Subscription Details](#2-get-subscription-details) | `GET_SUBSCRIPTION_DETAILS` (6006) | METADATA | 0.1 | per request |
+| 3 | [Get Meta Details From Name](#3-get-meta-details-from-name) | `GET_META_DETAILS` (3021) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

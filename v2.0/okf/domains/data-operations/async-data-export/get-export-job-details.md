@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}"
   domain: data-operations
   group: async-data-export
+  api_units:
+    api_id: 9001
+    action: EXPORT_JOB_STATUS
+    category: METADATA
+    units: 0
+    units_basis: per_request
+    units_note: "0 - no API units are deducted"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.data.read
   org_id_header: required
@@ -74,6 +82,8 @@ Reports the progress of an export job, and once it has finished, where to collec
 | Permission required | Only the user who created the export job. Any other user, including an Account Admin or Organization Admin, receives 8124. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0 - this request is free; no API units are deducted. Action `EXPORT_JOB_STATUS` (api-id `9001`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-operations-grouped-api.json`](../../../references/openapi/data-operations-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1exportjobs~1{job-id}/get`; response schema `ExportJobDetailsResponse` |
 
 # Request
@@ -255,3 +265,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Export Job using SQL Query (Asynchronous)](create-export-job-sql-query.md), [Create Export Job using View ID (Asynchronous)](create-export-job-view-id.md), [Download Exported Data](download-exported-data.md).
 - [SDK examples](../../../sdk-examples/data-operations/async-data-export/get-export-job-details.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

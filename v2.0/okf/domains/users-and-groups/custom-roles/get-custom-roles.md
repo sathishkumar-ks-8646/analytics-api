@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/orgs/roles"
   domain: users-and-groups
   group: custom-roles
+  api_units:
+    api_id: 6014
+    action: GET_ROLES
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.usermanagement.read
   org_id_header: required
@@ -77,6 +85,8 @@ This is the only way to read a role definition back - there is no get-by-ID vari
 | Permission required | The authenticated user must be an Account Admin or Organization Admin of the organization. No other role qualifies; custom roles must be enabled for the organization and included in its plan. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 1 unit per request - action `GET_ROLES` (api-id `6014`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`user-groups-grouped-api.json`](../../../references/openapi/user-groups-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1orgs~1roles/get`; response schema `GetCustomRolesResponse` |
 
 # Request
@@ -300,3 +310,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Custom Role](create-custom-role.md), [Update Custom Role](update-custom-role.md), [Delete Custom Role](delete-custom-role.md).
 - [SDK examples](../../../sdk-examples/users-and-groups/custom-roles/get-custom-roles.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

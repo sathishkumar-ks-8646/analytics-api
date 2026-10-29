@@ -28,14 +28,14 @@ Each slideshow also carries an **access type** that decides whether a viewer mus
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Slide List](#1-get-slide-list) | GET | `/restapi/v2/workspaces/<workspace-id>/slides` |
-| 2 | [Get Slide URL](#2-get-slide-url) | GET | `/restapi/v2/workspaces/<workspace-id>/slides/<slide-id>/publish` |
-| 3 | [Get Slide Info](#3-get-slide-info) | GET | `/restapi/v2/workspaces/<workspace-id>/slides/<slide-id>` |
-| 4 | [Create Slide Show](#4-create-slide-show) | POST | `/restapi/v2/workspaces/<workspace-id>/slides` |
-| 5 | [Update Slide Show](#5-update-slide-show) | PUT | `/restapi/v2/workspaces/<workspace-id>/slides/<slide-id>` |
-| 6 | [Delete Slide Show](#6-delete-slide-show) | DELETE | `/restapi/v2/workspaces/<workspace-id>/slides/<slide-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Slide List](#1-get-slide-list) | GET | `/restapi/v2/workspaces/<workspace-id>/slides` | 1 |
+| 2 | [Get Slide URL](#2-get-slide-url) | GET | `/restapi/v2/workspaces/<workspace-id>/slides/<slide-id>/publish` | 1 |
+| 3 | [Get Slide Info](#3-get-slide-info) | GET | `/restapi/v2/workspaces/<workspace-id>/slides/<slide-id>` | 1 |
+| 4 | [Create Slide Show](#4-create-slide-show) | POST | `/restapi/v2/workspaces/<workspace-id>/slides` | 2 |
+| 5 | [Update Slide Show](#5-update-slide-show) | PUT | `/restapi/v2/workspaces/<workspace-id>/slides/<slide-id>` | 2 |
+| 6 | [Delete Slide Show](#6-delete-slide-show) | DELETE | `/restapi/v2/workspaces/<workspace-id>/slides/<slide-id>` | 2 |
 
 > **Note on naming:** The public API portal presents the same six operations under slightly different display names — Get Slideshows, Get Slideshow URL, Get Slideshow Details, Create Slideshow, Update Slideshow, and Delete Slideshow respectively. The underlying paths, scopes, and payloads are identical.
 >
@@ -67,6 +67,8 @@ Returns every slideshow that exists in the workspace, with its ID, name, and acc
 | **OAuth Scope** | `ZohoAnalytics.embed.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Slideshow permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_SLIDE_LIST` (api-id `5005`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -208,6 +210,8 @@ Builds and returns the presentation URL for an existing slideshow. The rendering
 | **OAuth Scope** | `ZohoAnalytics.embed.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Slideshow permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_SLIDE_URL` (api-id `5006`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -407,6 +411,8 @@ Returns the full definition of a single slideshow: its name, its access type, it
 | **OAuth Scope** | `ZohoAnalytics.embed.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Slideshow permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_SLIDE_INFO` (api-id `5007`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -561,6 +567,8 @@ Creates a new slideshow in the workspace from an ordered set of views, and retur
 | **OAuth Scope** | `ZohoAnalytics.embed.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Slideshow permission on the workspace. |
+| **API Units** | 2 units per request — gateway action `CREATE_SLIDE_SHOW` (api-id `5008`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -743,6 +751,8 @@ Updates an existing slideshow: renames it, replaces its set of views, changes it
 | **OAuth Scope** | `ZohoAnalytics.embed.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Slideshow permission on the workspace. |
+| **API Units** | 2 units per request — gateway action `UPDATE_SLIDE_SHOW` (api-id `5009`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -912,6 +922,8 @@ Deletes a slideshow from the workspace. The views that were part of it are untou
 | **OAuth Scope** | `ZohoAnalytics.embed.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Slideshow permission on the workspace. |
+| **API Units** | 2 units per request — gateway action `DELETE_SLIDE_SHOW` (api-id `5010`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -1112,3 +1124,39 @@ CONFIG={"slideName":"Sales Overview","viewIds":["137687000006991601"]}
 | **`slideUrl` shape is stable and fully populated** | It is always `https://<domain>/ZDBSlideshow.cc?SLIDEID=<id>&SLIDEKEY=<key>&AUTOPLAY=<bool>&INTERVAL=<seconds>&INCLUDETITLE=<bool>&INCLUDEDESC=<bool>&SOCIALWIDGETS=<bool>` — all seven parameters, in that order, whether or not they were supplied. This makes the URL safe to parse, but it also means the key is always embedded. |
 | **`slideKey` is a credential** | It appears in `slideInfo.slideKey` and inside every `slideUrl`. For an `accessType: 1` slideshow it grants sign-in-free access to the content, so avoid logging these values and restrict who may call [Get Slide Info](#3-get-slide-info) and [Get Slide URL](#2-get-slide-url). |
 | **Create echoes only the identifiers** | [Create Slide Show](#4-create-slide-show) returns `slideId` and `slideUrl` only — not `slideName`, `accessType`, or `viewIds`. Confirm what was stored with [Get Slide Info](#3-get-slide-info) rather than assuming the request was applied verbatim. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Slide List](#1-get-slide-list) | `GET_SLIDE_LIST` (5005) | METADATA | 1 | per request |
+| 2 | [Get Slide URL](#2-get-slide-url) | `GET_SLIDE_URL` (5006) | METADATA | 1 | per request |
+| 3 | [Get Slide Info](#3-get-slide-info) | `GET_SLIDE_INFO` (5007) | METADATA | 1 | per request |
+| 4 | [Create Slide Show](#4-create-slide-show) | `CREATE_SLIDE_SHOW` (5008) | METADATA | 2 | per request |
+| 5 | [Update Slide Show](#5-update-slide-show) | `UPDATE_SLIDE_SHOW` (5009) | METADATA | 2 | per request |
+| 6 | [Delete Slide Show](#6-delete-slide-show) | `DELETE_SLIDE_SHOW` (5010) | METADATA | 2 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

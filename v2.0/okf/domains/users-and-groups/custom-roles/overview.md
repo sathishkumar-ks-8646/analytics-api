@@ -17,18 +17,30 @@ api:
       method: GET
       path: "/restapi/v2/orgs/roles"
       doc: "/domains/users-and-groups/custom-roles/get-custom-roles.md"
+      api_units: 1
+      api_units_action: GET_ROLES
+      api_units_category: METADATA
     - operation_id: createCustomRole
       method: POST
       path: "/restapi/v2/orgs/roles"
       doc: "/domains/users-and-groups/custom-roles/create-custom-role.md"
+      api_units: 1
+      api_units_action: CREATE_ROLE
+      api_units_category: METADATA
     - operation_id: updateCustomRole
       method: PUT
       path: "/restapi/v2/orgs/roles/{role-id}"
       doc: "/domains/users-and-groups/custom-roles/update-custom-role.md"
+      api_units: 1
+      api_units_action: UPDATE_ROLE
+      api_units_category: METADATA
     - operation_id: deleteCustomRole
       method: DELETE
       path: "/restapi/v2/orgs/roles/{role-id}"
       doc: "/domains/users-and-groups/custom-roles/delete-custom-role.md"
+      api_units: 1
+      api_units_action: DELETE_ROLE
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
@@ -53,12 +65,12 @@ These APIs define roles only. Attaching a role to a user or to a workspace is do
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Custom Roles](get-custom-roles.md) | GET | `/restapi/v2/orgs/roles` | `getCustomRoles` | `ZohoAnalytics.usermanagement.read` | 200 |
-| [Create Custom Role](create-custom-role.md) | POST | `/restapi/v2/orgs/roles` | `createCustomRole` | `ZohoAnalytics.usermanagement.create` | 200 |
-| [Update Custom Role](update-custom-role.md) | PUT | `/restapi/v2/orgs/roles/{role-id}` | `updateCustomRole` | `ZohoAnalytics.usermanagement.update` | 204 |
-| [Delete Custom Role](delete-custom-role.md) | DELETE | `/restapi/v2/orgs/roles/{role-id}` | `deleteCustomRole` | `ZohoAnalytics.usermanagement.delete` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Custom Roles](get-custom-roles.md) | GET | `/restapi/v2/orgs/roles` | `getCustomRoles` | `ZohoAnalytics.usermanagement.read` | 200 | 1 |
+| [Create Custom Role](create-custom-role.md) | POST | `/restapi/v2/orgs/roles` | `createCustomRole` | `ZohoAnalytics.usermanagement.create` | 200 | 1 |
+| [Update Custom Role](update-custom-role.md) | PUT | `/restapi/v2/orgs/roles/{role-id}` | `updateCustomRole` | `ZohoAnalytics.usermanagement.update` | 204 | 1 |
+| [Delete Custom Role](delete-custom-role.md) | DELETE | `/restapi/v2/orgs/roles/{role-id}` | `deleteCustomRole` | `ZohoAnalytics.usermanagement.delete` | 204 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

@@ -17,10 +17,16 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/data"
       doc: "/domains/data-operations/sync-data-import/import-data-new-table.md"
+      api_units: variable
+      api_units_action: INITIATE_IMPORT
+      api_units_category: BULK
     - operation_id: importDataExistingTable
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data"
       doc: "/domains/data-operations/sync-data-import/import-data-existing-table.md"
+      api_units: variable
+      api_units_action: INITIATE_IMPORT
+      api_units_category: BULK
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
@@ -41,10 +47,10 @@ APIs for importing data directly into new or existing tables.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Import Data into a New Table (Synchronous)](import-data-new-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/data` | `importDataNewTable` | `ZohoAnalytics.data.create` | 200 |
-| [Import Data into an Existing Table (Synchronous)](import-data-existing-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data` | `importDataExistingTable` | `ZohoAnalytics.data.create` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Import Data into a New Table (Synchronous)](import-data-new-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/data` | `importDataNewTable` | `ZohoAnalytics.data.create` | 200 | variable |
+| [Import Data into an Existing Table (Synchronous)](import-data-existing-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data` | `importDataExistingTable` | `ZohoAnalytics.data.create` | 200 | variable |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

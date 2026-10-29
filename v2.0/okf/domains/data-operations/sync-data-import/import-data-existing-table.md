@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data"
   domain: data-operations
   group: sync-data-import
+  api_units:
+    api_id: 8001
+    action: INITIATE_IMPORT
+    category: BULK
+    units: 0
+    units_basis: per_request
+    units_variable: true
+    units_note: "Variable - units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)"
+    category_frequency_limit: 40 requests/minute
   oauth_scopes:
     - ZohoAnalytics.data.create
   org_id_header: required
@@ -87,6 +96,8 @@ Loads the uploaded data into an existing table, appending, replacing, or merging
 | CONFIG parameter | JSON object sent as the `CONFIG` part of a `multipart/form-data` body - **mandatory** |
 | Request Content-Type | `multipart/form-data` |
 | Success response | HTTP 200 - `application/json` |
+| API units | Variable - units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`) - action `INITIATE_IMPORT` (api-id `8001`), **BULK** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 40 requests/minute across all **BULK**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-operations-grouped-api.json`](../../../references/openapi/data-operations-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1data/post`; CONFIG schema `ImportConfigExistingTable`; response schema `ExistImportSuccessResponse` |
 
 # Request
@@ -458,3 +469,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Import Data into a New Table (Synchronous)](import-data-new-table.md).
 - [SDK examples](../../../sdk-examples/data-operations/sync-data-import/import-data-existing-table.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

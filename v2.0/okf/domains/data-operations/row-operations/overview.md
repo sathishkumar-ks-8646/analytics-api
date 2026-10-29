@@ -17,14 +17,23 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows"
       doc: "/domains/data-operations/row-operations/add-row.md"
+      api_units: 0.1
+      api_units_action: ADD_ROW
+      api_units_category: DML
     - operation_id: updateRows
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows"
       doc: "/domains/data-operations/row-operations/update-rows.md"
+      api_units: 0.3
+      api_units_action: UPDATE_ROW
+      api_units_category: DML
     - operation_id: deleteRows
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows"
       doc: "/domains/data-operations/row-operations/delete-rows.md"
+      api_units: 0.1
+      api_units_action: DELETE_ROW
+      api_units_category: DML
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
@@ -45,11 +54,11 @@ APIs for adding, updating, and deleting rows in a view.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Add Row](add-row.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows` | `addRow` | `ZohoAnalytics.data.create` | 200 |
-| [Update Row](update-rows.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows` | `updateRows` | `ZohoAnalytics.data.update` | 200 |
-| [Delete Row](delete-rows.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows` | `deleteRows` | `ZohoAnalytics.data.delete` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Add Row](add-row.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows` | `addRow` | `ZohoAnalytics.data.create` | 200 | 0.1 |
+| [Update Row](update-rows.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows` | `updateRows` | `ZohoAnalytics.data.update` | 200 | 0.3 |
+| [Delete Row](delete-rows.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows` | `deleteRows` | `ZohoAnalytics.data.delete` | 200 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

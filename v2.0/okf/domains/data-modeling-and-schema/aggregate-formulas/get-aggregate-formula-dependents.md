@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/aggregateformulas/{formula-id}/dependents"
   domain: data-modeling-and-schema
   group: aggregate-formulas
+  api_units:
+    api_id: 3040
+    action: GET_AGGREGATE_FORMULA_DEPENDENTS
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -68,6 +76,8 @@ Returns all views, dashboards, and other aggregate formulas that depend on the s
 | Permission required | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Read permission on the workspace. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 1 unit per request - action `GET_AGGREGATE_FORMULA_DEPENDENTS` (api-id `3040`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-modeling-schema-grouped-api.json`](../../../references/openapi/data-modeling-schema-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1aggregateformulas~1{formula-id}~1dependents/get`; response schema `GetAggregateFormulaDependentsResponse` |
 
 # Request
@@ -251,3 +261,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Aggregate Formula](get-aggregate-formula-list.md), [Add Aggregate Formula](add-aggregate-formula.md), [Edit Aggregate Formula](edit-aggregate-formula.md), [Delete Aggregate Formula](delete-aggregate-formula.md), [Get Unified Metrics in Workspace](get-aggregate-formulas-in-workspace.md), [Get Aggregate Formula Value](get-aggregate-formula-value.md).
 - [SDK examples](../../../sdk-examples/data-modeling-and-schema/aggregate-formulas/get-aggregate-formula-dependents.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

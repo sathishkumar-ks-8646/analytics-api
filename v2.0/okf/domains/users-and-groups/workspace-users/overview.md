@@ -17,34 +17,58 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/users"
       doc: "/domains/users-and-groups/workspace-users/get-workspace-users.md"
+      api_units: 1
+      api_units_action: GET_WORKSPACE_USERS
+      api_units_category: METADATA
     - operation_id: addWorkspaceUsers
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/users"
       doc: "/domains/users-and-groups/workspace-users/add-workspace-users.md"
+      api_units: 0.5
+      api_units_action: ADD_WORKSPACE_USERS
+      api_units_category: METADATA
     - operation_id: deleteWorkspaceUsers
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/users"
       doc: "/domains/users-and-groups/workspace-users/delete-workspace-users.md"
+      api_units: 1
+      api_units_action: REMOVE_WORKSPACE_USERS
+      api_units_category: METADATA
     - operation_id: changeWorkspaceUsersStatus
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/users/status"
       doc: "/domains/users-and-groups/workspace-users/change-workspace-users-status.md"
+      api_units: 0.5
+      api_units_action: CHANGE_WORKSPACE_USERS_STATUS
+      api_units_category: METADATA
     - operation_id: changeWorkspaceUsersRole
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/users/role"
       doc: "/domains/users-and-groups/workspace-users/change-workspace-users-role.md"
+      api_units: 1
+      api_units_action: CHANGE_WORKSPACE_USERS_ROLE
+      api_units_category: METADATA
     - operation_id: getWorkspaceAdmins
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/admins"
       doc: "/domains/users-and-groups/workspace-users/get-workspace-admins.md"
+      api_units: 0.1
+      api_units_action: GET_WORKSPACE_ADMINS
+      api_units_category: METADATA
     - operation_id: addWorkspaceAdmins
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/admins"
       doc: "/domains/users-and-groups/workspace-users/add-workspace-admins.md"
+      api_units: 5
+      api_units_action: ADD_WORKSPACE_ADMINS
+      api_units_category: METADATA
     - operation_id: removeWorkspaceAdmins
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/admins"
       doc: "/domains/users-and-groups/workspace-users/remove-workspace-admins.md"
+      api_units: 5
+      api_units_action: REMOVE_WORKSPACE_ADMINS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
@@ -75,16 +99,16 @@ When the Account Admin of the organization is also a Client Portal Admin, the op
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Workspace Users](get-workspace-users.md) | GET | `/restapi/v2/workspaces/{workspace-id}/users` | `getWorkspaceUsers` | `ZohoAnalytics.usermanagement.read` | 200 |
-| [Add Workspace Users](add-workspace-users.md) | POST | `/restapi/v2/workspaces/{workspace-id}/users` | `addWorkspaceUsers` | `ZohoAnalytics.usermanagement.create` | 204 |
-| [Remove Workspace Users](delete-workspace-users.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/users` | `deleteWorkspaceUsers` | `ZohoAnalytics.usermanagement.delete` | 204 |
-| [Change Workspace Users Status](change-workspace-users-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/users/status` | `changeWorkspaceUsersStatus` | `ZohoAnalytics.usermanagement.update` | 204 |
-| [Change Workspace Users Role](change-workspace-users-role.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/users/role` | `changeWorkspaceUsersRole` | `ZohoAnalytics.usermanagement.update` | 204 |
-| [Get Workspace Admins](get-workspace-admins.md) | GET | `/restapi/v2/workspaces/{workspace-id}/admins` | `getWorkspaceAdmins` | `ZohoAnalytics.share.read` | 200 |
-| [Add Workspace Admins](add-workspace-admins.md) | POST | `/restapi/v2/workspaces/{workspace-id}/admins` | `addWorkspaceAdmins` | `ZohoAnalytics.share.create` | 204 |
-| [Remove Workspace Admins](remove-workspace-admins.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/admins` | `removeWorkspaceAdmins` | `ZohoAnalytics.share.delete` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Workspace Users](get-workspace-users.md) | GET | `/restapi/v2/workspaces/{workspace-id}/users` | `getWorkspaceUsers` | `ZohoAnalytics.usermanagement.read` | 200 | 1 |
+| [Add Workspace Users](add-workspace-users.md) | POST | `/restapi/v2/workspaces/{workspace-id}/users` | `addWorkspaceUsers` | `ZohoAnalytics.usermanagement.create` | 204 | 0.5 |
+| [Remove Workspace Users](delete-workspace-users.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/users` | `deleteWorkspaceUsers` | `ZohoAnalytics.usermanagement.delete` | 204 | 1 |
+| [Change Workspace Users Status](change-workspace-users-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/users/status` | `changeWorkspaceUsersStatus` | `ZohoAnalytics.usermanagement.update` | 204 | 0.5 |
+| [Change Workspace Users Role](change-workspace-users-role.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/users/role` | `changeWorkspaceUsersRole` | `ZohoAnalytics.usermanagement.update` | 204 | 1 |
+| [Get Workspace Admins](get-workspace-admins.md) | GET | `/restapi/v2/workspaces/{workspace-id}/admins` | `getWorkspaceAdmins` | `ZohoAnalytics.share.read` | 200 | 0.1 |
+| [Add Workspace Admins](add-workspace-admins.md) | POST | `/restapi/v2/workspaces/{workspace-id}/admins` | `addWorkspaceAdmins` | `ZohoAnalytics.share.create` | 204 | 5 |
+| [Remove Workspace Admins](remove-workspace-admins.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/admins` | `removeWorkspaceAdmins` | `ZohoAnalytics.share.delete` | 204 | 5 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

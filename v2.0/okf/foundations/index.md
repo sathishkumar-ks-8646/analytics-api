@@ -2,6 +2,7 @@
 
 # Concepts
 
+* [API units and frequency limits](api-units.md) - What one call of each Zoho Analytics REST API v2 endpoint costs in API units, how variable (row-based and format-based) costs are computed, the three unit categories and the per-minute request ceilings they carry.
 * [Asynchronous jobs (export and import)](asynchronous-jobs.md) - How background jobs work in Zoho Analytics REST API v2 - job creation, jobCode states, polling, callbackUrl notifications, batch import keys, retention and ownership rules.
 * [Authentication (OAuth 2.0)](authentication.md) - How to authenticate Zoho Analytics REST API v2 calls with OAuth 2.0 access tokens, the Authorization header format, token lifetime and refresh, and the errors returned when authentication fails.
 * [Custom roles](custom-roles.md) - Organization-defined custom roles in Zoho Analytics - the three access permission levels, the full permission catalogue by category, how a custom role name is used by the REST API v2 user-management endpoints, and how its permissions map onto the API's authorization vocabulary.

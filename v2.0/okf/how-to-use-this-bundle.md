@@ -24,7 +24,7 @@ This bundle follows the Open Knowledge Format (OKF) v0.2: a directory tree of ma
 |---|---|---|
 | `/overview.md` | What the API is and the five conventions. | `API Overview` |
 | `/endpoint-catalog.md` | Every endpoint in one table. | `API Catalog` |
-| `/foundations/` | Shared rules: authentication, data centers, request conventions, response envelope, HTTP statuses, error codes, scopes, roles, permission matrix, identifiers, criteria syntax, async jobs, rate limits, export and import enums, white label, glossary, SDK clients. | `Reference`, `Concept`, `Error Catalog`, `Authentication` |
+| `/foundations/` | Shared rules: authentication, data centers, request conventions, response envelope, HTTP statuses, error codes, scopes, roles, permission matrix, identifiers, criteria syntax, async jobs, rate limits, API units, export and import enums, white label, glossary, SDK clients. | `Reference`, `Concept`, `Error Catalog`, `Authentication` |
 | `/domains/<domain>/overview.md` | One document per domain: description, groups, endpoints. | `API Domain` |
 | `/domains/<domain>/<group>/overview.md` | One document per API group: concepts, limits, permission model, shared CONFIG attributes, notes. | `API Group` |
 | `/domains/<domain>/<group>/<operation-id>.md` | One document per endpoint. | `API Endpoint` |
@@ -62,6 +62,7 @@ The body of every endpoint document uses the same H1 sections in the same order:
 3. **Diagnosing a failure**: look up `data.errorCode` in [Error code catalog](foundations/error-codes.md); the anchor is `#error-<code>`.
 4. **Choosing scopes**: use `api.oauth_scopes` of every endpoint the integration calls, or consult [OAuth scopes](foundations/oauth-scopes.md) for the operations per scope.
 5. **Checking authorization**: [Permission matrix](foundations/permission-matrix.md) lists the required role per endpoint; [Roles & permissions](foundations/roles-and-permissions.md) defines the roles.
+6. **Budgeting calls**: `api.api_units` in the endpoint frontmatter gives the unit cost, the unit category and the category's per-minute request ceiling; [API units](foundations/api-units.md) has the full table and the variable-cost rules.
 6. **Generating SDKs or collections**: read `/references/endpoint-catalog.json` for the inventory, then the OpenAPI files for schemas; use `/sdk-examples/` for idiomatic usage per language.
 7. **Multi-step tasks**: check `/workflows/` first; each playbook links the exact endpoints in order and names the IDs that flow between them.
 

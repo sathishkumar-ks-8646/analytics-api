@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/datasources"
   domain: data-operations
   group: data-sync-and-connectivity
+  api_units:
+    api_id: 3024
+    action: GET_DATASOURCES
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -72,6 +80,8 @@ Lists every datasource in a workspace, the tables each one feeds, and the state 
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with View Datasource or Create Table permission on the workspace. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 1 unit per request - action `GET_DATASOURCES` (api-id `3024`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-operations-grouped-api.json`](../../../references/openapi/data-operations-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1datasources/get`; response schema `GetDatasourcesResponse` |
 
 # Request
@@ -356,3 +366,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Sync Data](sync-datasource.md), [Refetch Data](refetch-datasource.md), [Update Datasource Connection](update-datasource-connection.md), [Get Last Import Details](get-last-import-details.md).
 - [SDK examples](../../../sdk-examples/data-operations/data-sync-and-connectivity/get-datasources.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

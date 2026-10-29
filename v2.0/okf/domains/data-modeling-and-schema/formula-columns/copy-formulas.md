@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/formulas/copy"
   domain: data-modeling-and-schema
   group: formula-columns
+  api_units:
+    api_id: 2021
+    action: COPY_FORMULAS
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.modeling.create
   org_id_header: required
@@ -73,6 +81,8 @@ Copies one or more custom formula columns (by name) from a view in the source wo
 | Success response | HTTP 204 with no body |
 | ZANALYTICS-DEST-ORGID Header | Conditionally required — set this when the destination workspace belongs to a different organisation than the one identified by `ZANALYTICS-ORGID` (Org Admin cross-org scenario). |
 | Custom Domain | **Not available** via White Label / Client Portal. |
+| API units | 1 unit per request - action `COPY_FORMULAS` (api-id `2021`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-modeling-schema-grouped-api.json`](../../../references/openapi/data-modeling-schema-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1formulas~1copy/post`; CONFIG schema `CopyFormulasConfig` |
 
 # Request
@@ -205,3 +215,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Custom Formulas](get-custom-formula-list.md), [Add Custom Formula](add-formula-column.md), [Edit Custom Formula](edit-formula-column.md), [Delete Custom Formula](delete-formula-column.md).
 - [SDK examples](../../../sdk-examples/data-modeling-and-schema/formula-columns/copy-formulas.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

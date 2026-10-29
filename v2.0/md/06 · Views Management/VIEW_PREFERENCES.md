@@ -14,10 +14,10 @@ This document describes the V2 **View Preferences** REST APIs of Zoho Analytics 
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Add Favourite View](#1-add-favourite-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/favorite` |
-| 2 | [Remove Favourite View](#2-remove-favourite-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/favorite` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Add Favourite View](#1-add-favourite-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/favorite` | 0.1 |
+| 2 | [Remove Favourite View](#2-remove-favourite-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/favorite` | 0.1 |
 
 ---
 
@@ -30,6 +30,8 @@ This document describes the V2 **View Preferences** REST APIs of Zoho Analytics 
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **Permission Required** | The authenticated user must have at least **Read Only** permission on the view. This includes Account Admins, Organization Admins, Workspace Admins, View Owners, and any user explicitly granted Read Only or higher access to the view. |
+| **API Units** | 0.1 units per request — gateway action `ADD_FAVOURITE_VIEW` (api-id `3017`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -89,6 +91,8 @@ HTTP/1.1 204 No Content
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **Permission Required** | The authenticated user must have at least **Read Only** permission on the view. This includes Account Admins, Organization Admins, Workspace Admins, View Owners, and any user explicitly granted Read Only or higher access to the view. |
+| **API Units** | 0.1 units per request — gateway action `REMOVE_FAVOURITE_VIEW` (api-id `3018`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -179,3 +183,35 @@ ZANALYTICS-ORGID: 700000123456
 | **No CONFIG parameter** | Neither API accepts a CONFIG request parameter. The only inputs are the URL path parameters `<workspace-id>` and `<view-id>`. |
 | **HTTP method choice** | `POST` is used for Add (not `PUT`) because the favourite entry is a new association being created. `DELETE` removes the association. Both use the same URL path with the `/favorite` suffix. |
 | **Response** | Both APIs return HTTP 204 No Content with an empty body on success. There is no JSON response envelope for these operations. |
+
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Add Favourite View](#1-add-favourite-view) | `ADD_FAVOURITE_VIEW` (3017) | METADATA | 0.1 | per request |
+| 2 | [Remove Favourite View](#2-remove-favourite-view) | `REMOVE_FAVOURITE_VIEW` (3018) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

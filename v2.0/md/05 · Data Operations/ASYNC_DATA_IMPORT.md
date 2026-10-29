@@ -32,13 +32,13 @@ The five APIs fall into two families that solve different problems, plus one sha
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Create Import Job for a New Table (Asynchronous)](#1-create-import-job-for-a-new-table-asynchronous) | POST | `/restapi/v2/bulk/workspaces/<workspace-id>/data` |
-| 2 | [Create Import Job for an Existing Table (Asynchronous)](#2-create-import-job-for-an-existing-table-asynchronous) | POST | `/restapi/v2/bulk/workspaces/<workspace-id>/views/<view-id>/data` |
-| 3 | [Batch Import Data into New Table](#3-batch-import-data-into-new-table) | POST | `/restapi/v2/bulk/workspaces/<workspace-id>/data/batch` |
-| 4 | [Batch Import Data into Existing Table](#4-batch-import-data-into-existing-table) | POST | `/restapi/v2/bulk/workspaces/<workspace-id>/views/<view-id>/data/batch` |
-| 5 | [Get Import Job Details](#5-get-import-job-details) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/importjobs/<job-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Create Import Job for a New Table (Asynchronous)](#1-create-import-job-for-a-new-table-asynchronous) | POST | `/restapi/v2/bulk/workspaces/<workspace-id>/data` | variable |
+| 2 | [Create Import Job for an Existing Table (Asynchronous)](#2-create-import-job-for-an-existing-table-asynchronous) | POST | `/restapi/v2/bulk/workspaces/<workspace-id>/views/<view-id>/data` | variable |
+| 3 | [Batch Import Data into New Table](#3-batch-import-data-into-new-table) | POST | `/restapi/v2/bulk/workspaces/<workspace-id>/data/batch` | variable |
+| 4 | [Batch Import Data into Existing Table](#4-batch-import-data-into-existing-table) | POST | `/restapi/v2/bulk/workspaces/<workspace-id>/views/<view-id>/data/batch` | variable |
+| 5 | [Get Import Job Details](#5-get-import-job-details) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/importjobs/<job-id>` | 0 |
 
 ---
 
@@ -253,6 +253,8 @@ Uploads a file, creates a new table from it, and returns a job ID for tracking. 
 | **OAuth Scope** | `ZohoAnalytics.data.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Table permission on the workspace. |
+| **API Units** | Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`) — gateway action `INITIATE_IMPORT` (api-id `8001`), **BULK** unit category. |
+| **Frequency Limit** | 40 requests/minute shared across every **BULK**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -484,6 +486,8 @@ Uploads a file and loads it into an existing table in the background, appending,
 | **OAuth Scope** | `ZohoAnalytics.data.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user holding the import permission matching the requested `importType` — see [Permission Model](#permission-model). |
+| **API Units** | Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`) — gateway action `INITIATE_IMPORT` (api-id `8001`), **BULK** unit category. |
+| **Frequency Limit** | 40 requests/minute shared across every **BULK**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -722,6 +726,8 @@ Creates a new table and loads it from **several uploads**, all belonging to one 
 | **OAuth Scope** | `ZohoAnalytics.data.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Table permission on the workspace. |
+| **API Units** | Variable — the batch upload requests themselves cost 0; units are charged once, on the rows imported by the final batch, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`) — gateway action `BATCH_IMPORT_FILE_UPLOAD` (api-id `8005`), **BULK** unit category. |
+| **Frequency Limit** | 40 requests/minute shared across every **BULK**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -943,6 +949,8 @@ Loads an existing table from several uploads belonging to one import job. Called
 | **OAuth Scope** | `ZohoAnalytics.data.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user holding the import permission matching the requested `importType` — see [Permission Model](#permission-model). |
+| **API Units** | Variable — the batch upload requests themselves cost 0; units are charged once, on the rows imported by the final batch, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`) — gateway action `BATCH_IMPORT_FILE_UPLOAD` (api-id `8005`), **BULK** unit category. |
+| **Frequency Limit** | 40 requests/minute shared across every **BULK**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1170,6 +1178,8 @@ Returns the current state of an import job and, once it has finished, the full i
 | **OAuth Scope** | `ZohoAnalytics.data.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | **Only the user who created the import job.** Any other user — including an Account Admin or Organization Admin — receives `8138`. |
+| **API Units** | 0 — this request is free; no API units are deducted. Gateway action `IMPORT_JOB_STATUS` (api-id `9003`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -1488,3 +1498,43 @@ Content-Type: text/csv
 | **`importErrors` is HTML, not data** | A fragment of `<nobr>…</NOBR><br>` markup describing each offending line, field, and value. Display or log it; do not parse it. |
 | **`columnDetails` uses display labels** | Values such as `"Plain Text"`, `"Positive Number"`, `"Currency"`, `"Geo Column"` — not the `dataType` codes accepted by `columnDataTypes` on the request side. The two vocabularies do not round-trip. |
 | **The summary is transient** | Everything under `jobInfo` disappears one hour after the job finishes. Store what you need. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Create Import Job for a New Table (Asynchronous)](#1-create-import-job-for-a-new-table-asynchronous) | `INITIATE_IMPORT` (8001) | BULK | variable | depends on payload — see the notes below |
+| 2 | [Create Import Job for an Existing Table (Asynchronous)](#2-create-import-job-for-an-existing-table-asynchronous) | `INITIATE_IMPORT` (8001) | BULK | variable | depends on payload — see the notes below |
+| 3 | [Batch Import Data into New Table](#3-batch-import-data-into-new-table) | `BATCH_IMPORT_FILE_UPLOAD` (8005) | BULK | variable | depends on payload — see the notes below |
+| 4 | [Batch Import Data into Existing Table](#4-batch-import-data-into-existing-table) | `BATCH_IMPORT_FILE_UPLOAD` (8005) | BULK | variable | depends on payload — see the notes below |
+| 5 | [Get Import Job Details](#5-get-import-job-details) | `IMPORT_JOB_STATUS` (9003) | METADATA | 0 | not charged |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | Yes |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### Variable costs in this document
+
+- **Create Import Job for a New Table (Asynchronous)** (`INITIATE_IMPORT`, 8001): Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)
+- **Batch Import Data into New Table** (`BATCH_IMPORT_FILE_UPLOAD`, 8005): Variable — the batch upload requests themselves cost 0; units are charged once, on the rows imported by the final batch, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

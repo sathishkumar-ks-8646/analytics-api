@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/rows"
   domain: data-operations
   group: row-operations
+  api_units:
+    api_id: 1003
+    action: DELETE_ROW
+    category: DML
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 100 requests/minute
   oauth_scopes:
     - ZohoAnalytics.data.delete
   org_id_header: required
@@ -80,6 +88,8 @@ Deletes the rows of a table that match a filter, or every row.
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - **mandatory** |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `DELETE_ROW` (api-id `1003`), **DML** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 100 requests/minute across all **DML**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-operations-grouped-api.json`](../../../references/openapi/data-operations-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1rows/delete`; CONFIG schema `DeleteRowsConfig`; response schema `DeleteRowsResponse` |
 
 # Request
@@ -256,3 +266,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Add Row](add-row.md), [Update Row](update-rows.md).
 - [SDK examples](../../../sdk-examples/data-operations/row-operations/delete-rows.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

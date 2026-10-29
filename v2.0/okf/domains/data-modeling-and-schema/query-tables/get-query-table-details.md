@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}"
   domain: data-modeling-and-schema
   group: query-tables
+  api_units:
+    api_id: 3047
+    action: GET_QUERYTABLE_DETAILS
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -68,6 +76,8 @@ Returns the full metadata of a query table, including its SQL definition, the ta
 | Permission required | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the query table. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 1 unit per request - action `GET_QUERYTABLE_DETAILS` (api-id `3047`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-modeling-schema-grouped-api.json`](../../../references/openapi/data-modeling-schema-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1querytables~1{querytable-id}/get`; response schema `GetQueryTableDetailsResponse` |
 
 # Request
@@ -278,3 +288,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Query Tables](get-query-tables.md), [Create Query Table](create-query-table.md), [Edit Query Table](edit-query-table.md).
 - [SDK examples](../../../sdk-examples/data-modeling-and-schema/query-tables/get-query-table-details.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

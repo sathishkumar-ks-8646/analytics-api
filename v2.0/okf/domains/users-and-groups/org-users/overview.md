@@ -17,30 +17,51 @@ api:
       method: GET
       path: "/restapi/v2/users"
       doc: "/domains/users-and-groups/org-users/get-users.md"
+      api_units: 1
+      api_units_action: GET_ORG_USERS
+      api_units_category: METADATA
     - operation_id: addUsers
       method: POST
       path: "/restapi/v2/users"
       doc: "/domains/users-and-groups/org-users/add-users.md"
+      api_units: 0.1
+      api_units_action: ADD_ORG_USERS
+      api_units_category: METADATA
     - operation_id: removeUsers
       method: DELETE
       path: "/restapi/v2/users"
       doc: "/domains/users-and-groups/org-users/remove-users.md"
+      api_units: 0.1
+      api_units_action: REMOVE_ORG_USERS
+      api_units_category: METADATA
     - operation_id: activateUsers
       method: PUT
       path: "/restapi/v2/users/active"
       doc: "/domains/users-and-groups/org-users/activate-users.md"
+      api_units: 0.1
+      api_units_action: ACTIVATE_ORG_USERS
+      api_units_category: METADATA
     - operation_id: deActivateUsers
       method: PUT
       path: "/restapi/v2/users/inactive"
       doc: "/domains/users-and-groups/org-users/de-activate-users.md"
+      api_units: 0.1
+      api_units_action: DEACTIVATE_ORG_USERS
+      api_units_category: METADATA
     - operation_id: changeUserRole
       method: PUT
       path: "/restapi/v2/users/role"
       doc: "/domains/users-and-groups/org-users/change-user-role.md"
+      api_units: 0.1
+      api_units_action: CHANGE_USER_ROLE
+      api_units_category: METADATA
     - operation_id: getOrgAdmins
       method: GET
       path: "/restapi/v2/orgadmins"
       doc: "/domains/users-and-groups/org-users/get-org-admins.md"
+      api_units: 0.1
+      api_units_action: GET_ORG_ADMINS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/user-groups-grouped-api.json"
@@ -71,15 +92,15 @@ Zoho Analytics also supports Client Portal (White Label) deployments, where an o
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Users](get-users.md) | GET | `/restapi/v2/users` | `getUsers` | `ZohoAnalytics.usermanagement.read` | 200 |
-| [Add Users](add-users.md) | POST | `/restapi/v2/users` | `addUsers` | `ZohoAnalytics.usermanagement.create` | 204 |
-| [Remove Users](remove-users.md) | DELETE | `/restapi/v2/users` | `removeUsers` | `ZohoAnalytics.usermanagement.delete` | 204 |
-| [Activate Users](activate-users.md) | PUT | `/restapi/v2/users/active` | `activateUsers` | `ZohoAnalytics.usermanagement.update` | 204 |
-| [Deactivate Users](de-activate-users.md) | PUT | `/restapi/v2/users/inactive` | `deActivateUsers` | `ZohoAnalytics.usermanagement.update` | 204 |
-| [Change User Role](change-user-role.md) | PUT | `/restapi/v2/users/role` | `changeUserRole` | `ZohoAnalytics.usermanagement.update` | 204 |
-| [Get Org Admins](get-org-admins.md) | GET | `/restapi/v2/orgadmins` | `getOrgAdmins` | `ZohoAnalytics.share.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Users](get-users.md) | GET | `/restapi/v2/users` | `getUsers` | `ZohoAnalytics.usermanagement.read` | 200 | 1 |
+| [Add Users](add-users.md) | POST | `/restapi/v2/users` | `addUsers` | `ZohoAnalytics.usermanagement.create` | 204 | 0.1 |
+| [Remove Users](remove-users.md) | DELETE | `/restapi/v2/users` | `removeUsers` | `ZohoAnalytics.usermanagement.delete` | 204 | 0.1 |
+| [Activate Users](activate-users.md) | PUT | `/restapi/v2/users/active` | `activateUsers` | `ZohoAnalytics.usermanagement.update` | 204 | 0.1 |
+| [Deactivate Users](de-activate-users.md) | PUT | `/restapi/v2/users/inactive` | `deActivateUsers` | `ZohoAnalytics.usermanagement.update` | 204 | 0.1 |
+| [Change User Role](change-user-role.md) | PUT | `/restapi/v2/users/role` | `changeUserRole` | `ZohoAnalytics.usermanagement.update` | 204 | 0.1 |
+| [Get Org Admins](get-org-admins.md) | GET | `/restapi/v2/orgadmins` | `getOrgAdmins` | `ZohoAnalytics.share.read` | 200 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

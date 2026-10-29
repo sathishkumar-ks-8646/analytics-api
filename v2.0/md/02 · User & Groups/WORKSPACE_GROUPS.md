@@ -10,15 +10,15 @@ Workspace Groups are named collections of users within a specific workspace. Gro
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Group List](#1-get-group-list) | GET | `/restapi/v2/workspaces/<workspace-id>/groups` |
-| 2 | [Create Group](#2-create-group) | POST | `/restapi/v2/workspaces/<workspace-id>/groups` |
-| 3 | [Rename Group](#3-rename-group) | PUT | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>` |
-| 4 | [Add Group Members](#4-add-group-members) | POST | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>/members` |
-| 5 | [Remove Group Members](#5-remove-group-members) | DELETE | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>/members` |
-| 6 | [Delete Group](#6-delete-group) | DELETE | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>` |
-| 7 | [Get Group Details](#7-get-group-details) | GET | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Group List](#1-get-group-list) | GET | `/restapi/v2/workspaces/<workspace-id>/groups` | 0.1 |
+| 2 | [Create Group](#2-create-group) | POST | `/restapi/v2/workspaces/<workspace-id>/groups` | 1 |
+| 3 | [Rename Group](#3-rename-group) | PUT | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>` | 0.1 |
+| 4 | [Add Group Members](#4-add-group-members) | POST | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>/members` | 0.1 |
+| 5 | [Remove Group Members](#5-remove-group-members) | DELETE | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>/members` | 0.1 |
+| 6 | [Delete Group](#6-delete-group) | DELETE | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>` | 1 |
+| 7 | [Get Group Details](#7-get-group-details) | GET | `/restapi/v2/workspaces/<workspace-id>/groups/<group-id>` | 0.1 |
 
 ---
 
@@ -35,6 +35,8 @@ When the Account Admin is a Client Portal Admin, each group entry includes a `do
 | **OAuth Scope** | `ZohoAnalytics.share.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 0.1 units per request — gateway action `GET_GROUPS` (api-id `4012`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -184,6 +186,8 @@ Creates a new group in the specified workspace and optionally adds initial membe
 | **OAuth Scope** | `ZohoAnalytics.share.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 1 unit per request — gateway action `CREATE_GROUP` (api-id `4013`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -291,6 +295,8 @@ Updates the name and/or description of an existing group in the specified worksp
 | **OAuth Scope** | `ZohoAnalytics.share.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 0.1 units per request — gateway action `RENAME_GROUP` (api-id `4014`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -385,6 +391,8 @@ Adds one or more users to an existing group. Users must already have access to t
 | **OAuth Scope** | `ZohoAnalytics.share.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 0.1 units per request — gateway action `ADD_GROUP_MEMBERS` (api-id `4015`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -482,6 +490,8 @@ Removes one or more members from a group. Removed users lose any view-level acce
 | **OAuth Scope** | `ZohoAnalytics.share.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 0.1 units per request — gateway action `REMOVE_GROUP_MEMBERS` (api-id `4016`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -575,6 +585,8 @@ Permanently deletes a group from the workspace. This operation is irreversible. 
 | **OAuth Scope** | `ZohoAnalytics.share.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 1 unit per request — gateway action `DELETE_GROUP` (api-id `4017`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -642,6 +654,8 @@ For Client Portal Admins or users visiting via a custom portal domain URL, the r
 | **OAuth Scope** | `ZohoAnalytics.share.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. |
+| **API Units** | 0.1 units per request — gateway action `GET_GROUP_DETAILS` (api-id `4018`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -850,3 +864,40 @@ Groups are the building block for bulk view-level access management. When a view
 | Standard domain user calling Get Group Details via a portal URL | Response includes `domainName` showing the group's portal domain. |
 | Adding members to a portal-domain group | Members must belong to the group's portal domain. Standard org users cannot be added to a portal-domain group. Do not include `domainName` in Add/Remove Group Members calls — the domain is determined by the group. |
 | WL Workspace Admin (portal domain with restricted workspace access) | Cannot call any group APIs. Returns error **7301** — WL Workspace Admins do not have access in disabled-workspace portal contexts. |
+
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Group List](#1-get-group-list) | `GET_GROUPS` (4012) | METADATA | 0.1 | per request |
+| 2 | [Create Group](#2-create-group) | `CREATE_GROUP` (4013) | METADATA | 1 | per request |
+| 3 | [Rename Group](#3-rename-group) | `RENAME_GROUP` (4014) | METADATA | 0.1 | per request |
+| 4 | [Add Group Members](#4-add-group-members) | `ADD_GROUP_MEMBERS` (4015) | METADATA | 0.1 | per request |
+| 5 | [Remove Group Members](#5-remove-group-members) | `REMOVE_GROUP_MEMBERS` (4016) | METADATA | 0.1 | per request |
+| 6 | [Delete Group](#6-delete-group) | `DELETE_GROUP` (4017) | METADATA | 1 | per request |
+| 7 | [Get Group Details](#7-get-group-details) | `GET_GROUP_DETAILS` (4018) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

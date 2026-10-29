@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/users"
   domain: users-and-groups
   group: org-users
+  api_units:
+    api_id: 6003
+    action: REMOVE_ORG_USERS
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.usermanagement.delete
   org_id_header: required
@@ -75,6 +83,8 @@ Removes one or more users from the specified organisation. Removed users immedia
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - **mandatory** |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 204 with no body |
+| API units | 0.1 units per request - action `REMOVE_ORG_USERS` (api-id `6003`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`user-groups-grouped-api.json`](../../../references/openapi/user-groups-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1users/delete`; CONFIG schema `RemoveUsersConfig` |
 
 # Request
@@ -200,3 +210,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Users](get-users.md), [Add Users](add-users.md), [Activate Users](activate-users.md), [Deactivate Users](de-activate-users.md), [Change User Role](change-user-role.md), [Get Org Admins](get-org-admins.md).
 - [SDK examples](../../../sdk-examples/users-and-groups/org-users/remove-users.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

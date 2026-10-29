@@ -60,11 +60,11 @@ Every rule in this document that depends on a column's data type uses one of the
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Create Report](#1-create-report) | POST | `/restapi/v2/workspaces/<workspace-id>/reports` |
-| 2 | [Read Report Metadata](#2-read-report-metadata) | GET | `/restapi/v2/workspaces/<workspace-id>/reports/<report-id>/metadata` |
-| 3 | [Update Report](#3-update-report) | PUT | `/restapi/v2/workspaces/<workspace-id>/reports/<report-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Create Report](#1-create-report) | POST | `/restapi/v2/workspaces/<workspace-id>/reports` | 5 |
+| 2 | [Read Report Metadata](#2-read-report-metadata) | GET | `/restapi/v2/workspaces/<workspace-id>/reports/<report-id>/metadata` | 0.1 |
+| 3 | [Update Report](#3-update-report) | PUT | `/restapi/v2/workspaces/<workspace-id>/reports/<report-id>` | 5 |
 
 > **Note on method overloading:** `PUT /reports/<report-id>` (Update) rebuilds the report. There is no
 > `GET /reports/<report-id>`; the definition is read from the `/metadata` sub-path.
@@ -202,6 +202,8 @@ returned `viewId` as `<report-id>` in [Read Report Metadata](#2-read-report-meta
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | Account Admin, Organization Admin, Workspace Owner or Workspace Admin; a Custom Role user whose role grants **Create Report** on the base table; or a shared / group user holding **Create Report** permission. The caller must additionally be able to read the base table and every column the report uses. See [Permission Model](#permission-model). |
+| **API Units** | 5 units per request — gateway action `CREATE_ANALYSISVIEW` (api-id `2031`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -837,6 +839,8 @@ from [Create Report](#1-create-report) (`data.viewId`) or from the workspace's v
 | **OAuth Scope** | `ZohoAnalytics.modeling.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The report's owner, or a user holding **Design Modify** on the report: Account Admin, Organization Admin, Workspace Owner, Workspace Admin, or a shared / group / Custom Role user granted edit rights. A read-only shared user cannot call this endpoint. |
+| **API Units** | 0.1 units per request — gateway action `GET_REPORT_METADATA` (api-id `3052`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -983,6 +987,8 @@ Rebuilds an existing report from a fresh CONFIG and returns no body. The `<repor
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The report's **owner**, an Account Admin, an Organization Admin, the Workspace Owner or a Workspace Admin. Any other caller — including a shared, group or Custom Role user holding Design Modify — is rejected with `7301`. The caller must also be able to read the base table. |
+| **API Units** | 5 units per request — gateway action `UPDATE_ANALYSISVIEW` (api-id `2032`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1617,3 +1623,36 @@ Phrases are case-insensitive, words separated by exactly one space. `<unit>` is 
 | `userFilters` | No | No — omission clears |
 
 [Read Report Metadata](#2-read-report-metadata) takes no CONFIG.
+
+---
+
+## Appendix G – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Create Report](#1-create-report) | `CREATE_ANALYSISVIEW` (2031) | METADATA | 5 | per request |
+| 2 | [Read Report Metadata](#2-read-report-metadata) | `GET_REPORT_METADATA` (3052) | METADATA | 0.1 | per request |
+| 3 | [Update Report](#3-update-report) | `UPDATE_ANALYSISVIEW` (2032) | METADATA | 5 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

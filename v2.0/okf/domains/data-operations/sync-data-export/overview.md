@@ -17,6 +17,9 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data"
       doc: "/domains/data-operations/sync-data-export/export-data-view.md"
+      api_units: variable
+      api_units_action: INITIATE_EXPORT
+      api_units_category: BULK
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
@@ -37,9 +40,9 @@ APIs for exporting view data directly.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Export Data from a View](export-data-view.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data` | `exportDataView` | `ZohoAnalytics.data.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Export Data from a View](export-data-view.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data` | `exportDataView` | `ZohoAnalytics.data.read` | 200 | variable |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

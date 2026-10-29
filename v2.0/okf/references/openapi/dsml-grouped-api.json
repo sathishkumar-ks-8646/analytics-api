@@ -10,6 +10,20 @@
       "url": "https://analyticsapi.zoho.com"
     }
   ],
+  "x-api-unit-categories": {
+    "description": "Every call deducts API units from the organization's plan allowance and is counted against the per-minute request ceiling of its unit category. A unit cost with a row basis is charged pro rata as (rowsProcessed / rowsBasis) * units, without rounding up to a whole block. The per-minute ceilings below are the base configuration; an organization's effective ceiling is the base value scaled by a plan-specific multiplier.",
+    "categories": {
+      "DML": {
+        "frequencyLimitPerMinute": 100
+      },
+      "BULK": {
+        "frequencyLimitPerMinute": 40
+      },
+      "METADATA": {
+        "frequencyLimitPerMinute": 60
+      }
+    }
+  },
   "tags": [
     {
       "name": "AutoML Analysis",
@@ -265,6 +279,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 2065,
+          "action": "CREATE_AUTOML_ANALYSIS",
+          "units": {
+            "category": "METADATA",
+            "cost": 3,
+            "basis": "request",
+            "note": "3 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       },
       "get": {
@@ -365,6 +392,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3055,
+          "action": "GET_AUTOML_ANALYSIS_IN_Workspace",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -425,6 +465,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 2069,
+          "action": "RUN_AUTOML_ANALYSIS_DEPLOYMENT",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -481,6 +534,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2066,
+          "action": "DELETE_AUTOML_ANALYSIS",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       },
@@ -655,6 +721,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3056,
+          "action": "GET_AUTOML_ANALYSIS_DETAILS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -753,6 +832,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 3054,
+          "action": "GET_AUTOML_ANALYSIS_IN_ORGANIZATION",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -812,6 +904,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2067,
+          "action": "DELETE_AUTOML_ANALYSIS_MODEL",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }
@@ -936,6 +1041,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 3057,
+          "action": "GET_DEPLOYMENTS_FOR_A_MODEL",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       },
@@ -1166,6 +1284,19 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-zenesis-security": {
+          "api-id": 2068,
+          "action": "CREATE_AUTOML_ANALYSIS_DEPLOYMENT",
+          "units": {
+            "category": "METADATA",
+            "cost": 3,
+            "basis": "request",
+            "note": "3 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
+          }
         }
       }
     },
@@ -1225,6 +1356,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2070,
+          "action": "DELETE_AUTOML_ANALYSIS_DEPLOYMENT",
+          "units": {
+            "category": "METADATA",
+            "cost": 2,
+            "basis": "request",
+            "note": "2 units per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }
@@ -1392,6 +1536,19 @@
           },
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
+          }
+        },
+        "x-zenesis-security": {
+          "api-id": 2071,
+          "action": "AUTOML_WHAT_IF_ANALYSIS",
+          "units": {
+            "category": "METADATA",
+            "cost": 1,
+            "basis": "request",
+            "note": "1 unit per request"
+          },
+          "frequency": {
+            "category-limit-per-minute": 60
           }
         }
       }

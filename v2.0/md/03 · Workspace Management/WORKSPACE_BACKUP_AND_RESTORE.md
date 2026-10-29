@@ -31,14 +31,14 @@ A workspace backup is a point-in-time copy of a workspace — its structure (tab
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Workspace Backups](#1-get-workspace-backups) | GET | `/restapi/v2/workspaces/<workspace-id>/backups` |
-| 2 | [Backup Workspace Now](#2-backup-workspace-now) | POST | `/restapi/v2/workspaces/<workspace-id>/backups` |
-| 3 | [Download Workspace Backup](#3-download-workspace-backup) | GET | `/restapi/v2/workspaces/<workspace-id>/backups/<backup-id>/download` |
-| 4 | [Restore Workspace from Backup](#4-restore-workspace-from-backup) | POST | `/restapi/v2/workspaces/<workspace-id>/backups/<backup-id>/restore` |
-| 5 | [Get Workspace Backup Status](#5-get-workspace-backup-status) | GET | `/restapi/v2/workspaces/<workspace-id>/backups/<backup-id>/status` |
-| 6 | [Get Workspace Restore Status](#6-get-workspace-restore-status) | GET | `/restapi/v2/workspaces/<workspace-id>/restores/<restore-id>/status` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Workspace Backups](#1-get-workspace-backups) | GET | `/restapi/v2/workspaces/<workspace-id>/backups` | 1 |
+| 2 | [Backup Workspace Now](#2-backup-workspace-now) | POST | `/restapi/v2/workspaces/<workspace-id>/backups` | 5 |
+| 3 | [Download Workspace Backup](#3-download-workspace-backup) | GET | `/restapi/v2/workspaces/<workspace-id>/backups/<backup-id>/download` | 1 |
+| 4 | [Restore Workspace from Backup](#4-restore-workspace-from-backup) | POST | `/restapi/v2/workspaces/<workspace-id>/backups/<backup-id>/restore` | 10 |
+| 5 | [Get Workspace Backup Status](#5-get-workspace-backup-status) | GET | `/restapi/v2/workspaces/<workspace-id>/backups/<backup-id>/status` | 0.5 |
+| 6 | [Get Workspace Restore Status](#6-get-workspace-restore-status) | GET | `/restapi/v2/workspaces/<workspace-id>/restores/<restore-id>/status` | 0.5 |
 
 > **Note on method overloading:** the list and start APIs share one path and differ only by method. `GET` never starts anything; `POST` queues a backup immediately. There is no `PUT` or `DELETE` — backups cannot be deleted through the API.
 
@@ -114,6 +114,8 @@ Returns the workspace's backup settings and the list of its retained backups. Su
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation that owns the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (`7301`). |
+| **API Units** | 1 unit per request — gateway action `GET_WORKSPACE_BACKUPS` (api-id `3082`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -266,6 +268,8 @@ Queues an immediate backup of the workspace. Returns at once with the new `backu
 | **OAuth Scope** | `ZohoAnalytics.metadata.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation that owns the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (`7301`). |
+| **API Units** | 5 units per request — gateway action `BACKUP_WORKSPACE_NOW` (api-id `3083`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -379,6 +383,8 @@ Downloads a completed backup as a `.wsbkp` file. The response is the **file itse
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation that owns the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (`7301`). |
+| **API Units** | 1 unit per request — gateway action `DOWNLOAD_WORKSPACE_BACKUP` (api-id `3084`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -467,6 +473,8 @@ Queues a restore of the workspace from one of its own backups. Returns at once w
 | **OAuth Scope** | `ZohoAnalytics.metadata.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation that owns the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (`7301`). |
+| **API Units** | 10 units per request — gateway action `RESTORE_WORKSPACE_BACKUP` (api-id `3085`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -611,6 +619,8 @@ Returns the current status of one backup. Use it to poll a backup started with [
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation that owns the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (`7301`). |
+| **API Units** | 0.5 units per request — gateway action `GET_WORKSPACE_BACKUP_STATUS` (api-id `3096`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -702,6 +712,8 @@ Returns the current status of one restore. Use it to poll a restore started with
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation that owns the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation that owns the workspace. Workspace Admins and custom-role users are refused (`7301`). |
+| **API Units** | 0.5 units per request — gateway action `GET_WORKSPACE_RESTORE_STATUS` (api-id `3097`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -924,3 +936,39 @@ CONFIG={"confirmRestore":true}
 | `restoreMode` | — | ✔ |
 
 > The other four APIs take no CONFIG.
+
+---
+
+## Appendix G – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Workspace Backups](#1-get-workspace-backups) | `GET_WORKSPACE_BACKUPS` (3082) | METADATA | 1 | per request |
+| 2 | [Backup Workspace Now](#2-backup-workspace-now) | `BACKUP_WORKSPACE_NOW` (3083) | METADATA | 5 | per request |
+| 3 | [Download Workspace Backup](#3-download-workspace-backup) | `DOWNLOAD_WORKSPACE_BACKUP` (3084) | METADATA | 1 | per request |
+| 4 | [Restore Workspace from Backup](#4-restore-workspace-from-backup) | `RESTORE_WORKSPACE_BACKUP` (3085) | METADATA | 10 | per request |
+| 5 | [Get Workspace Backup Status](#5-get-workspace-backup-status) | `GET_WORKSPACE_BACKUP_STATUS` (3096) | METADATA | 0.5 | per request |
+| 6 | [Get Workspace Restore Status](#6-get-workspace-restore-status) | `GET_WORKSPACE_RESTORE_STATUS` (3097) | METADATA | 0.5 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

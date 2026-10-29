@@ -31,7 +31,8 @@
     "workflows": "/workflows/index.md",
     "sdk_examples": "/sdk-examples/index.md",
     "openapi": "/references/openapi/",
-    "error_catalog": "/foundations/error-codes.md"
+    "error_catalog": "/foundations/error-codes.md",
+    "api_units": "/foundations/api-units.md"
   },
   "trust": {
     "tier": "unverified",

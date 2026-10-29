@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/sync"
   domain: data-operations
   group: data-sync-and-connectivity
+  api_units:
+    api_id: 3026
+    action: REFETCH_DATA
+    category: METADATA
+    units: 2
+    units_basis: per_request
+    units_note: "2 units per request"
+    category_frequency_limit: 60 requests/minute
+    endpoint_throttle: "5 requests per minute, 5-minute lockout on breach"
   oauth_scopes:
     - ZohoAnalytics.metadata.create
   org_id_header: required
@@ -78,6 +87,8 @@ Triggers an immediate pull for **one table** from whatever datasource sits behin
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - optional |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 204 with no body |
+| API units | 2 units per request - action `REFETCH_DATA` (api-id `3026`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization; this endpoint is additionally throttled to 5 requests per minute, 5-minute lockout on breach. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-operations-grouped-api.json`](../../../references/openapi/data-operations-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1sync/post`; CONFIG schema `RefetchDataConfig` |
 
 # Request
@@ -231,3 +242,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Sync Data](sync-datasource.md), [Update Datasource Connection](update-datasource-connection.md), [Get Datasources](get-datasources.md), [Get Last Import Details](get-last-import-details.md).
 - [SDK examples](../../../sdk-examples/data-operations/data-sync-and-connectivity/refetch-datasource.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

@@ -17,22 +17,37 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas"
       doc: "/domains/data-modeling-and-schema/formula-columns/get-custom-formula-list.md"
+      api_units: 0.1
+      api_units_action: GET_FORMULA_COLUMN
+      api_units_category: METADATA
     - operation_id: addFormulaColumn
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas"
       doc: "/domains/data-modeling-and-schema/formula-columns/add-formula-column.md"
+      api_units: 15
+      api_units_action: ADD_FORMULA_COLUMN
+      api_units_category: METADATA
     - operation_id: editFormulaColumn
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas/{formula-id}"
       doc: "/domains/data-modeling-and-schema/formula-columns/edit-formula-column.md"
+      api_units: 15
+      api_units_action: EDIT_FORMULA_COLUMN
+      api_units_category: METADATA
     - operation_id: deleteFormulaColumn
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas/{formula-id}"
       doc: "/domains/data-modeling-and-schema/formula-columns/delete-formula-column.md"
+      api_units: 2
+      api_units_action: DELETE_FORMULA_COLUMN
+      api_units_category: METADATA
     - operation_id: copyFormulas
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/formulas/copy"
       doc: "/domains/data-modeling-and-schema/formula-columns/copy-formulas.md"
+      api_units: 1
+      api_units_action: COPY_FORMULAS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
@@ -59,13 +74,13 @@ APIs for managing custom formula columns and copying formulas.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Custom Formulas](get-custom-formula-list.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas` | `getCustomFormulaList` | `ZohoAnalytics.metadata.read` | 200 |
-| [Add Custom Formula](add-formula-column.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas` | `addFormulaColumn` | `ZohoAnalytics.modeling.create` | 200 |
-| [Edit Custom Formula](edit-formula-column.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas/{formula-id}` | `editFormulaColumn` | `ZohoAnalytics.modeling.update` | 204 |
-| [Delete Custom Formula](delete-formula-column.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas/{formula-id}` | `deleteFormulaColumn` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Copy Custom Formulas](copy-formulas.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/formulas/copy` | `copyFormulas` | `ZohoAnalytics.modeling.create` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Custom Formulas](get-custom-formula-list.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas` | `getCustomFormulaList` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
+| [Add Custom Formula](add-formula-column.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas` | `addFormulaColumn` | `ZohoAnalytics.modeling.create` | 200 | 15 |
+| [Edit Custom Formula](edit-formula-column.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas/{formula-id}` | `editFormulaColumn` | `ZohoAnalytics.modeling.update` | 204 | 15 |
+| [Delete Custom Formula](delete-formula-column.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/customformulas/{formula-id}` | `deleteFormulaColumn` | `ZohoAnalytics.modeling.delete` | 204 | 2 |
+| [Copy Custom Formulas](copy-formulas.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/formulas/copy` | `copyFormulas` | `ZohoAnalytics.modeling.create` | 204 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

@@ -27,15 +27,15 @@ Separately, [Get Publish Configurations](#6-get-publish-configurations) and [Upd
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Make View Public](#1-make-view-public) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/public` |
-| 2 | [Remove Public Permission](#2-remove-public-permission) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/public` |
-| 3 | [Get Private URL](#3-get-private-url) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/privatelink` |
-| 4 | [Create Private URL](#4-create-private-url) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/privatelink` |
-| 5 | [Remove Private Access](#5-remove-private-access) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/privatelink` |
-| 6 | [Get Publish Configurations](#6-get-publish-configurations) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/config` |
-| 7 | [Update Publish Configurations](#7-update-publish-configurations) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/config` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Make View Public](#1-make-view-public) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/public` | 1 |
+| 2 | [Remove Public Permission](#2-remove-public-permission) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/public` | 1 |
+| 3 | [Get Private URL](#3-get-private-url) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/privatelink` | 0.1 |
+| 4 | [Create Private URL](#4-create-private-url) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/privatelink` | 1 |
+| 5 | [Remove Private Access](#5-remove-private-access) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/privatelink` | 1 |
+| 6 | [Get Publish Configurations](#6-get-publish-configurations) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/config` | 0.1 |
+| 7 | [Update Publish Configurations](#7-update-publish-configurations) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/config` | 0.5 |
 
 > **Note on naming:** "Create Private link" is documented here as **"Create Private URL"**, "Remove Private Link" as **"Remove Private Access"**, "Get Publish Details" as **"Get Publish Configurations"**, and "Update Publish Details" as **"Update Publish Configurations"**. "Make View Public" and "Remove Public Permission" are unrenamed.
 >
@@ -54,6 +54,8 @@ Publishes a view as a **Public URL** and, in the same call, defines the read-onl
 | **OAuth Scope** | `ZohoAnalytics.embed.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Make Public permission on the view. |
+| **API Units** | 1 unit per request — gateway action `MAKE_VIEW_PUBLIC` (api-id `5013`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -291,6 +293,8 @@ Un-publishes the view's **Public URL**, revoking access for all public visitors.
 | **OAuth Scope** | `ZohoAnalytics.embed.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Make Public permission on the view, or any user with Share permission on the view. |
+| **API Units** | 1 unit per request — gateway action `REMOVE_PUBLIC_VIEW` (api-id `5014`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -377,6 +381,8 @@ Returns the existing **Private URL** of a view — the `open-view` URL with the 
 | **OAuth Scope** | `ZohoAnalytics.embed.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Publish permission on the view. |
+| **API Units** | 0.1 units per request — gateway action `GET_PRIVATE_URL` (api-id `5003`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -504,6 +510,8 @@ Creates a **Private URL** for a view — generating the secret private key if on
 | **OAuth Scope** | `ZohoAnalytics.embed.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Publish permission on the view. |
+| **API Units** | 1 unit per request — gateway action `CREATE_PRIVATE_URL` (api-id `5004`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -708,6 +716,8 @@ Removes the view's **Private URL** entirely — the private key, the associated 
 | **OAuth Scope** | `ZohoAnalytics.embed.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Publish permission on the workspace, or any user with Share permission on the view. |
+| **API Units** | 1 unit per request — gateway action `REMOVE_PRIVATE_PERMISSION` (api-id `5012`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -795,6 +805,8 @@ Returns the complete publish state of a view in one call: the **public** channel
 | **OAuth Scope** | `ZohoAnalytics.embed.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Publish permission on the view, or any user with Make Public permission on the view. |
+| **API Units** | 0.1 units per request — gateway action `GET_PUBLISH_CONFIGURATIONS` (api-id `5015`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -1009,6 +1021,8 @@ Updates the **presentation configuration** of the view's published page — titl
 | **OAuth Scope** | `ZohoAnalytics.embed.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Publish permission on the view, or any user with Make Public permission on the view. |
+| **API Units** | 0.5 units per request — gateway action `UPDATE_PUBLISH_CONFIGURATIONS` (api-id `5016`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1292,3 +1306,40 @@ CONFIG={"criteria":"\"Sales_1\".\"Region\"='West'"}
 | **Booleans are native, numbers are native, dates are strings** | Unlike the sharing APIs (where `inheritParentFilterCriteria` is serialised as the string `"true"`/`"false"`), every boolean in `publicViewConfig` / `privateLinkConfig` / `publishConfig` is a native JSON boolean, and `publicPermLevel`, `width`, `height`, and `autoRefresh` are native JSON numbers. `expiryDate` is a `dd/MM/yyyy` string in GMT. |
 | **View IDs in the URL are numeric path segments** | Unlike the sharing APIs' response payloads, which return IDs as JSON strings, the publish APIs carry the view ID only inside the returned URL text — extract it as a string to avoid precision loss on large IDs. |
 | **Effects are observable through the Sharing APIs** | Because both channels are modelled as shares to reserved pseudo-users, [Get Shared Details](SHARING.md#4-get-shared-details) is the canonical way to audit what a public or private link actually grants: look for `sharedTo: "Public Visitor"` / `sharedToZuId: "-20"` (with `publicPermLevel` set) and `sharedTo: "Private Link"` / `sharedToZuId: "-30"` (with `publicPermLevel: 0`), plus the resolved `permissionString`, `criteria`, `vudColumns`, and `drillColumns`. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Make View Public](#1-make-view-public) | `MAKE_VIEW_PUBLIC` (5013) | METADATA | 1 | per request |
+| 2 | [Remove Public Permission](#2-remove-public-permission) | `REMOVE_PUBLIC_VIEW` (5014) | METADATA | 1 | per request |
+| 3 | [Get Private URL](#3-get-private-url) | `GET_PRIVATE_URL` (5003) | METADATA | 0.1 | per request |
+| 4 | [Create Private URL](#4-create-private-url) | `CREATE_PRIVATE_URL` (5004) | METADATA | 1 | per request |
+| 5 | [Remove Private Access](#5-remove-private-access) | `REMOVE_PRIVATE_PERMISSION` (5012) | METADATA | 1 | per request |
+| 6 | [Get Publish Configurations](#6-get-publish-configurations) | `GET_PUBLISH_CONFIGURATIONS` (5015) | METADATA | 0.1 | per request |
+| 7 | [Update Publish Configurations](#7-update-publish-configurations) | `UPDATE_PUBLISH_CONFIGURATIONS` (5016) | METADATA | 0.5 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

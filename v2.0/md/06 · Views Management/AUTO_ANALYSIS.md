@@ -8,10 +8,10 @@ Auto Analysis APIs allow you to automatically generate a set of meaningful views
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-------------|
-| 1 | [Auto Analyse View](#1-auto-analyse-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/autoanalyse` |
-| 2 | [Auto Analyse Column](#2-auto-analyse-column) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>/autoanalyse` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-------------|----------|
+| 1 | [Auto Analyse View](#1-auto-analyse-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/autoanalyse` | 1 |
+| 2 | [Auto Analyse Column](#2-auto-analyse-column) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>/autoanalyse` | 1 |
 
 ---
 
@@ -31,6 +31,8 @@ The operation tracks completion state — once auto analysis has been run succes
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Report permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `AUTO_ANALYSIS_VIEW` (api-id `2023`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -156,6 +158,8 @@ Triggers auto analysis for a **single column** of a table. The system generates 
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Report permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `AUTO_ANALYSIS_COLUMN` (api-id `2024`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -316,3 +320,35 @@ Content-Type: application/x-www-form-urlencoded
 | Large table with many columns | Auto Analyse View may take longer than usual. The operation is synchronous — the HTTP response is returned only after all views are created. For very large tables, consider analysing individual high-priority columns using Auto Analyse Column for faster targeted results. |
 | Auto analysis after importing new rows (same schema) | Schema has not changed, but data distribution may have changed. Run Auto Analyse View with `analyseAgain=true` to regenerate views that reflect the updated data. |
 | Auto analysis after adding new columns to a table | Existing auto-generated views were created without knowledge of the new columns. Run Auto Analyse View with `analyseAgain=true` to include the new columns in the generated view set. |
+
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Auto Analyse View](#1-auto-analyse-view) | `AUTO_ANALYSIS_VIEW` (2023) | METADATA | 1 | per request |
+| 2 | [Auto Analyse Column](#2-auto-analyse-column) | `AUTO_ANALYSIS_COLUMN` (2024) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

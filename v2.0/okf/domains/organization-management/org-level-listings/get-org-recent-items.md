@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/orgs/recentitems"
   domain: organization-management
   group: org-level-listings
+  api_units:
+    api_id: 3007
+    action: GET_RECENT_VIEWS
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
+    mapping_note: "No <url> entry for this path in security-restapi.xml; units taken from GET_RECENT_VIEWS (api-id 3007), the deployed v2 recent-items route."
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -76,6 +85,8 @@ The API reads the own history of the caller and keeps the entries whose workspac
 | Permission required | The authenticated user must be an active user of the organisation. Only the caller's own history is returned. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_RECENT_VIEWS` (api-id `3007`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`org-management-grouped-api.json`](../../../references/openapi/org-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1orgs~1recentitems/get`; response schema `GetOrgRecentItemsResponse` |
 
 # Request
@@ -257,3 +268,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Org Workspaces](get-org-workspaces.md), [Get Org Dashboards](get-org-dashboards.md).
 - [SDK examples](../../../sdk-examples/organization-management/org-level-listings/get-org-recent-items.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

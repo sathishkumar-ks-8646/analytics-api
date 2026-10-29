@@ -29,18 +29,18 @@ A **data alert** is a named, scheduled rule attached to a single report. On ever
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Alerts In Workspace](#1-get-alerts-in-workspace) | GET | `/restapi/v2/workspaces/<workspace-id>/alerts` |
-| 2 | [Get Alerts In View](#2-get-alerts-in-view) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/alerts` |
-| 3 | [Get View Metadata For Alert](#3-get-view-metadata-for-alert) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/alerts/metadata` |
-| 4 | [Get Alert Configuration](#4-get-alert-configuration) | GET | `/restapi/v2/workspaces/<workspace-id>/alerts/<alert-id>` |
-| 5 | [Create Alert](#5-create-alert) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/alerts` |
-| 6 | [Update Alert](#6-update-alert) | PUT | `/restapi/v2/workspaces/<workspace-id>/alerts/<alert-id>` |
-| 7 | [Delete Alerts](#7-delete-alerts) | DELETE | `/restapi/v2/workspaces/<workspace-id>/alerts` |
-| 8 | [Change Alert Status](#8-change-alert-status) | PUT | `/restapi/v2/workspaces/<workspace-id>/alerts/status` |
-| 9 | [Run Alert](#9-run-alert) | POST | `/restapi/v2/workspaces/<workspace-id>/alerts/<alert-id>/execute` |
-| 10 | [Get Alert Events](#10-get-alert-events) | GET | `/restapi/v2/workspaces/<workspace-id>/alerts/<alert-id>/events` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Alerts In Workspace](#1-get-alerts-in-workspace) | GET | `/restapi/v2/workspaces/<workspace-id>/alerts` | 2 |
+| 2 | [Get Alerts In View](#2-get-alerts-in-view) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/alerts` | 0.5 |
+| 3 | [Get View Metadata For Alert](#3-get-view-metadata-for-alert) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/alerts/metadata` | 1 |
+| 4 | [Get Alert Configuration](#4-get-alert-configuration) | GET | `/restapi/v2/workspaces/<workspace-id>/alerts/<alert-id>` | 1 |
+| 5 | [Create Alert](#5-create-alert) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/alerts` | 3 |
+| 6 | [Update Alert](#6-update-alert) | PUT | `/restapi/v2/workspaces/<workspace-id>/alerts/<alert-id>` | 3 |
+| 7 | [Delete Alerts](#7-delete-alerts) | DELETE | `/restapi/v2/workspaces/<workspace-id>/alerts` | 2 |
+| 8 | [Change Alert Status](#8-change-alert-status) | PUT | `/restapi/v2/workspaces/<workspace-id>/alerts/status` | 1 |
+| 9 | [Run Alert](#9-run-alert) | POST | `/restapi/v2/workspaces/<workspace-id>/alerts/<alert-id>/execute` | 1 |
+| 10 | [Get Alert Events](#10-get-alert-events) | GET | `/restapi/v2/workspaces/<workspace-id>/alerts/<alert-id>/events` | 1 |
 
 > **Note on method overloading:** `/workspaces/<workspace-id>/views/<view-id>/alerts` serves [Get Alerts In View](#2-get-alerts-in-view) on `GET` and [Create Alert](#5-create-alert) on `POST`. The same path with the wrong verb silently performs the other operation.
 >
@@ -158,6 +158,8 @@ Returns every alert defined anywhere in the workspace, with its name, the view i
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or a custom-role user whose role has the **Manage Data Alerts** permission on this workspace. The check is workspace-wide — see [Permission Model](#permission-model). |
+| **API Units** | 2 units per request — gateway action `GET_ALERTS_IN_WORKSPACE` (api-id `3091`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -318,6 +320,8 @@ Returns the alerts configured on one report. The response entries are identical 
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the view's workspace, **or** hold the `CREATEALERT` (Manage Data Alerts) permission on that specific view. Stricter than [Get Alerts In Workspace](#1-get-alerts-in-workspace). |
+| **API Units** | 0.5 units per request — gateway action `GET_ALERTS_IN_VIEW` (api-id `3092`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -445,6 +449,8 @@ Returns everything needed to construct a rule for a report: its alertable column
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the view's workspace, **or** hold the `CREATEALERT` (Manage Data Alerts) permission on that specific view. |
+| **API Units** | 1 unit per request — gateway action `GET_VIEW_METADATA_FOR_ALERT` (api-id `3093`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -640,6 +646,8 @@ Returns one alert's complete configuration **in exactly the CONFIG shape that [C
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, **or** a custom-role user with the **Manage Data Alerts** permission who either has all-alerts access or **owns this alert**. The alert must belong to `<workspace-id>`. |
+| **API Units** | 1 unit per request — gateway action `GET_ALERT_CONFIGURATION` (api-id `3094`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -856,6 +864,8 @@ Creates an alert on the specified report and returns its id. The view must be a 
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the view's workspace, **or** hold the `CREATEALERT` (Manage Data Alerts) permission on that specific view. |
+| **API Units** | 3 units per request — gateway action `CREATE_ALERT` (api-id `2083`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1629,6 +1639,8 @@ Replaces an existing alert's configuration. The CONFIG body is the **same shape 
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, **or** a custom-role user with the **Manage Data Alerts** permission who either has all-alerts access or **owns this alert**. |
+| **API Units** | 3 units per request — gateway action `UPDATE_ALERT` (api-id `2084`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1943,6 +1955,8 @@ Deletes one or more alerts in a workspace. Every id is validated before anything
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, **or** a custom-role user with the **Manage Data Alerts** permission who either has all-alerts access or **owns every alert listed**. The check runs per id. |
+| **API Units** | 2 units per request — gateway action `DELETE_ALERTS` (api-id `2085`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -2072,6 +2086,8 @@ Enables (resumes) or pauses one or more alerts without altering their configurat
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, **or** a custom-role user with the **Manage Data Alerts** permission who either has all-alerts access or **owns every alert listed**. The check runs per id. |
+| **API Units** | 1 unit per request — gateway action `CHANGE_ALERT_STATUS` (api-id `2086`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -2215,6 +2231,8 @@ Queues an off-schedule evaluation of one alert. The alert is evaluated against l
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, **or** a custom-role user with the **Manage Data Alerts** permission who either has all-alerts access or **owns this alert**. |
+| **API Units** | 1 unit per request — gateway action `RUN_ALERT` (api-id `2087`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -2347,6 +2365,8 @@ Returns the audit trail of one alert's evaluations — when each ran, and whethe
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be the DB Owner (Account Admin, Organization Admin or Workspace Admin) of the workspace, **or** a custom-role user with the **Manage Data Alerts** permission who either has all-alerts access or **owns this alert**. |
+| **API Units** | 1 unit per request — gateway action `GET_ALERT_EVENTS` (api-id `3095`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -2838,3 +2858,43 @@ Only five APIs accept CONFIG. `✔` means the attribute is accepted; `—` means
 \* At least one of `email`, `notification`, `slack`, `msteams` and `webhook` must resolve to a stored channel, otherwise `32000001`.
 
 [Get Alerts In Workspace](#1-get-alerts-in-workspace), [Get Alerts In View](#2-get-alerts-in-view), [Get View Metadata For Alert](#3-get-view-metadata-for-alert) and [Get Alert Configuration](#4-get-alert-configuration) take no CONFIG at all.
+
+---
+
+## Appendix G – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Alerts In Workspace](#1-get-alerts-in-workspace) | `GET_ALERTS_IN_WORKSPACE` (3091) | METADATA | 2 | per request |
+| 2 | [Get Alerts In View](#2-get-alerts-in-view) | `GET_ALERTS_IN_VIEW` (3092) | METADATA | 0.5 | per request |
+| 3 | [Get View Metadata For Alert](#3-get-view-metadata-for-alert) | `GET_VIEW_METADATA_FOR_ALERT` (3093) | METADATA | 1 | per request |
+| 4 | [Get Alert Configuration](#4-get-alert-configuration) | `GET_ALERT_CONFIGURATION` (3094) | METADATA | 1 | per request |
+| 5 | [Create Alert](#5-create-alert) | `CREATE_ALERT` (2083) | METADATA | 3 | per request |
+| 6 | [Update Alert](#6-update-alert) | `UPDATE_ALERT` (2084) | METADATA | 3 | per request |
+| 7 | [Delete Alerts](#7-delete-alerts) | `DELETE_ALERTS` (2085) | METADATA | 2 | per request |
+| 8 | [Change Alert Status](#8-change-alert-status) | `CHANGE_ALERT_STATUS` (2086) | METADATA | 1 | per request |
+| 9 | [Run Alert](#9-run-alert) | `RUN_ALERT` (2087) | METADATA | 1 | per request |
+| 10 | [Get Alert Events](#10-get-alert-events) | `GET_ALERT_EVENTS` (3095) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

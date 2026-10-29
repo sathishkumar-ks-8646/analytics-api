@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed"
   domain: share-and-publish
   group: embed-url
+  api_units:
+    api_id: 5002
+    action: GET_EMBED_URL
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.embed.read
   org_id_header: required
@@ -80,6 +88,8 @@ Mints a new, short-lived embed URL for a view. Everything the eventual viewer ca
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Publish permission or Make Public permission on the view. A caller who is not a workspace owner must additionally be listed in the organization's OEM-enabled users configuration, otherwise 7301. In every case the organization or the workspace must be enabled for Embedded Analytics, otherwise 8023. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `application/json` |
+| API units | 1 unit per request - action `GET_EMBED_URL` (api-id `5002`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`share-publish-grouped-api.json`](../../../references/openapi/share-publish-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1embed/get`; CONFIG schema `GetEmbedUrlConfig`; response schema `GetEmbedUrlResponse` |
 
 # Request
@@ -396,3 +406,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Fetch All Embed URLs](get-embed-urls.md), [Delete Embed URL](delete-embed-url.md).
 - [SDK examples](../../../sdk-examples/share-and-publish/embed-url/get-embed-url.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

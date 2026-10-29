@@ -17,18 +17,30 @@ api:
       method: GET
       path: "/restapi/v2/bulk/workspaces/{workspace-id}/data"
       doc: "/domains/data-operations/async-data-export/create-export-job-sql-query.md"
+      api_units: variable
+      api_units_action: INITIATE_EXPORT
+      api_units_category: BULK
     - operation_id: createExportJobViewId
       method: GET
       path: "/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data"
       doc: "/domains/data-operations/async-data-export/create-export-job-view-id.md"
+      api_units: variable
+      api_units_action: INITIATE_EXPORT
+      api_units_category: BULK
     - operation_id: getExportJobDetails
       method: GET
       path: "/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}"
       doc: "/domains/data-operations/async-data-export/get-export-job-details.md"
+      api_units: 0
+      api_units_action: EXPORT_JOB_STATUS
+      api_units_category: METADATA
     - operation_id: downloadExportedData
       method: GET
       path: "/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}/data"
       doc: "/domains/data-operations/async-data-export/download-exported-data.md"
+      api_units: 0
+      api_units_action: DOWNLOAD_FILE
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
@@ -49,12 +61,12 @@ APIs for creating export jobs and downloading generated exports.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Create Export Job using SQL Query (Asynchronous)](create-export-job-sql-query.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/data` | `createExportJobSQLQuery` | `ZohoAnalytics.data.read` | 200 |
-| [Create Export Job using View ID (Asynchronous)](create-export-job-view-id.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data` | `createExportJobViewId` | `ZohoAnalytics.data.read` | 200 |
-| [Get Export Job Details](get-export-job-details.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}` | `getExportJobDetails` | `ZohoAnalytics.data.read` | 200 |
-| [Download Exported Data](download-exported-data.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}/data` | `downloadExportedData` | `ZohoAnalytics.data.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Create Export Job using SQL Query (Asynchronous)](create-export-job-sql-query.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/data` | `createExportJobSQLQuery` | `ZohoAnalytics.data.read` | 200 | variable |
+| [Create Export Job using View ID (Asynchronous)](create-export-job-view-id.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data` | `createExportJobViewId` | `ZohoAnalytics.data.read` | 200 | variable |
+| [Get Export Job Details](get-export-job-details.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}` | `getExportJobDetails` | `ZohoAnalytics.data.read` | 200 | 0 |
+| [Download Exported Data](download-exported-data.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/exportjobs/{job-id}/data` | `downloadExportedData` | `ZohoAnalytics.data.read` | 200 | 0 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

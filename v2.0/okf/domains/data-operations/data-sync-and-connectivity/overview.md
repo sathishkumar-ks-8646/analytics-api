@@ -17,22 +17,37 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}/sync"
       doc: "/domains/data-operations/data-sync-and-connectivity/sync-datasource.md"
+      api_units: 5
+      api_units_action: SYNC_DATA
+      api_units_category: METADATA
     - operation_id: refetchDatasource
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/sync"
       doc: "/domains/data-operations/data-sync-and-connectivity/refetch-datasource.md"
+      api_units: 2
+      api_units_action: REFETCH_DATA
+      api_units_category: METADATA
     - operation_id: updateDatasourceConnection
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}"
       doc: "/domains/data-operations/data-sync-and-connectivity/update-datasource-connection.md"
+      api_units: 1
+      api_units_action: UPDATE_DATASOURCE_CONNECTION
+      api_units_category: METADATA
     - operation_id: getDatasources
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/datasources"
       doc: "/domains/data-operations/data-sync-and-connectivity/get-datasources.md"
+      api_units: 1
+      api_units_action: GET_DATASOURCES
+      api_units_category: METADATA
     - operation_id: getLastImportDetails
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/importdetails"
       doc: "/domains/data-operations/data-sync-and-connectivity/get-last-import-details.md"
+      api_units: 0.1
+      api_units_action: GET_LAST_IMPORT_DETAILS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
@@ -53,13 +68,13 @@ APIs for import history, datasource sync/refetch, datasource updates, and listin
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Sync Data](sync-datasource.md) | POST | `/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}/sync` | `syncDatasource` | `ZohoAnalytics.metadata.create` | 204 |
-| [Refetch Data](refetch-datasource.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/sync` | `refetchDatasource` | `ZohoAnalytics.metadata.create` | 204 |
-| [Update Datasource Connection](update-datasource-connection.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}` | `updateDatasourceConnection` | `ZohoAnalytics.metadata.update` | 204 |
-| [Get Datasources](get-datasources.md) | GET | `/restapi/v2/workspaces/{workspace-id}/datasources` | `getDatasources` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Last Import Details](get-last-import-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/importdetails` | `getLastImportDetails` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Sync Data](sync-datasource.md) | POST | `/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}/sync` | `syncDatasource` | `ZohoAnalytics.metadata.create` | 204 | 5 |
+| [Refetch Data](refetch-datasource.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/sync` | `refetchDatasource` | `ZohoAnalytics.metadata.create` | 204 | 2 |
+| [Update Datasource Connection](update-datasource-connection.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/datasources/{datasource-id}` | `updateDatasourceConnection` | `ZohoAnalytics.metadata.update` | 204 | 1 |
+| [Get Datasources](get-datasources.md) | GET | `/restapi/v2/workspaces/{workspace-id}/datasources` | `getDatasources` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Get Last Import Details](get-last-import-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/importdetails` | `getLastImportDetails` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 
@@ -197,7 +212,7 @@ These are the limits that apply with **default settings**.
 |------------|-------|-------------|
 | **Manual syncs per datasource connection** | **5 per day.** The counter resets daily and is reported as `syncUsed` against `totalSyncAllowed` by [Get Datasources](get-datasources.md). Both [Sync Data](sync-datasource.md) and [Refetch Data](refetch-datasource.md) consume it. | `19000048` |
 | **One sync at a time per table** | A table already being synced cannot be synced again until the current run finishes. | `18072` |
-| **Repeated rapid calls are throttled** | [Sync Data](sync-datasource.md) and [Refetch Data](refetch-datasource.md) are additionally rate limited per user. A burst of calls in quick succession is locked out for a short cool-off period. | Framework-level rejection |
+| **Repeated rapid calls are throttled** | [Sync Data](sync-datasource.md) and [Refetch Data](refetch-datasource.md) are additionally rate limited to 5 requests per minute. A burst beyond that is locked out for 5 minutes. | Framework-level rejection |
 | **`syncIntervalId` becomes mandatory above one interval** | A datasource with more than one sync interval cannot be synced as a whole. | `8182` |
 | **`CONFIG` length — Sync Data / Refetch Data** | **3,000** characters. | `8507` |
 | **`CONFIG` length — Update Datasource Connection** | **1,000,000** characters. | `8507` |

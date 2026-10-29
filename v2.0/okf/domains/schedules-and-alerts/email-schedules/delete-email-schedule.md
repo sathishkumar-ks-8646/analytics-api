@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/emailschedules/{schedule-id}"
   domain: schedules-and-alerts
   group: email-schedules
+  api_units:
+    api_id: 2052
+    action: DELETE_EMAIL_SCHEDULE
+    category: METADATA
+    units: 3
+    units_basis: per_request
+    units_note: "3 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.modeling.delete
   org_id_header: required
@@ -71,6 +79,8 @@ Permanently deletes an email schedule. The views it delivered are unaffected; on
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Email Schedule permission on the workspace. A custom-role user whose role does not grant access to all email schedules may delete only schedules they created themselves — otherwise 8002. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 204 with no body |
+| API units | 3 units per request - action `DELETE_EMAIL_SCHEDULE` (api-id `2052`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`schedules-alerts-grouped-api.json`](../../../references/openapi/schedules-alerts-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1emailschedules~1{schedule-id}/delete` |
 
 # Request
@@ -201,3 +211,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Email Schedules](get-email-schedules.md), [Create Email Schedule](create-email-schedule.md), [Update Email Schedule](update-email-schedule.md), [Change Email Schedule Status](change-email-schedule-status.md), [Trigger Email Schedule](trigger-email-schedule.md).
 - [SDK examples](../../../sdk-examples/schedules-and-alerts/email-schedules/delete-email-schedule.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata"
   domain: reports-and-dashboards
   group: dashboards
+  api_units:
+    api_id: 2061
+    action: GET_DASHBOARD_METADATA
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
+    endpoint_throttle: "20 requests per user per minute, 10-minute lockout on breach"
   oauth_scopes:
     - ZohoAnalytics.modeling.read
   org_id_header: required
@@ -83,7 +92,9 @@ Permission required: Read Only or higher on the dashboard. Owners, Workspace Adm
 | Success response | HTTP 200 - `application/json` |
 | Rate limit | 20 requests per user per 60 seconds. See [Rate limits](../../../foundations/rate-limits-and-quotas.md). |
 | Custom domain | Permitted when the workspace is mapped to the calling domain. |
-| Throttle | 20 requests per minute per user. |
+| Throttle | 20 requests per minute per user; 10-minute lock-out on breach. |
+| API units | 1 unit per request - action `GET_DASHBOARD_METADATA` (api-id `2061`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization; this endpoint is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`reports-dashboards-grouped-api.json`](../../../references/openapi/reports-dashboards-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}~1metadata/get`; CONFIG schema `GetDashboardMetadataConfig`; response schema `GetDashboardMetadataResponse` |
 
 # Request
@@ -279,3 +290,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Dashboard](create-dashboard.md), [Update Dashboard](update-dashboard.md).
 - [SDK examples](../../../sdk-examples/reports-and-dashboards/dashboards/get-dashboard-metadata.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

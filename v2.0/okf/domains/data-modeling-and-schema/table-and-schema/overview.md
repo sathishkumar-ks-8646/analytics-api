@@ -17,10 +17,16 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/tables"
       doc: "/domains/data-modeling-and-schema/table-and-schema/create-table.md"
+      api_units: 1
+      api_units_action: CREATE_TABLE
+      api_units_category: METADATA
     - operation_id: getTableMetadata
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/metadata"
       doc: "/domains/data-modeling-and-schema/table-and-schema/get-table-metadata.md"
+      api_units: 1
+      api_units_action: GET_TABLE_METADATA
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
@@ -49,10 +55,10 @@ APIs for creating tables and fetching table metadata.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Create Table](create-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tables` | `createTable` | `ZohoAnalytics.modeling.create` | 200 |
-| [Get Table Metadata](get-table-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/metadata` | `getTableMetadata` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Create Table](create-table.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tables` | `createTable` | `ZohoAnalytics.modeling.create` | 200 | 1 |
+| [Get Table Metadata](get-table-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/metadata` | `getTableMetadata` | `ZohoAnalytics.metadata.read` | 200 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

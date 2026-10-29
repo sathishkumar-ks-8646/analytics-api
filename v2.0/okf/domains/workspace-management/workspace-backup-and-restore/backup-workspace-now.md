@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/backups"
   domain: workspace-management
   group: workspace-backup-and-restore
+  api_units:
+    api_id: 3083
+    action: BACKUP_WORKSPACE_NOW
+    category: METADATA
+    units: 5
+    units_basis: per_request
+    units_note: "5 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.create
   org_id_header: required
@@ -76,6 +84,8 @@ Queues an immediate backup of the workspace. Returns at once with the new `backu
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - optional |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 200 - `application/json` |
+| API units | 5 units per request - action `BACKUP_WORKSPACE_NOW` (api-id `3083`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`workspace-management-grouped-api.json`](../../../references/openapi/workspace-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups/post`; CONFIG schema `BackupWorkspaceNowConfig`; response schema `BackupWorkspaceNowResponse` |
 
 # Request
@@ -216,3 +226,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Workspace Backups](get-workspace-backups.md), [Download Workspace Backup](download-workspace-backup.md), [Restore Workspace from Backup](restore-workspace-from-backup.md), [Get Workspace Backup Status](get-workspace-backup-status.md), [Get Workspace Restore Status](get-workspace-restore-status.md).
 - [SDK examples](../../../sdk-examples/workspace-management/workspace-backup-and-restore/backup-workspace-now.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

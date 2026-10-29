@@ -17,14 +17,23 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/dashboards"
       doc: "/domains/reports-and-dashboards/dashboards/create-dashboard.md"
+      api_units: 5
+      api_units_action: CREATE_DASHBOARD
+      api_units_category: METADATA
     - operation_id: getDashboardMetadata
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata"
       doc: "/domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md"
+      api_units: 1
+      api_units_action: GET_DASHBOARD_METADATA
+      api_units_category: METADATA
     - operation_id: updateDashboard
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}"
       doc: "/domains/reports-and-dashboards/dashboards/update-dashboard.md"
+      api_units: 5
+      api_units_action: UPDATE_DASHBOARD
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
@@ -59,11 +68,11 @@ APIs for creating a dashboard, reading its stored layout, settings and themes, r
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Create Dashboard](create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `createDashboard` | `ZohoAnalytics.modeling.create` | 200 |
-| [Read Dashboard Metadata](get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `getDashboardMetadata` | `ZohoAnalytics.modeling.read` | 200 |
-| [Update Dashboard](update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `updateDashboard` | `ZohoAnalytics.modeling.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Create Dashboard](create-dashboard.md) | POST | `/restapi/v2/workspaces/{workspace-id}/dashboards` | `createDashboard` | `ZohoAnalytics.modeling.create` | 200 | 5 |
+| [Read Dashboard Metadata](get-dashboard-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}/metadata` | `getDashboardMetadata` | `ZohoAnalytics.modeling.read` | 200 | 1 |
+| [Update Dashboard](update-dashboard.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/dashboards/{dashboard-id}` | `updateDashboard` | `ZohoAnalytics.modeling.update` | 204 | 5 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

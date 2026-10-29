@@ -17,34 +17,58 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns"
       doc: "/domains/data-modeling-and-schema/columns/add-column.md"
+      api_units: 15
+      api_units_action: ADD_COLUMN
+      api_units_category: METADATA
     - operation_id: renameColumn
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}"
       doc: "/domains/data-modeling-and-schema/columns/rename-column.md"
+      api_units: 5
+      api_units_action: RENAME_COLUMN
+      api_units_category: METADATA
     - operation_id: deleteColumn
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}"
       doc: "/domains/data-modeling-and-schema/columns/delete-column.md"
+      api_units: 10
+      api_units_action: DELETE_COLUMN
+      api_units_category: METADATA
     - operation_id: hideColumns
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/hide"
       doc: "/domains/data-modeling-and-schema/columns/hide-columns.md"
+      api_units: 1
+      api_units_action: HIDE_COLUMNS
+      api_units_category: METADATA
     - operation_id: showColumns
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/show"
       doc: "/domains/data-modeling-and-schema/columns/show-columns.md"
+      api_units: 1
+      api_units_action: SHOW_COLUMNS
+      api_units_category: METADATA
     - operation_id: getColumnDependents
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/dependents"
       doc: "/domains/data-modeling-and-schema/columns/get-column-dependents.md"
+      api_units: 0.1
+      api_units_action: GET_COLUMN_DEPENDENTS
+      api_units_category: METADATA
     - operation_id: sortDataByColumns
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data/sort"
       doc: "/domains/data-modeling-and-schema/columns/sort-data-by-columns.md"
+      api_units: 1
+      api_units_action: SORT_DATA_BY_COLUMNS
+      api_units_category: METADATA
     - operation_id: reorderColumns
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/reorder"
       doc: "/domains/data-modeling-and-schema/columns/reorder-columns.md"
+      api_units: 1
+      api_units_action: REORDER_COLUMNS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
@@ -73,16 +97,16 @@ APIs for adding, renaming, reordering, showing, hiding, deleting, and sorting co
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Add Column](add-column.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns` | `addColumn` | `ZohoAnalytics.modeling.create` | 200 |
-| [Rename Column](rename-column.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}` | `renameColumn` | `ZohoAnalytics.modeling.update` | 204 |
-| [Delete Column](delete-column.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}` | `deleteColumn` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Hide Columns](hide-columns.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/hide` | `hideColumns` | `ZohoAnalytics.modeling.update` | 204 |
-| [Show Columns](show-columns.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/show` | `showColumns` | `ZohoAnalytics.modeling.update` | 204 |
-| [Get Column Dependents](get-column-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/dependents` | `getColumnDependents` | `ZohoAnalytics.metadata.read` | 200 |
-| [Sort Data by Columns](sort-data-by-columns.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data/sort` | `sortDataByColumns` | `ZohoAnalytics.modeling.update` | 204 |
-| [Reorder Columns](reorder-columns.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/reorder` | `reorderColumns` | `ZohoAnalytics.modeling.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Add Column](add-column.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns` | `addColumn` | `ZohoAnalytics.modeling.create` | 200 | 15 |
+| [Rename Column](rename-column.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}` | `renameColumn` | `ZohoAnalytics.modeling.update` | 204 | 5 |
+| [Delete Column](delete-column.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}` | `deleteColumn` | `ZohoAnalytics.modeling.delete` | 204 | 10 |
+| [Hide Columns](hide-columns.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/hide` | `hideColumns` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Show Columns](show-columns.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/show` | `showColumns` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Get Column Dependents](get-column-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/dependents` | `getColumnDependents` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
+| [Sort Data by Columns](sort-data-by-columns.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data/sort` | `sortDataByColumns` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Reorder Columns](reorder-columns.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/reorder` | `reorderColumns` | `ZohoAnalytics.modeling.update` | 204 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

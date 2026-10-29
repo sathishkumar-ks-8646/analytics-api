@@ -20,12 +20,12 @@ The two halves are not independent. `accessType` sets a ceiling, and a permissio
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Custom Roles](#1-get-custom-roles) | GET | `/restapi/v2/orgs/roles` |
-| 2 | [Create Custom Role](#2-create-custom-role) | POST | `/restapi/v2/orgs/roles` |
-| 3 | [Update Custom Role](#3-update-custom-role) | PUT | `/restapi/v2/orgs/roles/<role-id>` |
-| 4 | [Delete Custom Role](#4-delete-custom-role) | DELETE | `/restapi/v2/orgs/roles/<role-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Custom Roles](#1-get-custom-roles) | GET | `/restapi/v2/orgs/roles` | 1 |
+| 2 | [Create Custom Role](#2-create-custom-role) | POST | `/restapi/v2/orgs/roles` | 1 |
+| 3 | [Update Custom Role](#3-update-custom-role) | PUT | `/restapi/v2/orgs/roles/<role-id>` | 1 |
+| 4 | [Delete Custom Role](#4-delete-custom-role) | DELETE | `/restapi/v2/orgs/roles/<role-id>` | 1 |
 
 > Notes that apply to all four APIs:
 > - All require the `ZANALYTICS-ORGID` header.
@@ -226,6 +226,8 @@ Returns every custom role defined in the organization, with its full permission 
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
+| **API Units** | 1 unit per request — gateway action `GET_ROLES` (api-id `6014`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 This API takes no path parameters. The organization is identified by the `ZANALYTICS-ORGID` header.
 
@@ -412,6 +414,8 @@ Creates one custom role in the organization.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | `200 OK` with a JSON body carrying `data.roleId` |
+| **API Units** | 1 unit per request — gateway action `CREATE_ROLE` (api-id `6015`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 This API takes no path parameters.
 
@@ -710,6 +714,8 @@ Renames a custom role, replaces its access type and permissions, or both.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 1 unit per request — gateway action `UPDATE_ROLE` (api-id `6016`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -956,6 +962,8 @@ Deletes a custom role definition.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 1 unit per request — gateway action `DELETE_ROLE` (api-id `6017`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -1266,3 +1274,37 @@ Every recognised permission key, by group. All are booleans, and **an omitted ke
 | – | – | ✓ | `7580` |
 | ✓ | ✓ | – | `7580` |
 | ✓ | – | ✓ | `7580` |
+
+---
+
+## Appendix H – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Custom Roles](#1-get-custom-roles) | `GET_ROLES` (6014) | METADATA | 1 | per request |
+| 2 | [Create Custom Role](#2-create-custom-role) | `CREATE_ROLE` (6015) | METADATA | 1 | per request |
+| 3 | [Update Custom Role](#3-update-custom-role) | `UPDATE_ROLE` (6016) | METADATA | 1 | per request |
+| 4 | [Delete Custom Role](#4-delete-custom-role) | `DELETE_ROLE` (6017) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

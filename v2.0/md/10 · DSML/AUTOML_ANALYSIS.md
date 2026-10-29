@@ -33,19 +33,19 @@ Workspace
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get AutoML Analysis In Org](#1-get-automl-analysis-in-org) | GET | `/restapi/v2/automl/analysis` |
-| 2 | [Get AutoML Analysis In Workspace](#2-get-automl-analysis-in-workspace) | GET | `/restapi/v2/automl/workspaces/<workspace-id>/analysis` |
-| 3 | [Get AutoML Analysis Details](#3-get-automl-analysis-details) | GET | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>` |
-| 4 | [Get Deployments For A Model](#4-get-deployments-for-a-model) | GET | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/models/<model-id>/deployments` |
-| 5 | [Create AutoML Analysis](#5-create-automl-analysis) | POST | `/restapi/v2/automl/workspaces/<workspace-id>/analysis` |
-| 6 | [Delete AutoML Analysis](#6-delete-automl-analysis) | DELETE | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>` |
-| 7 | [Delete AutoML Analysis Model](#7-delete-automl-analysis-model) | DELETE | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/models/<model-id>` |
-| 8 | [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) | POST | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/models/<model-id>/deployments` |
-| 9 | [Run AutoML Analysis](#9-run-automl-analysis) | POST | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/deployments/<deployment-id>/execute` |
-| 10 | [Delete AutoML Analysis Model Deployment](#10-delete-automl-analysis-model-deployment) | DELETE | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/deployments/<deployment-id>` |
-| 11 | [AutoML What If Analysis](#11-automl-what-if-analysis) | POST | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/models/<model-id>/whatif` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get AutoML Analysis In Org](#1-get-automl-analysis-in-org) | GET | `/restapi/v2/automl/analysis` | 2 |
+| 2 | [Get AutoML Analysis In Workspace](#2-get-automl-analysis-in-workspace) | GET | `/restapi/v2/automl/workspaces/<workspace-id>/analysis` | 1 |
+| 3 | [Get AutoML Analysis Details](#3-get-automl-analysis-details) | GET | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>` | 1 |
+| 4 | [Get Deployments For A Model](#4-get-deployments-for-a-model) | GET | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/models/<model-id>/deployments` | 1 |
+| 5 | [Create AutoML Analysis](#5-create-automl-analysis) | POST | `/restapi/v2/automl/workspaces/<workspace-id>/analysis` | 3 |
+| 6 | [Delete AutoML Analysis](#6-delete-automl-analysis) | DELETE | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>` | 2 |
+| 7 | [Delete AutoML Analysis Model](#7-delete-automl-analysis-model) | DELETE | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/models/<model-id>` | 2 |
+| 8 | [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) | POST | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/models/<model-id>/deployments` | 3 |
+| 9 | [Run AutoML Analysis](#9-run-automl-analysis) | POST | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/deployments/<deployment-id>/execute` | 2 |
+| 10 | [Delete AutoML Analysis Model Deployment](#10-delete-automl-analysis-model-deployment) | DELETE | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/deployments/<deployment-id>` | 2 |
+| 11 | [AutoML What If Analysis](#11-automl-what-if-analysis) | POST | `/restapi/v2/automl/workspaces/<workspace-id>/analysis/<analysis-id>/models/<model-id>/whatif` | 1 |
 
 ---
 
@@ -163,6 +163,8 @@ Returns every AutoML analysis across **all workspaces** in the organization, eac
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID whose analyses are listed. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organization. A Workspace Admin is **not** sufficient. |
+| **API Units** | 2 units per request — gateway action `GET_AUTOML_ANALYSIS_IN_ORGANIZATION` (api-id `3054`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. The path has no workspace segment.
 
@@ -296,6 +298,8 @@ Returns every AutoML analysis defined in one workspace. Identical to [Get AutoML
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_AUTOML_ANALYSIS_IN_Workspace` (api-id `3055`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -425,6 +429,8 @@ Returns the full definition of one analysis **together with every model trained 
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_AUTOML_ANALYSIS_DETAILS` (api-id `3056`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -633,6 +639,8 @@ Returns the deployment configured for a model — its input and output tables, s
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 1 unit per request — gateway action `GET_DEPLOYMENTS_FOR_A_MODEL` (api-id `3057`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -789,6 +797,8 @@ Creates an analysis and **immediately starts training one model per configured a
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 3 units per request — gateway action `CREATE_AUTOML_ANALYSIS` (api-id `2065`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1076,6 +1086,8 @@ Deletes an analysis **and everything beneath it** — all its models, and all de
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 2 units per request — gateway action `DELETE_AUTOML_ANALYSIS` (api-id `2066`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -1176,6 +1188,8 @@ Deletes one model from an analysis, along with the deployment attached to it. Th
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 2 units per request — gateway action `DELETE_AUTOML_ANALYSIS_MODEL` (api-id `2067`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -1263,6 +1277,8 @@ Binds a trained model to an input table and an output table so that predictions 
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 3 units per request — gateway action `CREATE_AUTOML_ANALYSIS_DEPLOYMENT` (api-id `2068`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1523,6 +1539,8 @@ Triggers a deployment immediately — the "run now" action. Scores the input tab
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 2 units per request — gateway action `RUN_AUTOML_ANALYSIS_DEPLOYMENT` (api-id `2069`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. Note that the path segment is `/deployments/<deployment-id>/execute` — the **model ID does not appear**, unlike the deployment-creation path.
 
@@ -1634,6 +1652,8 @@ Deletes a deployment. The model becomes deployable again; the analysis, the mode
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 2 units per request — gateway action `DELETE_AUTOML_ANALYSIS_DEPLOYMENT` (api-id `2070`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. As with [Run AutoML Analysis](#9-run-automl-analysis), the path addresses the deployment under the **analysis**, not under the model.
 
@@ -1721,6 +1741,8 @@ Generates a **single prediction for a hypothetical set of feature values** — a
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or the Workspace Admin (owner) of the specified workspace. |
+| **API Units** | 1 unit per request — gateway action `AUTOML_WHAT_IF_ANALYSIS` (api-id `2071`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -2051,3 +2073,44 @@ CONFIG={"name":"PricePredictionAnalysis","trainingTableId":137687000000061002,"p
 | **Empty array, never a missing key** | `data.analysis` is always present in both list APIs, empty (`[]`) when there is nothing to report. |
 | **Create responses return IDs only** | [Create AutoML Analysis](#5-create-automl-analysis) returns just `data.id`, and [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) just `deploymentId` and `outputTableId`. Neither echoes the configuration that was sent — confirm it with the corresponding read API. |
 | **Write-only configuration** | `algorithms` hyperparameters are readable back through `models[].algorithm`, but a deployment's `scheduleDetails`, `matchingColumns`, and `timezone` are never returned by any API. Retain your own copy if you need to clone or reproduce a deployment. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get AutoML Analysis In Org](#1-get-automl-analysis-in-org) | `GET_AUTOML_ANALYSIS_IN_ORGANIZATION` (3054) | METADATA | 2 | per request |
+| 2 | [Get AutoML Analysis In Workspace](#2-get-automl-analysis-in-workspace) | `GET_AUTOML_ANALYSIS_IN_Workspace` (3055) | METADATA | 1 | per request |
+| 3 | [Get AutoML Analysis Details](#3-get-automl-analysis-details) | `GET_AUTOML_ANALYSIS_DETAILS` (3056) | METADATA | 1 | per request |
+| 4 | [Get Deployments For A Model](#4-get-deployments-for-a-model) | `GET_DEPLOYMENTS_FOR_A_MODEL` (3057) | METADATA | 1 | per request |
+| 5 | [Create AutoML Analysis](#5-create-automl-analysis) | `CREATE_AUTOML_ANALYSIS` (2065) | METADATA | 3 | per request |
+| 6 | [Delete AutoML Analysis](#6-delete-automl-analysis) | `DELETE_AUTOML_ANALYSIS` (2066) | METADATA | 2 | per request |
+| 7 | [Delete AutoML Analysis Model](#7-delete-automl-analysis-model) | `DELETE_AUTOML_ANALYSIS_MODEL` (2067) | METADATA | 2 | per request |
+| 8 | [Create AutoML Analysis Deployment](#8-create-automl-analysis-deployment) | `CREATE_AUTOML_ANALYSIS_DEPLOYMENT` (2068) | METADATA | 3 | per request |
+| 9 | [Run AutoML Analysis](#9-run-automl-analysis) | `RUN_AUTOML_ANALYSIS_DEPLOYMENT` (2069) | METADATA | 2 | per request |
+| 10 | [Delete AutoML Analysis Model Deployment](#10-delete-automl-analysis-model-deployment) | `DELETE_AUTOML_ANALYSIS_DEPLOYMENT` (2070) | METADATA | 2 | per request |
+| 11 | [AutoML What If Analysis](#11-automl-what-if-analysis) | `AUTOML_WHAT_IF_ANALYSIS` (2071) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

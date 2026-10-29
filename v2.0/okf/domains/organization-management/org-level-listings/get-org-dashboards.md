@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/orgs/dashboards"
   domain: organization-management
   group: org-level-listings
+  api_units:
+    api_id: 3044
+    action: GET_ORG_DASHBOARDS
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -85,6 +93,8 @@ Visibility follows the permissions of the caller: a dashboard is returned only w
 | Permission required | The authenticated user must be a member of the organisation. Only dashboards the user may read are returned. Not available on Client Portal / White Label domains (7301). See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_ORG_DASHBOARDS` (api-id `3044`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`org-management-grouped-api.json`](../../../references/openapi/org-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1orgs~1dashboards/get`; CONFIG schema `GetOrgDashboardsConfig`; response schema `GetOrgDashboardsResponse` |
 
 # Request
@@ -372,3 +382,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Org Workspaces](get-org-workspaces.md), [Get Org Recent Items](get-org-recent-items.md).
 - [SDK examples](../../../sdk-examples/organization-management/org-level-listings/get-org-dashboards.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

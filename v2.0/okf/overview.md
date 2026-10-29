@@ -35,6 +35,7 @@ This bundle documents **168 endpoints** in **10 domains** and **33 API groups**.
 | **Authentication** | `Authorization: Zoho-oauthtoken <access-token>` on every call; the token must carry the scope the endpoint declares. | [Authentication](foundations/authentication.md), [OAuth scopes](foundations/oauth-scopes.md) |
 | **Organization header** | `ZANALYTICS-ORGID: <org-id>` on every call except the few user-scoped ones. | [Request conventions](foundations/request-conventions.md), [Identifiers](foundations/identifiers.md) |
 | **CONFIG parameter** | Structured input is one JSON object named `CONFIG`: URL-encoded query parameter on GET, form field on POST/PUT/DELETE, form part on multipart uploads. | [Request conventions](foundations/request-conventions.md#the-config-parameter) |
+| **API units** | Every call deducts API units from the organization plan allowance (`0` to `25` per request, or a per-1000-row rate for bulk operations) and counts against a per-minute ceiling for its unit category: `DML` 100/min, `BULK` 40/min, `METADATA` 60/min. | [API units](foundations/api-units.md), [Rate limits](foundations/rate-limits-and-quotas.md) |
 | **Response envelope** | Success is HTTP 200 with `{"status":"success","summary":...,"data":{...}}` or HTTP 204 with no body; failure is HTTP 4xx/5xx with `{"status":"failure","summary":"<CONSTANT>","data":{"errorCode":<int>,"errorMessage":"..."}}`. | [Response envelope](foundations/response-envelope.md), [Error code catalog](foundations/error-codes.md) |
 
 # Object Model in One Paragraph

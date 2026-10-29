@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data"
   domain: data-operations
   group: async-data-export
+  api_units:
+    api_id: 7001
+    action: INITIATE_EXPORT
+    category: BULK
+    units: 0
+    units_basis: per_request
+    units_variable: true
+    units_note: "Variable - the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)"
+    category_frequency_limit: 40 requests/minute
   oauth_scopes:
     - ZohoAnalytics.data.read
   org_id_header: required
@@ -134,6 +143,8 @@ Limitations:
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner, or any user with Export permission on the view. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `application/json` |
+| API units | Variable - the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard) - action `INITIATE_EXPORT` (api-id `7001`), **BULK** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 40 requests/minute across all **BULK**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-operations-grouped-api.json`](../../../references/openapi/data-operations-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1views~1{view-id}~1data/get`; CONFIG schema `ExportJobConfigViewId`; response schema `ExportJobCreationResponse` |
 
 # Request
@@ -376,3 +387,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Export Job using SQL Query (Asynchronous)](create-export-job-sql-query.md), [Get Export Job Details](get-export-job-details.md), [Download Exported Data](download-exported-data.md).
 - [SDK examples](../../../sdk-examples/data-operations/async-data-export/create-export-job-view-id.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

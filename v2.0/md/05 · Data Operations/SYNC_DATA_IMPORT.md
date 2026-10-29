@@ -31,10 +31,10 @@ The two APIs here differ only in their **destination**:
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) | POST | `/restapi/v2/workspaces/<workspace-id>/data` |
-| 2 | [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/data` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) | POST | `/restapi/v2/workspaces/<workspace-id>/data` | variable |
+| 2 | [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/data` | variable |
 
 > **Note on naming:** Per the request for this batch, "Import Data" is documented as **"Import Data into a New Table (Synchronous)"** and "Exist Import" as **"Import Data into an Existing Table (Synchronous)"**.
 
@@ -139,6 +139,8 @@ Creates a new table in the workspace from the uploaded data and returns the new 
 | **OAuth Scope** | `ZohoAnalytics.data.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Table permission on the workspace. |
+| **API Units** | Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`) — gateway action `INITIATE_IMPORT` (api-id `8001`), **BULK** unit category. |
+| **Frequency Limit** | 40 requests/minute shared across every **BULK**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -469,6 +471,8 @@ Loads the uploaded data into an existing table, appending, replacing, or merging
 | **OAuth Scope** | `ZohoAnalytics.data.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user holding the import permission that matches the requested `importType` — see [Permission Model](#permission-model). |
+| **API Units** | Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`) — gateway action `INITIATE_IMPORT` (api-id `8001`), **BULK** unit category. |
+| **Frequency Limit** | 40 requests/minute shared across every **BULK**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -864,3 +868,39 @@ CONFIG=%7B%22tableName%22%3A%22SalesData%22%2C%22fileType%22%3A%22CSV%22%2C%22au
 | **`columnDetails` uses display labels, not type codes** | Values are human-readable names such as `"Plain Text"`, `"Positive Number"`, `"Decimal Number"`, `"Currency"`, `"Percentage"`, `"Date"`, `"E-Mail"`, `"URL"`, `"Geo Column"` — not the `dataType` codes accepted by `columnDataTypes` on the request side. The two vocabularies do not round-trip. |
 | **Counts are native numbers** | `totalColumnCount`, `selectedColumnCount`, `totalRowCount`, `successRowCount`, and `warnings` are genuine JSON numbers; `viewId` is a string. |
 | **`importType` is echoed in upper case** | Regardless of the casing sent, and including the synthetic `"APPEND"` reported by the new-table import. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Import Data into a New Table (Synchronous)](#1-import-data-into-a-new-table-synchronous) | `INITIATE_IMPORT` (8001) | BULK | variable | depends on payload — see the notes below |
+| 2 | [Import Data into an Existing Table (Synchronous)](#2-import-data-into-an-existing-table-synchronous) | `INITIATE_IMPORT` (8001) | BULK | variable | depends on payload — see the notes below |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | Yes |
+| `METADATA` | 60 | — |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### Variable costs in this document
+
+- **Import Data into a New Table (Synchronous)** (`INITIATE_IMPORT`, 8001): Variable — units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

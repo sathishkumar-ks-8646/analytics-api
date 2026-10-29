@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/alerts"
   domain: schedules-and-alerts
   group: data-alerts
+  api_units:
+    api_id: 3091
+    action: GET_ALERTS_IN_WORKSPACE
+    category: METADATA
+    units: 2
+    units_basis: per_request
+    units_note: "2 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -72,6 +80,8 @@ Returns every alert defined anywhere in the workspace, with its name, the view i
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or a custom-role user whose role has the Manage Data Alerts permission on this workspace. The check is workspace-wide — see Permission Model. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 2 units per request - action `GET_ALERTS_IN_WORKSPACE` (api-id `3091`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`schedules-alerts-grouped-api.json`](../../../references/openapi/schedules-alerts-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts/get`; response schema `GetAlertsInWorkspaceResponse` |
 
 # Request
@@ -260,3 +270,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Alerts In View](get-alerts-in-view.md), [Get View Metadata For Alert](get-view-metadata-for-alert.md), [Get Alert Configuration](get-alert-configuration.md), [Create Alert](create-alert.md), [Update Alert](update-alert.md), [Delete Alerts](delete-alerts.md), [Change Alert Status](change-alert-status.md), [Run Alert](run-alert.md), [Get Alert Events](get-alert-events.md).
 - [SDK examples](../../../sdk-examples/schedules-and-alerts/data-alerts/get-alerts-in-workspace.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

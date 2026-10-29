@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/slides/{slide-id}"
   domain: share-and-publish
   group: slideshow-management
+  api_units:
+    api_id: 5010
+    action: DELETE_SLIDE_SHOW
+    category: METADATA
+    units: 2
+    units_basis: per_request
+    units_note: "2 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.embed.delete
   org_id_header: required
@@ -71,6 +79,8 @@ Deletes a slideshow from the workspace. The views that were part of it are untou
 | Permission required | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Slideshow permission on the workspace. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 204 with no body |
+| API units | 2 units per request - action `DELETE_SLIDE_SHOW` (api-id `5010`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`share-publish-grouped-api.json`](../../../references/openapi/share-publish-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1slides~1{slide-id}/delete` |
 
 # Request
@@ -199,3 +209,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Slide List](get-slideshows.md), [Get Slide URL](get-slideshow-url.md), [Get Slide Info](get-slideshow-details.md), [Create Slide Show](create-slideshow.md), [Update Slide Show](update-slideshow.md).
 - [SDK examples](../../../sdk-examples/share-and-publish/slideshow-management/delete-slideshow.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

@@ -10,6 +10,20 @@
       "url": "https://analyticsapi.zoho.com"
     }
   ],
+  "x-api-unit-categories": {
+    "description": "Every call deducts API units from the organization's plan allowance and is counted against the per-minute request ceiling of its unit category. A unit cost with a row basis is charged pro rata as (rowsProcessed / rowsBasis) * units, without rounding up to a whole block. The per-minute ceilings below are the base configuration; an organization's effective ceiling is the base value scaled by a plan-specific multiplier.",
+    "categories": {
+      "DML": {
+        "frequencyLimitPerMinute": 100
+      },
+      "BULK": {
+        "frequencyLimitPerMinute": 40
+      },
+      "METADATA": {
+        "frequencyLimitPerMinute": 60
+      }
+    }
+  },
   "tags": [
     {
       "name": "Workspace Operations",
@@ -43,7 +57,7 @@
           "Workspace Operations"
         ],
         "summary": "Create Workspace",
-        "description": "Creates a new empty workspace in the specified organisation. The workspace is created with no tables, views, or users — content must be added through subsequent APIs.\n\n**Notes**\n\n> Note:\n>\n> - The **workspaceName** should be unique within the organization. Creating a workspace with a name that is already in use fails with error code 7111.\n> - The **workspaceName** can hold a maximum of 50 characters and the **workspaceDesc** can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.\n> - When **workspaceDesc** is omitted, the description is stored as an empty string. It can be updated later using the Rename Workspace API.\n> - The response data holds only the **workspaceId**. Use the Get Workspace Info or the Get Org Workspaces API to retrieve the complete workspace record.\n> - The workspace secret key is not generated at creation time. Use the Get Workspace Secret Key API when the key is needed for a cross-organization copy.\n> - The number of workspaces that can be created depends on the subscription plan of the organization. Reaching the limit fails with error code 7951.\n> - Organization Admins are allowed to create workspaces within their organization.\n> - The workspace is created with no tables or views. The content has to be added using the subsequent APIs.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Organization Admin privileges in the target organisation. |\n| 7951 | The organisation has reached its workspace creation limit based on the current subscription plan. | Upgrade the plan or delete unused workspaces before creating a new one. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Creates a new empty workspace in the specified organisation. The workspace is created with no tables, views, or users — content must be added through subsequent APIs.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - The **workspaceName** should be unique within the organization. Creating a workspace with a name that is already in use fails with error code 7111.\n> - The **workspaceName** can hold a maximum of 50 characters and the **workspaceDesc** can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.\n> - When **workspaceDesc** is omitted, the description is stored as an empty string. It can be updated later using the Rename Workspace API.\n> - The response data holds only the **workspaceId**. Use the Get Workspace Info or the Get Org Workspaces API to retrieve the complete workspace record.\n> - The workspace secret key is not generated at creation time. Use the Get Workspace Secret Key API when the key is needed for a cross-organization copy.\n> - The number of workspaces that can be created depends on the subscription plan of the organization. Reaching the limit fails with error code 7951.\n> - Organization Admins are allowed to create workspaces within their organization.\n> - The workspace is created with no tables or views. The content has to be added using the subsequent APIs.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Organization Admin privileges in the target organisation. |\n| 7951 | The organisation has reached its workspace creation limit based on the current subscription plan. | Upgrade the plan or delete unused workspaces before creating a new one. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "createWorkspace",
         "security": [
           {
@@ -131,6 +145,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2001,
+          "action": "CREATE_WORKSPACE",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -140,7 +163,7 @@
           "Workspace Operations"
         ],
         "summary": "Get Workspace Info",
-        "description": "Returns metadata for the specified workspace. The calling user must have at least some level of access to the workspace (Workspace Admin, or any view in the workspace shared with them). An optional withUserRoleInfo flag enriches the response with the calling user's role details within the workspace.\n\nThe optional `withUserRoleInfo` key enriches the response with the role details of the requesting user within the workspace.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | User does not have any access to the specified workspace. The user must be a workspace admin or have at least one view shared with them in this workspace. | Verify the user has been added to the workspace or has a view shared with them. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns metadata for the specified workspace. The calling user must have at least some level of access to the workspace (Workspace Admin, or any view in the workspace shared with them). An optional withUserRoleInfo flag enriches the response with the calling user's role details within the workspace.\n\nThe optional `withUserRoleInfo` key enriches the response with the role details of the requesting user within the workspace.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | User does not have any access to the specified workspace. The user must be a workspace admin or have at least one view shared with them in this workspace. | Verify the user has been added to the workspace or has a view shared with them. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getWorkspaceDetails",
         "security": [
           {
@@ -267,6 +290,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3012,
+          "action": "GET_WORKSPACE_DETAILS",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "post": {
@@ -274,7 +306,7 @@
           "Workspace Operations"
         ],
         "summary": "Copy Workspace",
-        "description": "Creates a copy of an existing workspace. The copy can be placed in the same organisation or a different organisation. When copying to a different organisation, the workspace's secret key (workspaceKey) must be provided for authorisation. The copy can optionally include all table data and/or preserve import source connections.\n\nWhen the destination organization differs from the organization that owns the source workspace, the secret key of the source workspace has to be provided as `workspaceKey` to authorize the copy. The key can be obtained using the Get Workspace Secret Key API. The requesting user should be an Account Admin or an Organization Admin of the destination organization.\n\n> **Rate limit:** Only one copy operation is allowed to run at a time per organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Source workspace not found. | Verify of the source workspace. |\n| 7301 | User is not an Account Admin or Organization Admin of the destination organisation. | The caller must be an admin of the destination org, not just the source org. |\n| 7951 | The destination organisation has reached its workspace limit. | Upgrade the destination org's plan or remove unused workspaces. |\n| 8024 | Cross-org copy attempted without a valid workspaceKey, or the provided key does not match the source workspace's secret key. | Obtain the correct workspaceKey from the source workspace owner using Get Workspace Secret Key, then retry. For same-org copies, omit workspaceKey. |\n| 8058 | The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist. | Provide a valid, existing organisation ID in ZANALYTICS-DEST-ORGID. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Creates a copy of an existing workspace. The copy can be placed in the same organisation or a different organisation. When copying to a different organisation, the workspace's secret key (workspaceKey) must be provided for authorisation. The copy can optionally include all table data and/or preserve import source connections.\n\nWhen the destination organization differs from the organization that owns the source workspace, the secret key of the source workspace has to be provided as `workspaceKey` to authorize the copy. The key can be obtained using the Get Workspace Secret Key API. The requesting user should be an Account Admin or an Organization Admin of the destination organization.\n\n> **Rate limit:** Only one copy operation is allowed to run at a time per organization.\n\n**Rate limit**\n\n- Costs 25 API units per request when copyData is false. When copyData is true, 25 API units plus 1 API unit per 1000 rows copied.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Source workspace not found. | Verify of the source workspace. |\n| 7301 | User is not an Account Admin or Organization Admin of the destination organisation. | The caller must be an admin of the destination org, not just the source org. |\n| 7951 | The destination organisation has reached its workspace limit. | Upgrade the destination org's plan or remove unused workspaces. |\n| 8024 | Cross-org copy attempted without a valid workspaceKey, or the provided key does not match the source workspace's secret key. | Obtain the correct workspaceKey from the source workspace owner using Get Workspace Secret Key, then retry. For same-org copies, omit workspaceKey. |\n| 8058 | The organisation ID provided in ZANALYTICS-DEST-ORGID does not exist. | Provide a valid, existing organisation ID in ZANALYTICS-DEST-ORGID. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "copyWorkspace",
         "security": [
           {
@@ -391,6 +423,16 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2002,
+          "action": "COPY_WORKSPACE_WO_DATA",
+          "category": "METADATA",
+          "units": 25,
+          "unitsBasis": "perRequest",
+          "unitsVariable": true,
+          "unitsNote": "25 units per request when `copyData` is false; when `copyData` is true, 25 units plus 1 unit per 1000 rows copied",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "put": {
@@ -398,7 +440,7 @@
           "Workspace Operations"
         ],
         "summary": "Rename Workspace",
-        "description": "Updates the name and/or description of an existing workspace. Both fields are replaced atomically — if workspaceDesc is omitted, the description is reset to an empty string (the previous value is not preserved).\n\n**Notes**\n\n> Note:\n>\n> - Rename Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - When **workspaceDesc** is omitted, the existing description of the workspace is permanently reset to an empty string. Always pass the current description, read using the Get Workspace Info API, when only the name has to be changed.\n> - Renaming the workspace to its existing name succeeds without an error.\n> - The **workspaceName** should be unique within the organization. Renaming to a name that is already in use fails with error code 7111.\n> - The **workspaceName** can hold a maximum of 50 characters and the **workspaceDesc** can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.\n> - The name and the description are replaced atomically. Both values in the request overwrite the stored values.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7111 | The new workspace name is already used by another workspace in the organisation. | Choose a name not already in use. |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
+        "description": "Updates the name and/or description of an existing workspace. Both fields are replaced atomically — if workspaceDesc is omitted, the description is reset to an empty string (the previous value is not preserved).\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Rename Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - When **workspaceDesc** is omitted, the existing description of the workspace is permanently reset to an empty string. Always pass the current description, read using the Get Workspace Info API, when only the name has to be changed.\n> - Renaming the workspace to its existing name succeeds without an error.\n> - The **workspaceName** should be unique within the organization. Renaming to a name that is already in use fails with error code 7111.\n> - The **workspaceName** can hold a maximum of 50 characters and the **workspaceDesc** can hold a maximum of 250 characters. Exceeding these limits is rejected during parameter validation.\n> - The name and the description are replaced atomically. Both values in the request overwrite the stored values.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7111 | The new workspace name is already used by another workspace in the organisation. | Choose a name not already in use. |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.update. |",
         "operationId": "renameWorkspace",
         "security": [
           {
@@ -479,6 +521,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2004,
+          "action": "RENAME_WORKSPACE",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "delete": {
@@ -486,7 +537,7 @@
           "Workspace Operations"
         ],
         "summary": "Delete Workspace",
-        "description": "Permanently deletes the specified workspace and all of its contents — tables, views, dashboards, formulas, import configurations, and all sharing settings. This operation is irreversible.\n\n**Notes**\n\n> Note:\n>\n> - Delete Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - The deletion is permanent. There is no trash or recycle mechanism for workspaces, and the workspace along with all its views, data, import configurations and sharing settings cannot be recovered.\n> - All the sharing configurations of the workspace are removed. Users who had access to the views in this workspace lose that access at the moment of deletion.\n> - The workspace level admin role of the Workspace Admins is removed. Their organization membership and their access to the other workspaces are not affected.\n> - Any scheduled or in-progress data import job in the workspace is cancelled.\n> - This API accepts an optional CONFIG parameter. No CONFIG key is required for the standard use of this API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
+        "description": "Permanently deletes the specified workspace and all of its contents — tables, views, dashboards, formulas, import configurations, and all sharing settings. This operation is irreversible.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Delete Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - The deletion is permanent. There is no trash or recycle mechanism for workspaces, and the workspace along with all its views, data, import configurations and sharing settings cannot be recovered.\n> - All the sharing configurations of the workspace are removed. Users who had access to the views in this workspace lose that access at the moment of deletion.\n> - The workspace level admin role of the Workspace Admins is removed. Their organization membership and their access to the other workspaces are not affected.\n> - Any scheduled or in-progress data import job in the workspace is cancelled.\n> - This API accepts an optional CONFIG parameter. No CONFIG key is required for the standard use of this API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "operationId": "deleteWorkspace",
         "security": [
           {
@@ -513,6 +564,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2005,
+          "action": "DELETE_WORKSPACE",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -522,7 +582,7 @@
           "Workspace Operations"
         ],
         "summary": "Get Workspace Secret Key",
-        "description": "Returns the secret key for the specified workspace. This key is used as the workspaceKey parameter when performing a cross-organisation Copy Workspace operation — it authorises the copying of the workspace to a different organisation.\n\nThe key can optionally be regenerated, which permanently invalidates the previous key. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.\n\n**Notes**\n\n> Note:\n>\n> - Setting **regenerateKey** to false, which is the default, is safe to invoke repeatedly. The existing key is returned each time, and a key is generated on the first call when none exists.\n> - Setting **regenerateKey** to true invalidates the previous key immediately. A cross-organization copy attempted with the old key after regeneration fails with error code 8024. A copy operation that had already started before the regeneration is not affected, as the key is validated only at the start of the copy.\n> - The workspace secret key is returned only by this API. It is not present in the response of the Get Workspace Info, the Get Org Workspaces or any other API.\n> - Only the Account Admins and the Organization Admins of the organization that owns the workspace can retrieve the key.\n> - As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the secret key for the specified workspace. This key is used as the workspaceKey parameter when performing a cross-organisation Copy Workspace operation — it authorises the copying of the workspace to a different organisation.\n\nThe key can optionally be regenerated, which permanently invalidates the previous key. The requesting user should be an Account Admin or an Organization Admin of the organization that owns the workspace.\n\n**Rate limit**\n\n- Costs 0.5 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Setting **regenerateKey** to false, which is the default, is safe to invoke repeatedly. The existing key is returned each time, and a key is generated on the first call when none exists.\n> - Setting **regenerateKey** to true invalidates the previous key immediately. A cross-organization copy attempted with the old key after regeneration fails with error code 8024. A copy operation that had already started before the regeneration is not affected, as the key is validated only at the start of the copy.\n> - The workspace secret key is returned only by this API. It is not present in the response of the Get Workspace Info, the Get Org Workspaces or any other API.\n> - Only the Account Admins and the Organization Admins of the organization that owns the workspace can retrieve the key.\n> - As this is a GET request, the CONFIG value should be stringified and URL encoded before it is sent.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | User is not an Account Admin or Organization Admin. | Ensure the caller has Account Admin or Org Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getWorkspaceSecretKey",
         "security": [
           {
@@ -596,6 +656,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3011,
+          "action": "GET_WORKSPACE_SECRETKEY",
+          "category": "METADATA",
+          "units": 0.5,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.5 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -605,7 +674,7 @@
           "Workspace Operations"
         ],
         "summary": "Export as Template",
-        "description": "Exports selected views from the specified workspace as a reusable template file. The response is a binary file in .atpt (Zoho Analytics Template) format — not a JSON payload. This file can be imported into another workspace to recreate the selected views and their structural dependencies.\n\nThe template holds the schema definitions of the selected tables and views, the formula and lookup columns, the calculated fields and the view design configurations. The data rows of the source tables are not exported.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7104 | One or more specified view IDs do not exist. | Verify all viewIds are valid using the Get View List API. |\n| 7319 | One or more specified view IDs do not belong to the specified workspace. | Ensure all viewIds belong to the workspace identified by . |\n| 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin. | Ensure the caller has at least Workspace Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Exports selected views from the specified workspace as a reusable template file. The response is a binary file in .atpt (Zoho Analytics Template) format — not a JSON payload. This file can be imported into another workspace to recreate the selected views and their structural dependencies.\n\nThe template holds the schema definitions of the selected tables and views, the formula and lookup columns, the calculated fields and the view design configurations. The data rows of the source tables are not exported.\n\n**Rate limit**\n\n- Costs 5 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7104 | One or more specified view IDs do not exist. | Verify all viewIds are valid using the Get View List API. |\n| 7319 | One or more specified view IDs do not belong to the specified workspace. | Ensure all viewIds belong to the workspace identified by . |\n| 7301 | User is not a Workspace Admin, Account Admin, or Organization Admin. | Ensure the caller has at least Workspace Admin access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "exportAsTemplate",
         "security": [
           {
@@ -684,6 +753,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3032,
+          "action": "EXPORT_AS_TEMPLATE",
+          "category": "METADATA",
+          "units": 5,
+          "unitsBasis": "perRequest",
+          "unitsNote": "5 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -693,7 +771,7 @@
           "Workspace Preferences"
         ],
         "summary": "Add Default Workspace",
-        "description": "Marks the specified workspace as the calling user's default workspace. The default workspace is the one that opens automatically when the user logs in to Zoho Analytics.\n\nA user can hold only one default workspace at a time. When a different workspace is already set as the default, it is replaced silently. Invoking this API on a workspace that is already the default succeeds without error.\n\n**Notes**\n\n> Note:\n>\n> - Add Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - A user can hold only one default workspace at a time. When the user already holds a different workspace as the default, the previous default is replaced silently and no error is raised.\n> - This API is idempotent. Invoking it on a workspace that is already the default workspace of the user succeeds without error and makes no change.\n> - The requesting user should have at least one view of the workspace shared with them. A user with no access to any view of the workspace cannot mark it as the default workspace and the request fails with error code 7301.\n> - The default preference continues to be stored even when the user loses access to the workspace later. However, the workspace is not presented as accessible until the access is restored.\n> - After this API is invoked, the workspace is returned with isDefault as true in the response of the Get Org Workspaces API. Use that API to verify the change.\n> - The preferences are stored per user and per organization. Marking a workspace as the default for one user has no effect on the preferences of any other user.\n> - Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace — no views have been shared with them, and they are not a Workspace Admin. | Ensure the user is a workspace member or has at least one view shared with them before marking it as default. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Marks the specified workspace as the calling user's default workspace. The default workspace is the one that opens automatically when the user logs in to Zoho Analytics.\n\nA user can hold only one default workspace at a time. When a different workspace is already set as the default, it is replaced silently. Invoking this API on a workspace that is already the default succeeds without error.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Add Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - A user can hold only one default workspace at a time. When the user already holds a different workspace as the default, the previous default is replaced silently and no error is raised.\n> - This API is idempotent. Invoking it on a workspace that is already the default workspace of the user succeeds without error and makes no change.\n> - The requesting user should have at least one view of the workspace shared with them. A user with no access to any view of the workspace cannot mark it as the default workspace and the request fails with error code 7301.\n> - The default preference continues to be stored even when the user loses access to the workspace later. However, the workspace is not presented as accessible until the access is restored.\n> - After this API is invoked, the workspace is returned with isDefault as true in the response of the Get Org Workspaces API. Use that API to verify the change.\n> - The preferences are stored per user and per organization. Marking a workspace as the default for one user has no effect on the preferences of any other user.\n> - Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace — no views have been shared with them, and they are not a Workspace Admin. | Ensure the user is a workspace member or has at least one view shared with them before marking it as default. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "operationId": "addDefaultWorkspace",
         "security": [
           {
@@ -720,6 +798,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3019,
+          "action": "ADD_DEFAULT_WORKSPACE",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "delete": {
@@ -727,7 +814,7 @@
           "Workspace Preferences"
         ],
         "summary": "Remove Default Workspace",
-        "description": "Removes the default workspace designation from the specified workspace for the calling user. After this operation, the user has no default workspace set.\n\nUnlike the Add Default Workspace API, this API is not idempotent. When the specified workspace is not the current default workspace of the user, the request fails with error code 7415. Verify the current default using the Get Org Workspaces API, which returns `isDefault` as true for the current default, before invoking this API.\n\n**Notes**\n\n> Note:\n>\n> - Remove Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is not idempotent. When the specified workspace is not the current default workspace of the requesting user, the request fails with error code 7415 instead of succeeding silently.\n> - Use the Get Org Workspaces API to confirm that the target workspace holds isDefault as true before invoking this API.\n> - This behaviour differs from the Add Default Workspace API, which is idempotent, and from the Remove Favourite Workspace API, which succeeds silently when the workspace is not in the favourites.\n> - After the designation is removed, the user holds no default workspace. A new default has to be set explicitly using the Add Default Workspace API.\n> - Invoking this API immediately after the Add Default Workspace API succeeds, as the workspace can be set and unset in sequence.\n> - The requesting user should have at least one view of the workspace shared with them, failing which the request fails with error code 7301.\n> - The preferences are stored per user and per organization. Removing the default designation for one user has no effect on the preferences of any other user.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |\n| 7415 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. | Use Get Org Workspaces to identify the workspace with isDefault: true, then call this API with that workspace ID. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Removes the default workspace designation from the specified workspace for the calling user. After this operation, the user has no default workspace set.\n\nUnlike the Add Default Workspace API, this API is not idempotent. When the specified workspace is not the current default workspace of the user, the request fails with error code 7415. Verify the current default using the Get Org Workspaces API, which returns `isDefault` as true for the current default, before invoking this API.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Remove Default Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is not idempotent. When the specified workspace is not the current default workspace of the requesting user, the request fails with error code 7415 instead of succeeding silently.\n> - Use the Get Org Workspaces API to confirm that the target workspace holds isDefault as true before invoking this API.\n> - This behaviour differs from the Add Default Workspace API, which is idempotent, and from the Remove Favourite Workspace API, which succeeds silently when the workspace is not in the favourites.\n> - After the designation is removed, the user holds no default workspace. A new default has to be set explicitly using the Add Default Workspace API.\n> - Invoking this API immediately after the Add Default Workspace API succeeds, as the workspace can be set and unset in sequence.\n> - The requesting user should have at least one view of the workspace shared with them, failing which the request fails with error code 7301.\n> - The preferences are stored per user and per organization. Removing the default designation for one user has no effect on the preferences of any other user.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |\n| 7415 | The specified workspace is not the calling user's current default workspace. This API does not succeed silently for non-default workspaces. | Use Get Org Workspaces to identify the workspace with isDefault: true, then call this API with that workspace ID. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "operationId": "removeDefaultWorkspace",
         "security": [
           {
@@ -754,6 +841,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3020,
+          "action": "REMOVE_DEFAULT_WORKSPACE",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -763,7 +859,7 @@
           "Workspace Preferences"
         ],
         "summary": "Add Favourite Workspace",
-        "description": "Adds the specified workspace to the calling user's list of favourite workspaces. Favourited workspaces are typically surfaced at the top of workspace listings for quick navigation.\n\nA user can mark any number of workspaces as favourite, as there is no exclusivity constraint. When the workspace is already present in the favourites, the request succeeds silently without error.\n\n**Notes**\n\n> Note:\n>\n> - Add Favourite Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is idempotent. When the workspace is already present in the favourites of the user, the request succeeds without error and no duplicate entry is created.\n> - There is no limit on the number of workspaces a user can mark as favourite. Unlike the default workspace, the favourite preference carries no exclusivity constraint.\n> - The requesting user should have at least one view of the workspace shared with them. Access is checked at the workspace level and no permission beyond basic read access is required. A user with no access fails with error code 7301.\n> - The favourite preference is not exposed as a distinct field in the response of the standard workspace list APIs.\n> - The preferences are stored per user and per organization. Adding a workspace to the favourites of one user has no effect on the preferences of any other user.\n> - Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace. | Ensure the user is a workspace member or has at least one view shared with them before adding it to favourites. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Adds the specified workspace to the calling user's list of favourite workspaces. Favourited workspaces are typically surfaced at the top of workspace listings for quick navigation.\n\nA user can mark any number of workspaces as favourite, as there is no exclusivity constraint. When the workspace is already present in the favourites, the request succeeds silently without error.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Add Favourite Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is idempotent. When the workspace is already present in the favourites of the user, the request succeeds without error and no duplicate entry is created.\n> - There is no limit on the number of workspaces a user can mark as favourite. Unlike the default workspace, the favourite preference carries no exclusivity constraint.\n> - The requesting user should have at least one view of the workspace shared with them. Access is checked at the workspace level and no permission beyond basic read access is required. A user with no access fails with error code 7301.\n> - The favourite preference is not exposed as a distinct field in the response of the standard workspace list APIs.\n> - The preferences are stored per user and per organization. Adding a workspace to the favourites of one user has no effect on the preferences of any other user.\n> - Client Portal users and standard Zoho Analytics users maintain separate preference stores, even when they access the same workspace. A Client Portal user should access the workspace through the portal domain in which it is shared with them, failing which the access check fails with error code 7301.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace. | Ensure the user is a workspace member or has at least one view shared with them before adding it to favourites. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "operationId": "addFavoriteWorkspace",
         "security": [
           {
@@ -790,6 +886,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3015,
+          "action": "ADD_FAVOURITE_WORKSPACE",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "delete": {
@@ -797,7 +902,7 @@
           "Workspace Preferences"
         ],
         "summary": "Remove Favourite Workspace",
-        "description": "Removes the specified workspace from the calling user's list of favourite workspaces. If the workspace is not currently in the user's favourites, this call succeeds silently without error (idempotent).\n\nThis API is idempotent. When the workspace is not present in the favourites of the user, the request succeeds silently without error. This differs from the Remove Default Workspace API, which fails with error code 7415 in the equivalent situation.\n\n**Notes**\n\n> Note:\n>\n> - Remove Favourite Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is idempotent. When the workspace is not present in the favourites of the user, the request succeeds silently without error.\n> - This behaviour differs from the Remove Default Workspace API, which fails with error code 7415 when the workspace is not the current default. This is the key behavioural difference between the two remove operations.\n> - The requesting user should have at least one view of the workspace shared with them, failing which the request fails with error code 7301.\n> - The preferences are stored per user and per organization. Removing a workspace from the favourites of one user has no effect on the preferences of any other user.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Removes the specified workspace from the calling user's list of favourite workspaces. If the workspace is not currently in the user's favourites, this call succeeds silently without error (idempotent).\n\nThis API is idempotent. When the workspace is not present in the favourites of the user, the request succeeds silently without error. This differs from the Remove Default Workspace API, which fails with error code 7415 in the equivalent situation.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Remove Favourite Workspace returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - This API is idempotent. When the workspace is not present in the favourites of the user, the request succeeds silently without error.\n> - This behaviour differs from the Remove Default Workspace API, which fails with error code 7415 when the workspace is not the current default. This is the key behavioural difference between the two remove operations.\n> - The requesting user should have at least one view of the workspace shared with them, failing which the request fails with error code 7301.\n> - The preferences are stored per user and per organization. Removing a workspace from the favourites of one user has no effect on the preferences of any other user.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The user has no access to the specified workspace. | Ensure the user has at least one view shared with them in the workspace. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "operationId": "removeFavoriteWorkspace",
         "security": [
           {
@@ -824,6 +929,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3016,
+          "action": "REMOVE_FAVOURITE_WORKSPACE",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -833,7 +947,7 @@
           "Domain & White Label"
         ],
         "summary": "Enable Workspace for Domain Access",
-        "description": "Enables the specified workspace for access through the organisation's White Label / Client Portal domain. Once enabled, the workspace becomes visible and accessible to users who log in via the configured custom domain URL.\n\nThe portal domain is resolved automatically from the White Label configuration of the Account Admin of the workspace, so no domain name parameter is required. Invoking this API on a workspace that is already enabled for domain access fails with error code 12049.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The caller is not an Account Admin or Organization Admin of the workspace's organisation, or the workspace's Account Admin does not have a White Label / Client Portal domain configured. | Ensure the caller is an org admin and that the organisation has an active White Label domain setup. |\n| 12049 | The workspace is already enabled for White Label domain access. Calling Enable on an already-enabled workspace is not idempotent. | Check the current domain access state before calling. Use Disable first if you need to re-enable (e.g., after domain reconfiguration). |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Enables the specified workspace for access through the organisation's White Label / Client Portal domain. Once enabled, the workspace becomes visible and accessible to users who log in via the configured custom domain URL.\n\nThe portal domain is resolved automatically from the White Label configuration of the Account Admin of the workspace, so no domain name parameter is required. Invoking this API on a workspace that is already enabled for domain access fails with error code 12049.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The caller is not an Account Admin or Organization Admin of the workspace's organisation, or the workspace's Account Admin does not have a White Label / Client Portal domain configured. | Ensure the caller is an org admin and that the organisation has an active White Label domain setup. |\n| 12049 | The workspace is already enabled for White Label domain access. Calling Enable on an already-enabled workspace is not idempotent. | Check the current domain access state before calling. Use Disable first if you need to re-enable (e.g., after domain reconfiguration). |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "operationId": "enableDomainWorkspace",
         "security": [
           {
@@ -860,6 +974,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3022,
+          "action": "ENABLE_DOMAIN_WORKSPACE",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "delete": {
@@ -867,7 +990,7 @@
           "Domain & White Label"
         ],
         "summary": "Disable Workspace for Domain Access",
-        "description": "Removes the specified workspace from the organisation's White Label / Client Portal domain. Once disabled, the workspace is no longer accessible to users who log in via the custom portal domain URL. Users who had access via the portal immediately lose that access.\n\nDisabling gates only the access through the portal domain. It does not remove any view level sharing or user membership, and the workspace remains fully accessible through the standard Zoho Analytics URL for the non-portal users. Invoking this API on a workspace that is not currently enabled for domain access fails with error code 12050.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The caller is not an Account Admin or Organization Admin of the workspace's organisation, or the organisation has no White Label domain. | Ensure the caller has admin access and the org has a configured White Label domain. |\n| 12050 | The workspace is not currently enabled for White Label domain access. Calling Disable on an already-disabled workspace is not idempotent. | Verify the current state before calling. Only call Disable on workspaces previously enabled via Enable Workspace for Domain Access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
+        "description": "Removes the specified workspace from the organisation's White Label / Client Portal domain. Once disabled, the workspace is no longer accessible to users who log in via the custom portal domain URL. Users who had access via the portal immediately lose that access.\n\nDisabling gates only the access through the portal domain. It does not remove any view level sharing or user membership, and the workspace remains fully accessible through the standard Zoho Analytics URL for the non-portal users. Invoking this API on a workspace that is not currently enabled for domain access fails with error code 12050.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | Workspace not found. | Verify . |\n| 7301 | The caller is not an Account Admin or Organization Admin of the workspace's organisation, or the organisation has no White Label domain. | Ensure the caller has admin access and the org has a configured White Label domain. |\n| 12050 | The workspace is not currently enabled for White Label domain access. Calling Disable on an already-disabled workspace is not idempotent. | Verify the current state before calling. Only call Disable on workspaces previously enabled via Enable Workspace for Domain Access. |\n| 8535 | Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.update. |",
         "operationId": "disableDomainWorkspace",
         "security": [
           {
@@ -894,6 +1017,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3023,
+          "action": "DISABLE_DOMAIN_WORKSPACE",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -903,7 +1035,7 @@
           "Workspace Folders"
         ],
         "summary": "Get Folder List",
-        "description": "Returns all folders in the specified workspace, including their names, descriptions, display order, default status, and parent folder references. Shared users and group members receive a filtered list containing only the folders that include at least one view they have access to.\n\nWorkspace Admins receive every folder of the workspace. Shared users and group members receive a filtered list holding only the folders that contain at least one view they have access to.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin, or has at least READ access to one or more views in the workspace. |",
+        "description": "Returns all folders in the specified workspace, including their names, descriptions, display order, default status, and parent folder references. Shared users and group members receive a filtered list containing only the folders that include at least one view they have access to.\n\nWorkspace Admins receive every folder of the workspace. Shared users and group members receive a filtered list holding only the folders that contain at least one view they have access to.\n\n**Rate limit**\n\n- Costs 0.1 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin, or has at least READ access to one or more views in the workspace. |",
         "operationId": "getFolders",
         "security": [
           {
@@ -1047,6 +1179,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3006,
+          "action": "GET_FOLDERS",
+          "category": "METADATA",
+          "units": 0.1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.1 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "post": {
@@ -1054,7 +1195,7 @@
           "Workspace Folders"
         ],
         "summary": "Create Folder",
-        "description": "Creates a new folder in the specified workspace. The folder can optionally be created as a sub-folder of an existing root level folder, and can be set as the default folder of the workspace at the time of creation.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7140 | A folder with the same name already exists in the workspace. | Use a unique folder name within the workspace. |\n| 7144 | The specified parentFolderId does not exist. | Verify the parentFolderId value using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |\n| 7414 | Folder name cannot be empty. | Provide a non-empty value for folderName. |\n| 7496 | Maximum subfolder nesting depth exceeded. | Sub-folders cannot themselves have children. Only one level of nesting is supported. |",
+        "description": "Creates a new folder in the specified workspace. The folder can optionally be created as a sub-folder of an existing root level folder, and can be set as the default folder of the workspace at the time of creation.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7140 | A folder with the same name already exists in the workspace. | Use a unique folder name within the workspace. |\n| 7144 | The specified parentFolderId does not exist. | Verify the parentFolderId value using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |\n| 7414 | Folder name cannot be empty. | Provide a non-empty value for folderName. |\n| 7496 | Maximum subfolder nesting depth exceeded. | Sub-folders cannot themselves have children. Only one level of nesting is supported. |",
         "operationId": "createFolder",
         "security": [
           {
@@ -1157,6 +1298,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2010,
+          "action": "CREATE_FOLDER",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1166,7 +1316,7 @@
           "Workspace Folders"
         ],
         "summary": "Rename Folder",
-        "description": "Updates the name and/or description of an existing folder. If folderDesc is omitted from the request, the folder's existing description is reset to an empty string.\n\n**Notes**\n\n> Note:\n>\n> - Rename Folder returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - When folderDesc is omitted, the existing description of the folder is permanently reset to an empty string. This is intentional behaviour and not a defect. Always read the current folderDesc using the Get Folder List API and pass it back when only the name has to be changed.\n> - Renaming the folder to its existing name succeeds without an error.\n> - The folderName should be unique within the workspace. Renaming to a name that is already in use fails with error code 7140, and an empty name fails with error code 7414.\n> - The folderName can hold a maximum of 200 characters and the folderDesc can hold a maximum of 250 characters.\n> - The folder-id in the request URL should be obtained using the Get Folder List API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7140 | A folder with the same name already exists in the workspace. | Use a unique folder name within the workspace. |\n| 7144 | The specified folder does not exist. | Verify the folder ID using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |\n| 7414 | Folder name cannot be empty. | Provide a non-empty value for folderName. |",
+        "description": "Updates the name and/or description of an existing folder. If folderDesc is omitted from the request, the folder's existing description is reset to an empty string.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Rename Folder returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - When folderDesc is omitted, the existing description of the folder is permanently reset to an empty string. This is intentional behaviour and not a defect. Always read the current folderDesc using the Get Folder List API and pass it back when only the name has to be changed.\n> - Renaming the folder to its existing name succeeds without an error.\n> - The folderName should be unique within the workspace. Renaming to a name that is already in use fails with error code 7140, and an empty name fails with error code 7414.\n> - The folderName can hold a maximum of 200 characters and the folderDesc can hold a maximum of 250 characters.\n> - The folder-id in the request URL should be obtained using the Get Folder List API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7140 | A folder with the same name already exists in the workspace. | Use a unique folder name within the workspace. |\n| 7144 | The specified folder does not exist. | Verify the folder ID using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |\n| 7414 | Folder name cannot be empty. | Provide a non-empty value for folderName. |",
         "operationId": "renameFolder",
         "security": [
           {
@@ -1241,6 +1391,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2011,
+          "action": "RENAME_FOLDER",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "delete": {
@@ -1248,7 +1407,7 @@
           "Workspace Folders"
         ],
         "summary": "Delete Folder",
-        "description": "Deletes the specified folder from the workspace. By default the views present inside the folder are retained and moved to the root level of the workspace, and only the folder container is removed. The views can optionally be deleted along with the folder.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder does not exist. | Verify the folder ID using the Get Folder List API. |\n| 7277 | The folder contains tables that have dependent child views; deletion blocked. | Set deleteDependentViews to true to delete the folder along with all dependent views, or manually delete the dependent views first. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |",
+        "description": "Deletes the specified folder from the workspace. By default the views present inside the folder are retained and moved to the root level of the workspace, and only the folder container is removed. The views can optionally be deleted along with the folder.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder does not exist. | Verify the folder ID using the Get Folder List API. |\n| 7277 | The folder contains tables that have dependent child views; deletion blocked. | Set deleteDependentViews to true to delete the folder along with all dependent views, or manually delete the dependent views first. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |",
         "operationId": "deleteFolder",
         "security": [
           {
@@ -1316,6 +1475,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2012,
+          "action": "DELETE_FOLDER",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1325,7 +1493,7 @@
           "Workspace Folders"
         ],
         "summary": "Make Default Folder",
-        "description": "Sets the specified folder as the default folder for the workspace. The previous default folder (if any) loses its default status. Every workspace has exactly one default folder at all times.\n\nThis API is idempotent. Invoking it on a folder that is already the default folder succeeds without error.\n\n**Notes**\n\n> Note:\n>\n> - Make Default Folder returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - The folder that was the default until then immediately loses its isDefault status. A workspace holds exactly one default folder at any point in time.\n> - This API is idempotent. Invoking it on a folder that is already the default folder succeeds without error and makes no change.\n> - Use the Get Folder List API after invoking this API to confirm that isDefault is true on the intended folder.\n> - The folder-id in the request URL should be obtained using the Get Folder List API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder does not exist. | Verify the folder ID using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |",
+        "description": "Sets the specified folder as the default folder for the workspace. The previous default folder (if any) loses its default status. Every workspace has exactly one default folder at all times.\n\nThis API is idempotent. Invoking it on a folder that is already the default folder succeeds without error.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Make Default Folder returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - The folder that was the default until then immediately loses its isDefault status. A workspace holds exactly one default folder at any point in time.\n> - This API is idempotent. Invoking it on a folder that is already the default folder succeeds without error and makes no change.\n> - Use the Get Folder List API after invoking this API to confirm that isDefault is true on the intended folder.\n> - The folder-id in the request URL should be obtained using the Get Folder List API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder does not exist. | Verify the folder ID using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |",
         "operationId": "makeDefaultFolder",
         "security": [
           {
@@ -1355,6 +1523,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2030,
+          "action": "MAKE_DEFAULT_FOLDER",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1364,7 +1541,7 @@
           "Workspace Folders"
         ],
         "summary": "Change Folder Hierarchy",
-        "description": "Changes the hierarchical position of a folder — either promoting a sub-folder to a top-level folder, or nesting an existing top-level folder under another top-level folder.\n\n**Notes**\n\n> Note:\n>\n> - Change Folder Hierarchy returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - When hierarchy is set to 0, the parentFolderId should not be sent. The parent link of the folder is removed and it becomes a root level folder.\n> - When hierarchy is set to 1, the parentFolderId is mandatory. Omitting it results in an error.\n> - The parentFolderId should refer to a root level folder, that is, a folder whose own parentFolderId is -1. A folder cannot be nested inside an existing sub-folder, as exactly one level of nesting is supported.\n> - Only the values 0 and 1 are accepted for hierarchy. Any other value fails with error code 8119 before any change is made.\n> - Both the folder-id in the request URL and the parentFolderId should be obtained using the Get Folder List API. Verify that the parentFolderId target is a root level folder before invoking this API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder or parent folder does not exist. | Verify the folder IDs using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |\n| 8119 | Invalid value for hierarchy. Only 0 and 1 are accepted. | Use 0 to promote a sub-folder to root level, or 1 to nest a folder under a parent. |",
+        "description": "Changes the hierarchical position of a folder — either promoting a sub-folder to a top-level folder, or nesting an existing top-level folder under another top-level folder.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Change Folder Hierarchy returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - When hierarchy is set to 0, the parentFolderId should not be sent. The parent link of the folder is removed and it becomes a root level folder.\n> - When hierarchy is set to 1, the parentFolderId is mandatory. Omitting it results in an error.\n> - The parentFolderId should refer to a root level folder, that is, a folder whose own parentFolderId is -1. A folder cannot be nested inside an existing sub-folder, as exactly one level of nesting is supported.\n> - Only the values 0 and 1 are accepted for hierarchy. Any other value fails with error code 8119 before any change is made.\n> - Both the folder-id in the request URL and the parentFolderId should be obtained using the Get Folder List API. Verify that the parentFolderId target is a root level folder before invoking this API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder or parent folder does not exist. | Verify the folder IDs using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |\n| 8119 | Invalid value for hierarchy. Only 0 and 1 are accepted. | Use 0 to promote a sub-folder to root level, or 1 to nest a folder under a parent. |",
         "operationId": "changeFolderHierarchy",
         "security": [
           {
@@ -1438,6 +1615,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2047,
+          "action": "CHANGE_FOLDER_HIERARCHY",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1447,7 +1633,7 @@
           "Workspace Folders"
         ],
         "summary": "Change Folder Position",
-        "description": "Reorders a folder by moving it to just above another specified folder at the same hierarchy level. Both folders must be at the same level (both top-level or both sub-folders of the same parent).\n\n**Notes**\n\n> Note:\n>\n> - Change Folder Position returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - The folder identified by the folder-id in the request URL is placed immediately above the folder given in referenceFolderId in the sorted list.\n> - Both the folders should be at the same hierarchy level, that is, both at the root level or both sub-folders of the same parent. Reordering across levels is not supported and produces unexpected results.\n> - The folderIndex values of the affected folders are recalculated after this operation. Use the Get Folder List API to confirm the new ordering.\n> - Both the folder-id in the request URL and the referenceFolderId should be obtained using the Get Folder List API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder or reference folder does not exist. | Verify the folder IDs using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |",
+        "description": "Reorders a folder by moving it to just above another specified folder at the same hierarchy level. Both folders must be at the same level (both top-level or both sub-folders of the same parent).\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Notes**\n\n> Note:\n>\n> - Change Folder Position returns a bare HTTP 204 No Content on success. There is no response body and no **status** or **summary** JSON to parse, so check only the HTTP status code. A JSON payload is returned only on failure.\n> - The folder identified by the folder-id in the request URL is placed immediately above the folder given in referenceFolderId in the sorted list.\n> - Both the folders should be at the same hierarchy level, that is, both at the root level or both sub-folders of the same parent. Reordering across levels is not supported and produces unexpected results.\n> - The folderIndex values of the affected folders are recalculated after this operation. Use the Get Folder List API to confirm the new ordering.\n> - Both the folder-id in the request URL and the referenceFolderId should be obtained using the Get Folder List API.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified folder or reference folder does not exist. | Verify the folder IDs using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |",
         "operationId": "changeFolderPosition",
         "security": [
           {
@@ -1520,6 +1706,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2048,
+          "action": "CHANGE_FOLDER_POSITION",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1529,7 +1724,7 @@
           "Workspace Folders"
         ],
         "summary": "Move Views To Folder",
-        "description": "Moves one or more views (tables, reports, dashboards) into the specified destination folder within the workspace. All views must belong to the same workspace. Up to 1000 view IDs can be moved in a single request.\n\nThe operation is transactional. A single view ID that does not belong to the workspace fails the entire request before any view is moved.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified destination folder does not exist. | Verify the folderId using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |\n| 7319 | One or more view IDs do not belong to the specified workspace. | Ensure all view IDs in viewIds belong to the workspace identified by . |",
+        "description": "Moves one or more views (tables, reports, dashboards) into the specified destination folder within the workspace. All views must belong to the same workspace. Up to 1000 view IDs can be moved in a single request.\n\nThe operation is transactional. A single view ID that does not belong to the workspace fails the entire request before any view is moved.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7144 | The specified destination folder does not exist. | Verify the folderId using the Get Folder List API. |\n| 7301 | User does not have permission. | Ensure the user is a Workspace Admin or has Create Folder permission on the workspace. |\n| 7319 | One or more view IDs do not belong to the specified workspace. | Ensure all view IDs in viewIds belong to the workspace identified by . |",
         "operationId": "moveViewsToFolder",
         "security": [
           {
@@ -1607,6 +1802,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2049,
+          "action": "MOVE_VIEWS_TO_FOLDER",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1614,7 +1818,7 @@
       "get": {
         "operationId": "getLinkedWorkspacesForOrganization",
         "summary": "Get Linked Workspaces For Organization",
-        "description": "Returns every master↔client link in the organisation named by ZANALYTICS-ORGID, grouped one entry per master workspace. This is the broadest discovery call, and the usual way to find a sandboxId.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin of the organisation in ZANALYTICS-ORGID, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns every master↔client link in the organisation named by ZANALYTICS-ORGID, grouped one entry per master workspace. This is the broadest discovery call, and the usual way to find a sandboxId.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin of the organisation in ZANALYTICS-ORGID, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Linked Workspaces"
         ],
@@ -1714,6 +1918,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3086,
+          "action": "GET_LINKED_WORKSPACES_FOR_ORGANIZATION",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -1721,7 +1934,7 @@
       "get": {
         "operationId": "getLinkedWorkspacesForMasterWorkspace",
         "summary": "Get Linked Workspaces For Master Workspace",
-        "description": "Returns the links of a single master workspace, in the same shape as one entry of Get Linked Workspaces For Organization - but as a single object, not an array.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the links of a single master workspace, in the same shape as one entry of Get Linked Workspaces For Organization - but as a single object, not an array.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Linked Workspaces"
         ],
@@ -1828,12 +2041,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3087,
+          "action": "GET_LINKED_WORKSPACES_FOR_MASTER_WORKSPACE",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "post": {
         "operationId": "linkWorkspaces",
         "summary": "Link Workspaces",
-        "description": "Links one or more client workspaces to a master. The request is validated for compatibility first and, if every candidate passes, the initial design push is scheduled. Candidates already linked to this master are skipped silently.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace or one of the candidate workspaces was not found. | Verify and every clients[].workspaceIds entry. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or one of the organisations named in clients[].orgId; or the request arrived through a Client Portal / White Label domain. | Authenticate as an administrator of every organisation in the payload, from the standard API host. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - One or more workspaceIds do not belong to the orgId they were listed under. | Group each workspace under the organisation that owns it. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG carries no clients array. | Send {\"clients\":[{\"orgId\":…,\"workspaceIds\":[…]}]}. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON. | Send a valid, URL-encoded JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8246 | INVALID_MASTER_WORKSPACE_MAPPING - is itself linked as a client of another master. | Use a workspace that is not already a client. |\n| 8247 | LINK_WORKSPACES_INCOMPATIBLE_WORKSPACES - At least one candidate failed the compatibility check. Nothing was linked. | Read data.incompatibleWorkspaces, resolve the conflicts or drop those workspaces, and resend. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound. | Send CONFIG with between 1 and 100 organisation entries. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Links one or more client workspaces to a master. The request is validated for compatibility first and, if every candidate passes, the initial design push is scheduled. Candidates already linked to this master are skipped silently.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace or one of the candidate workspaces was not found. | Verify and every clients[].workspaceIds entry. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or one of the organisations named in clients[].orgId; or the request arrived through a Client Portal / White Label domain. | Authenticate as an administrator of every organisation in the payload, from the standard API host. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - One or more workspaceIds do not belong to the orgId they were listed under. | Group each workspace under the organisation that owns it. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG carries no clients array. | Send {\"clients\":[{\"orgId\":…,\"workspaceIds\":[…]}]}. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON. | Send a valid, URL-encoded JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8246 | INVALID_MASTER_WORKSPACE_MAPPING - is itself linked as a client of another master. | Use a workspace that is not already a client. |\n| 8247 | LINK_WORKSPACES_INCOMPATIBLE_WORKSPACES - At least one candidate failed the compatibility check. Nothing was linked. | Read data.incompatibleWorkspaces, resolve the conflicts or drop those workspaces, and resend. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound. | Send CONFIG with between 1 and 100 organisation entries. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "tags": [
           "Linked Workspaces"
         ],
@@ -1926,12 +2148,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2080,
+          "action": "LINK_WORKSPACES",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "delete": {
         "operationId": "unlinkWorkspaces",
         "summary": "Unlink Workspaces",
-        "description": "Removes links between a master workspace and its clients, either all of them or a named set. The client workspaces themselves survive - only the mapping, and the design relationship it carries, is removed.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace was not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8078 | EMPTY_JSON_ATTRIBUTE_FOUND - scope was sent with an empty value. | Send ALL or SELECTED. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. | Add scope. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON. | Send a valid, URL-encoded JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8119 | INVALID_VALUE_FOR_ATTRIBUTE - scope is not exactly ALL or SELECTED. | Send upper-case ALL or SELECTED. |\n| 8248 | SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more sandboxIds are not linked to this master. The message names them. | Use sandbox IDs from Get Linked Workspaces For Master Workspace. |\n| 8249 | INVALID_CONFIGURATION_REMOVE_LINKED_WORKSPACES - sandboxIds was supplied with scope: \"ALL\", or omitted with scope: \"SELECTED\". | Send {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"sandboxIds\":[…]}. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or sandboxIds is outside its 1-100 bound. | Send CONFIG as a URL-encoded form body on the DELETE request. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
+        "description": "Removes links between a master workspace and its clients, either all of them or a named set. The client workspaces themselves survive - only the mapping, and the design relationship it carries, is removed.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace was not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8078 | EMPTY_JSON_ATTRIBUTE_FOUND - scope was sent with an empty value. | Send ALL or SELECTED. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. | Add scope. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON. | Send a valid, URL-encoded JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8119 | INVALID_VALUE_FOR_ATTRIBUTE - scope is not exactly ALL or SELECTED. | Send upper-case ALL or SELECTED. |\n| 8248 | SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more sandboxIds are not linked to this master. The message names them. | Use sandbox IDs from Get Linked Workspaces For Master Workspace. |\n| 8249 | INVALID_CONFIGURATION_REMOVE_LINKED_WORKSPACES - sandboxIds was supplied with scope: \"ALL\", or omitted with scope: \"SELECTED\". | Send {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"sandboxIds\":[…]}. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or sandboxIds is outside its 1-100 bound. | Send CONFIG as a URL-encoded form body on the DELETE request. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "tags": [
           "Linked Workspaces"
         ],
@@ -2007,6 +2238,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2081,
+          "action": "UNLINK_WORKSPACES",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -2014,7 +2254,7 @@
       "get": {
         "operationId": "getLinkableWorkspaces",
         "summary": "Get Linkable Workspaces",
-        "description": "Returns, grouped by organisation, the workspaces the caller may offer as link candidates for a given master. This is the only source of the workspaceIds that Link Workspaces accepts.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns, grouped by organisation, the workspaces the caller may offer as link candidates for a given master. This is the only source of the workspaceIds that Link Workspaces accepts.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Linked Workspaces"
         ],
@@ -2099,6 +2339,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3088,
+          "action": "GET_LINKABLE_WORKSPACES",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -2106,7 +2355,7 @@
       "get": {
         "operationId": "getWorkspaceLinkingCompatibility",
         "summary": "Get Workspace Linking Compatibility",
-        "description": "Runs the full linking validation against a set of candidate client workspaces without linking anything, and returns a per-workspace verdict with the conflicting entities broken out. Link Workspaces runs exactly this check internally and refuses the whole request if any candidate fails, so calling this first is how you avoid an all-or-nothing rejection.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace or one of the candidate workspaces was not found. | Verify and every clients[].workspaceIds entry. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or one of the organisations named in clients[].orgId; or the request arrived through a Client Portal / White Label domain. | Authenticate as an administrator of every organisation in the payload, from the standard API host. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - One or more workspaceIds do not belong to the orgId they were listed under. | Group each workspace under the organisation that actually owns it, as reported by Get Linkable Workspaces. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG carries no clients array. | Send {\"clients\":[{\"orgId\":…,\"workspaceIds\":[…]}]}. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON. | Send a valid, URL-encoded JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8246 | INVALID_MASTER_WORKSPACE_MAPPING - is itself linked as a client of another master. | Use a workspace that is not already a client; a workspace cannot be both. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound. | Send CONFIG with between 1 and 100 organisation entries. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Runs the full linking validation against a set of candidate client workspaces without linking anything, and returns a per-workspace verdict with the conflicting entities broken out. Link Workspaces runs exactly this check internally and refuses the whole request if any candidate fails, so calling this first is how you avoid an all-or-nothing rejection.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace or one of the candidate workspaces was not found. | Verify and every clients[].workspaceIds entry. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or one of the organisations named in clients[].orgId; or the request arrived through a Client Portal / White Label domain. | Authenticate as an administrator of every organisation in the payload, from the standard API host. |\n| 7387 | DBID_NOT_BELONGS_TO_ZSOID - One or more workspaceIds do not belong to the orgId they were listed under. | Group each workspace under the organisation that actually owns it, as reported by Get Linkable Workspaces. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG carries no clients array. | Send {\"clients\":[{\"orgId\":…,\"workspaceIds\":[…]}]}. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON. | Send a valid, URL-encoded JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8246 | INVALID_MASTER_WORKSPACE_MAPPING - is itself linked as a client of another master. | Use a workspace that is not already a client; a workspace cannot be both. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound. | Send CONFIG with between 1 and 100 organisation entries. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Linked Workspaces"
         ],
@@ -2278,6 +2527,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3089,
+          "action": "GET_WORKSPACE_LINKING_COMPATIBILITY",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -2285,7 +2543,7 @@
       "post": {
         "operationId": "syncLinkedWorkspaces",
         "summary": "Sync Linked Workspaces",
-        "description": "Pushes the master workspace's design to its linked clients. The request either syncs every link, or names the sandboxes to sync and - per sandbox - either everything or a specific list of master-workspace views.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace was not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | META_OBJECT_NOT_PRESENT - A masterViewIds entry does not exist. | Verify every view ID via Get View List against the master workspace. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or the organisation owning a workspace named in masterViewIds; or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG is empty. | Send at least {\"scope\":\"ALL\"}. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. | Add the top-level scope. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON. | Send a valid, URL-encoded JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8119 | INVALID_VALUE_FOR_ATTRIBUTE - The top-level scope is not exactly ALL or SELECTED. | Send upper-case ALL or SELECTED. |\n| 8246 | INVALID_MASTER_WORKSPACE_MAPPING - is itself linked as a client of another master. | Sync from the real master. |\n| 8248 | SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more clients[].sandboxId values are not linked to this master. The message names them. | Use sandbox IDs from Get Linked Workspaces For Master Workspace. |\n| 8250 | INVALID_CONFIGURATION_SYNC_SCOPE_LINKED_WORKSPACES - clients was supplied with scope: \"ALL\", omitted with scope: \"SELECTED\", or resolved to nothing to sync. | Send {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"clients\":[…]}. |\n| 8251 | INVALID_CONFIGURATION_SYNC_CLIENT_SCOPE_LINKED_WORKSPACES - A clients[] entry is missing sandboxId, carries a scope other than ALL / SELECTED, supplies masterViewIds with scope: \"ALL\", or omits them with scope: \"SELECTED\". | Give each entry a sandboxId plus either {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"masterViewIds\":[…]}. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound. | Send CONFIG with a valid JSON object. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Pushes the master workspace's design to its linked clients. The request either syncs every link, or names the sandboxes to sync and - per sandbox - either everything or a specific list of master-workspace views.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace was not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7104 | META_OBJECT_NOT_PRESENT - A masterViewIds entry does not exist. | Verify every view ID via Get View List against the master workspace. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller does not administer the header organisation, the master's organisation, or the organisation owning a workspace named in masterViewIds; or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG is empty. | Send at least {\"scope\":\"ALL\"}. |\n| 8079 | ATTRIBUTE_NOT_PRESENT_IN_JSON_CONFIGURATION - scope is missing from CONFIG. | Add the top-level scope. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is not parseable JSON. | Send a valid, URL-encoded JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8119 | INVALID_VALUE_FOR_ATTRIBUTE - The top-level scope is not exactly ALL or SELECTED. | Send upper-case ALL or SELECTED. |\n| 8246 | INVALID_MASTER_WORKSPACE_MAPPING - is itself linked as a client of another master. | Sync from the real master. |\n| 8248 | SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more clients[].sandboxId values are not linked to this master. The message names them. | Use sandbox IDs from Get Linked Workspaces For Master Workspace. |\n| 8250 | INVALID_CONFIGURATION_SYNC_SCOPE_LINKED_WORKSPACES - clients was supplied with scope: \"ALL\", omitted with scope: \"SELECTED\", or resolved to nothing to sync. | Send {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"clients\":[…]}. |\n| 8251 | INVALID_CONFIGURATION_SYNC_CLIENT_SCOPE_LINKED_WORKSPACES - A clients[] entry is missing sandboxId, carries a scope other than ALL / SELECTED, supplies masterViewIds with scope: \"ALL\", or omits them with scope: \"SELECTED\". | Give each entry a sandboxId plus either {\"scope\":\"ALL\"} or {\"scope\":\"SELECTED\",\"masterViewIds\":[…]}. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - The CONFIG parameter was not sent, or clients is outside its 1-100 bound. | Send CONFIG with a valid JSON object. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "tags": [
           "Linked Workspaces"
         ],
@@ -2371,12 +2629,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2082,
+          "action": "SYNC_LINKED_WORKSPACES",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "get": {
         "operationId": "getLinkedWorkspaceSyncDetails",
         "summary": "Get Linked Workspace Sync Details",
-        "description": "Returns, per linked sandbox, what the last sync did entity by entity and what is still waiting to be pushed. This is the only API that reports sync outcomes at entity granularity.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace was not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object. | Send a valid, URL-encoded JSON object, or omit CONFIG entirely. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8248 | SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more sandboxIds are not linked to this master. The message names them. | Use sandbox IDs from Get Linked Workspaces For Master Workspace. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - CONFIG was sent without sandboxIds, or with more than 100 entries. | Omit CONFIG to fetch everything, or send 1-100 sandbox IDs. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns, per linked sandbox, what the last sync did entity by entity and what is still waiting to be pushed. This is the only API that reports sync outcomes at entity granularity.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | META_OBJECT_NOT_PRESENT - The master workspace was not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an organisation administrator of the header organisation or of the master's organisation, or the request arrived through a Client Portal / White Label domain. | Authenticate as an organisation administrator and call from the standard API host. |\n| 8060 | DOMAIN_NOT_EXIST - The custom domain in the request host is not provisioned. | Use the standard API host. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG was sent but is not a parseable JSON object. | Send a valid, URL-encoded JSON object, or omit CONFIG entirely. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - ZANALYTICS-ORGID is missing. | Add the ZANALYTICS-ORGID request header. |\n| 8248 | SANDBOX_NOT_MAPPED_TO_MASTER_WORKSPACE - One or more sandboxIds are not linked to this master. The message names them. | Use sandbox IDs from Get Linked Workspaces For Master Workspace. |\n| 8504 | LESS_THAN_MIN_OCCURANCE - CONFIG was sent without sandboxIds, or with more than 100 entries. | Omit CONFIG to fetch everything, or send 1-100 sandbox IDs. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Linked Workspaces"
         ],
@@ -2547,6 +2814,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3090,
+          "action": "GET_LINKED_WORKSPACE_SYNC_DETAILS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -2554,7 +2830,7 @@
       "get": {
         "operationId": "getWorkspaceBackups",
         "summary": "Get Workspace Backups",
-        "description": "Returns the workspace's backup settings and the list of its retained backups. Supplies the backupId values used by every other API in this document.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the workspace's backup settings and the list of its retained backups. Supplies the backupId values used by every other API in this document.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Workspace Backup & Restore"
         ],
@@ -2639,12 +2915,21 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3082,
+          "action": "GET_WORKSPACE_BACKUPS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "post": {
         "operationId": "backupWorkspaceNow",
         "summary": "Backup Workspace Now",
-        "description": "Queues an immediate backup of the workspace. Returns at once with the new backupId; the backup itself runs in the background. Poll Get Workspace Backup Status until it finishes.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is present but is not valid JSON. | Send a valid JSON object, or omit CONFIG. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8251 | INVALID_BACKUP_MODE - backupMode is not an allowed value. | Use STRUCTURE or STRUCTURE_AND_DATA. |\n| 8253 | RESTORE_ALREADY_IN_PROGRESS - A restore is running for this workspace. | Wait for the restore to finish (Get Workspace Restore Status), then retry. |\n| 8255 | CONNECTOR_SYNC_IN_PROGRESS - A connector sync is running for this workspace. | Wait for the sync to complete, then retry. |\n| 8257 | BACKUP_ALREADY_IN_PROGRESS - A backup is already running for this workspace. | Wait for it to complete (Get Workspace Backup Status), then retry if you still need another. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.create. |",
+        "description": "Queues an immediate backup of the workspace. Returns at once with the new backupId; the backup itself runs in the background. Poll Get Workspace Backup Status until it finishes.\n\n**Rate limit**\n\n- Costs 5 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is present but is not valid JSON. | Send a valid JSON object, or omit CONFIG. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8251 | INVALID_BACKUP_MODE - backupMode is not an allowed value. | Use STRUCTURE or STRUCTURE_AND_DATA. |\n| 8253 | RESTORE_ALREADY_IN_PROGRESS - A restore is running for this workspace. | Wait for the restore to finish (Get Workspace Restore Status), then retry. |\n| 8255 | CONNECTOR_SYNC_IN_PROGRESS - A connector sync is running for this workspace. | Wait for the sync to complete, then retry. |\n| 8257 | BACKUP_ALREADY_IN_PROGRESS - A backup is already running for this workspace. | Wait for it to complete (Get Workspace Backup Status), then retry if you still need another. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.create. |",
         "tags": [
           "Workspace Backup & Restore"
         ],
@@ -2726,6 +3011,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3083,
+          "action": "BACKUP_WORKSPACE_NOW",
+          "category": "METADATA",
+          "units": 5,
+          "unitsBasis": "perRequest",
+          "unitsNote": "5 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -2733,7 +3027,7 @@
       "get": {
         "operationId": "downloadWorkspaceBackup",
         "summary": "Download Workspace Backup",
-        "description": "Downloads a completed backup as a .wsbkp file. The response is the file itself, not a JSON envelope.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8245 | BACKUP_NOT_FOUND - The backup does not exist, or does not belong to this workspace. | Take the backupId from Get Workspace Backups for the same workspace. |\n| 8246 | BACKUP_NOT_READY - The backup is not SUCCESS, or has no stored file. | Poll Get Workspace Backup Status until SUCCESS; a FAILED or DELETED backup cannot be downloaded. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Downloads a completed backup as a .wsbkp file. The response is the file itself, not a JSON envelope.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8245 | BACKUP_NOT_FOUND - The backup does not exist, or does not belong to this workspace. | Take the backupId from Get Workspace Backups for the same workspace. |\n| 8246 | BACKUP_NOT_READY - The backup is not SUCCESS, or has no stored file. | Poll Get Workspace Backup Status until SUCCESS; a FAILED or DELETED backup cannot be downloaded. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Workspace Backup & Restore"
         ],
@@ -2774,6 +3068,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3084,
+          "action": "DOWNLOAD_WORKSPACE_BACKUP",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -2781,7 +3084,7 @@
       "post": {
         "operationId": "restoreWorkspaceFromBackup",
         "summary": "Restore Workspace from Backup",
-        "description": "Queues a restore of the workspace from one of its own backups. Returns at once with a restoreId; the restore runs in the background. Poll Get Workspace Restore Status with the restoreId.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG is present but empty. | Send CONFIG={\"confirmRestore\":true}. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is present but is not valid JSON. | Send a valid JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8245 | BACKUP_NOT_FOUND - The backup does not exist, or does not belong to this workspace. | Take the backupId from Get Workspace Backups for the same workspace. |\n| 8246 | BACKUP_NOT_READY - The backup is not in a state that can be restored (for example IN_PROGRESS). | Poll Get Workspace Backup Status until SUCCESS, then retry. |\n| 8247 | BACKUP_NOT_RESTORABLE - The backup is DELETED or FAILED. | Choose a backup with isReadyToDownload: true, or take a new one. |\n| 8248 | BACKUP_EXPIRED - The backup is older than the restore window, or its stored file has expired. | Take a new backup; an expired one cannot be restored. |\n| 8249 | CONFIRM_RESTORE_REQUIRED - confirmRestore is not true. | Send \"confirmRestore\": true in CONFIG. |\n| 8253 | RESTORE_ALREADY_IN_PROGRESS - A restore is running for this workspace. | Wait for it to finish (Get Workspace Restore Status), then retry if still needed. |\n| 8254 | INVALID_RESTORE_MODE_BACKUP - STRUCTURE_AND_DATA was requested from a STRUCTURE-only backup. | Omit restoreMode, or send STRUCTURE. |\n| 8257 | BACKUP_ALREADY_IN_PROGRESS - A backup is running for this workspace. | Wait for it to complete (Get Workspace Backup Status), then retry. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.create. |",
+        "description": "Queues a restore of the workspace from one of its own backups. Returns at once with a restoreId; the restore runs in the background. Poll Get Workspace Restore Status with the restoreId.\n\n**Rate limit**\n\n- Costs 10 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8077 | EMPTY_JSON_CONFIGURATION - CONFIG is present but empty. | Send CONFIG={\"confirmRestore\":true}. |\n| 8080 | INVALID_JSON_CONFIGURATION - CONFIG is present but is not valid JSON. | Send a valid JSON object. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8245 | BACKUP_NOT_FOUND - The backup does not exist, or does not belong to this workspace. | Take the backupId from Get Workspace Backups for the same workspace. |\n| 8246 | BACKUP_NOT_READY - The backup is not in a state that can be restored (for example IN_PROGRESS). | Poll Get Workspace Backup Status until SUCCESS, then retry. |\n| 8247 | BACKUP_NOT_RESTORABLE - The backup is DELETED or FAILED. | Choose a backup with isReadyToDownload: true, or take a new one. |\n| 8248 | BACKUP_EXPIRED - The backup is older than the restore window, or its stored file has expired. | Take a new backup; an expired one cannot be restored. |\n| 8249 | CONFIRM_RESTORE_REQUIRED - confirmRestore is not true. | Send \"confirmRestore\": true in CONFIG. |\n| 8253 | RESTORE_ALREADY_IN_PROGRESS - A restore is running for this workspace. | Wait for it to finish (Get Workspace Restore Status), then retry if still needed. |\n| 8254 | INVALID_RESTORE_MODE_BACKUP - STRUCTURE_AND_DATA was requested from a STRUCTURE-only backup. | Omit restoreMode, or send STRUCTURE. |\n| 8257 | BACKUP_ALREADY_IN_PROGRESS - A backup is running for this workspace. | Wait for it to complete (Get Workspace Backup Status), then retry. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.create. |",
         "tags": [
           "Workspace Backup & Restore"
         ],
@@ -2879,6 +3182,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3085,
+          "action": "RESTORE_WORKSPACE_BACKUP",
+          "category": "METADATA",
+          "units": 10,
+          "unitsBasis": "perRequest",
+          "unitsNote": "10 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -2886,7 +3198,7 @@
       "get": {
         "operationId": "getWorkspaceBackupStatus",
         "summary": "Get Workspace Backup Status",
-        "description": "Returns the current status of one backup. Use it to poll a backup started with Backup Workspace Now, and to check a backup before downloading or restoring it.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8245 | BACKUP_NOT_FOUND - The backup does not exist, does not belong to this workspace, or is in an unrecognised state. | Take the backupId from Get Workspace Backups for the same workspace. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the current status of one backup. Use it to poll a backup started with Backup Workspace Now, and to check a backup before downloading or restoring it.\n\n**Rate limit**\n\n- Costs 0.5 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8245 | BACKUP_NOT_FOUND - The backup does not exist, does not belong to this workspace, or is in an unrecognised state. | Take the backupId from Get Workspace Backups for the same workspace. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Workspace Backup & Restore"
         ],
@@ -2940,6 +3252,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3096,
+          "action": "GET_WORKSPACE_BACKUP_STATUS",
+          "category": "METADATA",
+          "units": 0.5,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.5 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -2947,7 +3268,7 @@
       "get": {
         "operationId": "getWorkspaceRestoreStatus",
         "summary": "Get Workspace Restore Status",
-        "description": "Returns the current status of one restore. Use it to poll a restore started with Restore Workspace from Backup.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8256 | RESTORE_NOT_FOUND - The restore does not exist, or does not belong to this workspace. | Use the restoreId returned by Restore Workspace from Backup for the same workspace. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the current status of one restore. Use it to poll a restore started with Restore Workspace from Backup.\n\n**Rate limit**\n\n- Costs 0.5 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 6025 | BACKUP_NOT_ALLOWED - The organisation's plan does not include Backup. | Upgrade the plan, or do not call the backup APIs for this organisation. |\n| 7301 | SECURITY_NOT_PERMITTED - The caller is not an Account Admin or Organization Admin, or the request came through a Client Portal / White Label domain. | Call from the standard API host as an Account Admin or Organization Admin of the organisation that owns the workspace. |\n| 8083 | ORGID_NOT_PRESENT_IN_THE_HEADER - The ZANALYTICS-ORGID header is missing or empty. | Add the ZANALYTICS-ORGID header with your Organization ID. |\n| 8084 | ORGID_NOT_EXIST - No organisation exists with the given ID. | Use the orgId returned by the organisation listing API. |\n| 8256 | RESTORE_NOT_FOUND - The restore does not exist, or does not belong to this workspace. | Use the restoreId returned by Restore Workspace from Backup for the same workspace. |\n| 8535 | INVALID_OAUTHTOKEN - Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "tags": [
           "Workspace Backup & Restore"
         ],
@@ -3001,6 +3322,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3097,
+          "action": "GET_WORKSPACE_RESTORE_STATUS",
+          "category": "METADATA",
+          "units": 0.5,
+          "unitsBasis": "perRequest",
+          "unitsNote": "0.5 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     }

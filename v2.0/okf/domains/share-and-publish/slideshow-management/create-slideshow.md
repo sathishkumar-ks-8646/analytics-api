@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/slides"
   domain: share-and-publish
   group: slideshow-management
+  api_units:
+    api_id: 5008
+    action: CREATE_SLIDE_SHOW
+    category: METADATA
+    units: 2
+    units_basis: per_request
+    units_note: "2 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.embed.create
   org_id_header: required
@@ -81,6 +89,8 @@ Creates a new slideshow in the workspace from an ordered set of views, and retur
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - **mandatory** |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 200 - `application/json` |
+| API units | 2 units per request - action `CREATE_SLIDE_SHOW` (api-id `5008`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`share-publish-grouped-api.json`](../../../references/openapi/share-publish-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1slides/post`; CONFIG schema `CreateSlideshowConfig`; response schema `CreateSlideshowResponse` |
 
 # Request
@@ -295,3 +305,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Slide List](get-slideshows.md), [Get Slide URL](get-slideshow-url.md), [Get Slide Info](get-slideshow-details.md), [Update Slide Show](update-slideshow.md), [Delete Slide Show](delete-slideshow.md).
 - [SDK examples](../../../sdk-examples/share-and-publish/slideshow-management/create-slideshow.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

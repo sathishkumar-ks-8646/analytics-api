@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/trash/{view-id}"
   domain: views-management
   group: trash-management
+  api_units:
+    api_id: 2040
+    action: DELETE_TRASH_VIEW
+    category: METADATA
+    units: 3
+    units_basis: per_request
+    units_note: "3 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.modeling.delete
   org_id_header: required
@@ -77,6 +85,8 @@ Before deleting, the service checks whether any child dependent views - reports,
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - optional |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 204 with no body |
+| API units | 3 units per request - action `DELETE_TRASH_VIEW` (api-id `2040`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`views-management-grouped-api.json`](../../../references/openapi/views-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1trash~1{view-id}/delete`; CONFIG schema `DeleteTrashViewConfig` |
 
 # Request
@@ -202,3 +212,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Trash Views](get-trash-views.md), [Restore Trash View](restore-trash-view.md).
 - [SDK examples](../../../sdk-examples/views-management/trash-management/delete-trash-view.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

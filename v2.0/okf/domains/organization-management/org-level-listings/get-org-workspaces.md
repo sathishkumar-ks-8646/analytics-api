@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/orgs/workspaces"
   domain: organization-management
   group: org-level-listings
+  api_units:
+    api_id: 3043
+    action: GET_WORKSPACES
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -76,6 +84,8 @@ An Account Admin or an Organization Admin receives every active workspace of the
 | Permission required | The authenticated user must be an active user of the organisation. Account Admins and Organization Admins see every active workspace; other users see only the workspaces shared with them. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_WORKSPACES` (api-id `3043`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`org-management-grouped-api.json`](../../../references/openapi/org-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1orgs~1workspaces/get`; response schema `GetOrgWorkspacesResponse` |
 
 # Request
@@ -251,3 +261,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Org Dashboards](get-org-dashboards.md), [Get Org Recent Items](get-org-recent-items.md).
 - [SDK examples](../../../sdk-examples/organization-management/org-level-listings/get-org-workspaces.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

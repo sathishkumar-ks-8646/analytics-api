@@ -17,22 +17,37 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/variables"
       doc: "/domains/data-modeling-and-schema/workspace-variables/create-variable.md"
+      api_units: 1
+      api_units_action: CREATE_VARIABLE
+      api_units_category: METADATA
     - operation_id: updateVariable
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}"
       doc: "/domains/data-modeling-and-schema/workspace-variables/update-variable.md"
+      api_units: 1
+      api_units_action: UPDATE_VARIABLE
+      api_units_category: METADATA
     - operation_id: deleteVariable
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}"
       doc: "/domains/data-modeling-and-schema/workspace-variables/delete-variable.md"
+      api_units: 1
+      api_units_action: DELETE_VARIABLE
+      api_units_category: METADATA
     - operation_id: getVariables
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/variables"
       doc: "/domains/data-modeling-and-schema/workspace-variables/get-variables.md"
+      api_units: 1
+      api_units_action: GET_VARIABLES
+      api_units_category: METADATA
     - operation_id: getVariableDetails
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}"
       doc: "/domains/data-modeling-and-schema/workspace-variables/get-variable-details.md"
+      api_units: 1
+      api_units_action: GET_VARIABLE_DETAILS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
@@ -53,13 +68,13 @@ APIs for creating, updating, deleting, and retrieving workspace variables.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Create Variable](create-variable.md) | POST | `/restapi/v2/workspaces/{workspace-id}/variables` | `createVariable` | `ZohoAnalytics.modeling.create` | 200 |
-| [Edit Variable](update-variable.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` | `updateVariable` | `ZohoAnalytics.modeling.update` | 204 |
-| [Delete Variable](delete-variable.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` | `deleteVariable` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Get Variables](get-variables.md) | GET | `/restapi/v2/workspaces/{workspace-id}/variables` | `getVariables` | `ZohoAnalytics.modeling.read` | 200 |
-| [Get Variable Details](get-variable-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` | `getVariableDetails` | `ZohoAnalytics.modeling.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Create Variable](create-variable.md) | POST | `/restapi/v2/workspaces/{workspace-id}/variables` | `createVariable` | `ZohoAnalytics.modeling.create` | 200 | 1 |
+| [Edit Variable](update-variable.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` | `updateVariable` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Delete Variable](delete-variable.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` | `deleteVariable` | `ZohoAnalytics.modeling.delete` | 204 | 1 |
+| [Get Variables](get-variables.md) | GET | `/restapi/v2/workspaces/{workspace-id}/variables` | `getVariables` | `ZohoAnalytics.modeling.read` | 200 | 1 |
+| [Get Variable Details](get-variable-details.md) | GET | `/restapi/v2/workspaces/{workspace-id}/variables/{variable-id}` | `getVariableDetails` | `ZohoAnalytics.modeling.read` | 200 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

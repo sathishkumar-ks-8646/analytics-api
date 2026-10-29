@@ -7,6 +7,13 @@ and what an integrator gets wrong if they do not read it.
 The OpenAPI in [`../zenesis-oas/`](../zenesis-oas/README.md) is the contract; these documents are the
 reason the contract looks the way it does. Both are authored, neither is generated from the other.
 
+[`API_UNITS_AND_RATE_LIMITS.md`](API_UNITS_AND_RATE_LIMITS.md) sits alongside the domain folders and
+carries the cost side of the reference: what every documented V2 API deducts in API units, the three
+unit categories and their per-minute request ceilings, the variable (row-, format- and
+`importType`-driven) costs, and the API-specific throttles. It is generated from the API gateway
+configuration (`webapps/db/WEB-INF/gatewayxmls/zagateway-restapi.xml`) and the URL security
+configuration (`webapps/db/WEB-INF/securityxmls/security-restapi.xml`).
+
 ## Layout
 
 ```
@@ -49,11 +56,17 @@ cross-cutting behaviour - and then one section per endpoint:
 ## What is an "Email Schedule" in Zoho Analytics?
 ...
 ## Index
-| # | API Name | Method | URL |
+| # | API Name | Method | URL | API Units |
 ...
 ## 1. Get Email Schedules
 ## 2. Create Email Schedule
+...
+## Appendix N – API Units and Frequency Limits
 ```
+
+Each `## N. Title` section opens with an attribute table that carries **API Units** and **Frequency
+Limit** rows, and every file closes with an **API Units and Frequency Limits** appendix: the per-API
+unit cost for that group, the cost formula, the category ceilings, and any API-specific throttle.
 
 **The `## N. Title` heading is a join key, not decoration.** The OKF builder (`tools/okf/build_okf.py`) matches
 each heading against the OpenAPI operation whose `x-zenesis-title` (else `summary`) is the same string.
@@ -65,6 +78,10 @@ with no schema. Rename in both.
 - Change the markdown, the OpenAPI operation and the SDK samples in the same commit. A behaviour note
   that contradicts the schema is worse than no note.
 - Keep the index table at the top of the file in step with the sections below it.
+- Unit costs and frequency limits are derived, not authored. If a cost changes, it changes in
+  `zagateway-restapi.xml` (or a throttle in `security-restapi.xml`) first; then update the API Units
+  row, the index table, the file's API Units appendix and
+  [`API_UNITS_AND_RATE_LIMITS.md`](API_UNITS_AND_RATE_LIMITS.md) together.
 - Relative links between group documents resolve on GitHub and in a clone; keep them relative.
 - Adding a group means: a new `.md` file here, a new tag and its operations in the domain
   specification, snippets in the samples file, and a new entry under the domain in

@@ -10,6 +10,20 @@
       "url": "https://analyticsapi.zoho.com"
     }
   ],
+  "x-api-unit-categories": {
+    "description": "Every call deducts API units from the organization's plan allowance and is counted against the per-minute request ceiling of its unit category. A unit cost with a row basis is charged pro rata as (rowsProcessed / rowsBasis) * units, without rounding up to a whole block. The per-minute ceilings below are the base configuration; an organization's effective ceiling is the base value scaled by a plan-specific multiplier.",
+    "categories": {
+      "DML": {
+        "frequencyLimitPerMinute": 100
+      },
+      "BULK": {
+        "frequencyLimitPerMinute": 40
+      },
+      "METADATA": {
+        "frequencyLimitPerMinute": 60
+      }
+    }
+  },
   "tags": [
     {
       "name": "AutoML Analysis",
@@ -23,7 +37,7 @@
           "AutoML Analysis"
         ],
         "summary": "Create AutoML Analysis",
-        "description": "Creates an analysis and immediately starts training one model per configured algorithm. Returns as soon as the training job is queued — it does not wait for training to finish.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7005 | COMMONINTERNALSERVERERROR — Surfaces when trainingTableId does not identify a real table. | Verify the ID via Get View List. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 7319 | OBJIDNOTBELONGSTODB — The training table belongs to a different workspace. | Use a table from . |\n| 8078 | EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent empty. | Supply a value. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing. | The message names the attribute. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — serverOption or predictionType is outside its allowed set. | The message names the attribute and permitted values. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is absent, or a required key is missing at the template level. | Send a complete CONFIG object. |\n| 8547 | ARRAYSIZEOUTOFRANGE — features is empty or exceeds the allowed array size. | Send between 3 and 20 feature names. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Creates an analysis and immediately starts training one model per configured algorithm. Returns as soon as the training job is queued — it does not wait for training to finish.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7005 | COMMONINTERNALSERVERERROR — Surfaces when trainingTableId does not identify a real table. | Verify the ID via Get View List. |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 7319 | OBJIDNOTBELONGSTODB — The training table belongs to a different workspace. | Use a table from . |\n| 8078 | EMPTYJSONATTRIBUTEFOUND — A mandatory attribute was sent empty. | Supply a value. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A mandatory attribute is missing. | The message names the attribute. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — serverOption or predictionType is outside its allowed set. | The message names the attribute and permitted values. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is absent, or a required key is missing at the template level. | Send a complete CONFIG object. |\n| 8547 | ARRAYSIZEOUTOFRANGE — features is empty or exceeds the allowed array size. | Send between 3 and 20 feature names. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "createAutoMLAnalysis",
         "security": [
           {
@@ -178,6 +192,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2065,
+          "action": "CREATE_AUTOML_ANALYSIS",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "get": {
@@ -185,7 +208,7 @@
           "AutoML Analysis"
         ],
         "summary": "Get AutoML Analysis In Workspace",
-        "description": "Returns every AutoML analysis defined in one workspace. Identical to Get AutoML Analysis In Org except that it is workspace-scoped and therefore omits the workspace fields.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller does not own this workspace. | Call from the standard API host as an Account Admin, Organization Admin, or the workspace's own admin. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns every AutoML analysis defined in one workspace. Identical to Get AutoML Analysis In Org except that it is workspace-scoped and therefore omits the workspace fields.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and that the ZANALYTICS-ORGID header matches it. |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller does not own this workspace. | Call from the standard API host as an Account Admin, Organization Admin, or the workspace's own admin. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getAutoMLAnalysisInWorkspace",
         "security": [
           {
@@ -260,6 +283,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3055,
+          "action": "GET_AUTOML_ANALYSIS_IN_Workspace",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -269,7 +301,7 @@
           "AutoML Analysis"
         ],
         "summary": "Run AutoML Analysis",
-        "description": "Triggers a deployment immediately — the \"run now\" action. Scores the input table with the deployed model and writes the results to the output table according to the deployment's importType.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Triggers a deployment immediately — the \"run now\" action. Scores the input table with the deployed model and writes the results to the output table according to the deployment's importType.\n\n**Rate limit**\n\n- Costs 2 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "runAutoMLAnalysis",
         "security": [
           {
@@ -302,6 +334,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2069,
+          "action": "RUN_AUTOML_ANALYSIS_DEPLOYMENT",
+          "category": "METADATA",
+          "units": 2,
+          "unitsBasis": "perRequest",
+          "unitsNote": "2 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -311,7 +352,7 @@
           "AutoML Analysis"
         ],
         "summary": "Delete AutoML Analysis",
-        "description": "Deletes an analysis and everything beneath it — all its models, and all deployments attached to those models.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
+        "description": "Deletes an analysis and everything beneath it — all its models, and all deployments attached to those models.\n\n**Rate limit**\n\n- Costs 2 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "operationId": "deleteAutoMLAnalysis",
         "security": [
           {
@@ -341,6 +382,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2066,
+          "action": "DELETE_AUTOML_ANALYSIS",
+          "category": "METADATA",
+          "units": 2,
+          "unitsBasis": "perRequest",
+          "unitsNote": "2 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "get": {
@@ -348,7 +398,7 @@
           "AutoML Analysis"
         ],
         "summary": "Get AutoML Analysis Details",
-        "description": "Returns the full definition of one analysis together with every model trained under it — including each model's ID, score, training status, and hyperparameters. This is the pivotal read in the family: it is the only source of modelId.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the full definition of one analysis together with every model trained under it — including each model's ID, score, training status, and hyperparameters. This is the pivotal read in the family: it is the only source of modelId.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getAutoMLAnalysisDetails",
         "security": [
           {
@@ -488,6 +538,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3056,
+          "action": "GET_AUTOML_ANALYSIS_DETAILS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -497,7 +556,7 @@
           "AutoML Analysis"
         ],
         "summary": "Get AutoML Analysis In Org",
-        "description": "Returns every AutoML analysis across all workspaces in the organization, each tagged with the workspace it belongs to. This is the organization-wide inventory call.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller is not an Account Admin / Organization Admin of the organization. | Call from the standard API host as an Account Admin or Organization Admin. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns every AutoML analysis across all workspaces in the organization, each tagged with the workspace it belongs to. This is the organization-wide inventory call.\n\n**Rate limit**\n\n- Costs 2 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7301 | SECURITYNOTPERMITTED — The request came through a Client Portal / White Label domain, or the caller is not an Account Admin / Organization Admin of the organization. | Call from the standard API host as an Account Admin or Organization Admin. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getAutoMLAnalysisInOrg",
         "security": [
           {
@@ -573,6 +632,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3054,
+          "action": "GET_AUTOML_ANALYSIS_IN_ORGANIZATION",
+          "category": "METADATA",
+          "units": 2,
+          "unitsBasis": "perRequest",
+          "unitsNote": "2 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -582,7 +650,7 @@
           "AutoML Analysis"
         ],
         "summary": "Delete AutoML Analysis Model",
-        "description": "Deletes one model from an analysis, along with the deployment attached to it. The analysis and its other models are unaffected.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
+        "description": "Deletes one model from an analysis, along with the deployment attached to it. The analysis and its other models are unaffected.\n\n**Rate limit**\n\n- Costs 2 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "operationId": "deleteAutoMLAnalysisModel",
         "security": [
           {
@@ -615,6 +683,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2067,
+          "action": "DELETE_AUTOML_ANALYSIS_MODEL",
+          "category": "METADATA",
+          "units": 2,
+          "unitsBasis": "perRequest",
+          "unitsNote": "2 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -624,7 +701,7 @@
           "AutoML Analysis"
         ],
         "summary": "Get Deployments For A Model",
-        "description": "Returns the deployment configured for a model — its input and output tables, schedule outcome, and last run status.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
+        "description": "Returns the deployment configured for a model — its input and output tables, schedule outcome, and last run status.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.metadata.read. |",
         "operationId": "getDeploymentsForModel",
         "security": [
           {
@@ -721,6 +798,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 3057,
+          "action": "GET_DEPLOYMENTS_FOR_A_MODEL",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       },
       "post": {
@@ -728,7 +814,7 @@
           "AutoML Analysis"
         ],
         "summary": "Create AutoML Analysis Deployment",
-        "description": "Binds a trained model to an input table and an output table so that predictions can be generated — on a recurring schedule, on demand, or both. Returns the new deployment ID and the ID of the output table it created.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 7319 | OBJIDNOTBELONGSTODB — The input table belongs to a different workspace. | Use a table from . |\n| 8050 | INVALIDVALUE — timezone is not a recognised timezone name. | Use a standard timezone identifier such as Asia/Kolkata. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A required attribute is missing; for weekly/monthly schedules this reports 'day'. | The message names the attribute. See the schedule caveat above. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — serverOption, hour, minute, or interval is outside its permitted set. | The message names the attribute and the allowed values. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is absent or a mandatory key is missing at the template level. | Send a complete CONFIG object. |\n| 8544 | OUTOFRANGE — A schedule value is outside its declared range. | Correct the value. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Binds a trained model to an input table and an output table so that predictions can be generated — on a recurring schedule, on demand, or both. Returns the new deployment ID and the ID of the output table it created.\n\n**Rate limit**\n\n- Costs 3 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 7319 | OBJIDNOTBELONGSTODB — The input table belongs to a different workspace. | Use a table from . |\n| 8050 | INVALIDVALUE — timezone is not a recognised timezone name. | Use a standard timezone identifier such as Asia/Kolkata. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — A required attribute is missing; for weekly/monthly schedules this reports 'day'. | The message names the attribute. See the schedule caveat above. |\n| 8119 | INVALIDVALUEFORATTRIBUTE — serverOption, hour, minute, or interval is outside its permitted set. | The message names the attribute and the allowed values. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is absent or a mandatory key is missing at the template level. | Send a complete CONFIG object. |\n| 8544 | OUTOFRANGE — A schedule value is outside its declared range. | Correct the value. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "createAutoMLAnalysisDeployment",
         "security": [
           {
@@ -894,6 +980,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2068,
+          "action": "CREATE_AUTOML_ANALYSIS_DEPLOYMENT",
+          "category": "METADATA",
+          "units": 3,
+          "unitsBasis": "perRequest",
+          "unitsNote": "3 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -903,7 +998,7 @@
           "AutoML Analysis"
         ],
         "summary": "Delete AutoML Analysis Model Deployment",
-        "description": "Deletes a deployment. The model becomes deployable again; the analysis, the model, and the output table are unaffected.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
+        "description": "Deletes a deployment. The model becomes deployable again; the analysis, the model, and the output table are unaffected.\n\n**Rate limit**\n\n- Costs 2 API units per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.delete. |",
         "operationId": "deleteAutoMLAnalysisModelDeployment",
         "security": [
           {
@@ -936,6 +1031,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2070,
+          "action": "DELETE_AUTOML_ANALYSIS_DEPLOYMENT",
+          "category": "METADATA",
+          "units": 2,
+          "unitsBasis": "perRequest",
+          "unitsNote": "2 units per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     },
@@ -945,7 +1049,7 @@
           "AutoML Analysis"
         ],
         "summary": "AutoML What If Analysis",
-        "description": "Generates a single prediction for a hypothetical set of feature values — a live \"what if I changed these inputs?\" query against a trained model. Nothing is stored and no table is written.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8078 | EMPTYJSONATTRIBUTEFOUND — features was sent as an empty object. | Supply every training feature and its value. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — features is missing from CONFIG. | Include the features object. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is absent. | Send a CONFIG object containing features. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
+        "description": "Generates a single prediction for a hypothetical set of feature values — a live \"what if I changed these inputs?\" query against a trained model. Nothing is stored and no table is written.\n\n**Rate limit**\n\n- Costs 1 API unit per request.\n- Unit category METADATA: up to 60 requests per minute across every METADATA-category call of the organization.\n\n**Error codes**\n\n| Code | Meaning | Resolution |\n| --- | --- | --- |\n| 7103 | METAOBJECTNOTPRESENT — Workspace not found. | Verify and the ZANALYTICS-ORGID header. |\n| 7301 | SECURITYNOTPERMITTED — Portal-domain request, or the caller does not own this workspace. | Call from the standard API host as an owner of the workspace. |\n| 8078 | EMPTYJSONATTRIBUTEFOUND — features was sent as an empty object. | Supply every training feature and its value. |\n| 8079 | ATTRIBUTENOTPRESENTINJSONCONFIGURATION — features is missing from CONFIG. | Include the features object. |\n| 8504 | LESSTHANMINOCCURANCE — CONFIG is absent. | Send a CONFIG object containing features. |\n| 8535 | INVALIDOAUTHTOKEN — Invalid or expired OAuth token. | Provide a valid token with scope ZohoAnalytics.modeling.create. |",
         "operationId": "autoMLWhatIfAnalysis",
         "security": [
           {
@@ -1062,6 +1166,15 @@
           "500": {
             "$ref": "https://raw.githubusercontent.com/zoho/analytics-oas/refs/heads/main/v2.0/common/zoho-analytics-api-common.json#/components/responses/UnexpectedErrorResponse"
           }
+        },
+        "x-api-units": {
+          "apiId": 2071,
+          "action": "AUTOML_WHAT_IF_ANALYSIS",
+          "category": "METADATA",
+          "units": 1,
+          "unitsBasis": "perRequest",
+          "unitsNote": "1 unit per request",
+          "categoryFrequencyLimitPerMinute": 60
         }
       }
     }

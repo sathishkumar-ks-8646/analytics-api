@@ -30,10 +30,10 @@ If the organisation has no White Label domain set up, these APIs will return a p
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Enable Workspace for Domain Access](#1-enable-workspace-for-domain-access) | POST | `/restapi/v2/workspaces/<workspace-id>/wlaccess` |
-| 2 | [Disable Workspace for Domain Access](#2-disable-workspace-for-domain-access) | DELETE | `/restapi/v2/workspaces/<workspace-id>/wlaccess` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Enable Workspace for Domain Access](#1-enable-workspace-for-domain-access) | POST | `/restapi/v2/workspaces/<workspace-id>/wlaccess` | 0.1 |
+| 2 | [Disable Workspace for Domain Access](#2-disable-workspace-for-domain-access) | DELETE | `/restapi/v2/workspaces/<workspace-id>/wlaccess` | 0.1 |
 
 ---
 
@@ -52,6 +52,8 @@ Calling this API on a workspace that is already enabled for domain access fails 
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the workspace's organisation, **and** the workspace's Account Admin must have a White Label / Client Portal domain configured. |
+| **API Units** | 0.1 units per request — gateway action `ENABLE_DOMAIN_WORKSPACE` (api-id `3022`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
@@ -147,6 +149,8 @@ Calling this API on a workspace that is not currently enabled for domain access 
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the workspace's organisation, **and** the workspace's Account Admin must have a White Label / Client Portal domain configured. |
+| **API Units** | 0.1 units per request — gateway action `DISABLE_DOMAIN_WORKSPACE` (api-id `3023`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only. There is no request body.
 
@@ -287,3 +291,35 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | Caller scope | Account Admin / Org Admin only | Any user with workspace access | Any user with workspace access |
 | Effect scope | Affects all portal domain users | Per-user preference only | Per-user preference only |
 | Prerequisite | Active White Label domain on the org | None | None |
+
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Enable Workspace for Domain Access](#1-enable-workspace-for-domain-access) | `ENABLE_DOMAIN_WORKSPACE` (3022) | METADATA | 0.1 | per request |
+| 2 | [Disable Workspace for Domain Access](#2-disable-workspace-for-domain-access) | `DISABLE_DOMAIN_WORKSPACE` (3023) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

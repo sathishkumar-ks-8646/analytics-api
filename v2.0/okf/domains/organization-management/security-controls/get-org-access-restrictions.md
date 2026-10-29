@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/security-controls/access-restrictions"
   domain: organization-management
   group: security-controls
+  api_units:
+    api_id: 3067
+    action: GET_ORG_ACCESS_RESTRICTIONS
+    category: METADATA
+    units: 1
+    units_basis: per_request
+    units_note: "1 unit per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -70,6 +78,8 @@ Returns the organisation's access restriction settings: the master switch and th
 | Permission required | The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins and custom-role users are refused (7301). See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 1 unit per request - action `GET_ORG_ACCESS_RESTRICTIONS` (api-id `3067`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`org-management-grouped-api.json`](../../../references/openapi/org-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1security-controls~1access-restrictions/get`; response schema `GetOrgAccessRestrictionsResponse` |
 
 # Request
@@ -268,3 +278,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Update Org Access Restrictions](update-org-access-restrictions.md), [Get Workspace Access Restrictions](get-workspace-access-restrictions.md), [Update Workspace Access Restrictions](update-workspace-access-restrictions.md).
 - [SDK examples](../../../sdk-examples/organization-management/security-controls/get-org-access-restrictions.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

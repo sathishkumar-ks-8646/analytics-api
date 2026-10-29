@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/data"
   domain: data-operations
   group: sync-data-export
+  api_units:
+    api_id: 7001
+    action: INITIATE_EXPORT
+    category: BULK
+    units: 0
+    units_basis: per_request
+    units_variable: true
+    units_note: "Variable - the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)"
+    category_frequency_limit: 40 requests/minute
   oauth_scopes:
     - ZohoAnalytics.data.read
   org_id_header: required
@@ -125,6 +134,8 @@ Note: Export Data API is restricted for certain resources (given below). For the
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - optional |
 | Success response | HTTP 200 - `text/csv`, `application/json`, `application/xml`, `application/vnd.ms-excel`, `application/pdf`, `text/html`, `image/png`, `image/jpeg` |
 | Content-Type | Varies with `responseFormat` — see [Response Structure by Format](#response-structure-by-format) |
+| API units | Variable - the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard) - action `INITIATE_EXPORT` (api-id `7001`), **BULK** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 40 requests/minute across all **BULK**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-operations-grouped-api.json`](../../../references/openapi/data-operations-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1data/get`; CONFIG schema `ExportConfig` |
 
 # Request
@@ -690,3 +701,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [Request conventions](../../../foundations/request-conventions.md), [Response envelope](../../../foundations/response-envelope.md), [Error code catalog](../../../foundations/error-codes.md).
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - [SDK examples](../../../sdk-examples/data-operations/sync-data-export/export-data-view.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

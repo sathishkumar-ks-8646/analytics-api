@@ -10,13 +10,13 @@ This document covers the APIs for creating, editing, deleting, listing, and copy
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Custom Formulas](#1-get-custom-formulas) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/customformulas` |
-| 2 | [Add Custom Formula](#2-add-custom-formula) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/customformulas` |
-| 3 | [Edit Custom Formula](#3-edit-custom-formula) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/customformulas/<formula-id>` |
-| 4 | [Delete Custom Formula](#4-delete-custom-formula) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/customformulas/<formula-id>` |
-| 5 | [Copy Custom Formulas](#5-copy-custom-formulas) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/formulas/copy` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Custom Formulas](#1-get-custom-formulas) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/customformulas` | 0.1 |
+| 2 | [Add Custom Formula](#2-add-custom-formula) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/customformulas` | 15 |
+| 3 | [Edit Custom Formula](#3-edit-custom-formula) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/customformulas/<formula-id>` | 15 |
+| 4 | [Delete Custom Formula](#4-delete-custom-formula) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/customformulas/<formula-id>` | 2 |
+| 5 | [Copy Custom Formulas](#5-copy-custom-formulas) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/formulas/copy` | 1 |
 
 ---
 
@@ -32,6 +32,8 @@ Returns the list of custom formula columns defined on the specified view.
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 30 requests per user per minute (10-minute lockout on breach). |
+| **API Units** | 0.1 units per request — gateway action `GET_FORMULA_COLUMN` (api-id `3036`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 30 requests per user per minute, 10-minute lockout on breach. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -125,6 +127,8 @@ Creates a new custom formula column on the specified view. The formula's value i
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 20 requests per user per minute (10-minute lockout on breach). |
+| **API Units** | 15 units per request — gateway action `ADD_FORMULA_COLUMN` (api-id `2041`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameters
 
@@ -235,6 +239,8 @@ Updates the expression and/or description of an existing custom formula column.
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 20 requests per user per minute (10-minute lockout on breach). |
+| **API Units** | 15 units per request — gateway action `EDIT_FORMULA_COLUMN` (api-id `2042`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameters
 
@@ -334,6 +340,8 @@ Permanently deletes a custom formula column from the specified view. By default,
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Formula permission on the view. |
 | **Rate Limit** | 30 requests per user per minute (10-minute lockout on breach). |
+| **API Units** | 2 units per request — gateway action `DELETE_FORMULA_COLUMN` (api-id `2043`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 30 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameters
 
@@ -429,6 +437,8 @@ Copies one or more custom formula columns (by name) from a view in the source wo
 | **ZANALYTICS-DEST-ORGID Header** | Conditionally required — set this when the destination workspace belongs to a different organisation than the one identified by `ZANALYTICS-ORGID` (Org Admin cross-org scenario). |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the destination organisation. This API is **not** available to Workspace Admins or any custom-permission user — only Account Admin / Org Admin roles are authorized. |
 | **Custom Domain** | **Not available** via White Label / Client Portal. |
+| **API Units** | 1 unit per request — gateway action `COPY_FORMULAS` (api-id `2021`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -579,3 +589,49 @@ No response body is returned for this API. Success is indicated solely by the HT
 | **Empty response bodies are common in this API set** | Edit Custom Formula, Delete Custom Formula, and Copy Custom Formulas all return no JSON payload on success — only an HTTP `204 No Content` status. Always design integrations to treat the HTTP status code as the success indicator rather than parsing a response body. |
 | **`customFormulas` naming convention** | Despite the underlying URL path supporting both `customformulas` and `formulacolumns`, the JSON response key is always `customFormulas` (camelCase) when the `customformulas` path is used — use this document's path consistently to avoid ambiguity. |
 | **Formula expressions are workspace-local** | An expression valid in one view cannot be blindly reused in another unless the referenced column names exist there too — this is precisely what Copy Custom Formulas automates, provided the destination view has matching columns. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Custom Formulas](#1-get-custom-formulas) | `GET_FORMULA_COLUMN` (3036) | METADATA | 0.1 | per request |
+| 2 | [Add Custom Formula](#2-add-custom-formula) | `ADD_FORMULA_COLUMN` (2041) | METADATA | 15 | per request |
+| 3 | [Edit Custom Formula](#3-edit-custom-formula) | `EDIT_FORMULA_COLUMN` (2042) | METADATA | 15 | per request |
+| 4 | [Delete Custom Formula](#4-delete-custom-formula) | `DELETE_FORMULA_COLUMN` (2043) | METADATA | 2 | per request |
+| 5 | [Copy Custom Formulas](#5-copy-custom-formulas) | `COPY_FORMULAS` (2021) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### API-specific throttles
+
+These APIs carry an extra threshold on top of the category ceiling. Crossing it locks the caller out of that API for the lock period.
+
+| API Name | Throttle |
+|----------|----------|
+| [Get Custom Formulas](#1-get-custom-formulas) | 30 requests per user per minute, 10-minute lockout on breach |
+| [Add Custom Formula](#2-add-custom-formula) | 20 requests per user per minute, 10-minute lockout on breach |
+| [Edit Custom Formula](#3-edit-custom-formula) | 20 requests per user per minute, 10-minute lockout on breach |
+| [Delete Custom Formula](#4-delete-custom-formula) | 30 requests per user per minute, 10-minute lockout on breach |
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

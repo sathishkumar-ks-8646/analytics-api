@@ -37,12 +37,12 @@ The trade for that extra round trip is that the restrictions of the synchronous 
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Create Export Job using SQL Query (Asynchronous)](#1-create-export-job-using-sql-query-asynchronous) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/data` |
-| 2 | [Create Export Job using View ID (Asynchronous)](#2-create-export-job-using-view-id-asynchronous) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/views/<view-id>/data` |
-| 3 | [Get Export Job Details](#3-get-export-job-details) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/exportjobs/<job-id>` |
-| 4 | [Download Exported Data](#4-download-exported-data) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/exportjobs/<job-id>/data` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Create Export Job using SQL Query (Asynchronous)](#1-create-export-job-using-sql-query-asynchronous) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/data` | variable |
+| 2 | [Create Export Job using View ID (Asynchronous)](#2-create-export-job-using-view-id-asynchronous) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/views/<view-id>/data` | variable |
+| 3 | [Get Export Job Details](#3-get-export-job-details) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/exportjobs/<job-id>` | 0 |
+| 4 | [Download Exported Data](#4-download-exported-data) | GET | `/restapi/v2/bulk/workspaces/<workspace-id>/exportjobs/<job-id>/data` | 0 |
 
 > **Note on naming:** The two job-creation APIs are documented as **"Create Export Job using SQL Query (Asynchronous)"** and **"Create Export Job using View ID (Asynchronous)"**; the remaining two as **"Get Export Job Details"** and **"Download Exported Data"**.
 
@@ -382,6 +382,8 @@ Creates an export job whose source is an ad-hoc SQL `SELECT` statement rather th
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** — it carries `sqlQuery` |
 | **Success Status** | `200 OK` with a JSON body carrying `data.jobId` |
+| **API Units** | Variable — the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard) — gateway action `INITIATE_EXPORT` (api-id `7001`), **BULK** unit category. |
+| **Frequency Limit** | 40 requests/minute shared across every **BULK**-category call of the organisation. |
 
 **Path parameters**
 
@@ -590,6 +592,8 @@ Creates an export job whose source is a saved view — including the view types 
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Optional — omitting it queues a CSV export of the whole view |
 | **Success Status** | `200 OK` with a JSON body carrying `data.jobId` |
+| **API Units** | Variable — the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard) — gateway action `INITIATE_EXPORT` (api-id `7001`), **BULK** unit category. |
+| **Frequency Limit** | 40 requests/minute shared across every **BULK**-category call of the organisation. |
 
 **Path parameters**
 
@@ -812,6 +816,8 @@ Reports the progress of an export job, and once it has finished, where to collec
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Not applicable — this API takes no CONFIG attributes |
 | **Success Status** | `200 OK` with a JSON body |
+| **API Units** | 0 — this request is free; no API units are deducted. Gateway action `EXPORT_JOB_STATUS` (api-id `9001`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -972,6 +978,8 @@ Returns the exported file produced by a completed export job.
 | **CONFIG** | Not applicable — this API takes no CONFIG attributes |
 | **Success Status** | `200 OK`, body is the exported file |
 | **Content-Type** | Varies with the job's `responseFormat` — see [Exported File Structure by Format](#exported-file-structure-by-format) |
+| **API Units** | 0 — this request is free; no API units are deducted. Gateway action `DOWNLOAD_FILE` (api-id `9002`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -1389,3 +1397,41 @@ Defaults: `leftHeader` `1`, `centerHeader` `0`, `rightHeader` `2`, `leftFooter` 
 | `includeTitle`, `includeDesc` | ✓ | ✓ |
 
 [Get Export Job Details](#3-get-export-job-details) and [Download Exported Data](#4-download-exported-data) take no CONFIG attributes at all.
+
+---
+
+## Appendix G – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Create Export Job using SQL Query (Asynchronous)](#1-create-export-job-using-sql-query-asynchronous) | `INITIATE_EXPORT` (7001) | BULK | variable | depends on payload — see the notes below |
+| 2 | [Create Export Job using View ID (Asynchronous)](#2-create-export-job-using-view-id-asynchronous) | `INITIATE_EXPORT` (7001) | BULK | variable | depends on payload — see the notes below |
+| 3 | [Get Export Job Details](#3-get-export-job-details) | `EXPORT_JOB_STATUS` (9001) | METADATA | 0 | not charged |
+| 4 | [Download Exported Data](#4-download-exported-data) | `DOWNLOAD_FILE` (9002) | METADATA | 0 | not charged |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | Yes |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### Variable costs in this document
+
+- **Create Export Job using SQL Query (Asynchronous)** (`INITIATE_EXPORT`, 7001): Variable — the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

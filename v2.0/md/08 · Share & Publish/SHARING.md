@@ -15,14 +15,14 @@ Each share grants a specific **permission set** (read, export, row-level write a
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Workspace Shared Details](#1-get-workspace-shared-details) | GET | `/restapi/v2/workspaces/<workspace-id>/share` |
-| 2 | [Share Views](#2-share-views) | POST | `/restapi/v2/workspaces/<workspace-id>/share` |
-| 3 | [Update Shared Details](#3-update-shared-details) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/share` |
-| 4 | [Get Shared Details](#4-get-shared-details) | GET | `/restapi/v2/workspaces/<workspace-id>/share/shareddetails` |
-| 5 | [Remove Shared Views](#5-remove-shared-views) | DELETE | `/restapi/v2/workspaces/<workspace-id>/share` |
-| 6 | [Get My Permissions](#6-get-my-permissions) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/share/userpermissions` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Workspace Shared Details](#1-get-workspace-shared-details) | GET | `/restapi/v2/workspaces/<workspace-id>/share` | 3 |
+| 2 | [Share Views](#2-share-views) | POST | `/restapi/v2/workspaces/<workspace-id>/share` | 5 |
+| 3 | [Update Shared Details](#3-update-shared-details) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/share` | 0.1 |
+| 4 | [Get Shared Details](#4-get-shared-details) | GET | `/restapi/v2/workspaces/<workspace-id>/share/shareddetails` | 0.1 |
+| 5 | [Remove Shared Views](#5-remove-shared-views) | DELETE | `/restapi/v2/workspaces/<workspace-id>/share` | 5 |
+| 6 | [Get My Permissions](#6-get-my-permissions) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/share/userpermissions` | 0.1 |
 
 ---
 
@@ -37,6 +37,8 @@ Returns a consolidated view of every share that exists in the workspace — grou
 | **OAuth Scope** | `ZohoAnalytics.share.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the specified workspace. This API is restricted to workspace owners — there is no permission-based alternative. |
+| **API Units** | 3 units per request — gateway action `GET_WORKSPACE_SHARE_INFO` (api-id `4007`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -182,6 +184,8 @@ Shares one or more views with a set of users and/or groups, with a specific perm
 | **OAuth Scope** | `ZohoAnalytics.share.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Share permission on all of the specified `viewIds`. |
+| **API Units** | 5 units per request — gateway action `SHARE_VIEWS` (api-id `4008`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -361,6 +365,8 @@ Updates the permission set, column/row restrictions, or filter criteria of an **
 | **OAuth Scope** | `ZohoAnalytics.share.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Share permission on `<view-id>`. |
+| **API Units** | 0.1 units per request — gateway action `UPDATE_SHARED_DETAILS_FOR_VIEW` (api-id `4020`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -468,6 +474,8 @@ Returns detailed share information — per user and per group, including permiss
 | **OAuth Scope** | `ZohoAnalytics.share.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Share permission on all of the specified `viewIds`. |
+| **API Units** | 0.1 units per request — gateway action `GET_SHARED_DETAILS_FOR_VIEW` (api-id `4010`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -734,6 +742,8 @@ Removes an existing share of one or more views from a set of users and/or groups
 | **OAuth Scope** | `ZohoAnalytics.share.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | For removing specific `viewIds`: the authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Share permission on the specified views. For `removeAllViews: true`: the authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin of the workspace — this bulk option is restricted to workspace owners. |
+| **API Units** | 5 units per request — gateway action `REMOVE_SHARE` (api-id `4009`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -840,6 +850,8 @@ Returns the effective permission set the **calling user** currently has on a spe
 | **OAuth Scope** | `ZohoAnalytics.share.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | Any authenticated user with at least Read-Only access to `<view-id>` (i.e., any user the view has been shared with, or the view's owner/Workspace Admin). |
+| **API Units** | 0.1 units per request — gateway action `GET_MY_PERMISSIONS` (api-id `4011`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -1021,3 +1033,39 @@ ZANALYTICS-ORGID: 700000123456
 | **IDs are transmitted as strings** | `viewId`, `groupId`, `sharedToZuId`, `sharedToGroupId`, and all other ID-like fields are JSON strings in every response, even though they are numeric — always parse them as long/string, not as native JSON numbers, to avoid precision loss on large IDs. |
 | **`criteria` / `inheritParentFilterCriteria` are always strings in Get Shared Details** | Even though `inheritParentFilterCriteria` is conceptually boolean, Get Shared Details serializes it as the string `"true"`/`"false"` rather than a native boolean — this differs from the CONFIG request format, where it is sent as a native boolean. |
 | **Empty containers, not omitted fields** | `userShareInfo`, `groupShareInfo`, `sharedColumns`, `vudColumns`, `drillColumns`, etc. are always present in successful responses but empty (`[]`/`{}`) when there is nothing to report — do not treat their absence as an error condition (they are never absent). |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Workspace Shared Details](#1-get-workspace-shared-details) | `GET_WORKSPACE_SHARE_INFO` (4007) | METADATA | 3 | per request |
+| 2 | [Share Views](#2-share-views) | `SHARE_VIEWS` (4008) | METADATA | 5 | per request |
+| 3 | [Update Shared Details](#3-update-shared-details) | `UPDATE_SHARED_DETAILS_FOR_VIEW` (4020) | METADATA | 0.1 | per request |
+| 4 | [Get Shared Details](#4-get-shared-details) | `GET_SHARED_DETAILS_FOR_VIEW` (4010) | METADATA | 0.1 | per request |
+| 5 | [Remove Shared Views](#5-remove-shared-views) | `REMOVE_SHARE` (4009) | METADATA | 5 | per request |
+| 6 | [Get My Permissions](#6-get-my-permissions) | `GET_MY_PERMISSIONS` (4011) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

@@ -17,14 +17,23 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed"
       doc: "/domains/share-and-publish/embed-url/get-embed-url.md"
+      api_units: 1
+      api_units_action: GET_EMBED_URL
+      api_units_category: METADATA
     - operation_id: getEmbedUrls
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embedurls"
       doc: "/domains/share-and-publish/embed-url/get-embed-urls.md"
+      api_units: 0.5
+      api_units_action: FETCH_ALL_EMBED_URLS
+      api_units_category: METADATA
     - operation_id: deleteEmbedUrl
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed"
       doc: "/domains/share-and-publish/embed-url/delete-embed-url.md"
+      api_units: 0.5
+      api_units_action: DELETE_EMBED_URL
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/share-publish-grouped-api.json"
@@ -45,11 +54,11 @@ APIs for retrieving embeddable view URLs.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Embed URL](get-embed-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed` | `getEmbedUrl` | `ZohoAnalytics.embed.read` | 200 |
-| [Fetch All Embed URLs](get-embed-urls.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embedurls` | `getEmbedUrls` |  | 200 |
-| [Delete Embed URL](delete-embed-url.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed` | `deleteEmbedUrl` |  | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Embed URL](get-embed-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed` | `getEmbedUrl` | `ZohoAnalytics.embed.read` | 200 | 1 |
+| [Fetch All Embed URLs](get-embed-urls.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embedurls` | `getEmbedUrls` |  | 200 | 0.5 |
+| [Delete Embed URL](delete-embed-url.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish/embed` | `deleteEmbedUrl` |  | 200 | 0.5 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

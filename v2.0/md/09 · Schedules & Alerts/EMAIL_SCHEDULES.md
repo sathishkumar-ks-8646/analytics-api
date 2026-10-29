@@ -26,14 +26,14 @@ An **email schedule** is a named, recurring job that exports one or more views i
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Email Schedules](#1-get-email-schedules) | GET | `/restapi/v2/workspaces/<workspace-id>/emailschedules` |
-| 2 | [Create Email Schedule](#2-create-email-schedule) | POST | `/restapi/v2/workspaces/<workspace-id>/emailschedules` |
-| 3 | [Update Email Schedule](#3-update-email-schedule) | PUT | `/restapi/v2/workspaces/<workspace-id>/emailschedules/<schedule-id>` |
-| 4 | [Delete Email Schedule](#4-delete-email-schedule) | DELETE | `/restapi/v2/workspaces/<workspace-id>/emailschedules/<schedule-id>` |
-| 5 | [Change Email Schedule Status](#5-change-email-schedule-status) | PUT | `/restapi/v2/workspaces/<workspace-id>/emailschedules/<schedule-id>/status` |
-| 6 | [Trigger Email Schedule](#6-trigger-email-schedule) | POST | `/restapi/v2/workspaces/<workspace-id>/emailschedules/<schedule-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Email Schedules](#1-get-email-schedules) | GET | `/restapi/v2/workspaces/<workspace-id>/emailschedules` | 1 |
+| 2 | [Create Email Schedule](#2-create-email-schedule) | POST | `/restapi/v2/workspaces/<workspace-id>/emailschedules` | 3 |
+| 3 | [Update Email Schedule](#3-update-email-schedule) | PUT | `/restapi/v2/workspaces/<workspace-id>/emailschedules/<schedule-id>` | 3 |
+| 4 | [Delete Email Schedule](#4-delete-email-schedule) | DELETE | `/restapi/v2/workspaces/<workspace-id>/emailschedules/<schedule-id>` | 3 |
+| 5 | [Change Email Schedule Status](#5-change-email-schedule-status) | PUT | `/restapi/v2/workspaces/<workspace-id>/emailschedules/<schedule-id>/status` | 1 |
+| 6 | [Trigger Email Schedule](#6-trigger-email-schedule) | POST | `/restapi/v2/workspaces/<workspace-id>/emailschedules/<schedule-id>` | 1 |
 
 > **Note on naming:** Per the request for this batch, "Get Email Schedule List" is documented here as **"Get Email Schedules"**. The other five names are unchanged.
 >
@@ -104,6 +104,8 @@ Returns every email schedule defined in the workspace, with its name, run period
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Email Schedule permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `GET EMAIL SCHEDULES` (api-id `3038`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -242,6 +244,8 @@ Creates a new recurring email schedule in the workspace and returns its ID.
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Email Schedule permission on the workspace. The caller must additionally hold **Export** permission on every view listed in `viewIds`. |
+| **API Units** | 3 units per request — gateway action `CREATE_EMAIL_SCHEDULE` (api-id `2050`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -557,6 +561,8 @@ Updates an existing schedule's name, run period, recipients, or email content. *
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Email Schedule permission on the workspace. A custom-role user whose role does not grant access to all email schedules may update **only schedules they created themselves** — otherwise `8002`. |
+| **API Units** | 3 units per request — gateway action `UPDATE_EMAIL_SCHEDULE` (api-id `2051`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -772,6 +778,8 @@ Permanently deletes an email schedule. The views it delivered are unaffected; on
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Email Schedule permission on the workspace. A custom-role user whose role does not grant access to all email schedules may delete **only schedules they created themselves** — otherwise `8002`. |
+| **API Units** | 3 units per request — gateway action `DELETE_EMAIL_SCHEDULE` (api-id `2052`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -873,6 +881,8 @@ Activates or deactivates a schedule without deleting it. A deactivated schedule 
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Email Schedule permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `CHANGE_EMAIL_SCHEDULE_STATUS` (api-id `2053`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -1007,6 +1017,8 @@ Runs a schedule immediately — the "send now" action. **This sends real email t
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Create Email Schedule permission on the workspace. Export must also be enabled for the organization and for the workspace. |
+| **API Units** | 1 unit per request — gateway action `TRIGGER_EMAIL_SCHEDULE` (api-id `2054`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -1244,3 +1256,39 @@ CONFIG={"scheduleName":"Daily Sales Snapshot","viewIds":["137687000006991601"],"
 | **Responses are extensible** | Some builds return additional per-schedule fields such as `subject`, `message`, and `isBCC`. Ignore unrecognised keys rather than validating against a closed schema. |
 | **`schedulePeriod` is localised prose** | Its wording and timezone abbreviation depend on the schedule and the organization, so it is unsuitable for equality checks, sorting, or parsing. Compare schedules on `scheduleId` or `scheduleName` instead. |
 | **Error codes 8000–8053 in this family are email-schedule specific** | They are defined in the mail-schedule error set and are numerically distinct from the identically numbered codes used by other API families. Always match on the `summary` symbolic name in addition to `errorCode` when handling errors across families. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Email Schedules](#1-get-email-schedules) | `GET EMAIL SCHEDULES` (3038) | METADATA | 1 | per request |
+| 2 | [Create Email Schedule](#2-create-email-schedule) | `CREATE_EMAIL_SCHEDULE` (2050) | METADATA | 3 | per request |
+| 3 | [Update Email Schedule](#3-update-email-schedule) | `UPDATE_EMAIL_SCHEDULE` (2051) | METADATA | 3 | per request |
+| 4 | [Delete Email Schedule](#4-delete-email-schedule) | `DELETE_EMAIL_SCHEDULE` (2052) | METADATA | 3 | per request |
+| 5 | [Change Email Schedule Status](#5-change-email-schedule-status) | `CHANGE_EMAIL_SCHEDULE_STATUS` (2053) | METADATA | 1 | per request |
+| 6 | [Trigger Email Schedule](#6-trigger-email-schedule) | `TRIGGER_EMAIL_SCHEDULE` (2054) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas/{formula-id}"
   domain: data-modeling-and-schema
   group: aggregate-formulas
+  api_units:
+    api_id: 2045
+    action: EDIT_AGG_FORMULA
+    category: METADATA
+    units: 5
+    units_basis: per_request
+    units_note: "5 units per request"
+    category_frequency_limit: 60 requests/minute
+    endpoint_throttle: "20 requests per user per minute, 10-minute lockout on breach"
   oauth_scopes:
     - ZohoAnalytics.modeling.update
   org_id_header: required
@@ -82,6 +91,8 @@ At least one of `formulaName` or `expression` must be sent. When `formulaName` i
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 204 with no body |
 | Rate limit | 20 requests per user per minute (10-minute lockout on breach). See [Rate limits](../../../foundations/rate-limits-and-quotas.md). |
+| API units | 5 units per request - action `EDIT_AGG_FORMULA` (api-id `2045`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization; this endpoint is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-modeling-schema-grouped-api.json`](../../../references/openapi/data-modeling-schema-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1aggregateformulas~1{formula-id}/put`; CONFIG schema `EditAggregateFormulaConfig` |
 
 # Request
@@ -225,3 +236,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Aggregate Formula](get-aggregate-formula-list.md), [Add Aggregate Formula](add-aggregate-formula.md), [Delete Aggregate Formula](delete-aggregate-formula.md), [Get Unified Metrics in Workspace](get-aggregate-formulas-in-workspace.md), [Get Aggregate Formula Dependents](get-aggregate-formula-dependents.md), [Get Aggregate Formula Value](get-aggregate-formula-value.md).
 - [SDK examples](../../../sdk-examples/data-modeling-and-schema/aggregate-formulas/edit-aggregate-formula.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

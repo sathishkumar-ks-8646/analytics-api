@@ -56,12 +56,12 @@ Every section is **partially updated**. An omitted section is untouched. Within 
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Org Access Restrictions](#1-get-org-access-restrictions) | GET | `/restapi/v2/security-controls/access-restrictions` |
-| 2 | [Update Org Access Restrictions](#2-update-org-access-restrictions) | PUT | `/restapi/v2/security-controls/access-restrictions` |
-| 3 | [Get Workspace Access Restrictions](#3-get-workspace-access-restrictions) | GET | `/restapi/v2/security-controls/workspaces/<workspace-id>/access-restrictions` |
-| 4 | [Update Workspace Access Restrictions](#4-update-workspace-access-restrictions) | PUT | `/restapi/v2/security-controls/workspaces/<workspace-id>/access-restrictions` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Org Access Restrictions](#1-get-org-access-restrictions) | GET | `/restapi/v2/security-controls/access-restrictions` | 1 |
+| 2 | [Update Org Access Restrictions](#2-update-org-access-restrictions) | PUT | `/restapi/v2/security-controls/access-restrictions` | 1 |
+| 3 | [Get Workspace Access Restrictions](#3-get-workspace-access-restrictions) | GET | `/restapi/v2/security-controls/workspaces/<workspace-id>/access-restrictions` | 1 |
+| 4 | [Update Workspace Access Restrictions](#4-update-workspace-access-restrictions) | PUT | `/restapi/v2/security-controls/workspaces/<workspace-id>/access-restrictions` | 1 |
 
 > **Note on method overloading:** the read and update APIs of each level share a path and differ only by method. `GET` never changes anything; `PUT` changes live security settings immediately. There is no `POST` or `DELETE`.
 
@@ -135,6 +135,8 @@ Returns the organisation's access restriction settings: the master switch and th
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation to read. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins and custom-role users are refused (`7301`). |
+| **API Units** | 1 unit per request — gateway action `GET_ORG_ACCESS_RESTRICTIONS` (api-id `3067`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -307,6 +309,8 @@ Switches the organisation's access restrictions on or off and updates any of the
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation to update. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins and custom-role users are refused (`7301`). |
+| **API Units** | 1 unit per request — gateway action `UPDATE_ORG_ACCESS_RESTRICTIONS` (api-id `3068`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -493,6 +497,8 @@ Returns the access restriction settings in effect for one workspace and whether 
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation that owns the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins of the workspace and custom-role users are refused (`7301`). |
+| **API Units** | 1 unit per request — gateway action `GET_WORKSPACE_ACCESS_RESTRICTIONS` (api-id `3069`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -666,6 +672,8 @@ Switches one workspace between following the organisation and having its own set
 | **OAuth Scope** | `ZohoAnalytics.metadata.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the organisation that owns the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organisation. Workspace Admins of the workspace and custom-role users are refused (`7301`). The organisation's `accessRestrictionEnabled` must be `true` (`8197`). |
+| **API Units** | 1 unit per request — gateway action `UPDATE_WORKSPACE_ACCESS_RESTRICTIONS` (api-id `3070`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -968,3 +976,37 @@ CONFIG={"accessRestrictionEnabled":true}
 | `publicViews` | ✔ | ✔ |
 | `exportViews` | ✔ | ✔ |
 | `emailViews` | ✔ | ✔ |
+
+---
+
+## Appendix G – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Org Access Restrictions](#1-get-org-access-restrictions) | `GET_ORG_ACCESS_RESTRICTIONS` (3067) | METADATA | 1 | per request |
+| 2 | [Update Org Access Restrictions](#2-update-org-access-restrictions) | `UPDATE_ORG_ACCESS_RESTRICTIONS` (3068) | METADATA | 1 | per request |
+| 3 | [Get Workspace Access Restrictions](#3-get-workspace-access-restrictions) | `GET_WORKSPACE_ACCESS_RESTRICTIONS` (3069) | METADATA | 1 | per request |
+| 4 | [Update Workspace Access Restrictions](#4-update-workspace-access-restrictions) | `UPDATE_WORKSPACE_ACCESS_RESTRICTIONS` (3070) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

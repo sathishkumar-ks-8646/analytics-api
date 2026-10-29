@@ -17,38 +17,65 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/saveas"
       doc: "/domains/views-management/view-operations/save-as-view.md"
+      api_units: 1
+      api_units_action: SAVEAS_VIEWS
+      api_units_category: METADATA
     - operation_id: copyViews
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/copy"
       doc: "/domains/views-management/view-operations/copy-views.md"
+      api_units: 1
+      api_units_action: COPY_VIEWS
+      api_units_category: METADATA
     - operation_id: createSimilarViews
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/similarviews"
       doc: "/domains/views-management/view-operations/create-similar-views.md"
+      api_units: 1
+      api_units_action: CREATE_SIMILAR_VIEWS
+      api_units_category: METADATA
     - operation_id: renameView
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}"
       doc: "/domains/views-management/view-operations/rename-view.md"
+      api_units: 1
+      api_units_action: RENAME_VIEW
+      api_units_category: METADATA
     - operation_id: deleteView
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}"
       doc: "/domains/views-management/view-operations/delete-view.md"
+      api_units: 2
+      api_units_action: DELETE_VIEW
+      api_units_category: METADATA
     - operation_id: getViews
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views"
       doc: "/domains/views-management/view-operations/get-views.md"
+      api_units: 0.1
+      api_units_action: GET_VIEWS
+      api_units_category: METADATA
     - operation_id: getViewDetails
       method: GET
       path: "/restapi/v2/views/{view-id}"
       doc: "/domains/views-management/view-operations/get-view-details.md"
+      api_units: 0.1
+      api_units_action: GET_VIEW_DETAILS
+      api_units_category: METADATA
     - operation_id: getViewUrl
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish"
       doc: "/domains/views-management/view-operations/get-view-url.md"
+      api_units: 0.1
+      api_units_action: GET_VIEW_URL
+      api_units_category: METADATA
     - operation_id: getViewDependents
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents"
       doc: "/domains/views-management/view-operations/get-view-dependents.md"
+      api_units: 1
+      api_units_action: GET_VIEW_DEPENDENTS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
@@ -77,17 +104,17 @@ APIs for creating, copying, renaming, deleting, and retrieving views.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Save As View](save-as-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/saveas` | `saveAsView` | `ZohoAnalytics.modeling.create` | 200 |
-| [Copy Views](copy-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/copy` | `copyViews` | `ZohoAnalytics.modeling.create` | 200 |
-| [Create Similar Views](create-similar-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/similarviews` | `createSimilarViews` | `ZohoAnalytics.modeling.create` | 204 |
-| [Rename View](rename-view.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}` | `renameView` | `ZohoAnalytics.modeling.update` | 204 |
-| [Delete View](delete-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}` | `deleteView` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Get View List](get-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views` | `getViews` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get View Details](get-view-details.md) | GET | `/restapi/v2/views/{view-id}` | `getViewDetails` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get View URL](get-view-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish` | `getViewUrl` | `ZohoAnalytics.embed.read` | 200 |
-| [Get View Dependents](get-view-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents` | `getViewDependents` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Save As View](save-as-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/saveas` | `saveAsView` | `ZohoAnalytics.modeling.create` | 200 | 1 |
+| [Copy Views](copy-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/copy` | `copyViews` | `ZohoAnalytics.modeling.create` | 200 | 1 |
+| [Create Similar Views](create-similar-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/similarviews` | `createSimilarViews` | `ZohoAnalytics.modeling.create` | 204 | 1 |
+| [Rename View](rename-view.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}` | `renameView` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Delete View](delete-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}` | `deleteView` | `ZohoAnalytics.modeling.delete` | 204 | 2 |
+| [Get View List](get-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views` | `getViews` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
+| [Get View Details](get-view-details.md) | GET | `/restapi/v2/views/{view-id}` | `getViewDetails` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
+| [Get View URL](get-view-url.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/publish` | `getViewUrl` | `ZohoAnalytics.embed.read` | 200 | 0.1 |
+| [Get View Dependents](get-view-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/dependents` | `getViewDependents` | `ZohoAnalytics.metadata.read` | 200 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

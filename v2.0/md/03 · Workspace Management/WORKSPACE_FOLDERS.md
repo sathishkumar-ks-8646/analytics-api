@@ -12,16 +12,16 @@ Folders provide a hierarchical organization layer within a workspace. Views (tab
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Folder List](#1-get-folder-list) | GET | `/restapi/v2/workspaces/<workspace-id>/folders` |
-| 2 | [Create Folder](#2-create-folder) | POST | `/restapi/v2/workspaces/<workspace-id>/folders` |
-| 3 | [Rename Folder](#3-rename-folder) | PUT | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>` |
-| 4 | [Delete Folder](#4-delete-folder) | DELETE | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>` |
-| 5 | [Change Folder Hierarchy](#5-change-folder-hierarchy) | PUT | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>/move` |
-| 6 | [Change Folder Position](#6-change-folder-position) | PUT | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>/reorder` |
-| 7 | [Move Views To Folder](#7-move-views-to-folder) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/movetofolder` |
-| 8 | [Make Default Folder](#8-make-default-folder) | PUT | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>/default` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Folder List](#1-get-folder-list) | GET | `/restapi/v2/workspaces/<workspace-id>/folders` | 0.1 |
+| 2 | [Create Folder](#2-create-folder) | POST | `/restapi/v2/workspaces/<workspace-id>/folders` | 1 |
+| 3 | [Rename Folder](#3-rename-folder) | PUT | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>` | 1 |
+| 4 | [Delete Folder](#4-delete-folder) | DELETE | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>` | 1 |
+| 5 | [Change Folder Hierarchy](#5-change-folder-hierarchy) | PUT | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>/move` | 1 |
+| 6 | [Change Folder Position](#6-change-folder-position) | PUT | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>/reorder` | 1 |
+| 7 | [Move Views To Folder](#7-move-views-to-folder) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/movetofolder` | 1 |
+| 8 | [Make Default Folder](#8-make-default-folder) | PUT | `/restapi/v2/workspaces/<workspace-id>/folders/<folder-id>/default` | 1 |
 
 ---
 
@@ -36,6 +36,8 @@ Returns all folders in the specified workspace, including their names, descripti
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or a Shared User or Group Member with at least READ permission on one or more views in the workspace. |
+| **API Units** | 0.1 units per request — gateway action `GET_FOLDERS` (api-id `3006`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -220,6 +222,8 @@ Creates a new folder in the specified workspace. The folder can optionally be cr
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Folder permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `CREATE_FOLDER` (api-id `2010`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -339,6 +343,8 @@ Updates the name and/or description of an existing folder. If `folderDesc` is om
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Folder permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `RENAME_FOLDER` (api-id `2011`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -433,6 +439,8 @@ Deletes the specified folder from the workspace. By default, views inside the fo
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Folder permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `DELETE_FOLDER` (api-id `2012`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -531,6 +539,8 @@ The `hierarchy` parameter controls the direction of the change:
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Folder permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `CHANGE_FOLDER_HIERARCHY` (api-id `2047`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -623,6 +633,8 @@ Reorders a folder by moving it to just above another specified folder at the sam
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Folder permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `CHANGE_FOLDER_POSITION` (api-id `2048`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -712,6 +724,8 @@ Moves one or more views (tables, reports, dashboards) into the specified destina
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Folder permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `MOVE_VIEWS_TO_FOLDER` (api-id `2049`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -804,6 +818,8 @@ Sets the specified folder as the default folder for the workspace. The previous 
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Folder permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `MAKE_DEFAULT_FOLDER` (api-id `2030`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -959,3 +975,41 @@ This appendix consolidates key behaviours, edge cases, and inter-API dependency 
 | **Subfolder nesting limit** | Exactly one level of nesting is supported. A root-level folder can have sub-folders; sub-folders cannot have children. |
 | **Create Folder response** | Returns only `folderId`. All other fields (`folderName`, `folderDesc`, `folderIndex`, `isDefault`, `parentFolderId`) are obtained by calling Get Folder List. |
 | **Rename Folder `folderDesc` reset** | Omitting `folderDesc` in a Rename request permanently clears the description. This is intentional API behaviour, not a bug. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Folder List](#1-get-folder-list) | `GET_FOLDERS` (3006) | METADATA | 0.1 | per request |
+| 2 | [Create Folder](#2-create-folder) | `CREATE_FOLDER` (2010) | METADATA | 1 | per request |
+| 3 | [Rename Folder](#3-rename-folder) | `RENAME_FOLDER` (2011) | METADATA | 1 | per request |
+| 4 | [Delete Folder](#4-delete-folder) | `DELETE_FOLDER` (2012) | METADATA | 1 | per request |
+| 5 | [Change Folder Hierarchy](#5-change-folder-hierarchy) | `CHANGE_FOLDER_HIERARCHY` (2047) | METADATA | 1 | per request |
+| 6 | [Change Folder Position](#6-change-folder-position) | `CHANGE_FOLDER_POSITION` (2048) | METADATA | 1 | per request |
+| 7 | [Move Views To Folder](#7-move-views-to-folder) | `MOVE_VIEWS_TO_FOLDER` (2049) | METADATA | 1 | per request |
+| 8 | [Make Default Folder](#8-make-default-folder) | `MAKE_DEFAULT_FOLDER` (2030) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

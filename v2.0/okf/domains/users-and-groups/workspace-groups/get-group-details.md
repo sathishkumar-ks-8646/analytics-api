@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/groups/{group-id}"
   domain: users-and-groups
   group: workspace-groups
+  api_units:
+    api_id: 4018
+    action: GET_GROUP_DETAILS
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.share.read
   org_id_header: required
@@ -72,6 +80,8 @@ For Client Portal Admins or users visiting via a custom portal domain URL, the r
 | Permission required | The authenticated user must be a Workspace Admin of the specified workspace. Account Admins and Organization Admins also have access. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_GROUP_DETAILS` (api-id `4018`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`user-groups-grouped-api.json`](../../../references/openapi/user-groups-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1groups~1{group-id}/get`; response schema `GetGroupDetailsResponse` |
 
 # Request
@@ -226,3 +236,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Group List](get-groups.md), [Create Group](create-group.md), [Rename Group](rename-group.md), [Add Group Members](add-group-members.md), [Remove Group Members](remove-group-members.md), [Delete Group](delete-group.md).
 - [SDK examples](../../../sdk-examples/users-and-groups/workspace-groups/get-group-details.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

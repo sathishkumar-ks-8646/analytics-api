@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/metadetails"
   domain: organization-management
   group: org-info-and-settings
+  api_units:
+    api_id: 3021
+    action: GET_META_DETAILS
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.read
   org_id_header: required
@@ -73,6 +81,8 @@ Resolves a workspace (and optionally a view) **by name** to return its numeric I
 | Permission required | The authenticated user must have at least Read access on the specified workspace (for workspace-only lookup), or Read access on the specific view (for view lookup). Workspace Admins, Account Admins, Organization Admins, and any user with at least one shared view in the workspace can call this API. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | JSON object sent as the URL-encoded `CONFIG` query parameter - **mandatory** |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_META_DETAILS` (api-id `3021`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`org-management-grouped-api.json`](../../../references/openapi/org-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1metadetails/get`; CONFIG schema `GetMetaDetailsConfig`; response schema `GetMetaDetailsResponse` |
 
 # Request
@@ -258,3 +268,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Resource Details](get-resource-details.md), [Get Subscription Details](get-subscription-details.md).
 - [SDK examples](../../../sdk-examples/organization-management/org-info-and-settings/get-meta-details.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

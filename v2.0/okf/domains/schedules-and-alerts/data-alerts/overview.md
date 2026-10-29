@@ -17,42 +17,72 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/alerts"
       doc: "/domains/schedules-and-alerts/data-alerts/get-alerts-in-workspace.md"
+      api_units: 2
+      api_units_action: GET_ALERTS_IN_WORKSPACE
+      api_units_category: METADATA
     - operation_id: getAlertsInView
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts"
       doc: "/domains/schedules-and-alerts/data-alerts/get-alerts-in-view.md"
+      api_units: 0.5
+      api_units_action: GET_ALERTS_IN_VIEW
+      api_units_category: METADATA
     - operation_id: getViewMetadataForAlert
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata"
       doc: "/domains/schedules-and-alerts/data-alerts/get-view-metadata-for-alert.md"
+      api_units: 1
+      api_units_action: GET_VIEW_METADATA_FOR_ALERT
+      api_units_category: METADATA
     - operation_id: getAlertConfiguration
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}"
       doc: "/domains/schedules-and-alerts/data-alerts/get-alert-configuration.md"
+      api_units: 1
+      api_units_action: GET_ALERT_CONFIGURATION
+      api_units_category: METADATA
     - operation_id: createAlert
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts"
       doc: "/domains/schedules-and-alerts/data-alerts/create-alert.md"
+      api_units: 3
+      api_units_action: CREATE_ALERT
+      api_units_category: METADATA
     - operation_id: updateAlert
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}"
       doc: "/domains/schedules-and-alerts/data-alerts/update-alert.md"
+      api_units: 3
+      api_units_action: UPDATE_ALERT
+      api_units_category: METADATA
     - operation_id: deleteAlerts
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/alerts"
       doc: "/domains/schedules-and-alerts/data-alerts/delete-alerts.md"
+      api_units: 2
+      api_units_action: DELETE_ALERTS
+      api_units_category: METADATA
     - operation_id: changeAlertStatus
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/alerts/status"
       doc: "/domains/schedules-and-alerts/data-alerts/change-alert-status.md"
+      api_units: 1
+      api_units_action: CHANGE_ALERT_STATUS
+      api_units_category: METADATA
     - operation_id: runAlert
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute"
       doc: "/domains/schedules-and-alerts/data-alerts/run-alert.md"
+      api_units: 1
+      api_units_action: RUN_ALERT
+      api_units_category: METADATA
     - operation_id: getAlertEvents
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events"
       doc: "/domains/schedules-and-alerts/data-alerts/get-alert-events.md"
+      api_units: 1
+      api_units_action: GET_ALERT_EVENTS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/schedules-alerts-grouped-api.json"
@@ -73,18 +103,18 @@ APIs for creating, listing, updating, running and deleting data alerts on a view
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Alerts In Workspace](get-alerts-in-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts` | `getAlertsInWorkspace` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Alerts In View](get-alerts-in-view.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` | `getAlertsInView` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get View Metadata For Alert](get-view-metadata-for-alert.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata` | `getViewMetadataForAlert` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Alert Configuration](get-alert-configuration.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` | `getAlertConfiguration` | `ZohoAnalytics.metadata.read` | 200 |
-| [Create Alert](create-alert.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` | `createAlert` | `ZohoAnalytics.modeling.create` | 200 |
-| [Update Alert](update-alert.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` | `updateAlert` | `ZohoAnalytics.modeling.update` | 204 |
-| [Delete Alerts](delete-alerts.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/alerts` | `deleteAlerts` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Change Alert Status](change-alert-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/alerts/status` | `changeAlertStatus` | `ZohoAnalytics.modeling.update` | 204 |
-| [Run Alert](run-alert.md) | POST | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute` | `runAlert` | `ZohoAnalytics.modeling.create` | 204 |
-| [Get Alert Events](get-alert-events.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events` | `getAlertEvents` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Alerts In Workspace](get-alerts-in-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts` | `getAlertsInWorkspace` | `ZohoAnalytics.metadata.read` | 200 | 2 |
+| [Get Alerts In View](get-alerts-in-view.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` | `getAlertsInView` | `ZohoAnalytics.metadata.read` | 200 | 0.5 |
+| [Get View Metadata For Alert](get-view-metadata-for-alert.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts/metadata` | `getViewMetadataForAlert` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Get Alert Configuration](get-alert-configuration.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` | `getAlertConfiguration` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Create Alert](create-alert.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/alerts` | `createAlert` | `ZohoAnalytics.modeling.create` | 200 | 3 |
+| [Update Alert](update-alert.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}` | `updateAlert` | `ZohoAnalytics.modeling.update` | 204 | 3 |
+| [Delete Alerts](delete-alerts.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/alerts` | `deleteAlerts` | `ZohoAnalytics.modeling.delete` | 204 | 2 |
+| [Change Alert Status](change-alert-status.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/alerts/status` | `changeAlertStatus` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Run Alert](run-alert.md) | POST | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/execute` | `runAlert` | `ZohoAnalytics.modeling.create` | 204 | 1 |
+| [Get Alert Events](get-alert-events.md) | GET | `/restapi/v2/workspaces/{workspace-id}/alerts/{alert-id}/events` | `getAlertEvents` | `ZohoAnalytics.metadata.read` | 200 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

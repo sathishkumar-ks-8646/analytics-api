@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/orgadmins"
   domain: users-and-groups
   group: org-users
+  api_units:
+    api_id: 4001
+    action: GET_ORG_ADMINS
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.share.read
   org_id_header: required
@@ -71,6 +79,8 @@ Returns the list of email addresses of users who currently hold the **Organizati
 | Permission required | The authenticated user must be the Account Admin of the specified organisation. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_ORG_ADMINS` (api-id `4001`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`user-groups-grouped-api.json`](../../../references/openapi/user-groups-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1orgadmins/get`; response schema `GetOrgAdminsResponse` |
 
 # Request
@@ -187,3 +197,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Users](get-users.md), [Add Users](add-users.md), [Remove Users](remove-users.md), [Activate Users](activate-users.md), [Deactivate Users](de-activate-users.md), [Change User Role](change-user-role.md).
 - [SDK examples](../../../sdk-examples/users-and-groups/org-users/get-org-admins.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

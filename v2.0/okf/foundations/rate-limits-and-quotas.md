@@ -188,46 +188,71 @@ status: stable
 
 # Summary
 
-Three different mechanisms limit how much an integration can do. They are enforced independently and produce different signals.
+Four different mechanisms limit how much an integration can do. They are enforced independently and produce different signals.
 
 | Mechanism | Scope | Signal | What to do |
 |---|---|---|---|
 | **Request throttles** | Specific write-heavy operations (query tables, formulas) | Request rejected for the lock period after the threshold is crossed within the window | Space out calls; on rejection wait for the lock period, do not retry in a tight loop. |
 | **Concurrency guards** | One long-running operation per object at a time (workspace copy, table refetch, query table design edit, export/import job slots) | A specific error code such as `18072`, `7429`, `8132` | Wait for the running operation to finish, then retry. Backing off blindly does not help. |
 | **Plan quotas** | Organization level, governed by the subscription plan (rows, users, scheduled emails, API units, export jobs...) | Error when the quota is exhausted; visible through [Get Resource Details](../domains/organization-management/org-info-and-settings/get-resource-details.md) | Monitor `remaining` values; upgrade the plan or reduce consumption. |
+| **Category frequency limits** | Organization level, per unit category (`DML` 100/min, `BULK` 40/min, `METADATA` 60/min) | Request rejected with an API-frequency error | Spread calls across the minute; the ceiling is shared by every endpoint in the category. See [API units](api-units.md#unit-categories-and-frequency-limits). |
 
 # Per-operation Throttles
 
-Throttles are counted per user. Crossing the threshold inside the window locks the user out of that operation for the lock period.
+Throttles are counted per user unless noted. Crossing the threshold inside the window locks the user out of that operation for the lock period. The values below are the ones configured on the endpoint URLs; the per-endpoint pages carry the same figures.
 
-| Operation | Limit | Lockout | Documented note |
-|---|---|---|---|
-| [Create Query Table](../domains/data-modeling-and-schema/query-tables/create-query-table.md) | 7 requests / user / 60 s | 5 minutes | 7 requests/user/minute (5-minute lockout on breach); 15 requests/minute service-wide. |
-| [Edit Query Table](../domains/data-modeling-and-schema/query-tables/edit-query-table.md) | 7 requests / user / 60 s | 5 minutes | 7 requests/user/minute (5-minute lockout on breach); 15 requests/minute service-wide. |
-| [Get Custom Formulas](../domains/data-modeling-and-schema/formula-columns/get-custom-formula-list.md) | 30 requests / user / 60 s | 10 minutes | 30 requests per user per minute (10-minute lockout on breach). |
-| [Add Custom Formula](../domains/data-modeling-and-schema/formula-columns/add-formula-column.md) | 20 requests / user / 60 s | 10 minutes | 20 requests per user per minute (10-minute lockout on breach). |
-| [Edit Custom Formula](../domains/data-modeling-and-schema/formula-columns/edit-formula-column.md) | 20 requests / user / 60 s | 10 minutes | 20 requests per user per minute (10-minute lockout on breach). |
-| [Delete Custom Formula](../domains/data-modeling-and-schema/formula-columns/delete-formula-column.md) | 30 requests / user / 60 s | 10 minutes | 30 requests per user per minute (10-minute lockout on breach). |
-| [Get Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/get-aggregate-formula-list.md) | 30 requests / user / 60 s | 10 minutes | 30 requests per user per minute (10-minute lockout on breach). |
-| [Add Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/add-aggregate-formula.md) | 20 requests / user / 60 s | 10 minutes | 20 requests per user per minute (10-minute lockout on breach). |
-| [Edit Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/edit-aggregate-formula.md) | 20 requests / user / 60 s | 10 minutes | 20 requests per user per minute (10-minute lockout on breach). |
-| [Delete Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/delete-aggregate-formula.md) | 20 requests / user / 60 s | 10 minutes | 20 requests per user per minute (10-minute lockout on breach). |
-| [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md) | 10 requests / user / 60 s | 10 minutes |  |
-| [Read Dashboard Metadata](../domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md) | 20 requests / user / 60 s | - |  |
-| [Update Dashboard](../domains/reports-and-dashboards/dashboards/update-dashboard.md) | 10 requests / user / 60 s | 10 minutes |  |
+| Operation | Limit | Lockout |
+|---|---|---|
+| [Create Query Table](../domains/data-modeling-and-schema/query-tables/create-query-table.md) | 20 requests / user / 60 s | 10 minutes |
+| [Edit Query Table](../domains/data-modeling-and-schema/query-tables/edit-query-table.md) | 20 requests / user / 60 s | 10 minutes |
+| [Get Custom Formulas](../domains/data-modeling-and-schema/formula-columns/get-custom-formula-list.md) | 30 requests / user / 60 s | 10 minutes |
+| [Add Custom Formula](../domains/data-modeling-and-schema/formula-columns/add-formula-column.md) | 20 requests / user / 60 s | 10 minutes |
+| [Edit Custom Formula](../domains/data-modeling-and-schema/formula-columns/edit-formula-column.md) | 20 requests / user / 60 s | 10 minutes |
+| [Delete Custom Formula](../domains/data-modeling-and-schema/formula-columns/delete-formula-column.md) | 30 requests / user / 60 s | 10 minutes |
+| [Get Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/get-aggregate-formula-list.md) | 30 requests / user / 60 s | 10 minutes |
+| [Add Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/add-aggregate-formula.md) | 20 requests / user / 60 s | 10 minutes |
+| [Edit Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/edit-aggregate-formula.md) | 20 requests / user / 60 s | 10 minutes |
+| [Delete Aggregate Formula](../domains/data-modeling-and-schema/aggregate-formulas/delete-aggregate-formula.md) | 20 requests / user / 60 s | 10 minutes |
+| [Create Dashboard](../domains/reports-and-dashboards/dashboards/create-dashboard.md) | 10 requests / user / 60 s | 10 minutes |
+| [Read Dashboard Metadata](../domains/reports-and-dashboards/dashboards/get-dashboard-metadata.md) | 20 requests / user / 60 s | 10 minutes |
+| [Update Dashboard](../domains/reports-and-dashboards/dashboards/update-dashboard.md) | 10 requests / user / 60 s | 10 minutes |
+| [Sync Data](../domains/data-operations/data-sync-and-connectivity/sync-datasource.md) | 5 requests / 60 s | 5 minutes |
+| [Refetch Data](../domains/data-operations/data-sync-and-connectivity/refetch-datasource.md) | 5 requests / 60 s | 5 minutes |
+
+On top of these, every endpoint is counted against the per-minute ceiling of its unit category - `DML` 100/min, `BULK` 40/min, `METADATA` 60/min - shared across the whole organization. See [API units](api-units.md#unit-categories-and-frequency-limits).
 
 Additional documented limits:
 
 - Create Query Table and Edit Query Table are also limited to 15 requests per minute service-wide, in addition to the per-user throttle.
 - Copy Workspace allows only one copy operation per organization at a time; a second request while a copy is running is rejected.
-- Sync Data and Refetch Data are rate limited per user; a burst of calls is locked out for a short cool-off period. Refetch is additionally guarded by one refetch per table at a time (error [`18072`](error-codes.md#error-18072)).
+- Sync Data and Refetch Data are rate limited to 5 requests per minute each, with a 5-minute lockout on breach. Refetch is additionally guarded by one refetch per table at a time (error [`18072`](error-codes.md#error-18072)).
 - Asynchronous export: at most 5 simultaneous export jobs per organization (error [`8132`](error-codes.md#error-8132)); jobs and their files are retained for 1 hour from job completion.
 - Synchronous export: payload ceiling 100 MB (error [`7830`](error-codes.md#error-7830)). The Export Data API is restricted for certain resources, which must use the asynchronous export (error [`8133`](error-codes.md#error-8133)): tables having more than one million rows; tables and views from live connect workspaces; dashboard and query table view types.
 - Synchronous import: maximum file size 20 MB per request.
 
 # API Units
 
-Each API call deducts API units from the organization's plan allowance; the exact cost depends on the operation type. The current allocation, usage and remainder are returned by [Get Resource Details](../domains/organization-management/org-info-and-settings/get-resource-details.md) under `resourceName: "apiUnits"` (fractional usage is possible). Single-row APIs (Add Row, Update Row, Delete Row) cost one unit per row, so bulk loading should use the import APIs instead.
+Every call deducts API units from the organization's plan allowance. The cost is fixed per endpoint for most operations and proportional to the rows processed for bulk and copy operations:
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based endpoints
+units charged = configured units                                      # everything else
+```
+
+Costs range from `0` (job status and download calls) through `0.1` (most reads and user-management writes) to `25` (Copy Workspace). The full per-endpoint table, the row-based and format-based variable costs, and the unit categories are in **[API units](api-units.md)**; the same figures are on every endpoint page and in [`/references/endpoint-catalog.json`](../references/endpoint-catalog.json) under `api_units`.
+
+| Unit category | Frequency limit | Typical cost range |
+|---|---|---|
+| `DML` | 100 requests/minute | 0.1 - 0.3 units per request |
+| `BULK` | 40 requests/minute | 0 to start a job; 3 - 15 units per 1000 rows for the data itself |
+| `METADATA` | 60 requests/minute | 0.1 - 25 units per request |
+
+Two practical rules:
+
+- **Load data in bulk.** Add Row costs `0.1` units for one row; [Import Data](../domains/data-operations/sync-data-import/import-data-existing-table.md) costs 10 units per 1000 rows. Loading 100000 rows row-by-row costs 10000 units against roughly 1000 units through import.
+- **Poll freely.** Export and import job status and download calls cost `0` units - but they still consume the `BULK` and `METADATA` frequency budget, so a tight polling loop hits the frequency limit rather than the unit allowance.
+
+The current allocation, usage and remainder are returned by [Get Resource Details](../domains/organization-management/org-info-and-settings/get-resource-details.md) under `resourceName: "apiUnits"` (fractional usage is possible).
 
 # Plan Quotas Visible Through the API
 
@@ -235,5 +260,6 @@ Each API call deducts API units from the organization's plan allowance; the exac
 
 # Related
 
+- [API units](api-units.md) - per-endpoint unit cost, unit categories and frequency limits
 - [Error code catalog](error-codes.md)
 - [Asynchronous jobs](asynchronous-jobs.md)

@@ -17,22 +17,37 @@ api:
       method: POST
       path: "/restapi/v2/bulk/workspaces/{workspace-id}/data"
       doc: "/domains/data-operations/async-data-import/create-import-job-new-table.md"
+      api_units: variable
+      api_units_action: INITIATE_IMPORT
+      api_units_category: BULK
     - operation_id: createImportJobExistingTable
       method: POST
       path: "/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data"
       doc: "/domains/data-operations/async-data-import/create-import-job-existing-table.md"
+      api_units: variable
+      api_units_action: INITIATE_IMPORT
+      api_units_category: BULK
     - operation_id: batchImportNewTable
       method: POST
       path: "/restapi/v2/bulk/workspaces/{workspace-id}/data/batch"
       doc: "/domains/data-operations/async-data-import/batch-import-new-table.md"
+      api_units: variable
+      api_units_action: BATCH_IMPORT_FILE_UPLOAD
+      api_units_category: BULK
     - operation_id: batchImportExistingTable
       method: POST
       path: "/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data/batch"
       doc: "/domains/data-operations/async-data-import/batch-import-existing-table.md"
+      api_units: variable
+      api_units_action: BATCH_IMPORT_FILE_UPLOAD
+      api_units_category: BULK
     - operation_id: getImportJobDetails
       method: GET
       path: "/restapi/v2/bulk/workspaces/{workspace-id}/importjobs/{job-id}"
       doc: "/domains/data-operations/async-data-import/get-import-job-details.md"
+      api_units: 0
+      api_units_action: IMPORT_JOB_STATUS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-operations-grouped-api.json"
@@ -55,13 +70,13 @@ APIs for creating and monitoring asynchronous import jobs and batch imports.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Create Import Job for a New Table (Asynchronous)](create-import-job-new-table.md) | POST | `/restapi/v2/bulk/workspaces/{workspace-id}/data` | `createImportJobNewTable` | `ZohoAnalytics.data.create` | 200 |
-| [Create Import Job for an Existing Table (Asynchronous)](create-import-job-existing-table.md) | POST | `/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data` | `createImportJobExistingTable` | `ZohoAnalytics.data.create` | 200 |
-| [Batch Import Data into New Table](batch-import-new-table.md) | POST | `/restapi/v2/bulk/workspaces/{workspace-id}/data/batch` | `batchImportNewTable` | `ZohoAnalytics.data.create` | 200 |
-| [Batch Import Data into Existing Table](batch-import-existing-table.md) | POST | `/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data/batch` | `batchImportExistingTable` | `ZohoAnalytics.data.create` | 200 |
-| [Get Import Job Details](get-import-job-details.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/importjobs/{job-id}` | `getImportJobDetails` | `ZohoAnalytics.data.create` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Create Import Job for a New Table (Asynchronous)](create-import-job-new-table.md) | POST | `/restapi/v2/bulk/workspaces/{workspace-id}/data` | `createImportJobNewTable` | `ZohoAnalytics.data.create` | 200 | variable |
+| [Create Import Job for an Existing Table (Asynchronous)](create-import-job-existing-table.md) | POST | `/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data` | `createImportJobExistingTable` | `ZohoAnalytics.data.create` | 200 | variable |
+| [Batch Import Data into New Table](batch-import-new-table.md) | POST | `/restapi/v2/bulk/workspaces/{workspace-id}/data/batch` | `batchImportNewTable` | `ZohoAnalytics.data.create` | 200 | variable |
+| [Batch Import Data into Existing Table](batch-import-existing-table.md) | POST | `/restapi/v2/bulk/workspaces/{workspace-id}/views/{view-id}/data/batch` | `batchImportExistingTable` | `ZohoAnalytics.data.create` | 200 | variable |
+| [Get Import Job Details](get-import-job-details.md) | GET | `/restapi/v2/bulk/workspaces/{workspace-id}/importjobs/{job-id}` | `getImportJobDetails` | `ZohoAnalytics.data.create` | 200 | 0 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

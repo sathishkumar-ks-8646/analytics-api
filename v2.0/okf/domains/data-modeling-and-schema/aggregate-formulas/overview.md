@@ -17,30 +17,51 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas"
       doc: "/domains/data-modeling-and-schema/aggregate-formulas/get-aggregate-formula-list.md"
+      api_units: 0.1
+      api_units_action: GET AGGREGATE FORMULA
+      api_units_category: METADATA
     - operation_id: addAggregateFormula
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas"
       doc: "/domains/data-modeling-and-schema/aggregate-formulas/add-aggregate-formula.md"
+      api_units: 5
+      api_units_action: ADD_AGG_FORMULA
+      api_units_category: METADATA
     - operation_id: editAggregateFormula
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas/{formula-id}"
       doc: "/domains/data-modeling-and-schema/aggregate-formulas/edit-aggregate-formula.md"
+      api_units: 5
+      api_units_action: EDIT_AGG_FORMULA
+      api_units_category: METADATA
     - operation_id: deleteAggregateFormula
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas/{formula-id}"
       doc: "/domains/data-modeling-and-schema/aggregate-formulas/delete-aggregate-formula.md"
+      api_units: 1
+      api_units_action: DELETE AGG FORMULA
+      api_units_category: METADATA
     - operation_id: getAggregateFormulasInWorkspace
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/aggregateformulas"
       doc: "/domains/data-modeling-and-schema/aggregate-formulas/get-aggregate-formulas-in-workspace.md"
+      api_units: 1
+      api_units_action: GET_AGGREGATE_FORMULAS_IN_WORKSPACE
+      api_units_category: METADATA
     - operation_id: getAggregateFormulaDependents
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/aggregateformulas/{formula-id}/dependents"
       doc: "/domains/data-modeling-and-schema/aggregate-formulas/get-aggregate-formula-dependents.md"
+      api_units: 1
+      api_units_action: GET_AGGREGATE_FORMULA_DEPENDENTS
+      api_units_category: METADATA
     - operation_id: getAggregateFormulaValue
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/aggregateformulas/{formula-id}/value"
       doc: "/domains/data-modeling-and-schema/aggregate-formulas/get-aggregate-formula-value.md"
+      api_units: 1
+      api_units_action: GET_AGGREGATE_FORMULA_VALUE
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
@@ -61,15 +82,15 @@ APIs for managing aggregate formulas and retrieving values and dependents.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Aggregate Formula](get-aggregate-formula-list.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas` | `getAggregateFormulaList` | `ZohoAnalytics.metadata.read` | 200 |
-| [Add Aggregate Formula](add-aggregate-formula.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas` | `addAggregateFormula` | `ZohoAnalytics.modeling.create` | 200 |
-| [Edit Aggregate Formula](edit-aggregate-formula.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas/{formula-id}` | `editAggregateFormula` | `ZohoAnalytics.modeling.update` | 204 |
-| [Delete Aggregate Formula](delete-aggregate-formula.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas/{formula-id}` | `deleteAggregateFormula` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Get Unified Metrics in Workspace](get-aggregate-formulas-in-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/aggregateformulas` | `getAggregateFormulasInWorkspace` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Aggregate Formula Dependents](get-aggregate-formula-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/aggregateformulas/{formula-id}/dependents` | `getAggregateFormulaDependents` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Aggregate Formula Value](get-aggregate-formula-value.md) | GET | `/restapi/v2/workspaces/{workspace-id}/aggregateformulas/{formula-id}/value` | `getAggregateFormulaValue` | `ZohoAnalytics.metadata.read` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Aggregate Formula](get-aggregate-formula-list.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas` | `getAggregateFormulaList` | `ZohoAnalytics.metadata.read` | 200 | 0.1 |
+| [Add Aggregate Formula](add-aggregate-formula.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas` | `addAggregateFormula` | `ZohoAnalytics.modeling.create` | 200 | 5 |
+| [Edit Aggregate Formula](edit-aggregate-formula.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas/{formula-id}` | `editAggregateFormula` | `ZohoAnalytics.modeling.update` | 204 | 5 |
+| [Delete Aggregate Formula](delete-aggregate-formula.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/aggregateformulas/{formula-id}` | `deleteAggregateFormula` | `ZohoAnalytics.modeling.delete` | 204 | 1 |
+| [Get Unified Metrics in Workspace](get-aggregate-formulas-in-workspace.md) | GET | `/restapi/v2/workspaces/{workspace-id}/aggregateformulas` | `getAggregateFormulasInWorkspace` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Get Aggregate Formula Dependents](get-aggregate-formula-dependents.md) | GET | `/restapi/v2/workspaces/{workspace-id}/aggregateformulas/{formula-id}/dependents` | `getAggregateFormulaDependents` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Get Aggregate Formula Value](get-aggregate-formula-value.md) | GET | `/restapi/v2/workspaces/{workspace-id}/aggregateformulas/{formula-id}/value` | `getAggregateFormulaValue` | `ZohoAnalytics.metadata.read` | 200 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

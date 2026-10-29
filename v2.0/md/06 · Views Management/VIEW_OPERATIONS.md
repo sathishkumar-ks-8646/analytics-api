@@ -12,17 +12,17 @@ This document covers V2 REST APIs for managing views within workspaces in Zoho A
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Save As View](#1-save-as-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/saveas` |
-| 2 | [Copy Views](#2-copy-views) | POST | `/restapi/v2/workspaces/<workspace-id>/views/copy` |
-| 3 | [Create Similar Views](#3-create-similar-views) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/similarviews` |
-| 4 | [Rename View](#4-rename-view) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>` |
-| 5 | [Delete View](#5-delete-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>` |
-| 6 | [Get View List](#6-get-view-list) | GET | `/restapi/v2/workspaces/<workspace-id>/views` |
-| 7 | [Get View Details](#7-get-view-details) | GET | `/restapi/v2/views/<view-id>` |
-| 8 | [Get View URL](#8-get-view-url) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish` |
-| 9 | [Get View Dependents](#9-get-view-dependents) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/dependents` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Save As View](#1-save-as-view) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/saveas` | 1 |
+| 2 | [Copy Views](#2-copy-views) | POST | `/restapi/v2/workspaces/<workspace-id>/views/copy` | 1 |
+| 3 | [Create Similar Views](#3-create-similar-views) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/similarviews` | 1 |
+| 4 | [Rename View](#4-rename-view) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>` | 1 |
+| 5 | [Delete View](#5-delete-view) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>` | 2 |
+| 6 | [Get View List](#6-get-view-list) | GET | `/restapi/v2/workspaces/<workspace-id>/views` | 0.1 |
+| 7 | [Get View Details](#7-get-view-details) | GET | `/restapi/v2/views/<view-id>` | 0.1 |
+| 8 | [Get View URL](#8-get-view-url) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish` | 0.1 |
+| 9 | [Get View Dependents](#9-get-view-dependents) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/dependents` | 1 |
 
 ---
 
@@ -37,6 +37,8 @@ Creates a copy of an existing view (table or analysis view) within the **same wo
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — must be the Organization ID of the workspace in which the source view resides. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Design & Modify permission on the workspace. |
+| **API Units** | 1 unit per request — gateway action `SAVEAS_VIEWS` (api-id `2007`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -151,6 +153,8 @@ Copies one or more views from a **source workspace** to a **destination workspac
 | **ZANALYTICS-ORGID Header** | **Mandatory** — For Account Admins (or when no `ZANALYTICS-DEST-ORGID` is supplied): must be the **destination Organisation ID** (the org where views will be copied to). For Organization Admins using `ZANALYTICS-DEST-ORGID`: this is the caller's own (current/source) organisation ID instead. This is a key difference from other APIs where ZANALYTICS-ORGID refers to the source workspace's org. |
 | **ZANALYTICS-DEST-ORGID Header** | **Optional** — Used by Organization Admins who have admin access to multiple organisations. Set this to the **destination** organisation ID when it differs from the org resolved from `ZANALYTICS-ORGID`. When present, the system validates that the caller is a member of the specified destination org and uses it as the target for the copy. When absent, the destination org defaults to the org resolved from `ZANALYTICS-ORGID`. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin (of the destination organisation). |
+| **API Units** | 1 unit per request — gateway action `COPY_VIEWS` (api-id `2020`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > **On ZANALYTICS-ORGID for this API:** By default, the header identifies the **destination org** because the security check validates the user's admin rights in the destination. The source workspace is identified by `<workspace-id>` in the URL. The destination workspace is identified by `destWorkspaceId` in CONFIG. The `destWorkspaceId` must belong to the org that is ultimately resolved as the destination (either `ZANALYTICS-ORGID` directly, or `ZANALYTICS-DEST-ORGID` when supplied).
 
@@ -309,6 +313,8 @@ This API is useful when you have two tables with the same (or compatible) column
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin, Organization Admin, or Workspace Admin of the workspace. |
+| **API Units** | 1 unit per request — gateway action `CREATE_SIMILAR_VIEWS` (api-id `2022`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > **`<view-id>` in the URL** is the **target table** — the table for which similar views will be created. The newly generated views will be bound to columns from this table.
 >
@@ -403,6 +409,8 @@ Renames an existing view and optionally updates its description. This applies to
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner. |
+| **API Units** | 1 unit per request — gateway action `RENAME_VIEW` (api-id `2008`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -486,6 +494,8 @@ Permanently deletes a view from a workspace. The view is moved to the workspace'
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or the View Owner. |
+| **API Units** | 2 units per request — gateway action `DELETE_VIEW` (api-id `2009`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -558,6 +568,8 @@ Returns a list of views accessible to the authenticated user within a specific w
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or a Shared User, or a Group Member, or any user with Read permission on the workspace. |
+| **API Units** | 0.1 units per request — gateway action `GET_VIEWS` (api-id `3005`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -754,6 +766,8 @@ Returns detailed metadata for a single view identified by its view ID. Unlike th
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID that owns the workspace holding the view. |
 | **Permission Required** | The authenticated user must have at least **Read Only** permission on the view. This includes Account Admins, Organization Admins, Workspace Admins, View Owners, and any user with Read Only or higher access to the view. |
+| **API Units** | 0.1 units per request — gateway action `GET_VIEW_DETAILS` (api-id `3013`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > **No workspace ID in the URL:** This endpoint resolves the view by `<view-id>` within the organisation named in `ZANALYTICS-ORGID`. The workspace is derived from the view's metadata. This is different from all other workspace-scoped APIs in this document.
 
@@ -1102,6 +1116,8 @@ Generates and returns the publicly accessible URL for a view. The URL can be ope
 | **OAuth Scope** | `ZohoAnalytics.embed.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Publish permission or Make Public permission on the workspace. |
+| **API Units** | 0.1 units per request — gateway action `GET_VIEW_URL` (api-id `5001`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameter
 
@@ -1228,6 +1244,8 @@ Returns all active views that **depend on** the specified view. A dependent view
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organization ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin, Organization Admin, or Workspace Admin. |
+| **API Units** | 1 unit per request — gateway action `GET_VIEW_DEPENDENTS` (api-id `3034`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -1512,3 +1530,41 @@ ZANALYTICS-ORGID: 700000123456
 | Query table that is both a parent (references other tables) and a child (referenced by analysis views) | Get View Dependents returns **downstream** views only — those that depend on the QT. It does not list the tables the QT itself depends on (use Get View Details for that). |
 | `<view-id>` belongs to the Trash | Only active (non-trashed) views are returned as dependents. Views that have been moved to Trash are not included. |
 
+---
+
+## Appendix D – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Save As View](#1-save-as-view) | `SAVEAS_VIEWS` (2007) | METADATA | 1 | per request |
+| 2 | [Copy Views](#2-copy-views) | `COPY_VIEWS` (2020) | METADATA | 1 | per request |
+| 3 | [Create Similar Views](#3-create-similar-views) | `CREATE_SIMILAR_VIEWS` (2022) | METADATA | 1 | per request |
+| 4 | [Rename View](#4-rename-view) | `RENAME_VIEW` (2008) | METADATA | 1 | per request |
+| 5 | [Delete View](#5-delete-view) | `DELETE_VIEW` (2009) | METADATA | 2 | per request |
+| 6 | [Get View List](#6-get-view-list) | `GET_VIEWS` (3005) | METADATA | 0.1 | per request |
+| 7 | [Get View Details](#7-get-view-details) | `GET_VIEW_DETAILS` (3013) | METADATA | 0.1 | per request |
+| 8 | [Get View URL](#8-get-view-url) | `GET_VIEW_URL` (5001) | METADATA | 0.1 | per request |
+| 9 | [Get View Dependents](#9-get-view-dependents) | `GET_VIEW_DEPENDENTS` (3034) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

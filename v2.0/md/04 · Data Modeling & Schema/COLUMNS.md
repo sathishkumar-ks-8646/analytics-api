@@ -12,16 +12,16 @@ This document covers the APIs for managing columns in a Zoho Analytics table —
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Add Column](#1-add-column) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns` |
-| 2 | [Rename Column](#2-rename-column) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>` |
-| 3 | [Delete Column](#3-delete-column) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>` |
-| 4 | [Hide Columns](#4-hide-columns) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/hide` |
-| 5 | [Show Columns](#5-show-columns) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/show` |
-| 6 | [Get Column Dependents](#6-get-column-dependents) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>/dependents` |
-| 7 | [Sort Data by Columns](#7-sort-data-by-columns) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/data/sort` |
-| 8 | [Reorder Columns](#8-reorder-columns) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/reorder` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Add Column](#1-add-column) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns` | 15 |
+| 2 | [Rename Column](#2-rename-column) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>` | 5 |
+| 3 | [Delete Column](#3-delete-column) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>` | 10 |
+| 4 | [Hide Columns](#4-hide-columns) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/hide` | 1 |
+| 5 | [Show Columns](#5-show-columns) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/show` | 1 |
+| 6 | [Get Column Dependents](#6-get-column-dependents) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/<column-id>/dependents` | 0.1 |
+| 7 | [Sort Data by Columns](#7-sort-data-by-columns) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/data/sort` | 1 |
+| 8 | [Reorder Columns](#8-reorder-columns) | PUT | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/columns/reorder` | 1 |
 
 ---
 
@@ -41,6 +41,8 @@ Adds one or more columns to an existing table. Supports two distinct modes in a 
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the workspace. |
+| **API Units** | 15 units per request — gateway action `ADD_COLUMN` (api-id `2013`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters — Single-Column Mode
 
@@ -234,6 +236,8 @@ Renames the specified column in the given table. The column is identified by its
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the workspace. |
+| **API Units** | 5 units per request — gateway action `RENAME_COLUMN` (api-id `2014`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -314,6 +318,8 @@ Permanently deletes a column from the specified table. By default, deletion is b
 | **OAuth Scope** | `ZohoAnalytics.modeling.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the workspace. |
+| **API Units** | 10 units per request — gateway action `DELETE_COLUMN` (api-id `2015`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -403,6 +409,8 @@ Hides one or more columns in the specified table. Hidden columns are not visible
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the view. |
+| **API Units** | 1 unit per request — gateway action `HIDE_COLUMNS` (api-id `2018`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -491,6 +499,8 @@ Makes one or more previously hidden columns visible again in the specified table
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the view. |
+| **API Units** | 1 unit per request — gateway action `SHOW_COLUMNS` (api-id `2019`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -577,6 +587,8 @@ Returns all views, custom formula columns, and aggregate formulas that depend on
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace. |
+| **API Units** | 0.1 units per request — gateway action `GET_COLUMN_DEPENDENTS` (api-id `3030`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -711,6 +723,8 @@ Sets the default sort order for rows in the specified table view. Supports two o
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the view. |
+| **API Units** | 1 unit per request — gateway action `SORT_DATA_BY_COLUMNS` (api-id `2064`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -813,6 +827,8 @@ Changes the display order of all columns in the specified table. The complete se
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the view. |
+| **API Units** | 1 unit per request — gateway action `REORDER_COLUMNS` (api-id `2063`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -970,3 +986,41 @@ Not applicable — this API never returns a JSON body on success (HTTP 204 No Co
 | **`sortOrder` in Sort Data by Columns** | `1` = Ascending (A→Z, smallest to largest). `2` = Descending (Z→A, largest to smallest). Reflected in `sortedOrder` field in Get Table Metadata responses: `0` = no sort, `1` = ascending, `-1` = descending (note the sign difference). |
 | **`isHidden` in Get Table Metadata** | `true` when the column was hidden via Hide Columns. Use Show Columns to reverse. |
 | **`viewTypeId` in Get Column Dependents** | `1` = Tabular Report, `2` = Chart, `3` = Pivot Table, `4` = Summary View, `6` = Query Table. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Add Column](#1-add-column) | `ADD_COLUMN` (2013) | METADATA | 15 | per request |
+| 2 | [Rename Column](#2-rename-column) | `RENAME_COLUMN` (2014) | METADATA | 5 | per request |
+| 3 | [Delete Column](#3-delete-column) | `DELETE_COLUMN` (2015) | METADATA | 10 | per request |
+| 4 | [Hide Columns](#4-hide-columns) | `HIDE_COLUMNS` (2018) | METADATA | 1 | per request |
+| 5 | [Show Columns](#5-show-columns) | `SHOW_COLUMNS` (2019) | METADATA | 1 | per request |
+| 6 | [Get Column Dependents](#6-get-column-dependents) | `GET_COLUMN_DEPENDENTS` (3030) | METADATA | 0.1 | per request |
+| 7 | [Sort Data by Columns](#7-sort-data-by-columns) | `SORT_DATA_BY_COLUMNS` (2064) | METADATA | 1 | per request |
+| 8 | [Reorder Columns](#8-reorder-columns) | `REORDER_COLUMNS` (2063) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

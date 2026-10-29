@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/querytables/{querytable-id}"
   domain: data-modeling-and-schema
   group: query-tables
+  api_units:
+    api_id: 2038
+    action: EDIT_QT
+    category: METADATA
+    units: 15
+    units_basis: per_request
+    units_note: "15 units per request"
+    category_frequency_limit: 60 requests/minute
+    endpoint_throttle: "20 requests per user per minute, 10-minute lockout on breach"
   oauth_scopes:
     - ZohoAnalytics.modeling.update
   org_id_header: required
@@ -26,7 +35,7 @@ api:
   success_status: 204
   response_content_types: []
   permission_required: "The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the query table."
-  rate_limit: "7 requests/user/minute (5-minute lockout on breach); 15 requests/minute service-wide."
+  rate_limit: "20 requests/user/minute (10-minute lockout on breach); 15 requests/minute service-wide."
   error_codes:
     - 7301
     - 7319
@@ -83,7 +92,9 @@ The new statement replaces the existing one entirely - there is no partial updat
 | CONFIG parameter | JSON object sent as the `CONFIG` field of an `application/x-www-form-urlencoded` body - **mandatory** |
 | Request Content-Type | `application/x-www-form-urlencoded` |
 | Success response | HTTP 204 with no body |
-| Rate limit | 7 requests/user/minute (5-minute lockout on breach); 15 requests/minute service-wide. See [Rate limits](../../../foundations/rate-limits-and-quotas.md). |
+| Rate limit | 20 requests/user/minute (10-minute lockout on breach); 15 requests/minute service-wide. See [Rate limits](../../../foundations/rate-limits-and-quotas.md). |
+| API units | 15 units per request - action `EDIT_QT` (api-id `2038`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization; this endpoint is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-modeling-schema-grouped-api.json`](../../../references/openapi/data-modeling-schema-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1querytables~1{querytable-id}/put`; CONFIG schema `EditQueryTableConfig` |
 
 # Request
@@ -120,7 +131,7 @@ The new statement replaces the existing one entirely - there is no partial updat
 - When the new statement selects a different set of columns, whether added, removed, renamed or retyped, the column list of the query table is recomputed and any report or dashboard built on a removed or renamed column breaks. Inspect the current schema through Get Query Table Details before making structural changes.
 - The request is rejected with error 7429 when another schema-changing operation is already in progress on the query table.
 - This API cannot rename the query table or change its description. Only the SQL statement and the folder can be updated here.
-- This API is throttled at 7 requests per user per minute, with a five-minute lockout when the limit is breached, and at 15 requests per minute across the service.
+- This API is throttled at 20 requests per user per minute, with a ten-minute lockout when the limit is breached, and at 15 requests per minute across the service.
 - Call the Get Query Table Details API afterwards to confirm the updated column schema.
 
 # Response
@@ -223,3 +234,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Query Tables](get-query-tables.md), [Create Query Table](create-query-table.md), [Get Query Table Details](get-query-table-details.md).
 - [SDK examples](../../../sdk-examples/data-modeling-and-schema/query-tables/edit-query-table.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

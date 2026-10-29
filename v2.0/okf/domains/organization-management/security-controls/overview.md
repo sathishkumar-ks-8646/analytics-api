@@ -17,18 +17,30 @@ api:
       method: GET
       path: "/restapi/v2/security-controls/access-restrictions"
       doc: "/domains/organization-management/security-controls/get-org-access-restrictions.md"
+      api_units: 1
+      api_units_action: GET_ORG_ACCESS_RESTRICTIONS
+      api_units_category: METADATA
     - operation_id: updateOrgAccessRestrictions
       method: PUT
       path: "/restapi/v2/security-controls/access-restrictions"
       doc: "/domains/organization-management/security-controls/update-org-access-restrictions.md"
+      api_units: 1
+      api_units_action: UPDATE_ORG_ACCESS_RESTRICTIONS
+      api_units_category: METADATA
     - operation_id: getWorkspaceAccessRestrictions
       method: GET
       path: "/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions"
       doc: "/domains/organization-management/security-controls/get-workspace-access-restrictions.md"
+      api_units: 1
+      api_units_action: GET_WORKSPACE_ACCESS_RESTRICTIONS
+      api_units_category: METADATA
     - operation_id: updateWorkspaceAccessRestrictions
       method: PUT
       path: "/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions"
       doc: "/domains/organization-management/security-controls/update-workspace-access-restrictions.md"
+      api_units: 1
+      api_units_action: UPDATE_WORKSPACE_ACCESS_RESTRICTIONS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/org-management-grouped-api.json"
@@ -49,12 +61,12 @@ APIs for reading and updating the access restriction settings of an organisation
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Org Access Restrictions](get-org-access-restrictions.md) | GET | `/restapi/v2/security-controls/access-restrictions` | `getOrgAccessRestrictions` | `ZohoAnalytics.metadata.read` | 200 |
-| [Update Org Access Restrictions](update-org-access-restrictions.md) | PUT | `/restapi/v2/security-controls/access-restrictions` | `updateOrgAccessRestrictions` | `ZohoAnalytics.metadata.update` | 204 |
-| [Get Workspace Access Restrictions](get-workspace-access-restrictions.md) | GET | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `getWorkspaceAccessRestrictions` | `ZohoAnalytics.metadata.read` | 200 |
-| [Update Workspace Access Restrictions](update-workspace-access-restrictions.md) | PUT | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `updateWorkspaceAccessRestrictions` | `ZohoAnalytics.metadata.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Org Access Restrictions](get-org-access-restrictions.md) | GET | `/restapi/v2/security-controls/access-restrictions` | `getOrgAccessRestrictions` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Update Org Access Restrictions](update-org-access-restrictions.md) | PUT | `/restapi/v2/security-controls/access-restrictions` | `updateOrgAccessRestrictions` | `ZohoAnalytics.metadata.update` | 204 | 1 |
+| [Get Workspace Access Restrictions](get-workspace-access-restrictions.md) | GET | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `getWorkspaceAccessRestrictions` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Update Workspace Access Restrictions](update-workspace-access-restrictions.md) | PUT | `/restapi/v2/security-controls/workspaces/{workspace-id}/access-restrictions` | `updateWorkspaceAccessRestrictions` | `ZohoAnalytics.metadata.update` | 204 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

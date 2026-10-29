@@ -17,10 +17,16 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite"
       doc: "/domains/views-management/view-preferences/add-favorite-view.md"
+      api_units: 0.1
+      api_units_action: ADD_FAVOURITE_VIEW
+      api_units_category: METADATA
     - operation_id: removeFavoriteView
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite"
       doc: "/domains/views-management/view-preferences/remove-favorite-view.md"
+      api_units: 0.1
+      api_units_action: REMOVE_FAVOURITE_VIEW
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
@@ -51,10 +57,10 @@ APIs to mark a view as a favorite for the authenticated user and to remove it fr
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Add Favourite View](add-favorite-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite` | `addFavoriteView` | `ZohoAnalytics.metadata.update` | 204 |
-| [Remove Favourite View](remove-favorite-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite` | `removeFavoriteView` | `ZohoAnalytics.metadata.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Add Favourite View](add-favorite-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite` | `addFavoriteView` | `ZohoAnalytics.metadata.update` | 204 | 0.1 |
+| [Remove Favourite View](remove-favorite-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/favorite` | `removeFavoriteView` | `ZohoAnalytics.metadata.update` | 204 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

@@ -17,14 +17,23 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/reports"
       doc: "/domains/reports-and-dashboards/reports/create-report.md"
+      api_units: 5
+      api_units_action: CREATE_ANALYSISVIEW
+      api_units_category: METADATA
     - operation_id: getReportMetadata
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata"
       doc: "/domains/reports-and-dashboards/reports/get-report-metadata.md"
+      api_units: 0.1
+      api_units_action: GET_REPORT_METADATA
+      api_units_category: METADATA
     - operation_id: updateReport
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/reports/{view-id}"
       doc: "/domains/reports-and-dashboards/reports/update-report.md"
+      api_units: 5
+      api_units_action: UPDATE_ANALYSISVIEW
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/reports-dashboards-grouped-api.json"
@@ -49,11 +58,11 @@ A report is defined almost entirely by its drop fields - the `axisColumns` array
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Create Report](create-report.md) | POST | `/restapi/v2/workspaces/{workspace-id}/reports` | `createReport` | `ZohoAnalytics.modeling.create` | 200 |
-| [Read Report Metadata](get-report-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` | `getReportMetadata` | `ZohoAnalytics.modeling.read` | 200 |
-| [Update Report](update-report.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}` | `updateReport` | `ZohoAnalytics.modeling.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Create Report](create-report.md) | POST | `/restapi/v2/workspaces/{workspace-id}/reports` | `createReport` | `ZohoAnalytics.modeling.create` | 200 | 5 |
+| [Read Report Metadata](get-report-metadata.md) | GET | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}/metadata` | `getReportMetadata` | `ZohoAnalytics.modeling.read` | 200 | 0.1 |
+| [Update Report](update-report.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/reports/{view-id}` | `updateReport` | `ZohoAnalytics.modeling.update` | 204 | 5 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

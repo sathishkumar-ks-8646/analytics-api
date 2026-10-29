@@ -16,6 +16,15 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/dashboards"
   domain: reports-and-dashboards
   group: dashboards
+  api_units:
+    api_id: 2060
+    action: CREATE_DASHBOARD
+    category: METADATA
+    units: 5
+    units_basis: per_request
+    units_note: "5 units per request"
+    category_frequency_limit: 60 requests/minute
+    endpoint_throttle: "10 requests per user per minute, 10-minute lockout on breach"
   oauth_scopes:
     - ZohoAnalytics.modeling.create
   org_id_header: required
@@ -107,6 +116,8 @@ Permission required: Workspace Admin / Organization Admin, or a shared or group 
 | Content-Type | `application/x-www-form-urlencoded` |
 | Custom domain | Permitted, but only when the target workspace is mapped to the calling white-label domain. A mismatch raises **7301**. |
 | Throttle | 10 requests per minute per user; 10-minute lock-out on breach. |
+| API units | 5 units per request - action `CREATE_DASHBOARD` (api-id `2060`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization; this endpoint is additionally throttled to 10 requests per user per minute, 10-minute lockout on breach. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`reports-dashboards-grouped-api.json`](../../../references/openapi/reports-dashboards-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards/post`; CONFIG schema `CreateDashboardConfig`; response schema `CreateDashboardResponse` |
 
 # Request
@@ -422,3 +433,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Read Dashboard Metadata](get-dashboard-metadata.md), [Update Dashboard](update-dashboard.md).
 - [SDK examples](../../../sdk-examples/reports-and-dashboards/dashboards/create-dashboard.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

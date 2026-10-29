@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/subscription"
   domain: organization-management
   group: org-info-and-settings
+  api_units:
+    api_id: 6006
+    action: GET_SUBSCRIPTION_DETAILS
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.usermanagement.read
   org_id_header: required
@@ -69,6 +77,8 @@ Returns the current subscription plan, add-on details, billing date, and trial s
 | Permission required | The authenticated user must be an Account Admin or Organization Admin of the specified organisation. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0.1 units per request - action `GET_SUBSCRIPTION_DETAILS` (api-id `6006`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`org-management-grouped-api.json`](../../../references/openapi/org-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1subscription/get`; response schema `GetSubscriptionDetailsResponse` |
 
 # Request
@@ -210,3 +220,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Get Resource Details](get-resource-details.md), [Get Meta Details From Name](get-meta-details.md).
 - [SDK examples](../../../sdk-examples/organization-management/org-info-and-settings/get-subscription-details.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

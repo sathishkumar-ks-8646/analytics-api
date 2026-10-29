@@ -35,6 +35,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1resources/get"
+      },
+      "api_units": {
+        "api_id": 6008,
+        "action": "GET_RESOURCE_DETAILS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -70,6 +79,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1subscription/get"
+      },
+      "api_units": {
+        "api_id": 6006,
+        "action": "GET_SUBSCRIPTION_DETAILS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -106,6 +124,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1metadetails/get"
+      },
+      "api_units": {
+        "api_id": 3021,
+        "action": "GET_META_DETAILS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -142,6 +169,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1orgs~1workspaces/get"
+      },
+      "api_units": {
+        "api_id": 3043,
+        "action": "GET_WORKSPACES",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -189,6 +225,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1orgs~1dashboards/get"
+      },
+      "api_units": {
+        "api_id": 3044,
+        "action": "GET_ORG_DASHBOARDS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -225,6 +270,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1orgs~1recentitems/get"
+      },
+      "api_units": {
+        "api_id": 3007,
+        "action": "GET_RECENT_VIEWS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -261,6 +315,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1security-controls~1access-restrictions/get"
+      },
+      "api_units": {
+        "api_id": 3067,
+        "action": "GET_ORG_ACCESS_RESTRICTIONS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -303,6 +366,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1security-controls~1access-restrictions/put"
+      },
+      "api_units": {
+        "api_id": 3068,
+        "action": "UPDATE_ORG_ACCESS_RESTRICTIONS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -340,6 +412,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1security-controls~1workspaces~1{workspace-id}~1access-restrictions/get"
+      },
+      "api_units": {
+        "api_id": 3069,
+        "action": "GET_WORKSPACE_ACCESS_RESTRICTIONS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -384,6 +465,15 @@
       "openapi": {
         "file": "/references/openapi/org-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1security-controls~1workspaces~1{workspace-id}~1access-restrictions/put"
+      },
+      "api_units": {
+        "api_id": 3070,
+        "action": "UPDATE_WORKSPACE_ACCESS_RESTRICTIONS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -419,6 +509,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1users/get"
+      },
+      "api_units": {
+        "api_id": 6001,
+        "action": "GET_ORG_USERS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -458,6 +557,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1users/post"
+      },
+      "api_units": {
+        "api_id": 6002,
+        "action": "ADD_ORG_USERS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -494,6 +602,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1users/delete"
+      },
+      "api_units": {
+        "api_id": 6003,
+        "action": "REMOVE_ORG_USERS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -531,6 +648,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1users~1active/put"
+      },
+      "api_units": {
+        "api_id": 6004,
+        "action": "ACTIVATE_ORG_USERS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -567,6 +693,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1users~1inactive/put"
+      },
+      "api_units": {
+        "api_id": 6005,
+        "action": "DEACTIVATE_ORG_USERS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -604,6 +739,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1users~1role/put"
+      },
+      "api_units": {
+        "api_id": 6007,
+        "action": "CHANGE_USER_ROLE",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -639,6 +783,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1orgadmins/get"
+      },
+      "api_units": {
+        "api_id": 4001,
+        "action": "GET_ORG_ADMINS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -676,6 +829,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1orgs~1roles/get"
+      },
+      "api_units": {
+        "api_id": 6014,
+        "action": "GET_ROLES",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -732,6 +894,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1orgs~1roles/post"
+      },
+      "api_units": {
+        "api_id": 6015,
+        "action": "CREATE_ROLE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -788,6 +959,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1orgs~1roles~1{role-id}/put"
+      },
+      "api_units": {
+        "api_id": 6016,
+        "action": "UPDATE_ROLE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -825,6 +1005,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1orgs~1roles~1{role-id}/delete"
+      },
+      "api_units": {
+        "api_id": 6017,
+        "action": "DELETE_ROLE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -860,6 +1049,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1users/get"
+      },
+      "api_units": {
+        "api_id": 6009,
+        "action": "GET_WORKSPACE_USERS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -896,6 +1094,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1users/post"
+      },
+      "api_units": {
+        "api_id": 6010,
+        "action": "ADD_WORKSPACE_USERS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -931,6 +1138,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1users/delete"
+      },
+      "api_units": {
+        "api_id": 6011,
+        "action": "REMOVE_WORKSPACE_USERS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -967,6 +1183,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1users~1status/put"
+      },
+      "api_units": {
+        "api_id": 6012,
+        "action": "CHANGE_WORKSPACE_USERS_STATUS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1003,6 +1228,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1users~1role/put"
+      },
+      "api_units": {
+        "api_id": 6013,
+        "action": "CHANGE_WORKSPACE_USERS_ROLE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1038,6 +1272,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1admins/get"
+      },
+      "api_units": {
+        "api_id": 4004,
+        "action": "GET_WORKSPACE_ADMINS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1074,6 +1317,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1admins/post"
+      },
+      "api_units": {
+        "api_id": 4005,
+        "action": "ADD_WORKSPACE_ADMINS",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1110,6 +1362,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1admins/delete"
+      },
+      "api_units": {
+        "api_id": 4006,
+        "action": "REMOVE_WORKSPACE_ADMINS",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1145,6 +1406,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1groups/get"
+      },
+      "api_units": {
+        "api_id": 4012,
+        "action": "GET_GROUPS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1183,6 +1453,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1groups/post"
+      },
+      "api_units": {
+        "api_id": 4013,
+        "action": "CREATE_GROUP",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1218,6 +1497,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1groups~1{group-id}/put"
+      },
+      "api_units": {
+        "api_id": 4014,
+        "action": "RENAME_GROUP",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1252,6 +1540,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1groups~1{group-id}~1members/post"
+      },
+      "api_units": {
+        "api_id": 4015,
+        "action": "ADD_GROUP_MEMBERS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1286,6 +1583,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1groups~1{group-id}~1members/delete"
+      },
+      "api_units": {
+        "api_id": 4016,
+        "action": "REMOVE_GROUP_MEMBERS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1320,6 +1626,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1groups~1{group-id}/delete"
+      },
+      "api_units": {
+        "api_id": 4017,
+        "action": "DELETE_GROUP",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1356,6 +1671,15 @@
       "openapi": {
         "file": "/references/openapi/user-groups-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1groups~1{group-id}/get"
+      },
+      "api_units": {
+        "api_id": 4018,
+        "action": "GET_GROUP_DETAILS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1391,6 +1715,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces/post"
+      },
+      "api_units": {
+        "api_id": 2001,
+        "action": "CREATE_WORKSPACE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1429,6 +1762,16 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}/post"
+      },
+      "api_units": {
+        "api_id": 2002,
+        "action": "COPY_WORKSPACE_WO_DATA",
+        "category": "METADATA",
+        "units": 25.0,
+        "units_basis": "per_request",
+        "units_note": "25 units per request when `copyData` is false; when `copyData` is true, 25 units plus 1 unit per 1000 rows copied",
+        "category_frequency_limit_per_minute": 60,
+        "units_variable": true
       }
     },
     {
@@ -1463,6 +1806,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}/put"
+      },
+      "api_units": {
+        "api_id": 2004,
+        "action": "RENAME_WORKSPACE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1496,6 +1848,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2005,
+        "action": "DELETE_WORKSPACE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1533,6 +1894,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1template~1data/get"
+      },
+      "api_units": {
+        "api_id": 3032,
+        "action": "EXPORT_AS_TEMPLATE",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1568,6 +1938,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1secretkey/get"
+      },
+      "api_units": {
+        "api_id": 3011,
+        "action": "GET_WORKSPACE_SECRETKEY",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1605,6 +1984,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}/get"
+      },
+      "api_units": {
+        "api_id": 3012,
+        "action": "GET_WORKSPACE_DETAILS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1638,6 +2026,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1folders/get"
+      },
+      "api_units": {
+        "api_id": 3006,
+        "action": "GET_FOLDERS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1675,6 +2072,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1folders/post"
+      },
+      "api_units": {
+        "api_id": 2010,
+        "action": "CREATE_FOLDER",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1709,6 +2115,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1folders~1{folder-id}/put"
+      },
+      "api_units": {
+        "api_id": 2011,
+        "action": "RENAME_FOLDER",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1742,6 +2157,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1folders~1{folder-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2012,
+        "action": "DELETE_FOLDER",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1775,6 +2199,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1folders~1{folder-id}~1move/put"
+      },
+      "api_units": {
+        "api_id": 2047,
+        "action": "CHANGE_FOLDER_HIERARCHY",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1807,6 +2240,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1folders~1{folder-id}~1reorder/put"
+      },
+      "api_units": {
+        "api_id": 2048,
+        "action": "CHANGE_FOLDER_POSITION",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1840,6 +2282,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1movetofolder/put"
+      },
+      "api_units": {
+        "api_id": 2049,
+        "action": "MOVE_VIEWS_TO_FOLDER",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1872,6 +2323,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1folders~1{folder-id}~1default/put"
+      },
+      "api_units": {
+        "api_id": 2030,
+        "action": "MAKE_DEFAULT_FOLDER",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1905,6 +2365,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1default/post"
+      },
+      "api_units": {
+        "api_id": 3019,
+        "action": "ADD_DEFAULT_WORKSPACE",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1939,6 +2408,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1default/delete"
+      },
+      "api_units": {
+        "api_id": 3020,
+        "action": "REMOVE_DEFAULT_WORKSPACE",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -1972,6 +2450,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1favorite/post"
+      },
+      "api_units": {
+        "api_id": 3015,
+        "action": "ADD_FAVOURITE_WORKSPACE",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2005,6 +2492,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1favorite/delete"
+      },
+      "api_units": {
+        "api_id": 3016,
+        "action": "REMOVE_FAVOURITE_WORKSPACE",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2039,6 +2535,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1wlaccess/post"
+      },
+      "api_units": {
+        "api_id": 3022,
+        "action": "ENABLE_DOMAIN_WORKSPACE",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2073,6 +2578,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1wlaccess/delete"
+      },
+      "api_units": {
+        "api_id": 3023,
+        "action": "DISABLE_DOMAIN_WORKSPACE",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2109,6 +2623,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1linkedworkspaces/get"
+      },
+      "api_units": {
+        "api_id": 3086,
+        "action": "GET_LINKED_WORKSPACES_FOR_ORGANIZATION",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2146,6 +2669,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces/get"
+      },
+      "api_units": {
+        "api_id": 3087,
+        "action": "GET_LINKED_WORKSPACES_FOR_MASTER_WORKSPACE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2183,6 +2715,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces~1linkable/get"
+      },
+      "api_units": {
+        "api_id": 3088,
+        "action": "GET_LINKABLE_WORKSPACES",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2225,6 +2766,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces~1compatibility/get"
+      },
+      "api_units": {
+        "api_id": 3089,
+        "action": "GET_WORKSPACE_LINKING_COMPATIBILITY",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2266,6 +2816,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces/post"
+      },
+      "api_units": {
+        "api_id": 2080,
+        "action": "LINK_WORKSPACES",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2311,6 +2870,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces~1sync/post"
+      },
+      "api_units": {
+        "api_id": 2082,
+        "action": "SYNC_LINKED_WORKSPACES",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2351,6 +2919,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces~1sync/get"
+      },
+      "api_units": {
+        "api_id": 3090,
+        "action": "GET_LINKED_WORKSPACE_SYNC_DETAILS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2393,6 +2970,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1linkedworkspaces/delete"
+      },
+      "api_units": {
+        "api_id": 2081,
+        "action": "UNLINK_WORKSPACES",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2430,6 +3016,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups/get"
+      },
+      "api_units": {
+        "api_id": 3082,
+        "action": "GET_WORKSPACE_BACKUPS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2472,6 +3067,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups/post"
+      },
+      "api_units": {
+        "api_id": 3083,
+        "action": "BACKUP_WORKSPACE_NOW",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2511,6 +3115,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups~1{backup-id}~1download/get"
+      },
+      "api_units": {
+        "api_id": 3084,
+        "action": "DOWNLOAD_WORKSPACE_BACKUP",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2558,6 +3171,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups~1{backup-id}~1restore/post"
+      },
+      "api_units": {
+        "api_id": 3085,
+        "action": "RESTORE_WORKSPACE_BACKUP",
+        "category": "METADATA",
+        "units": 10.0,
+        "units_basis": "per_request",
+        "units_note": "10 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2596,6 +3218,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1backups~1{backup-id}~1status/get"
+      },
+      "api_units": {
+        "api_id": 3096,
+        "action": "GET_WORKSPACE_BACKUP_STATUS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2634,6 +3265,15 @@
       "openapi": {
         "file": "/references/openapi/workspace-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1restores~1{restore-id}~1status/get"
+      },
+      "api_units": {
+        "api_id": 3097,
+        "action": "GET_WORKSPACE_RESTORE_STATUS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2680,6 +3320,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1tables/post"
+      },
+      "api_units": {
+        "api_id": 2006,
+        "action": "CREATE_TABLE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2716,6 +3365,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1metadata/get"
+      },
+      "api_units": {
+        "api_id": 3053,
+        "action": "GET_TABLE_METADATA",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2758,6 +3416,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns/post"
+      },
+      "api_units": {
+        "api_id": 2013,
+        "action": "ADD_COLUMN",
+        "category": "METADATA",
+        "units": 15.0,
+        "units_basis": "per_request",
+        "units_note": "15 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2795,6 +3462,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1{column-id}/put"
+      },
+      "api_units": {
+        "api_id": 2014,
+        "action": "RENAME_COLUMN",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2830,6 +3506,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1{column-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2015,
+        "action": "DELETE_COLUMN",
+        "category": "METADATA",
+        "units": 10.0,
+        "units_basis": "per_request",
+        "units_note": "10 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2864,6 +3549,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1hide/put"
+      },
+      "api_units": {
+        "api_id": 2018,
+        "action": "HIDE_COLUMNS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2897,6 +3591,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1show/put"
+      },
+      "api_units": {
+        "api_id": 2019,
+        "action": "SHOW_COLUMNS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2932,6 +3635,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1{column-id}~1dependents/get"
+      },
+      "api_units": {
+        "api_id": 3030,
+        "action": "GET_COLUMN_DEPENDENTS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -2967,6 +3679,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1data~1sort/put"
+      },
+      "api_units": {
+        "api_id": 2064,
+        "action": "SORT_DATA_BY_COLUMNS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3001,6 +3722,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1reorder/put"
+      },
+      "api_units": {
+        "api_id": 2063,
+        "action": "REORDER_COLUMNS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3041,6 +3771,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1{column-id}~1lookup/post"
+      },
+      "api_units": {
+        "api_id": 2016,
+        "action": "ADD_LOOKUP",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3076,6 +3815,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1{column-id}~1lookup/delete"
+      },
+      "api_units": {
+        "api_id": 2017,
+        "action": "REMOVE_LOOKUP",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3110,6 +3858,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1querytables/get"
+      },
+      "api_units": {
+        "api_id": 3064,
+        "action": "GET_QUERY_TABLES",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3156,6 +3913,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1querytables/post"
+      },
+      "api_units": {
+        "api_id": 2037,
+        "action": "CREATE_QT",
+        "category": "METADATA",
+        "units": 15.0,
+        "units_basis": "per_request",
+        "units_note": "15 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "20 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3197,6 +3964,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1querytables~1{querytable-id}/put"
+      },
+      "api_units": {
+        "api_id": 2038,
+        "action": "EDIT_QT",
+        "category": "METADATA",
+        "units": 15.0,
+        "units_basis": "per_request",
+        "units_note": "15 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "20 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3231,6 +4008,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1querytables~1{querytable-id}/get"
+      },
+      "api_units": {
+        "api_id": 3047,
+        "action": "GET_QUERYTABLE_DETAILS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3266,6 +4052,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1customformulas/get"
+      },
+      "api_units": {
+        "api_id": 3036,
+        "action": "GET_FORMULA_COLUMN",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "30 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3309,6 +4105,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1customformulas/post"
+      },
+      "api_units": {
+        "api_id": 2041,
+        "action": "ADD_FORMULA_COLUMN",
+        "category": "METADATA",
+        "units": 15.0,
+        "units_basis": "per_request",
+        "units_note": "15 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "20 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3351,6 +4157,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1customformulas~1{formula-id}/put"
+      },
+      "api_units": {
+        "api_id": 2042,
+        "action": "EDIT_FORMULA_COLUMN",
+        "category": "METADATA",
+        "units": 15.0,
+        "units_basis": "per_request",
+        "units_note": "15 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "20 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3388,6 +4204,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1customformulas~1{formula-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2043,
+        "action": "DELETE_FORMULA_COLUMN",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "30 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3422,6 +4248,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1formulas~1copy/post"
+      },
+      "api_units": {
+        "api_id": 2021,
+        "action": "COPY_FORMULAS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3456,6 +4291,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1aggregateformulas/get"
+      },
+      "api_units": {
+        "api_id": 3037,
+        "action": "GET AGGREGATE FORMULA",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "30 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3496,6 +4341,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1aggregateformulas/post"
+      },
+      "api_units": {
+        "api_id": 2044,
+        "action": "ADD_AGG_FORMULA",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "20 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3535,6 +4390,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1aggregateformulas~1{formula-id}/put"
+      },
+      "api_units": {
+        "api_id": 2045,
+        "action": "EDIT_AGG_FORMULA",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "20 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3571,6 +4436,16 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1aggregateformulas~1{formula-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2046,
+        "action": "DELETE AGG FORMULA",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "20 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -3604,6 +4479,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1aggregateformulas/get"
+      },
+      "api_units": {
+        "api_id": 3039,
+        "action": "GET_AGGREGATE_FORMULAS_IN_WORKSPACE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3638,6 +4522,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1aggregateformulas~1{formula-id}~1dependents/get"
+      },
+      "api_units": {
+        "api_id": 3040,
+        "action": "GET_AGGREGATE_FORMULA_DEPENDENTS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3672,6 +4565,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1aggregateformulas~1{formula-id}~1value/get"
+      },
+      "api_units": {
+        "api_id": 3041,
+        "action": "GET_AGGREGATE_FORMULA_VALUE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3725,6 +4627,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1variables/post"
+      },
+      "api_units": {
+        "api_id": 2025,
+        "action": "CREATE_VARIABLE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3778,6 +4689,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1variables~1{variable-id}/put"
+      },
+      "api_units": {
+        "api_id": 2026,
+        "action": "UPDATE_VARIABLE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3814,6 +4734,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1variables~1{variable-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2027,
+        "action": "DELETE_VARIABLE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3847,6 +4776,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1variables/get"
+      },
+      "api_units": {
+        "api_id": 2028,
+        "action": "GET_VARIABLES",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3881,6 +4819,15 @@
       "openapi": {
         "file": "/references/openapi/data-modeling-schema-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1variables~1{variable-id}/get"
+      },
+      "api_units": {
+        "api_id": 2029,
+        "action": "GET_VARIABLE_DETAILS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -3930,6 +4877,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1data/post"
+      },
+      "api_units": {
+        "api_id": 8001,
+        "action": "INITIATE_IMPORT",
+        "category": "BULK",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "Variable - units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)",
+        "category_frequency_limit_per_minute": 40,
+        "units_variable": true
       }
     },
     {
@@ -3983,6 +4940,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1data/post"
+      },
+      "api_units": {
+        "api_id": 8001,
+        "action": "INITIATE_IMPORT",
+        "category": "BULK",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "Variable - units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)",
+        "category_frequency_limit_per_minute": 40,
+        "units_variable": true
       }
     },
     {
@@ -4034,6 +5001,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1data/post"
+      },
+      "api_units": {
+        "api_id": 8001,
+        "action": "INITIATE_IMPORT",
+        "category": "BULK",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "Variable - units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)",
+        "category_frequency_limit_per_minute": 40,
+        "units_variable": true
       }
     },
     {
@@ -4089,6 +5066,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1views~1{view-id}~1data/post"
+      },
+      "api_units": {
+        "api_id": 8001,
+        "action": "INITIATE_IMPORT",
+        "category": "BULK",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "Variable - units are charged on the rows actually imported, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)",
+        "category_frequency_limit_per_minute": 40,
+        "units_variable": true
       }
     },
     {
@@ -4141,6 +5128,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1data~1batch/post"
+      },
+      "api_units": {
+        "api_id": 8005,
+        "action": "BATCH_IMPORT_FILE_UPLOAD",
+        "category": "BULK",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "Variable - the batch upload requests themselves cost 0; units are charged once, on the rows imported by the final batch, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)",
+        "category_frequency_limit_per_minute": 40,
+        "units_variable": true
       }
     },
     {
@@ -4197,6 +5194,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1views~1{view-id}~1data~1batch/post"
+      },
+      "api_units": {
+        "api_id": 8005,
+        "action": "BATCH_IMPORT_FILE_UPLOAD",
+        "category": "BULK",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "Variable - the batch upload requests themselves cost 0; units are charged once, on the rows imported by the final batch, based on `importType`: 10 units per 1000 rows (`append`, `truncateadd`), 15 units per 1000 rows (`updateadd`)",
+        "category_frequency_limit_per_minute": 40,
+        "units_variable": true
       }
     },
     {
@@ -4233,6 +5240,15 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1importjobs~1{job-id}/get"
+      },
+      "api_units": {
+        "api_id": 9003,
+        "action": "IMPORT_JOB_STATUS",
+        "category": "METADATA",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "0 - no API units are deducted",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -4302,6 +5318,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1data/get"
+      },
+      "api_units": {
+        "api_id": 7001,
+        "action": "INITIATE_EXPORT",
+        "category": "BULK",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "Variable - the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)",
+        "category_frequency_limit_per_minute": 40,
+        "units_variable": true
       }
     },
     {
@@ -4362,6 +5388,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1data/get"
+      },
+      "api_units": {
+        "api_id": 7001,
+        "action": "INITIATE_EXPORT",
+        "category": "BULK",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "Variable - the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)",
+        "category_frequency_limit_per_minute": 40,
+        "units_variable": true
       }
     },
     {
@@ -4423,6 +5459,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1views~1{view-id}~1data/get"
+      },
+      "api_units": {
+        "api_id": 7001,
+        "action": "INITIATE_EXPORT",
+        "category": "BULK",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "Variable - the request itself costs 0; units are charged when the data is produced, based on the output format: 3 units per 1000 rows (CSV, JSON, XML, XLS), 5 units per 1000 rows (PDF of a table), 10 units flat (chart image, or PDF of a chart), 15 units flat (HTML), 15 units flat (dashboard)",
+        "category_frequency_limit_per_minute": 40,
+        "units_variable": true
       }
     },
     {
@@ -4458,6 +5504,15 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1exportjobs~1{job-id}/get"
+      },
+      "api_units": {
+        "api_id": 9001,
+        "action": "EXPORT_JOB_STATUS",
+        "category": "METADATA",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "0 - no API units are deducted",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -4504,6 +5559,15 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1exportjobs~1{job-id}~1data/get"
+      },
+      "api_units": {
+        "api_id": 9002,
+        "action": "DOWNLOAD_FILE",
+        "category": "METADATA",
+        "units": 0.0,
+        "units_basis": "per_request",
+        "units_note": "0 - no API units are deducted",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -4549,6 +5613,15 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1rows/post"
+      },
+      "api_units": {
+        "api_id": 1001,
+        "action": "ADD_ROW",
+        "category": "DML",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 100
       }
     },
     {
@@ -4597,6 +5670,15 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1rows/put"
+      },
+      "api_units": {
+        "api_id": 1002,
+        "action": "UPDATE_ROW",
+        "category": "DML",
+        "units": 0.3,
+        "units_basis": "per_request",
+        "units_note": "0.3 units per request",
+        "category_frequency_limit_per_minute": 100
       }
     },
     {
@@ -4641,6 +5723,15 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1rows/delete"
+      },
+      "api_units": {
+        "api_id": 1003,
+        "action": "DELETE_ROW",
+        "category": "DML",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 100
       }
     },
     {
@@ -4679,6 +5770,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1datasources~1{datasource-id}~1sync/post"
+      },
+      "api_units": {
+        "api_id": 3025,
+        "action": "SYNC_DATA",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "5 requests per minute, 5-minute lockout on breach"
       }
     },
     {
@@ -4715,6 +5816,16 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1sync/post"
+      },
+      "api_units": {
+        "api_id": 3026,
+        "action": "REFETCH_DATA",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "5 requests per minute, 5-minute lockout on breach"
       }
     },
     {
@@ -4758,6 +5869,15 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1datasources~1{datasource-id}/put"
+      },
+      "api_units": {
+        "api_id": 3028,
+        "action": "UPDATE_DATASOURCE_CONNECTION",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -4792,6 +5912,15 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1datasources/get"
+      },
+      "api_units": {
+        "api_id": 3024,
+        "action": "GET_DATASOURCES",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -4827,6 +5956,15 @@
       "openapi": {
         "file": "/references/openapi/data-operations-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1importdetails/get"
+      },
+      "api_units": {
+        "api_id": 3027,
+        "action": "GET_LAST_IMPORT_DETAILS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -4866,6 +6004,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1saveas/post"
+      },
+      "api_units": {
+        "api_id": 2007,
+        "action": "SAVEAS_VIEWS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -4905,6 +6052,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1copy/post"
+      },
+      "api_units": {
+        "api_id": 2020,
+        "action": "COPY_VIEWS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -4941,6 +6097,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1similarviews/post"
+      },
+      "api_units": {
+        "api_id": 2022,
+        "action": "CREATE_SIMILAR_VIEWS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -4978,6 +6143,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}/put"
+      },
+      "api_units": {
+        "api_id": 2008,
+        "action": "RENAME_VIEW",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5013,6 +6187,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2009,
+        "action": "DELETE_VIEW",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5049,6 +6232,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views/get"
+      },
+      "api_units": {
+        "api_id": 3005,
+        "action": "GET_VIEWS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5086,6 +6278,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1views~1{view-id}/get"
+      },
+      "api_units": {
+        "api_id": 3013,
+        "action": "GET_VIEW_DETAILS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5126,6 +6327,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish/get"
+      },
+      "api_units": {
+        "api_id": 5001,
+        "action": "GET_VIEW_URL",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5163,6 +6373,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1dependents/get"
+      },
+      "api_units": {
+        "api_id": 3034,
+        "action": "GET_VIEW_DEPENDENTS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5198,6 +6417,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1favorite/post"
+      },
+      "api_units": {
+        "api_id": 3017,
+        "action": "ADD_FAVOURITE_VIEW",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5233,6 +6461,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1favorite/delete"
+      },
+      "api_units": {
+        "api_id": 3018,
+        "action": "REMOVE_FAVOURITE_VIEW",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5268,6 +6505,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1trash/get"
+      },
+      "api_units": {
+        "api_id": 3035,
+        "action": "GET_TRASH_VIEWS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5305,6 +6551,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1trash~1{view-id}/post"
+      },
+      "api_units": {
+        "api_id": 2039,
+        "action": "RESTORE_TRASH_VIEW",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5341,6 +6596,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1trash~1{view-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2040,
+        "action": "DELETE_TRASH_VIEW",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5380,6 +6644,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1autoanalyse/post"
+      },
+      "api_units": {
+        "api_id": 2023,
+        "action": "AUTO_ANALYSIS_VIEW",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5421,6 +6694,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1columns~1{column-id}~1autoanalyse/post"
+      },
+      "api_units": {
+        "api_id": 2024,
+        "action": "AUTO_ANALYSIS_COLUMN",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5458,6 +6740,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1tags/get"
+      },
+      "api_units": {
+        "api_id": 3071,
+        "action": "GET_TAGS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5497,6 +6788,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1tags~1{tag-id}~1views/get"
+      },
+      "api_units": {
+        "api_id": 3072,
+        "action": "GET_TAGGED_VIEWS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5534,6 +6834,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1tags/get"
+      },
+      "api_units": {
+        "api_id": 3073,
+        "action": "GET_VIEW_TAGS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5577,6 +6886,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1tags/post"
+      },
+      "api_units": {
+        "api_id": 2073,
+        "action": "CREATE_TAG",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5620,6 +6938,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1tags~1{tag-id}/put"
+      },
+      "api_units": {
+        "api_id": 2074,
+        "action": "UPDATE_TAG",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5658,6 +6985,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1tags~1{tag-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2075,
+        "action": "DELETE_TAG",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5700,6 +7036,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1tags~1{tag-id}~1views/post"
+      },
+      "api_units": {
+        "api_id": 2076,
+        "action": "ADD_TAG_TO_VIEWS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5741,6 +7086,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1tags~1{tag-id}~1views/delete"
+      },
+      "api_units": {
+        "api_id": 2077,
+        "action": "REMOVE_TAG_FROM_VIEWS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5783,6 +7137,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1tags/post"
+      },
+      "api_units": {
+        "api_id": 2078,
+        "action": "ADD_TAGS_TO_VIEW",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5824,6 +7187,15 @@
       "openapi": {
         "file": "/references/openapi/views-management-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1tags/delete"
+      },
+      "api_units": {
+        "api_id": 2079,
+        "action": "REMOVE_TAGS_FROM_VIEW",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5912,6 +7284,15 @@
       "openapi": {
         "file": "/references/openapi/reports-dashboards-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1reports/post"
+      },
+      "api_units": {
+        "api_id": 2031,
+        "action": "CREATE_ANALYSISVIEW",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -5952,6 +7333,15 @@
       "openapi": {
         "file": "/references/openapi/reports-dashboards-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1reports~1{view-id}~1metadata/get"
+      },
+      "api_units": {
+        "api_id": 3052,
+        "action": "GET_REPORT_METADATA",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6036,6 +7426,15 @@
       "openapi": {
         "file": "/references/openapi/reports-dashboards-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1reports~1{view-id}/put"
+      },
+      "api_units": {
+        "api_id": 2032,
+        "action": "UPDATE_ANALYSISVIEW",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6098,6 +7497,16 @@
       "openapi": {
         "file": "/references/openapi/reports-dashboards-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards/post"
+      },
+      "api_units": {
+        "api_id": 2060,
+        "action": "CREATE_DASHBOARD",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "10 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -6139,6 +7548,16 @@
       "openapi": {
         "file": "/references/openapi/reports-dashboards-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}~1metadata/get"
+      },
+      "api_units": {
+        "api_id": 2061,
+        "action": "GET_DASHBOARD_METADATA",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "20 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -6202,6 +7621,16 @@
       "openapi": {
         "file": "/references/openapi/reports-dashboards-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1dashboards~1{dashboard-id}/put"
+      },
+      "api_units": {
+        "api_id": 2062,
+        "action": "UPDATE_DASHBOARD",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60,
+        "endpoint_throttle": "10 requests per user per minute, 10-minute lockout on breach"
       }
     },
     {
@@ -6235,6 +7664,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1share/get"
+      },
+      "api_units": {
+        "api_id": 4007,
+        "action": "GET_WORKSPACE_SHARE_INFO",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6283,6 +7721,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1share/post"
+      },
+      "api_units": {
+        "api_id": 4008,
+        "action": "SHARE_VIEWS",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6321,6 +7768,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1share/put"
+      },
+      "api_units": {
+        "api_id": 4020,
+        "action": "UPDATE_SHARED_DETAILS_FOR_VIEW",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6355,6 +7811,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1share~1shareddetails/get"
+      },
+      "api_units": {
+        "api_id": 4010,
+        "action": "GET_SHARED_DETAILS_FOR_VIEW",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6392,6 +7857,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1share/delete"
+      },
+      "api_units": {
+        "api_id": 4009,
+        "action": "REMOVE_SHARE",
+        "category": "METADATA",
+        "units": 5.0,
+        "units_basis": "per_request",
+        "units_note": "5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6425,6 +7899,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1share~1userpermissions/get"
+      },
+      "api_units": {
+        "api_id": 4011,
+        "action": "GET_MY_PERMISSIONS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6476,6 +7959,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1public/post"
+      },
+      "api_units": {
+        "api_id": 5013,
+        "action": "MAKE_VIEW_PUBLIC",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6513,6 +8005,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1public/delete"
+      },
+      "api_units": {
+        "api_id": 5014,
+        "action": "REMOVE_PUBLIC_VIEW",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6555,6 +8056,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1privatelink/get"
+      },
+      "api_units": {
+        "api_id": 5003,
+        "action": "GET_PRIVATE_URL",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6609,6 +8119,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1privatelink/post"
+      },
+      "api_units": {
+        "api_id": 5004,
+        "action": "CREATE_PRIVATE_URL",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6646,6 +8165,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1privatelink/delete"
+      },
+      "api_units": {
+        "api_id": 5012,
+        "action": "REMOVE_PRIVATE_PERMISSION",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6683,6 +8211,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1config/get"
+      },
+      "api_units": {
+        "api_id": 5015,
+        "action": "GET_PUBLISH_CONFIGURATIONS",
+        "category": "METADATA",
+        "units": 0.1,
+        "units_basis": "per_request",
+        "units_note": "0.1 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6724,6 +8261,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1config/put"
+      },
+      "api_units": {
+        "api_id": 5016,
+        "action": "UPDATE_PUBLISH_CONFIGURATIONS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6772,6 +8318,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1publish~1embed/get"
+      },
+      "api_units": {
+        "api_id": 5002,
+        "action": "GET_EMBED_URL",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6804,7 +8359,16 @@
       ],
       "doc": "/domains/share-and-publish/embed-url/get-embed-urls.md",
       "sdk_examples": null,
-      "openapi": null
+      "openapi": null,
+      "api_units": {
+        "api_id": 5017,
+        "action": "FETCH_ALL_EMBED_URLS",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
+      }
     },
     {
       "operation_id": "deleteEmbedUrl",
@@ -6839,7 +8403,16 @@
       ],
       "doc": "/domains/share-and-publish/embed-url/delete-embed-url.md",
       "sdk_examples": null,
-      "openapi": null
+      "openapi": null,
+      "api_units": {
+        "api_id": 5018,
+        "action": "DELETE_EMBED_URL",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
+      }
     },
     {
       "operation_id": "getSlideshows",
@@ -6875,6 +8448,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1slides/get"
+      },
+      "api_units": {
+        "api_id": 5005,
+        "action": "GET_SLIDE_LIST",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6915,6 +8497,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1slides~1{slide-id}~1publish/get"
+      },
+      "api_units": {
+        "api_id": 5006,
+        "action": "GET_SLIDE_URL",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -6953,6 +8544,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1slides~1{slide-id}/get"
+      },
+      "api_units": {
+        "api_id": 5007,
+        "action": "GET_SLIDE_INFO",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7000,6 +8600,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1slides/post"
+      },
+      "api_units": {
+        "api_id": 5008,
+        "action": "CREATE_SLIDE_SHOW",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7044,6 +8653,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1slides~1{slide-id}/put"
+      },
+      "api_units": {
+        "api_id": 5009,
+        "action": "UPDATE_SLIDE_SHOW",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7080,6 +8698,15 @@
       "openapi": {
         "file": "/references/openapi/share-publish-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1slides~1{slide-id}/delete"
+      },
+      "api_units": {
+        "api_id": 5010,
+        "action": "DELETE_SLIDE_SHOW",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7115,6 +8742,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1emailschedules/get"
+      },
+      "api_units": {
+        "api_id": 3038,
+        "action": "GET EMAIL SCHEDULES",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7166,6 +8802,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1emailschedules/post"
+      },
+      "api_units": {
+        "api_id": 2050,
+        "action": "CREATE_EMAIL_SCHEDULE",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7210,6 +8855,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1emailschedules~1{schedule-id}/put"
+      },
+      "api_units": {
+        "api_id": 2051,
+        "action": "UPDATE_EMAIL_SCHEDULE",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7246,6 +8900,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1emailschedules~1{schedule-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2052,
+        "action": "DELETE_EMAIL_SCHEDULE",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7285,6 +8948,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1emailschedules~1{schedule-id}~1status/put"
+      },
+      "api_units": {
+        "api_id": 2053,
+        "action": "CHANGE_EMAIL_SCHEDULE_STATUS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7324,6 +8996,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1emailschedules~1{schedule-id}/post"
+      },
+      "api_units": {
+        "api_id": 2054,
+        "action": "TRIGGER_EMAIL_SCHEDULE",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7362,6 +9043,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts/get"
+      },
+      "api_units": {
+        "api_id": 3091,
+        "action": "GET_ALERTS_IN_WORKSPACE",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7402,6 +9092,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1alerts/get"
+      },
+      "api_units": {
+        "api_id": 3092,
+        "action": "GET_ALERTS_IN_VIEW",
+        "category": "METADATA",
+        "units": 0.5,
+        "units_basis": "per_request",
+        "units_note": "0.5 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7443,6 +9142,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1alerts~1metadata/get"
+      },
+      "api_units": {
+        "api_id": 3093,
+        "action": "GET_VIEW_METADATA_FOR_ALERT",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7482,6 +9190,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1{alert-id}/get"
+      },
+      "api_units": {
+        "api_id": 3094,
+        "action": "GET_ALERT_CONFIGURATION",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7529,6 +9246,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1views~1{view-id}~1alerts/post"
+      },
+      "api_units": {
+        "api_id": 2083,
+        "action": "CREATE_ALERT",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7568,6 +9294,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1{alert-id}/put"
+      },
+      "api_units": {
+        "api_id": 2084,
+        "action": "UPDATE_ALERT",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7609,6 +9344,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts/delete"
+      },
+      "api_units": {
+        "api_id": 2085,
+        "action": "DELETE_ALERTS",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7650,6 +9394,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1status/put"
+      },
+      "api_units": {
+        "api_id": 2086,
+        "action": "CHANGE_ALERT_STATUS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7690,6 +9443,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1{alert-id}~1execute/post"
+      },
+      "api_units": {
+        "api_id": 2087,
+        "action": "RUN_ALERT",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7731,6 +9493,15 @@
       "openapi": {
         "file": "/references/openapi/schedules-alerts-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1alerts~1{alert-id}~1events/get"
+      },
+      "api_units": {
+        "api_id": 3095,
+        "action": "GET_ALERT_EVENTS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7765,6 +9536,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1analysis/get"
+      },
+      "api_units": {
+        "api_id": 3054,
+        "action": "GET_AUTOML_ANALYSIS_IN_ORGANIZATION",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7800,6 +9580,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis/get"
+      },
+      "api_units": {
+        "api_id": 3055,
+        "action": "GET_AUTOML_ANALYSIS_IN_Workspace",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7835,6 +9624,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis~1{analysis-id}/get"
+      },
+      "api_units": {
+        "api_id": 3056,
+        "action": "GET_AUTOML_ANALYSIS_DETAILS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7870,6 +9668,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis~1{analysis-id}~1models~1{model-id}~1deployments/get"
+      },
+      "api_units": {
+        "api_id": 3057,
+        "action": "GET_DEPLOYMENTS_FOR_A_MODEL",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7912,6 +9719,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis/post"
+      },
+      "api_units": {
+        "api_id": 2065,
+        "action": "CREATE_AUTOML_ANALYSIS",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7945,6 +9761,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis~1{analysis-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2066,
+        "action": "DELETE_AUTOML_ANALYSIS",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -7978,6 +9803,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis~1{analysis-id}~1models~1{model-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2067,
+        "action": "DELETE_AUTOML_ANALYSIS_MODEL",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -8019,6 +9853,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis~1{analysis-id}~1models~1{model-id}~1deployments/post"
+      },
+      "api_units": {
+        "api_id": 2068,
+        "action": "CREATE_AUTOML_ANALYSIS_DEPLOYMENT",
+        "category": "METADATA",
+        "units": 3.0,
+        "units_basis": "per_request",
+        "units_note": "3 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -8052,6 +9895,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis~1{analysis-id}~1deployments~1{deployment-id}~1execute/post"
+      },
+      "api_units": {
+        "api_id": 2069,
+        "action": "RUN_AUTOML_ANALYSIS_DEPLOYMENT",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -8085,6 +9937,15 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis~1{analysis-id}~1deployments~1{deployment-id}/delete"
+      },
+      "api_units": {
+        "api_id": 2070,
+        "action": "DELETE_AUTOML_ANALYSIS_DEPLOYMENT",
+        "category": "METADATA",
+        "units": 2.0,
+        "units_basis": "per_request",
+        "units_note": "2 units per request",
+        "category_frequency_limit_per_minute": 60
       }
     },
     {
@@ -8123,7 +9984,27 @@
       "openapi": {
         "file": "/references/openapi/dsml-grouped-api.json",
         "pointer": "#/paths/~1restapi~1v2~1automl~1workspaces~1{workspace-id}~1analysis~1{analysis-id}~1models~1{model-id}~1whatif/post"
+      },
+      "api_units": {
+        "api_id": 2071,
+        "action": "AUTOML_WHAT_IF_ANALYSIS",
+        "category": "METADATA",
+        "units": 1.0,
+        "units_basis": "per_request",
+        "units_note": "1 unit per request",
+        "category_frequency_limit_per_minute": 60
       }
     }
-  ]
+  ],
+  "api_unit_categories": {
+    "DML": {
+      "frequency_limit_per_minute": 100
+    },
+    "BULK": {
+      "frequency_limit_per_minute": 40
+    },
+    "METADATA": {
+      "frequency_limit_per_minute": 60
+    }
+  }
 }

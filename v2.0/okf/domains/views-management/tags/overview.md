@@ -17,42 +17,72 @@ api:
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/tags"
       doc: "/domains/views-management/tags/get-tags.md"
+      api_units: 0.5
+      api_units_action: GET_TAGS
+      api_units_category: METADATA
     - operation_id: getTaggedViews
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views"
       doc: "/domains/views-management/tags/get-tagged-views.md"
+      api_units: 0.5
+      api_units_action: GET_TAGGED_VIEWS
+      api_units_category: METADATA
     - operation_id: getViewTags
       method: GET
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags"
       doc: "/domains/views-management/tags/get-view-tags.md"
+      api_units: 0.5
+      api_units_action: GET_VIEW_TAGS
+      api_units_category: METADATA
     - operation_id: createTag
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/tags"
       doc: "/domains/views-management/tags/create-tag.md"
+      api_units: 0.5
+      api_units_action: CREATE_TAG
+      api_units_category: METADATA
     - operation_id: updateTag
       method: PUT
       path: "/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}"
       doc: "/domains/views-management/tags/update-tag.md"
+      api_units: 0.5
+      api_units_action: UPDATE_TAG
+      api_units_category: METADATA
     - operation_id: deleteTag
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}"
       doc: "/domains/views-management/tags/delete-tag.md"
+      api_units: 0.5
+      api_units_action: DELETE_TAG
+      api_units_category: METADATA
     - operation_id: addTagToViews
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views"
       doc: "/domains/views-management/tags/add-tag-to-views.md"
+      api_units: 0.5
+      api_units_action: ADD_TAG_TO_VIEWS
+      api_units_category: METADATA
     - operation_id: removeTagFromViews
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views"
       doc: "/domains/views-management/tags/remove-tag-from-views.md"
+      api_units: 0.5
+      api_units_action: REMOVE_TAG_FROM_VIEWS
+      api_units_category: METADATA
     - operation_id: addTagsToView
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags"
       doc: "/domains/views-management/tags/add-tags-to-view.md"
+      api_units: 0.5
+      api_units_action: ADD_TAGS_TO_VIEW
+      api_units_category: METADATA
     - operation_id: removeTagsFromView
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags"
       doc: "/domains/views-management/tags/remove-tags-from-view.md"
+      api_units: 0.5
+      api_units_action: REMOVE_TAGS_FROM_VIEW
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/views-management-grouped-api.json"
@@ -73,18 +103,18 @@ APIs to create, update, delete and list the tags of a workspace, and to attach t
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get Tags List](get-tags.md) | GET | `/restapi/v2/workspaces/{workspace-id}/tags` | `getTags` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Tagged Views](get-tagged-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `getTaggedViews` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get View Tags](get-view-tags.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `getViewTags` | `ZohoAnalytics.metadata.read` | 200 |
-| [Create Tag](create-tag.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tags` | `createTag` | `ZohoAnalytics.modeling.create` | 200 |
-| [Update Tag](update-tag.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}` | `updateTag` | `ZohoAnalytics.modeling.update` | 204 |
-| [Delete Tag](delete-tag.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}` | `deleteTag` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Add Tag To Multiple Views](add-tag-to-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `addTagToViews` | `ZohoAnalytics.modeling.create` | 204 |
-| [Remove Tag From Multiple Views](remove-tag-from-views.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `removeTagFromViews` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Add Multiple Tags To View](add-tags-to-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `addTagsToView` | `ZohoAnalytics.modeling.create` | 204 |
-| [Remove Multiple Tags From View](remove-tags-from-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `removeTagsFromView` | `ZohoAnalytics.modeling.delete` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get Tags List](get-tags.md) | GET | `/restapi/v2/workspaces/{workspace-id}/tags` | `getTags` | `ZohoAnalytics.metadata.read` | 200 | 0.5 |
+| [Get Tagged Views](get-tagged-views.md) | GET | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `getTaggedViews` | `ZohoAnalytics.metadata.read` | 200 | 0.5 |
+| [Get View Tags](get-view-tags.md) | GET | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `getViewTags` | `ZohoAnalytics.metadata.read` | 200 | 0.5 |
+| [Create Tag](create-tag.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tags` | `createTag` | `ZohoAnalytics.modeling.create` | 200 | 0.5 |
+| [Update Tag](update-tag.md) | PUT | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}` | `updateTag` | `ZohoAnalytics.modeling.update` | 204 | 0.5 |
+| [Delete Tag](delete-tag.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}` | `deleteTag` | `ZohoAnalytics.modeling.delete` | 204 | 0.5 |
+| [Add Tag To Multiple Views](add-tag-to-views.md) | POST | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `addTagToViews` | `ZohoAnalytics.modeling.create` | 204 | 0.5 |
+| [Remove Tag From Multiple Views](remove-tag-from-views.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/tags/{tag-id}/views` | `removeTagFromViews` | `ZohoAnalytics.modeling.delete` | 204 | 0.5 |
+| [Add Multiple Tags To View](add-tags-to-view.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `addTagsToView` | `ZohoAnalytics.modeling.create` | 204 | 0.5 |
+| [Remove Multiple Tags From View](remove-tags-from-view.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/tags` | `removeTagsFromView` | `ZohoAnalytics.modeling.delete` | 204 | 0.5 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

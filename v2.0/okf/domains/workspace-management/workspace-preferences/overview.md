@@ -17,18 +17,30 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/default"
       doc: "/domains/workspace-management/workspace-preferences/add-default-workspace.md"
+      api_units: 0.1
+      api_units_action: ADD_DEFAULT_WORKSPACE
+      api_units_category: METADATA
     - operation_id: removeDefaultWorkspace
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/default"
       doc: "/domains/workspace-management/workspace-preferences/remove-default-workspace.md"
+      api_units: 0.1
+      api_units_action: REMOVE_DEFAULT_WORKSPACE
+      api_units_category: METADATA
     - operation_id: addFavoriteWorkspace
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/favorite"
       doc: "/domains/workspace-management/workspace-preferences/add-favorite-workspace.md"
+      api_units: 0.1
+      api_units_action: ADD_FAVOURITE_WORKSPACE
+      api_units_category: METADATA
     - operation_id: removeFavoriteWorkspace
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/favorite"
       doc: "/domains/workspace-management/workspace-preferences/remove-favorite-workspace.md"
+      api_units: 0.1
+      api_units_action: REMOVE_FAVOURITE_WORKSPACE
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/workspace-management-grouped-api.json"
@@ -57,12 +69,12 @@ APIs that manage the workspace preferences of a user, covering the default works
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Add Default Workspace](add-default-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/default` | `addDefaultWorkspace` | `ZohoAnalytics.metadata.update` | 204 |
-| [Remove Default Workspace](remove-default-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/default` | `removeDefaultWorkspace` | `ZohoAnalytics.metadata.update` | 204 |
-| [Add Favourite Workspace](add-favorite-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/favorite` | `addFavoriteWorkspace` | `ZohoAnalytics.metadata.update` | 204 |
-| [Remove Favourite Workspace](remove-favorite-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/favorite` | `removeFavoriteWorkspace` | `ZohoAnalytics.metadata.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Add Default Workspace](add-default-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/default` | `addDefaultWorkspace` | `ZohoAnalytics.metadata.update` | 204 | 0.1 |
+| [Remove Default Workspace](remove-default-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/default` | `removeDefaultWorkspace` | `ZohoAnalytics.metadata.update` | 204 | 0.1 |
+| [Add Favourite Workspace](add-favorite-workspace.md) | POST | `/restapi/v2/workspaces/{workspace-id}/favorite` | `addFavoriteWorkspace` | `ZohoAnalytics.metadata.update` | 204 | 0.1 |
+| [Remove Favourite Workspace](remove-favorite-workspace.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/favorite` | `removeFavoriteWorkspace` | `ZohoAnalytics.metadata.update` | 204 | 0.1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

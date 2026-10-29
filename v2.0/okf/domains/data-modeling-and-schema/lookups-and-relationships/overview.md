@@ -17,10 +17,16 @@ api:
       method: POST
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/lookup"
       doc: "/domains/data-modeling-and-schema/lookups-and-relationships/add-lookup.md"
+      api_units: 1
+      api_units_action: ADD_LOOKUP
+      api_units_category: METADATA
     - operation_id: removeLookup
       method: DELETE
       path: "/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/lookup"
       doc: "/domains/data-modeling-and-schema/lookups-and-relationships/remove-lookup.md"
+      api_units: 2
+      api_units_action: REMOVE_LOOKUP
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/data-modeling-schema-grouped-api.json"
@@ -41,10 +47,10 @@ APIs for adding and removing lookup relationships.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Add Lookup](add-lookup.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/lookup` | `addLookup` | `ZohoAnalytics.modeling.update` | 204 |
-| [Remove Lookup](remove-lookup.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/lookup` | `removeLookup` | `ZohoAnalytics.modeling.update` | 204 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Add Lookup](add-lookup.md) | POST | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/lookup` | `addLookup` | `ZohoAnalytics.modeling.update` | 204 | 1 |
+| [Remove Lookup](remove-lookup.md) | DELETE | `/restapi/v2/workspaces/{workspace-id}/views/{view-id}/columns/{column-id}/lookup` | `removeLookup` | `ZohoAnalytics.modeling.update` | 204 | 2 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

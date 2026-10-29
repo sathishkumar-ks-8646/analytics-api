@@ -19,13 +19,13 @@ They do **not** create datasources, and they do not load data supplied in the re
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Sync Data](#1-sync-data) | POST | `/restapi/v2/workspaces/<workspace-id>/datasources/<datasource-id>/sync` |
-| 2 | [Refetch Data](#2-refetch-data) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/sync` |
-| 3 | [Update Datasource Connection](#3-update-datasource-connection) | PUT | `/restapi/v2/workspaces/<workspace-id>/datasources/<datasource-id>` |
-| 4 | [Get Datasources](#4-get-datasources) | GET | `/restapi/v2/workspaces/<workspace-id>/datasources` |
-| 5 | [Get Last Import Details](#5-get-last-import-details) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/importdetails` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Sync Data](#1-sync-data) | POST | `/restapi/v2/workspaces/<workspace-id>/datasources/<datasource-id>/sync` | 5 |
+| 2 | [Refetch Data](#2-refetch-data) | POST | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/sync` | 2 |
+| 3 | [Update Datasource Connection](#3-update-datasource-connection) | PUT | `/restapi/v2/workspaces/<workspace-id>/datasources/<datasource-id>` | 1 |
+| 4 | [Get Datasources](#4-get-datasources) | GET | `/restapi/v2/workspaces/<workspace-id>/datasources` | 1 |
+| 5 | [Get Last Import Details](#5-get-last-import-details) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/importdetails` | 0.1 |
 
 > Notes that apply to all five APIs:
 > - All require the `ZANALYTICS-ORGID` header.
@@ -153,7 +153,7 @@ These are the limits that apply with **default settings**.
 |------------|-------|-------------|
 | **Manual syncs per datasource connection** | **5 per day.** The counter resets daily and is reported as `syncUsed` against `totalSyncAllowed` by [Get Datasources](#4-get-datasources). Both [Sync Data](#1-sync-data) and [Refetch Data](#2-refetch-data) consume it. | `19000048` |
 | **One sync at a time per table** | A table already being synced cannot be synced again until the current run finishes. | `18072` |
-| **Repeated rapid calls are throttled** | [Sync Data](#1-sync-data) and [Refetch Data](#2-refetch-data) are additionally rate limited per user. A burst of calls in quick succession is locked out for a short cool-off period. | Framework-level rejection |
+| **Repeated rapid calls are throttled** | [Sync Data](#1-sync-data) and [Refetch Data](#2-refetch-data) are additionally rate limited to 5 requests per minute. A burst beyond that is locked out for 5 minutes. | Framework-level rejection |
 | **`syncIntervalId` becomes mandatory above one interval** | A datasource with more than one sync interval cannot be synced as a whole. | `8182` |
 | **`CONFIG` length — Sync Data / Refetch Data** | **3,000** characters. | `8507` |
 | **`CONFIG` length — Update Datasource Connection** | **1,000,000** characters. | `8507` |
@@ -202,6 +202,8 @@ Triggers an immediate pull for a whole datasource — every table it feeds.
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Optional |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 5 units per request — gateway action `SYNC_DATA` (api-id `3025`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 5 requests per minute, 5-minute lockout on breach. |
 
 **Path parameters**
 
@@ -342,6 +344,8 @@ Triggers an immediate pull for **one table** from whatever datasource sits behin
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | Optional |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 2 units per request — gateway action `REFETCH_DATA` (api-id `3026`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 5 requests per minute, 5-minute lockout on breach. |
 
 **Path parameters**
 
@@ -477,6 +481,8 @@ Updates the connection details of a **database-style datasource** — host, port
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | **Mandatory** |
 | **Success Status** | **`204 No Content`** — no response body |
+| **API Units** | 1 unit per request — gateway action `UPDATE_DATASOURCE_CONNECTION` (api-id `3028`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -748,6 +754,8 @@ Lists every datasource in a workspace, the tables each one feeds, and the state 
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
+| **API Units** | 1 unit per request — gateway action `GET_DATASOURCES` (api-id `3024`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -1010,6 +1018,8 @@ Reports what the most recent load into a table actually did — when it ran, whe
 | **ZANALYTICS-ORGID Header** | **Mandatory** |
 | **CONFIG** | This API takes no CONFIG fields |
 | **Success Status** | `200 OK` with a JSON body |
+| **API Units** | 0.1 units per request — gateway action `GET_LAST_IMPORT_DETAILS` (api-id `3027`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 **Path parameters**
 
@@ -1351,3 +1361,47 @@ CONFIG=%7B%22isFullFetch%22%3Atrue%7D
 | `useSSH`, `sshTunnelHost`, `sshTunnelPort`, `sshTunnelUsername`, `sshTunnelPassword`, `sshTunnelAuthType` | – | – | ✓ |
 
 [Get Datasources](#4-get-datasources) and [Get Last Import Details](#5-get-last-import-details) take no CONFIG attributes at all.
+
+---
+
+## Appendix G – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Sync Data](#1-sync-data) | `SYNC_DATA` (3025) | METADATA | 5 | per request |
+| 2 | [Refetch Data](#2-refetch-data) | `REFETCH_DATA` (3026) | METADATA | 2 | per request |
+| 3 | [Update Datasource Connection](#3-update-datasource-connection) | `UPDATE_DATASOURCE_CONNECTION` (3028) | METADATA | 1 | per request |
+| 4 | [Get Datasources](#4-get-datasources) | `GET_DATASOURCES` (3024) | METADATA | 1 | per request |
+| 5 | [Get Last Import Details](#5-get-last-import-details) | `GET_LAST_IMPORT_DETAILS` (3027) | METADATA | 0.1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### API-specific throttles
+
+These APIs carry an extra threshold on top of the category ceiling. Crossing it locks the caller out of that API for the lock period.
+
+| API Name | Throttle |
+|----------|----------|
+| [Sync Data](#1-sync-data) | 5 requests per minute, 5-minute lockout on breach |
+| [Refetch Data](#2-refetch-data) | 5 requests per minute, 5-minute lockout on breach |
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

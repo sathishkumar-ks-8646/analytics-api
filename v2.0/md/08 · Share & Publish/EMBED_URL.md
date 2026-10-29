@@ -29,11 +29,11 @@ The `RSCONFIG` value in the URL is the opaque key under which that URL's configu
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Embed URL](#1-get-embed-url) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/embed` |
-| 2 | [Fetch All Embed URLs](#2-fetch-all-embed-urls) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/embedurls` |
-| 3 | [Delete Embed URL](#3-delete-embed-url) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/embed` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Embed URL](#1-get-embed-url) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/embed` | 1 |
+| 2 | [Fetch All Embed URLs](#2-fetch-all-embed-urls) | GET | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/embedurls` | 0.5 |
+| 3 | [Delete Embed URL](#3-delete-embed-url) | DELETE | `/restapi/v2/workspaces/<workspace-id>/views/<view-id>/publish/embed` | 0.5 |
 
 >
 > **Related APIs not in this document:** the per-view public/private publish channels and the publish presentation configuration are in [Publish](PUBLISH.md); slideshow embedding is in [Slideshow](SLIDESHOW_MANAGEMENT.md); ordinary user/group sharing is in [Sharing](SHARING.md).
@@ -64,6 +64,8 @@ Mints a new, short-lived embed URL for a view. Everything the eventual viewer ca
 | **OAuth Scope** | `ZohoAnalytics.embed.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin, or a Workspace Admin, or any user with Publish permission or Make Public permission on the view. A caller who is **not** a workspace owner must additionally be listed in the organization's OEM-enabled users configuration, otherwise `7301`. In every case the organization or the workspace must be enabled for Embedded Analytics, otherwise `8023`. |
+| **API Units** | 1 unit per request — gateway action `GET_EMBED_URL` (api-id `5002`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -343,6 +345,8 @@ Lists the embed URLs that have been issued for a view, together with the permiss
 | **OAuth Scope** | `ZohoAnalytics.embed.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organization. The caller must also hold Publish permission or Make Public permission on the view, and the organization or workspace must be enabled for Embedded Analytics, otherwise `8023`. |
+| **API Units** | 0.5 units per request — gateway action `FETCH_ALL_EMBED_URLS` (api-id `5017`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -617,6 +621,8 @@ Revokes embed URLs for a view — either one specific URL identified by its `rsC
 | **OAuth Scope** | `ZohoAnalytics.embed.delete` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be an Account Admin or Organization Admin of the organization. The caller must also hold Publish permission or Make Public permission on the view, and the organization or workspace must be enabled for Embedded Analytics, otherwise `8023`. |
+| **API Units** | 0.5 units per request — gateway action `DELETE_EMBED_URL` (api-id `5018`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -857,3 +863,36 @@ CONFIG={"deleteAllUrls":true}
 | **The returned URL host is not the API host** | `data.embedUrl` points at the Zoho Analytics **application** domain (e.g. `analytics.zoho.com`) or, when `domainName` was supplied, at that portal domain — never at the `analyticsapi.*` host the request was sent to. Do not construct these URLs client-side from the API host. |
 | **`rsConfig` and `embedUrl` are credentials** | `rsConfig` appears in the listing response and inside every `embedUrl` as the `RSCONFIG=` parameter. Anyone holding the full URL can view the data, with the baked-in permissions and filter, until it expires. Avoid logging these values and restrict who may call [Fetch All Embed URLs](#2-fetch-all-embed-urls). |
 | **Configuration is never echoed on mint** | [Get Embed URL](#1-get-embed-url) returns only `embedUrl` — not the permissions, criteria, validity, or column restrictions that were applied. Confirm what was stored with [Fetch All Embed URLs](#2-fetch-all-embed-urls) rather than assuming the request took effect verbatim. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Embed URL](#1-get-embed-url) | `GET_EMBED_URL` (5002) | METADATA | 1 | per request |
+| 2 | [Fetch All Embed URLs](#2-fetch-all-embed-urls) | `FETCH_ALL_EMBED_URLS` (5017) | METADATA | 0.5 | per request |
+| 3 | [Delete Embed URL](#3-delete-embed-url) | `DELETE_EMBED_URL` (5018) | METADATA | 0.5 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).

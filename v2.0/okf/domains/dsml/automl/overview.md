@@ -17,46 +17,79 @@ api:
       method: GET
       path: "/restapi/v2/automl/analysis"
       doc: "/domains/dsml/automl/get-auto-ml-analysis-in-org.md"
+      api_units: 2
+      api_units_action: GET_AUTOML_ANALYSIS_IN_ORGANIZATION
+      api_units_category: METADATA
     - operation_id: getAutoMLAnalysisInWorkspace
       method: GET
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis"
       doc: "/domains/dsml/automl/get-auto-ml-analysis-in-workspace.md"
+      api_units: 1
+      api_units_action: GET_AUTOML_ANALYSIS_IN_Workspace
+      api_units_category: METADATA
     - operation_id: getAutoMLAnalysisDetails
       method: GET
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}"
       doc: "/domains/dsml/automl/get-auto-ml-analysis-details.md"
+      api_units: 1
+      api_units_action: GET_AUTOML_ANALYSIS_DETAILS
+      api_units_category: METADATA
     - operation_id: getDeploymentsForModel
       method: GET
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments"
       doc: "/domains/dsml/automl/get-deployments-for-model.md"
+      api_units: 1
+      api_units_action: GET_DEPLOYMENTS_FOR_A_MODEL
+      api_units_category: METADATA
     - operation_id: createAutoMLAnalysis
       method: POST
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis"
       doc: "/domains/dsml/automl/create-auto-ml-analysis.md"
+      api_units: 3
+      api_units_action: CREATE_AUTOML_ANALYSIS
+      api_units_category: METADATA
     - operation_id: deleteAutoMLAnalysis
       method: DELETE
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}"
       doc: "/domains/dsml/automl/delete-auto-ml-analysis.md"
+      api_units: 2
+      api_units_action: DELETE_AUTOML_ANALYSIS
+      api_units_category: METADATA
     - operation_id: deleteAutoMLAnalysisModel
       method: DELETE
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}"
       doc: "/domains/dsml/automl/delete-auto-ml-analysis-model.md"
+      api_units: 2
+      api_units_action: DELETE_AUTOML_ANALYSIS_MODEL
+      api_units_category: METADATA
     - operation_id: createAutoMLAnalysisDeployment
       method: POST
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments"
       doc: "/domains/dsml/automl/create-auto-ml-analysis-deployment.md"
+      api_units: 3
+      api_units_action: CREATE_AUTOML_ANALYSIS_DEPLOYMENT
+      api_units_category: METADATA
     - operation_id: runAutoMLAnalysis
       method: POST
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}/execute"
       doc: "/domains/dsml/automl/run-auto-ml-analysis.md"
+      api_units: 2
+      api_units_action: RUN_AUTOML_ANALYSIS_DEPLOYMENT
+      api_units_category: METADATA
     - operation_id: deleteAutoMLAnalysisModelDeployment
       method: DELETE
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}"
       doc: "/domains/dsml/automl/delete-auto-ml-analysis-model-deployment.md"
+      api_units: 2
+      api_units_action: DELETE_AUTOML_ANALYSIS_DEPLOYMENT
+      api_units_category: METADATA
     - operation_id: autoMLWhatIfAnalysis
       method: POST
       path: "/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/whatif"
       doc: "/domains/dsml/automl/auto-ml-what-if-analysis.md"
+      api_units: 1
+      api_units_action: AUTOML_WHAT_IF_ANALYSIS
+      api_units_category: METADATA
 sources:
   - id: openapi-spec
     resource: "/references/openapi/dsml-grouped-api.json"
@@ -77,19 +110,19 @@ APIs for creating, running, deploying, and managing AutoML analyses and models.
 
 # Endpoints
 
-| Endpoint | Method | Path | Operation ID | OAuth scope | Success |
-|---|---|---|---|---|---|
-| [Get AutoML Analysis In Org](get-auto-ml-analysis-in-org.md) | GET | `/restapi/v2/automl/analysis` | `getAutoMLAnalysisInOrg` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get AutoML Analysis In Workspace](get-auto-ml-analysis-in-workspace.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis` | `getAutoMLAnalysisInWorkspace` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get AutoML Analysis Details](get-auto-ml-analysis-details.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}` | `getAutoMLAnalysisDetails` | `ZohoAnalytics.metadata.read` | 200 |
-| [Get Deployments For A Model](get-deployments-for-model.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments` | `getDeploymentsForModel` | `ZohoAnalytics.metadata.read` | 200 |
-| [Create AutoML Analysis](create-auto-ml-analysis.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis` | `createAutoMLAnalysis` | `ZohoAnalytics.modeling.create` | 200 |
-| [Delete AutoML Analysis](delete-auto-ml-analysis.md) | DELETE | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}` | `deleteAutoMLAnalysis` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Delete AutoML Analysis Model](delete-auto-ml-analysis-model.md) | DELETE | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}` | `deleteAutoMLAnalysisModel` | `ZohoAnalytics.modeling.delete` | 204 |
-| [Create AutoML Analysis Deployment](create-auto-ml-analysis-deployment.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments` | `createAutoMLAnalysisDeployment` | `ZohoAnalytics.modeling.create` | 200 |
-| [Run AutoML Analysis](run-auto-ml-analysis.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}/execute` | `runAutoMLAnalysis` | `ZohoAnalytics.modeling.create` | 204 |
-| [Delete AutoML Analysis Model Deployment](delete-auto-ml-analysis-model-deployment.md) | DELETE | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}` | `deleteAutoMLAnalysisModelDeployment` | `ZohoAnalytics.modeling.delete` | 204 |
-| [AutoML What If Analysis](auto-ml-what-if-analysis.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/whatif` | `autoMLWhatIfAnalysis` | `ZohoAnalytics.modeling.create` | 200 |
+| Endpoint | Method | Path | Operation ID | OAuth scope | Success | API units |
+|---|---|---|---|---|---|---|
+| [Get AutoML Analysis In Org](get-auto-ml-analysis-in-org.md) | GET | `/restapi/v2/automl/analysis` | `getAutoMLAnalysisInOrg` | `ZohoAnalytics.metadata.read` | 200 | 2 |
+| [Get AutoML Analysis In Workspace](get-auto-ml-analysis-in-workspace.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis` | `getAutoMLAnalysisInWorkspace` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Get AutoML Analysis Details](get-auto-ml-analysis-details.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}` | `getAutoMLAnalysisDetails` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Get Deployments For A Model](get-deployments-for-model.md) | GET | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments` | `getDeploymentsForModel` | `ZohoAnalytics.metadata.read` | 200 | 1 |
+| [Create AutoML Analysis](create-auto-ml-analysis.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis` | `createAutoMLAnalysis` | `ZohoAnalytics.modeling.create` | 200 | 3 |
+| [Delete AutoML Analysis](delete-auto-ml-analysis.md) | DELETE | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}` | `deleteAutoMLAnalysis` | `ZohoAnalytics.modeling.delete` | 204 | 2 |
+| [Delete AutoML Analysis Model](delete-auto-ml-analysis-model.md) | DELETE | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}` | `deleteAutoMLAnalysisModel` | `ZohoAnalytics.modeling.delete` | 204 | 2 |
+| [Create AutoML Analysis Deployment](create-auto-ml-analysis-deployment.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/deployments` | `createAutoMLAnalysisDeployment` | `ZohoAnalytics.modeling.create` | 200 | 3 |
+| [Run AutoML Analysis](run-auto-ml-analysis.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}/execute` | `runAutoMLAnalysis` | `ZohoAnalytics.modeling.create` | 204 | 2 |
+| [Delete AutoML Analysis Model Deployment](delete-auto-ml-analysis-model-deployment.md) | DELETE | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/deployments/{deployment-id}` | `deleteAutoMLAnalysisModelDeployment` | `ZohoAnalytics.modeling.delete` | 204 | 2 |
+| [AutoML What If Analysis](auto-ml-what-if-analysis.md) | POST | `/restapi/v2/automl/workspaces/{workspace-id}/analysis/{analysis-id}/models/{model-id}/whatif` | `autoMLWhatIfAnalysis` | `ZohoAnalytics.modeling.create` | 200 | 1 |
 
 All endpoints require the `Authorization: Zoho-oauthtoken <access-token>` header (see [Authentication](../../../foundations/authentication.md)) and, unless stated otherwise in the endpoint document, the `ZANALYTICS-ORGID` header (see [Request conventions](../../../foundations/request-conventions.md)).
 

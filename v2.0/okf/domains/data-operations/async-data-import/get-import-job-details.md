@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/bulk/workspaces/{workspace-id}/importjobs/{job-id}"
   domain: data-operations
   group: async-data-import
+  api_units:
+    api_id: 9003
+    action: IMPORT_JOB_STATUS
+    category: METADATA
+    units: 0
+    units_basis: per_request
+    units_note: "0 - no API units are deducted"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.data.create
   org_id_header: required
@@ -83,6 +91,8 @@ Note: the import job summary is retained only for one hour after job completion.
 | Permission required | Only the user who created the import job. Any other user — including an Account Admin or Organization Admin — receives 8138. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 200 - `application/json` |
+| API units | 0 - this request is free; no API units are deducted. Action `IMPORT_JOB_STATUS` (api-id `9003`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`data-operations-grouped-api.json`](../../../references/openapi/data-operations-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1bulk~1workspaces~1{workspace-id}~1importjobs~1{job-id}/get`; response schema `ImportJobDetailsResponse` |
 
 # Request
@@ -328,3 +338,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Create Import Job for a New Table (Asynchronous)](create-import-job-new-table.md), [Create Import Job for an Existing Table (Asynchronous)](create-import-job-existing-table.md), [Batch Import Data into New Table](batch-import-new-table.md), [Batch Import Data into Existing Table](batch-import-existing-table.md).
 - [SDK examples](../../../sdk-examples/data-operations/async-data-import/get-import-job-details.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

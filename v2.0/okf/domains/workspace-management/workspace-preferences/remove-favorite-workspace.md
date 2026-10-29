@@ -16,6 +16,14 @@ api:
   path: "/restapi/v2/workspaces/{workspace-id}/favorite"
   domain: workspace-management
   group: workspace-preferences
+  api_units:
+    api_id: 3016
+    action: REMOVE_FAVOURITE_WORKSPACE
+    category: METADATA
+    units: 0.1
+    units_basis: per_request
+    units_note: "0.1 units per request"
+    category_frequency_limit: 60 requests/minute
   oauth_scopes:
     - ZohoAnalytics.metadata.update
   org_id_header: required
@@ -68,6 +76,8 @@ Removes the specified workspace from the calling user's list of favourite worksp
 | Permission required | The authenticated user must be a Workspace Admin, or a Shared User, or a Group Member of the workspace, or any user with at least Read permission on a view within the workspace. See [Roles & permissions](../../../foundations/roles-and-permissions.md). |
 | CONFIG parameter | No CONFIG parameter |
 | Success response | HTTP 204 with no body |
+| API units | 0.1 units per request - action `REMOVE_FAVOURITE_WORKSPACE` (api-id `3016`), **METADATA** category. See [API units](../../../foundations/api-units.md). |
+| Frequency limit | 60 requests/minute across all **METADATA**-category calls of the organization. See [API units](../../../foundations/api-units.md#unit-categories-and-frequency-limits). |
 | OpenAPI | [`workspace-management-grouped-api.json`](../../../references/openapi/workspace-management-grouped-api.json) - pointer `#/paths/~1restapi~1v2~1workspaces~1{workspace-id}~1favorite/delete` |
 
 # Request
@@ -177,3 +187,4 @@ Every failure returns HTTP 4xx/5xx with the JSON error envelope; `data.errorCode
 - [OAuth scopes](../../../foundations/oauth-scopes.md), [Roles & permissions](../../../foundations/roles-and-permissions.md), [Permission matrix](../../../foundations/permission-matrix.md).
 - Other endpoints in this group: [Add Default Workspace](add-default-workspace.md), [Remove Default Workspace](remove-default-workspace.md), [Add Favourite Workspace](add-favorite-workspace.md).
 - [SDK examples](../../../sdk-examples/workspace-management/workspace-preferences/remove-favorite-workspace.md).
+- [API units](../../../foundations/api-units.md) - unit cost, unit categories and frequency limits for every endpoint.

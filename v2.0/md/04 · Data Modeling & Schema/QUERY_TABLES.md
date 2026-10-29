@@ -6,18 +6,18 @@ This document covers the APIs for creating, editing, listing, and inspecting **Q
 
 A **Query Table** (also called a **SQL View** or **QT**) is a view whose data is computed by executing a custom SQL query at query time rather than storing raw imported data. It allows joining, aggregating, and transforming data from one or more existing tables in the workspace using standard SQL syntax.
 
-> **Rate Limited:** Create Query Table and Edit Query Table are throttled — a maximum of 7 requests per user per minute (5-minute lockout on breach) and 15 requests per minute service-wide. Design your integration to batch or space out query table creation/edit calls accordingly.
+> **Rate Limited:** Create Query Table and Edit Query Table are throttled — a maximum of 20 requests per user per minute (10-minute lockout on breach) and 15 requests per minute service-wide. Design your integration to batch or space out query table creation/edit calls accordingly.
 
 ---
 
 ## Index
 
-| # | API Name | Method | URL |
-|---|----------|--------|-----|
-| 1 | [Get Query Tables](#1-get-query-tables) | GET | `/restapi/v2/workspaces/<workspace-id>/querytables` |
-| 2 | [Create Query Table](#2-create-query-table) | POST | `/restapi/v2/workspaces/<workspace-id>/querytables` |
-| 3 | [Edit Query Table](#3-edit-query-table) | PUT | `/restapi/v2/workspaces/<workspace-id>/querytables/<querytable-id>` |
-| 4 | [Get Query Table Details](#4-get-query-table-details) | GET | `/restapi/v2/workspaces/<workspace-id>/querytables/<querytable-id>` |
+| # | API Name | Method | URL | API Units |
+|---|----------|--------|-----|----------|
+| 1 | [Get Query Tables](#1-get-query-tables) | GET | `/restapi/v2/workspaces/<workspace-id>/querytables` | 0.1 |
+| 2 | [Create Query Table](#2-create-query-table) | POST | `/restapi/v2/workspaces/<workspace-id>/querytables` | 15 |
+| 3 | [Edit Query Table](#3-edit-query-table) | PUT | `/restapi/v2/workspaces/<workspace-id>/querytables/<querytable-id>` | 15 |
+| 4 | [Get Query Table Details](#4-get-query-table-details) | GET | `/restapi/v2/workspaces/<workspace-id>/querytables/<querytable-id>` | 1 |
 
 ---
 
@@ -32,6 +32,8 @@ Returns a paginated, filterable, sortable list of all query tables in the worksp
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Query Table permission on the workspace. |
+| **API Units** | 0.1 units per request — gateway action `GET_QUERY_TABLES` (api-id `3064`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 ### CONFIG Parameters
 
@@ -192,7 +194,9 @@ Creates a new query table by executing a user-supplied SQL `SELECT` statement ag
 | **OAuth Scope** | `ZohoAnalytics.modeling.create` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Create Query Table permission on the workspace. |
-| **Rate Limit** | 7 requests/user/minute (5-minute lockout on breach); 15 requests/minute service-wide. |
+| **Rate Limit** | 20 requests/user/minute (10-minute lockout on breach); 15 requests/minute service-wide. |
+| **API Units** | 15 units per request — gateway action `CREATE_QT` (api-id `2037`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameters
 
@@ -309,7 +313,9 @@ Updates the SQL definition and/or folder of an existing query table. The query t
 | **OAuth Scope** | `ZohoAnalytics.modeling.update` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the query table. |
-| **Rate Limit** | 7 requests/user/minute (5-minute lockout on breach); 15 requests/minute service-wide. |
+| **Rate Limit** | 20 requests/user/minute (10-minute lockout on breach); 15 requests/minute service-wide. |
+| **API Units** | 15 units per request — gateway action `EDIT_QT` (api-id `2038`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation; this API is additionally throttled to 20 requests per user per minute, 10-minute lockout on breach. |
 
 ### CONFIG Parameters
 
@@ -409,6 +415,8 @@ Returns the full metadata of a query table, including its SQL definition, the ta
 | **OAuth Scope** | `ZohoAnalytics.metadata.read` |
 | **ZANALYTICS-ORGID Header** | **Mandatory** — Organisation ID of the workspace. |
 | **Permission Required** | The authenticated user must be a Workspace Admin of the specified workspace, or any user with Design Modify permission on the query table. |
+| **API Units** | 1 unit per request — gateway action `GET_QUERYTABLE_DETAILS` (api-id `3047`), **METADATA** unit category. |
+| **Frequency Limit** | 60 requests/minute shared across every **METADATA**-category call of the organisation. |
 
 > This API has no CONFIG parameter. All inputs are provided via URL path parameters only.
 
@@ -630,3 +638,46 @@ ZANALYTICS-ORGID: 700000123456
 | **Query table columns follow the same schema shape as regular table columns** | The `columns` array in Get Query Table Details uses the same field structure (`columnId`, `dataType`, `dataTypeName`, `isHidden`, `sortedOrder`, etc.) documented in [Table and Schema](TABLE_AND_SCHEMA.md) and [Column Management](COLUMNS.md). |
 | **Edit Query Table has no data payload on success** | Unlike Create (`viewId`) and Get Details (full metadata), a successful Edit call returns HTTP `204 No Content` with no response body. |
 | **`orgId` in responses is the organisation ID, not the workspace ID** | Do not confuse `orgId` with `workspaceId` when parsing responses. |
+
+---
+
+## Appendix E – API Units and Frequency Limits
+
+Every call deducts **API units** from the organisation's plan allowance and is counted against a **per-minute request ceiling** shared by all APIs in the same unit category. Both are keyed off the internal gateway action (`api-id`) that the request method and URL resolve to.
+
+| # | API Name | Gateway Action (api-id) | Unit Category | Units | Charged |
+|---|----------|-------------------------|---------------|-------|---------|
+| 1 | [Get Query Tables](#1-get-query-tables) | `GET_QUERY_TABLES` (3064) | METADATA | 0.1 | per request |
+| 2 | [Create Query Table](#2-create-query-table) | `CREATE_QT` (2037) | METADATA | 15 | per request |
+| 3 | [Edit Query Table](#3-edit-query-table) | `EDIT_QT` (2038) | METADATA | 15 | per request |
+| 4 | [Get Query Table Details](#4-get-query-table-details) | `GET_QUERYTABLE_DETAILS` (3047) | METADATA | 1 | per request |
+
+### How the cost is computed
+
+```
+units charged = (rows processed / rows basis) * configured units      # row-based APIs
+units charged = configured units                                      # everything else
+```
+
+Row-based costs are not rounded up to a whole block — processing 250 rows at a rate of 3 units per 1000 rows costs `0.75` units. Units are charged on the rows **actually processed**, after the operation runs, so a partially completed import is still charged for the rows it wrote.
+
+### Frequency limits
+
+| Unit category | Requests per minute | Used by this document |
+|---------------|---------------------|-----------------------|
+| `DML` | 100 | — |
+| `BULK` | 40 | — |
+| `METADATA` | 60 | Yes |
+
+The ceiling is per organisation, shared by every API in that category, and is scaled by a plan-specific multiplier — the figures above are the base configuration. Exceeding it fails the request with an API-frequency error, which is independent of running out of units.
+
+### API-specific throttles
+
+These APIs carry an extra threshold on top of the category ceiling. Crossing it locks the caller out of that API for the lock period.
+
+| API Name | Throttle |
+|----------|----------|
+| [Create Query Table](#2-create-query-table) | 20 requests per user per minute, 10-minute lockout on breach |
+| [Edit Query Table](#3-edit-query-table) | 20 requests per user per minute, 10-minute lockout on breach |
+
+The current allocation, usage and remainder of API units for the organisation are returned by the **Get Resource Details** API under `resourceName: "apiUnits"`. Fractional usage is normal. The complete cross-document table is in [API Units and Rate Limits](../API_UNITS_AND_RATE_LIMITS.md).
